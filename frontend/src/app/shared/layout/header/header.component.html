@@ -1,0 +1,39 @@
+<header>
+	<mat-toolbar color="primary" class="navbar fixed-top">
+	    <div class="float-left">
+	    	<button mat-fab color="primary" (click)="openSidenav()" *ngIf="layout.hasSidenav()">
+			    <mat-icon aria-label="Ouvrir le menu">menu</mat-icon>
+			  </button>
+			</div>
+	    <div>
+		    <span class="app-titre">{{ layout.getTitle() }}</span>
+	    </div>
+			<div class="float-right">
+				<ng-container *ngIf="user.isAuthenticated(); else connexionBlock">
+					<button mat-button [matMenuTriggerFor]="menu" matTooltip="Ouvrir le menu"><mat-icon>face</mat-icon><span class="name">{{ user.username }}</span></button>
+		    	<mat-menu #menu="matMenu" [yPosition]="'below'">
+            <span mat-menu-item [disableRipple]="true" (click)="$event.stopPropagation()">
+            <!-- popover content begin -->
+            <mat-list>
+              <mat-list-item>
+                <a matLine routerLink="/droit">Gestion des droits
+                  <button mat-icon-button >
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                  </button>
+                </a>
+              </mat-list-item>
+            </mat-list>
+            <!-- popover content end  -->
+            </span>
+          </mat-menu>
+
+		    	<button mat-icon-button>
+				    <mat-icon aria-label="Se deconnecter" (click)="logout()">exit_to_app</mat-icon>
+				  </button>
+		    </ng-container>
+		    <ng-template #connexionBlock>
+					<a routerLink="/login"><button mat-raised-button>Connexion</button></a>
+				</ng-template>
+			</div>
+	</mat-toolbar>
+</header>

@@ -1,0 +1,64 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "styles-variables";
+@import '~bootstrap/scss/bootstrap-reboot';
+@import '~bootstrap/scss/bootstrap-grid';
+@import "styles-reset";
+
+* {
+	box-sizing: border-box;
+}
+
+body { 
+  font-family: Roboto, Arial, sans-serif;
+  margin: 0;
+}
+
+.w100 {
+  width: 100%;
+}
+
+.input-field {
+	/*width: 100%;*/
+}
+
+.form-control {
+  padding: .2rem .75rem;
+  border: none!important;
+}
+
+.mat-card {
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.container-fluid {
+	padding-top: 15px;
+	padding-bottom: 30px;
+}
+
+.mat-form-field {
+	width: 100%;
+}
+
+.titre-page {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.green {
+  color: #088A08;
+}
+
+.red {
+  color: #B40404;
+}
+
+.grey {
+  color: #888;
+}
+
+.mat-error {
+  font-size: 0.8em;
+  margin-top: -10px;
+}
