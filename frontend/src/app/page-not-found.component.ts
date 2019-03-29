@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 	selector: 'page-404',
 	template: `
     <div class='center'>
-      <h1>Hey, cette page n'existe pas !</h1>
+      <h1>Cette page n'existe pas !</h1>
       <a routerLink="/" class="waves-effect waves-teal btn-flat">
         Retourner à l' accueil
       </a>
