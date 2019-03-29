@@ -1,0 +1,14 @@
+#security_register:
+#    path: /inscription
+#    defaults: { _controller: APICoreBundle:Security:register }
+#    methods: POST
+
+api_user:
+    resource: "@APICoreBundle/Controller/UserController.php"
+    type:     rest
+    prefix: /
+
+api_droit:
+    resource: "@APICoreBundle/Controller/DroitController.php"
+    type:     rest
+    prefix: /

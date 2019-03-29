@@ -1,0 +1,99 @@
+{% extends "APICoreBundle::template.html.twig" %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<style>
+		.row {
+			margin-bottom: 0px;
+		}
+		.input-field {
+			margin-bottom: 5px;
+			margin-top: 10px;
+		}
+	</style>
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{% javascripts
+    '@APICoreBundle/Resources/public/js/inscription.js'
+  %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+  {% endjavascripts %}
+{% endblock %}
+
+{% block content %}
+		
+	<div style="text-align: center;"><h2>Formulaire d'inscription</h2></div>
+
+	{% if app.request.method == 'POST' %}
+		<div class="row">
+			<div class="col s8 offset-s2">
+				<div class="card-panel orange lighten-1">
+					{{ form_errors(form) }}
+          {{ form_errors(form.nom) }}
+          {{ form_errors(form.prenom) }}
+          {{ form_errors(form.username) }}
+          {{ form_errors(form.email) }}
+          {{ form_errors(form.password) }}
+          {{ form_errors(form.description) }}
+				</div>
+			</div>
+		</div>	
+	{% endif %}
+		
+		<div class="row">
+	    <form class="col s8 offset-s2" method="post" action="">
+	      <div class="row">
+	        <div class="input-field col s6">
+	          {{ form_widget(form.nom) }}
+	          {{ form_label(form.nom, null) }}
+	          <span class="helper-text" data-error="Ce champ ne peut pas être vide"></span>
+	        </div>
+	        <div class="input-field col s6">
+	          {{ form_widget(form.prenom) }}
+	          {{ form_label(form.prenom, null) }}
+	          <span class="helper-text" data-error="Ce champ ne peut pas être vide"></span>
+	        </div>
+	      </div>
+
+	      <div class="row">
+	      	<div class="input-field col s6">
+	          {{ form_widget(form.username) }}
+	          {{ form_label(form.username, null) }}
+	          <span class="helper-text" data-error="Ce champ ne peut pas être vide"></span>
+	        </div>
+	        <div class="input-field col s6">
+	          {{ form_widget(form.email) }}
+	          {{ form_label(form.email, null) }}
+	          <span class="helper-text" data-error="Ce champ ne peut pas être vide et doit être une adresse mail"></span>
+	        </div>
+	      </div>
+
+	      <div class="row">
+	      	<div class="input-field col s6">
+	          {{ form_widget(form.password) }}
+	          {{ form_label(form.password, null) }}
+	          <span class="helper-text" data-error="Ce champ ne peut pas être vide"></span>
+	        </div>
+	        <div class="input-field col s6">
+	          <input id="user_geo_nature_password2" type="password" class="validate" required>
+          	<label for="user_geo_nature_password2">Confirmation du mot de passe *</label>
+          	<span class="helper-text" data-error="Ce champ ne peut pas être vide"></span>
+	        </div>
+	      </div>
+	      
+	      <div class="row">
+	        <div class="input-field col s12">
+	          {{ form_widget(form.description) }}
+	          {{ form_label(form.description, null) }}
+	      	</div>
+	      </div>
+	      <div style="text-align:center;">
+	      	<button type="submit" class="waves-effect waves-light btn">S'inscrire</button>
+	      </div>
+	    </form>
+  </div>
+
+{% endblock %}

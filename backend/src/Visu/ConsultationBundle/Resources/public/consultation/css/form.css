@@ -1,0 +1,234 @@
+.alert-waiting.background {
+    top: 0px;
+    width: 100%;
+    position: fixed;
+    left: 0px;
+    height: 100%;
+    z-index: 10000;
+    background-color: #efefef;
+    opacity: 0.5;
+}
+
+.alert-waiting.alert-info {
+    top: 30px;
+    width: 25%;
+    position: fixed;
+    left: 50%;
+    margin-left: -12.5%;
+    z-index: 10001;
+}
+
+.liste-valeurs {
+	min-height: 34px;
+	background-color: #eee;
+    padding: 6px 12px;
+	font-size: 14px;
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Liste de resultat */
+.results-taxon-complete {
+	background-color: #fff;
+    border: 1px solid #ababab;
+    border-radius: 3px;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.results-taxon-complete .listes ul {
+    margin: 0px;
+    padding: 0px;
+}
+
+.results-taxon-complete .listes > ul {
+    list-style-type: none;
+    list-style: none;
+    padding-left: 20px;
+    display: table-cell;
+    padding: 10px;
+}
+
+.results-taxon-complete .listes > ul li.li-groupe > ul {
+    padding: 5px 10px; 
+    border: 1px solid #fff;
+    margin-bottom: 5px;
+}
+
+.results-taxon-complete .listes > ul li.li-groupe.current > ul,
+.results-taxon-complete .listes > ul li.li-groupe > ul:hover {
+    background-color: #efefef;
+    border: 1px solid #ababab;
+    border-radius: 2px;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+    -webkit-box-shadow: 0px 0px 7px rgba(0,0,0,.4);
+    box-shadow: 0px 0px 7px rgba(0,0,0,.4);
+}
+
+.results-taxon-complete .listes > ul li.li-groupe > ul li p {
+    margin: 0px; 
+    cursor: pointer;
+}
+
+.results-taxon-complete .listes > ul li.li-groupe > ul li.current p:not(.nom_vern),
+.results-taxon-complete .listes > ul li.li-groupe > ul li p:hover {
+    text-decoration: underline;
+}
+
+.results-taxon-complete .listes > ul li.li-groupe > ul li.li-valide p.nom_valide {
+    color: rgba(1, 102, 58, 0.9);; 
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.results-taxon-complete .listes > ul li.li-groupe > ul li.li-valide p.nom_valide:hover {
+    color: #01663A; 
+}
+
+.results-taxon-complete .listes > ul li.li-groupe > ul li.li-valide p.nom_vern:hover {
+    text-decoration: none;
+}
+
+.results-taxon-complete .listes > ul li.li-groupe > ul li.li-synonymes > ul {
+    border-left: 4px solid #01663a;
+    margin-left: 40px;
+}
+
+.results-taxo-complete .listes > ul li.li-groupe > ul li.li-synonymes > ul li.li-synonyme {
+    margin-left: 5px;
+}
+
+#map_form {
+	margin-top: 10px;
+	height: 350px;
+	border-radius: 2px;
+	border: 1px solid #efefef;
+}
+
+/**
+ *	Resultats
+ */
+
+.bloc-resultat {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	width: 100%;
+	z-index: 10000;
+	overflow-y: auto; 
+	background-color: #fff; 
+	padding: 10px 20px; 
+}
+
+.bloc-resultat .close-result {
+    font-size: 28px;
+    cursor: pointer;
+    color: #505050;
+}
+
+.bloc-resultat .glyphicon-question-sign {
+	font-size: 28px;
+	cursor: pointer;
+	color: #0040FF;
+    margin-left: 10px;
+}
+
+.bloc-resultat #map_result {
+    border: 1px solid #01663A;
+    border-radius: 3px;
+}
+
+.bloc-resultat .glyphicon-arrow-right {
+	font-size: 24px;
+}
+
+.bloc-resultat .feuille_obs {
+	width: 28px;
+	cursor: pointer;
+}
+
+.bloc-resultat .list-releve {
+    height: 28px;
+    cursor: pointer;
+}
+
+.bloc-resultat #table_taxons tr th:nth-child(3),
+.bloc-resultat #table_taxons tr td:nth-child(3) {
+    width: 30px;
+}
+
+/**
+ *	Fin Resultats
+ */
+
+.info-encart {
+	height: 100px;
+	background-color: rgba(1, 102, 58, 0.9);
+	padding-top: 5px;
+	box-shadow: 0 2px 4px 2px rgba(0, 0, 0, 0.26);
+	color: rgba(255,255,255,0.9);
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.1);
+}
+
+
+.info-encart .value-info-encart {
+	font-size: 35px;
+}
+
+.info-encart .label-info-encart {
+	font-size: 18px;
+}
+
+
+#toolbox_result {
+    top: 10px;
+    right: 20px;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+#toolbox_result .ls-header {
+    background-color: #fff;
+    padding: 4px;
+    border-radius: 3px;
+    cursor: pointer;
+    display: inline-table;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#toolbox_result .ls-title {
+    color: #606060;
+    display: inline-flex;
+    vertical-align: top;
+    font-size: 14px;
+    padding: 9px 0px;
+    font-weight: bold;
+    width: 80%;
+}
+
+#toolbox_result .ls-img {
+    float: right;
+}
+
+#toolbox_result .ls-body {
+    height: 100%!important;
+    width:100%!important;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+#toolbox_result .lst-layer {
+    color: #505050;
+}
+
+#control-fly-to-commune-result {
+    left: 45px;
+    width: 250px;
+    top: 8px;
+}

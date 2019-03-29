@@ -1,0 +1,1563 @@
+#content #global-content {
+	position: relative;
+	min-height: 400px;
+   	background-color: #fff;
+}
+
+#content.full-size {
+	z-index: 11;
+}
+
+#content.full-size #global-content {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    z-index: 10000;
+}
+
+#left-tab {
+	float:left;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	width: 50px;
+}
+
+#map,
+.map
+{
+	margin-left: 50px;
+	border: 1px solid #969696;
+    border-left-width: 0px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.full-size #map, 
+.full-size .map {
+	height: 100%;
+}
+
+#right-tab,
+#filter-tab
+{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	height: 100%;
+	width: auto;
+	opacity: 0.9;
+	display: block;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+#filter-tab {
+	opacity: 1;
+}
+
+#filter-content {
+	position: fixed;
+	z-index: 2;
+	top: 50px;
+	left: 0px;
+	padding: 0px;
+	background-color: #635FAD;
+	opacity: 0.9;
+	width: 70%;
+}
+
+#first-tab {
+	position: absolute;
+	height: 100%;
+	z-index: 3;
+	top: 0px;
+	padding-top: 50px;
+	right: 0px;
+	width: 480px;
+	background-color: #fff;
+	-webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+#filter-content ul {
+	list-style: none;
+	list-style-type: none;
+	padding: 0 15px;
+	margin: 0;
+}
+#filter-content ul li {
+	list-style: none;
+	margin: 10px 0px;
+	padding: 0;
+}
+#filter-content ul li.pull-right {
+	border-left: 1px solid #cccccc;
+	padding-right: 20px;	
+	padding-left: 20px;	
+}
+#filter-content ul li.pull-right.no-padding-right {
+	padding-right: 0px;
+}
+#filter-content ul li.pull-right.no-border {
+	border-left: none;
+}
+#filter-content .filter-content-title {
+	color: #eeeeee;
+  display: block;
+  font-size: 1em;
+  height: 20px;
+  line-height: 14px;
+  text-align: left;
+  width: 100%;
+  font-family: "Open Sans","sans-serif";
+}
+#filter-content input {
+	display: inline-block;
+}
+
+.tab-element {
+    height: 45px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.tab-element ul.tabs {
+    padding: 0px 5px;
+    padding-top: 5px;
+    list-style: none;
+    height: 35px;
+}
+
+.tab-element ul.tabs > li {
+	float: left;
+    cursor: pointer;
+    display: inline-block;
+    height: 40px;
+    background-color: #F7F7F7;
+    width: 50%;
+    padding-top: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #888;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-bottom-width: 0px;
+}
+
+.tab-element ul.tabs > li a {
+    color: #888;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 40px;
+    margin-top: -10px;
+    padding-top: 8px; 
+}
+
+.tab-element ul.tabs > li.active {
+    cursor: default;
+    background-color: rgba(156, 26, 31, 0.9);
+    height: 40px;
+    color: #fff;
+    border-top: 3px solid #9c1a1f;
+    border-left: 1px solid rgba(156, 26, 31, 0.9);
+    border-right: 1px solid rgba(156, 26, 31, 0.9);
+    padding-top: 8px;
+}
+
+.tab-element ul.tabs > li.active a {
+    cursor: default;
+    color: #fff;
+}
+
+.tab-element .sub-tab {
+    height: 4px;
+    margin: 0px 5px; 
+    background-color: rgba(156, 26, 31, 0.9);
+}
+
+
+
+/*************** CARTE ********************/
+
+.ol-control {
+	margin-top: 10px;
+
+}
+.trouveCommune {
+  top: .5em;
+  left: 70px;
+  background: none;
+}
+.trouveCommune:hover {
+  background: none;
+}
+
+.ol-scale-line {
+	left: 10px;
+}
+
+#legend-on-map {
+	bottom: 1.5em;
+	right: 500px;
+	margin-right: 20px;
+	background: rgba(255, 255, 255, 0.85);
+	border: 1px solid #aaa;
+	padding: 15px;
+	width: 420px;
+}
+
+#legend-on-map .resize {
+	background: #6a6c6f none repeat scroll 0 0;
+  border: 1px solid #666;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 14px;
+  left: 6px;
+  position: absolute;
+  top: 6px;
+  cursor: pointer;
+  z-index: 10000;
+}
+#legend-on-map .resize span {
+	-ms-transform: rotate(90deg); /* IE 9 */
+  -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+  transform: rotate(90deg);
+  margin: 1px 4px 1px 6px;
+  cursor: pointer;
+}
+
+#legend-on-map img {
+	padding: 0px;
+}
+#legend-on-map p {
+	font-size: 13px;
+	margin: 0 0 5px 0px;
+}
+#legend-on-map .legend-label {
+	font-weight: bold;
+	color: #3f3f3f;
+	font-size: 12.5px;
+}
+#legend-on-map .title {
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 15px;
+	font-size: 12.5px;
+	text-decoration: underline;
+}
+#legend-on-map .sous-titre {
+	font-weight: normal;
+}
+#indicateur-opacity.ui-widget {
+	font-size: 0.8em;
+	margin-top: 25px;
+}
+
+#load-maplayer {
+	height: 100%;
+    width: 100%;
+    background-color: rgba(50, 50, 50, 0.3);
+    position: absolute;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    border-radius: 0px;
+    text-align:center;
+} 
+
+#load-maplayer > p {   
+	padding-top: 25%;
+	background-position: center bottom;
+	height: 50px;
+	text-align: center;
+	font-weight: bold;
+}
+
+/************* Tab pane ***************/
+
+#principal-access-onglet {
+	position: absolute;
+	top: 10px;
+	width: 39px;
+	left: -40px;
+	z-index: 3;
+	cursor: pointer;
+}
+#principal-access-onglet ul {
+	margin-top: 0;
+}
+#principal-access-onglet ul li {
+	margin: 2px 0px 0px 0px;
+	width: 100%;
+	height: 156px;
+}
+#principal-access-onglet ul li {
+	text-align: center;
+	box-shadow: -2px 0px 6px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: -2px 0px 6px rgba(0, 0, 0, 0.3);
+	border-radius: 0px 0px 0px 0px;
+	/*background-color: rgba(255, 255, 255, 0.4);*/
+	background-repeat: no-repeat;
+	background-position: 0px top;
+	opacity: 0.8;
+}
+#principal-access-onglet ul li.active {
+	background-position: 0px -156px;
+	opacity: 1;
+}
+
+#right-tab #action-tab {
+	color: #fff;
+	cursor: pointer;
+	font-size: 30px;
+	font-weight: bold;
+	left: -94px;
+	position: absolute;
+	text-align: center;
+	top: 10px;
+	z-index: 3;
+}
+
+#right-tab .logo-sources {
+	position: absolute;
+    cursor: pointer;
+    bottom: 10px;
+    left: -134px;
+    z-index: 9999;
+    max-width: 335px;
+    text-align: right;
+    background-color: #fff;
+    border: 1px solid #ababab;
+    border-radius: 4px;
+    padding: 5px;
+    opacity: 0.8;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+}
+
+#right-tab .logo-sources:hover
+{
+	opacity: 1;
+	transition: opacity .25s ease-in-out;
+	-moz-transition: opacity .25s ease-in-out;
+	-webkit-transition: opacity .25s ease-in-out;
+}
+
+#right-tab .logo-sources img
+{
+	max-width: 50px;
+	margin: 0px 2px;
+	padding: 0;
+}
+
+.inverse {
+	-moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
+#right-tab-content {
+	cursor: default;
+	display: inline-block;
+	margin-right: 1px;
+	height: 100%;
+	width: 450px;
+	background-color: #FFF;
+	border: 1px solid #969696;
+	border-right-width: 0px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+#right-tab-content #principal-access .principal-access-button {
+	height: 120px;
+	line-height: 120px;
+	font-weight: bold;
+	font-size: 1.2em;
+	text-align: center;
+	color: #fff;
+	cursor: pointer;
+	text-shadow: 0 0 3px #000000;
+	opacity: 0.5;
+	letter-spacing: 1.4px;
+}
+#right-tab-content .panel .panel-heading {
+	cursor: pointer;
+	color:#9A9A9A;
+}
+#right-tab-content #principal-access .principal-access-button span {
+	vertical-align: middle;
+	display: inline-block;
+	line-height: 1.2em;
+}
+#right-tab-content #principal-access .principal-access-button:nth-child(1) {
+	background: url('http://oafs.fr/var/ezdemo_site/storage/images/nos-ressources/images/photos/especes-habitats/oiseaux/rougequeue-noir-juvenile/3584-3-fre-FR/Rougequeue-noir-juvenile_fancyboxFull.jpg') no-repeat center center / 300px;
+}
+#right-tab-content #principal-access .principal-access-button:nth-child(2) {
+	background: url('http://oafs.fr/var/ezdemo_site/storage/images/nos-ressources/images/photos/especes-habitats/oiseaux/vautour-fauve/458-7-fre-FR/Vautour-fauve_fancyboxFull.jpg') no-repeat center center / 300px;
+}
+#right-tab-content #principal-access .principal-access-button:nth-child(3) {
+	background: url('http://www.babelio.com/users/QUIZ_La-montagne-ca-vous-gagne-_1063.jpeg') no-repeat center center / 200px;
+}
+#right-tab-content #principal-access .principal-access-button.active {
+	opacity: 1;
+}
+
+/* Filter tab */
+#filter-tab-content {
+	cursor: default;
+	display: none;
+	margin-right: 1px;
+	height: 100%;
+	width: 450px;
+	padding: 5px;
+	background-color: #FFF;
+	border: 1px solid #969696;
+	border-right-width: 0px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+
+.panel-ofsa {
+    border-color: #273a43;
+    margin-bottom: 5px;
+}
+
+.panel-ofsa>.panel-heading {
+    color: #fff;
+    background-color: #273a43;
+    border-color: #273a43;
+    cursor: pointer;
+}
+
+.panel-ofsa .panel-collapse>.panel-body {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.open-filter-panel {
+    float: right;
+    display: inline-block;
+    position: absolute;
+    right: 15px;
+    top: 5px;
+}
+
+.panel .panel-heading {
+	cursor: pointer;
+}
+
+
+/* Left Tab */
+
+#left-tab-content {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 4;
+	background: #273a43 none repeat scroll 0 0;
+	width: 50px;
+	padding: 0px;
+	height: 100%;
+}
+#left-tab-content .menu-item,
+#left-tab-content #resize-global {
+	position: initial;
+	width: 50px;
+	text-align: center;
+	margin: 15px 0px;
+	cursor: pointer;
+}
+
+#left-tab-content .menu-item:hover span.glyphicon, #left-tab-content .menu-item:hover span.fa {
+	/*color: #487ACC;*/
+	color: #038c8c;
+}
+#left-tab-content .menu-item span.glyphicon, #left-tab-content .menu-item span.fa {
+	font-size: 25px;
+	line-height: 50px;
+	color: #bbb;
+}
+
+#left-tab-content .menu-item .left-tab-menu-ouvrant {
+	position: absolute;
+	left: 50px;
+	top: 0px;
+	padding: 20px 15px;
+  	width: 800%;
+  	min-width: 420px;
+  	text-align: left;
+  	display: inline-block;
+}
+
+#left-tab-content #echelle.menu-item .left-tab-menu-ouvrant {	width: 270px; }
+#left-tab-content #fond-plan.menu-item .left-tab-menu-ouvrant {	width: 300px; }
+#left-tab-content #contours.menu-item .left-tab-menu-ouvrant {	width: 300px; }
+#left-tab-content #date.menu-item .left-tab-menu-ouvrant {	width: 364px; }
+
+#left-tab-content #resize-global.menu-item {
+	margin-bottom: 0px;
+}
+#left-tab-content .menu-separator {
+	position: relative;
+	width: 60%;
+	text-align: center;
+	margin: 0px 0px 15px 20%;
+	border-bottom: 1px dotted #bbb;
+}
+#left-tab-content .menu-separator:first-child {
+	padding-top: 0px;
+}
+#left-tab-content .menu-item p.title {
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+#left-tab-content #echelle ul, #left-tab-content #date ul, #left-tab-content #echelle ul, #left-tab-content #contours ul, #left-tab-content #fond-plan ul {
+	list-style: none;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+#left-tab-content #echelle ul li {
+	display: inline-block;
+	margin: 0 0 10px 0;
+	cursor: pointer;
+	text-align: center;
+	padding-right: 25px;
+}
+#left-tab-content #echelle ul li:last-child {
+	padding-right: 0px;
+}
+
+#left-tab-content #contours img, #left-tab-content #fond-plan img {
+	width: 45px;
+	height: 45px;
+	margin: 0px 0px 2px 0px;
+	border: 1px solid #777;
+	background: #555 none repeat scroll 0 0;
+}
+
+#left-tab-content #date ul li {
+	display: inline-block;
+	margin: 0 10px;
+	cursor: pointer;
+}
+#left-tab-content #date ul li:hover, #left-tab-content #echelle ul li:hover {
+	text-decoration: underline;
+}
+#left-tab-content #date input {
+	width: 70px;
+	display: inline-block;
+	margin: 0 8px;
+}
+#left-tab-content #fond-plan input[type="checkbox"],
+#left-tab-content #contours input[type="checkbox"] {
+	margin-right: 10px;
+}
+
+#left-tab-content #fond-plan ul li {
+	display: block;
+	margin: 0px 0px 10px;
+	cursor: pointer;
+}
+#left-tab-content #contours ul li,
+#left-tab-content #fond-plan ul li {
+	margin: 0;
+	display: flex;
+}
+#left-tab-content #contours .left-tab-menu-ouvrant,
+#left-tab-content #fond-plan .left-tab-menu-ouvrant{
+	padding-bottom: 5px;
+}
+#left-tab-content #contours ul li:nth-child(n+2),
+#left-tab-content #fond-plan ul li:nth-child(n+2) {
+	margin-top: 0px;
+}
+#left-tab-content #contours input, #left-tab-content #contours label,
+#left-tab-content #fond-plan input, #left-tab-content #fond-plan label {
+	cursor: pointer;
+}
+#left-tab-content #contours label,
+#left-tab-content #fond-plan label {
+	width: 100px;
+}
+#left-tab-content #contours .contours-gestion, 
+#left-tab-content #fond-plan .layers-gestion {
+	display: inline-block;
+	height: 64px;
+	width: 162px;
+}
+#left-tab-content #contours .contours-opacity, 
+#left-tab-content #fond-plan .layers-opacity {
+	margin-top: 5px;
+}
+#left-tab-content #contours .ui-widget,
+#left-tab-content #fond-plan .ui-widget {
+	font-size: 0.8em;
+}
+
+#left-tab-content .sous-titre {
+	padding-left: 5px;
+	font-size: 15px;
+	border-left: 6px solid #9c1a1f;
+}
+
+.tooltip {
+  display: block;
+  font-size: 11px;
+  line-height: 1.3;
+}
+.tooltip.bottom .tooltip-arrow {
+  border-bottom-color: #333;
+}
+.tooltip.top .tooltip-arrow {
+  border-top-color: #333;
+}
+.tooltip.left .tooltip-arrow {
+  border-left-color: #333;
+}
+.tooltip.right .tooltip-arrow {
+  border-right-color: #333;
+}
+.tooltip .tooltip-inner {
+  background-color: #444;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #fff;
+  padding: 6px 12px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+  width: 650%;
+}
+
+
+/*************** Faune flore ***************/
+
+#right-tab-content .navbar-nav {
+	float: none;
+}
+
+
+/*
+#infos-espece-menu-button {
+	margin-top: 20px;
+	text-align: center;
+}
+#infos-espece-menu-button button {
+	font-weight: bold;
+	width: 45%;
+}*/
+.right-tab-content,
+.bloc-ofsa  {
+	background-color: #F7F7F7;
+	margin: 5px;
+	padding: 10px; 
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.right-tab-content ul#infos-espece-menu {
+	text-align: center;
+	/*margin: 5px 5px 0px 5px;*/
+}
+.right-tab-content ul#infos-espece-menu li {
+	border: 0px;
+	width: 50%;
+}
+.right-tab-content ul#infos-espece-menu li a {
+	color: #fff;
+	outline: none;
+	background: #6a6c6f none repeat scroll 0 0;
+	font-weight: bold;
+}
+.right-tab-content ul#infos-espece-menu li.active a {
+	font-weight: bold;
+	border-width: 1px 1px 0px 1px;
+	cursor: pointer;
+	color: #038c8c;
+	background: #F7F7F7;
+}
+
+.right-tab-content div.titre-element{
+	display: inline-block;
+	margin: 10px 0px 5px 10px;
+	border-left: 6px solid #9c1a1f;
+	padding-left: 5px;
+	font-size: 17px;
+	color: #505050;
+}
+
+.right-tab-content div.sub-titre-element{
+	display: inline-block;
+	margin: 10px 0px 5px 30px;
+	border-left: 3px solid #9c1a1f;
+	padding-left: 5px;
+	font-size: 12px;
+	color: #000;
+}
+
+.right-tab-content div.ss-bloc .checkbox {
+	margin-left: 40px;
+}
+
+#faune-flore-content {
+	/*
+	border-style: solid;
+	border-color: rgba(0, 100, 100, 0.8);
+	border-width: 0px 1px 1px 1px;
+	*/
+	clear: both;
+	padding: 3px 15px 25px 15px;
+	margin-bottom: 20px;
+	min-height: 200px;
+}
+
+#choix-espece button {
+	width: 34px;
+	height: 34px;
+	background-color: #2c67a9;
+	opacity: 0.8;
+	padding: 0;
+	color: #fff;
+}
+#choix-espece input {
+	width: 100%;
+	text-align: left;
+}
+span.twitter-typeahead .tt-suggestion {
+  cursor: pointer;
+}
+.typeahead-nom-vern {
+	color: #777;
+	font-size: 13px;
+	white-space: normal;
+	display: block;
+	padding-top: 4px;
+}
+span.twitter-typeahead .tt-suggestion:hover .typeahead-nom-vern, span.twitter-typeahead .tt-suggestion.tt-cursor .typeahead-nom-vern {
+	color: #fff;
+}
+.typeahead-synonymes {
+	color: #777;
+	font-size: 13px;
+	white-space: normal;
+	display: block;
+	font-style: italic;
+	padding-top: 4px;
+}
+span.twitter-typeahead .tt-suggestion:hover .typeahead-synonymes, span.twitter-typeahead .tt-suggestion.tt-cursor .typeahead-synonymes {
+	color: #fff;
+}
+.twitter-typeahead pre {
+	display: none;
+}
+.tab-title-1 {
+	width: 100%;
+	margin: 0px;
+	color: #3f3f3f;
+	font-size: 14px;
+	font-weight: bold;
+}
+.tab-title-2 {
+    background-color: #f7f7f7;
+    border: none;
+    border-radius: 4px;
+    clear: both;
+    color: #5e533a;
+    font-size: 1.1em;
+    font-weight: bold;
+    line-height: 35px;
+    margin: 25px 0;
+    padding: 0 0 0 25px;
+    position: relative;
+    width: 100%;
+}
+.tab-title-2 .pre-tab {
+	width: 10px;
+	height: 100%;
+	background-color: #038c8c;
+	position: absolute;
+	left: 0;
+	top: 0;
+	
+}
+.tab-title-3 {
+	width: 100%;
+	margin: 0px;
+	color: #777;
+	font-size: 13px;
+}
+.tab-title-4 {
+	color: #555;
+  font-size: 12.5px;
+  font-weight: bold;
+  margin: 0 0 10px 0;
+  width: 100%;
+  font-style: italic;
+}
+
+
+.indicateurs.checkbox label:nth-child(n+2) {
+	margin-top: 12px;
+}
+.indicateurs.checkbox input {
+	margin-top: 12px;
+}
+.indicateur-title {
+	font-size: 14px;
+	color: #4f4f4f;
+	margin: 0 0 1px 10px;
+	font-weight: bold;
+}
+.indicateur-descr {
+	font-size: 12.5px;
+	color: #888;
+	margin: 0 0 0 10px;
+	font-style: italic;
+}
+
+#zoom-espece {
+	margin-top: 20px;
+}
+#photo-espece img{
+		width: 100%;
+}
+
+#infos-espece-tab  {
+	margin-top: 20px;
+}
+#infos-espece-tab li a {
+	color: #555;
+}
+#infos-espece-tab li.active a {
+	color: #038c8c;
+}
+#infos-espece-tab a, #infos-espece-tab a:hover, #infos-espece-tab a:focus {
+	outline: none;
+}
+#infos-espece-content {
+	padding-top: 20px;
+}
+
+#infos-espece-content #menaces ul, #infos-espece-content #taxonomie ul, #infos-espece-content #reglementations ul {
+	list-style: none;
+	list-style-type: none;
+	margin: 0;
+	padding: 0
+}
+#infos-espece-content #reglementations li {
+	font-size: 13px;
+}
+#infos-espece-content .title-info-espece {
+ 	color: #038c8c;
+	font-size: 12.5px;
+	font-weight: bold;
+	margin: 7px 0 5px 0;
+}
+#infos-espece-content #taxonomie ul li {
+	font-style: italic;
+	color: #777;
+  font-size: 13px;
+  margin: 0;
+}
+#infos-espece-content #taxonomie .libelle-taxo {
+	font-weight: normal;
+	padding: 0px 4px;
+}
+#infos-espece-content #menaces ul li {
+	padding: 0;
+	margin: 0;
+	font-size: 12.5px;
+}
+#infos-espece-content #menaces .statut-lr {
+	border: 1px solid #ddd;
+  border-radius: 1px;
+  color: #3f3f3f;
+  cursor: default;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 35px;
+  margin: 0 19px 0 2px;
+  padding: 5px 11px;
+}
+.statut-lr.dd { background-color: rgb(211,212,213); }
+.statut-lr.lc { background-color: rgb(120,183,74); }
+.statut-lr.nt { background-color: rgb(251,242,202); }
+.statut-lr.vu { background-color: rgb(255,237,0); }
+.statut-lr.en { background-color: rgb(251,191,0); }
+.statut-lr.cr { background-color: rgb(211,0,27); }
+.statut-lr.re { background-color: rgb(90,26,99); color: #fff; }
+.statut-lr.ew { background-color: rgb(61,25,81); color: #fff; }
+.statut-lr.ew { background-color: rgb(0,0,0); color: #fff; }
+.statut-lr.na, .statut-lr.naa, .statut-lr.nab, .statut-lr.nac, .statut-lr.nad { background-color: none; color: #3f3f3f; }
+.statut-lr.ne { background-color: rgb(255,255,255); }
+
+
+
+
+#pheno {
+	width: 100%;
+	height: 250px;
+}
+
+#filtres-indicateurs-multiespeces {
+	margin-top: 35px;
+}
+#filtres-indicateurs-multiespeces li {
+	border: none;
+	cursor: pointer;
+	margin: 0px;
+	padding: 5px 0px;
+	padding-left: 15px;
+}
+#filtres-indicateurs-multiespeces li.active {
+	background-color: #428bca;
+  color: #ffffff;
+}
+#filtres-indicateurs-multiespeces li span {
+	margin-left: 10px;
+}
+
+
+/*********************** MODAL : recherche espèce faune / flore *********************/
+
+#find-species-modal .modal-body #faune-flore-choix-especes ul {
+	border: none;
+	list-style: none;
+	list-style-type: none;
+	text-align: center;
+	margin-bottom: 0px;
+}
+#find-species-modal .modal-body #faune-flore-choix-especes li {
+	display: inline-block;
+	margin-bottom: 0px;
+}
+#find-species-modal .modal-body #faune-flore-choix-especes a {
+	color: #777;
+  font-size: 2em;
+  font-weight: bold;
+  padding: 0.4em;
+	text-decoration: none;
+	font-style: normal;
+	border: none;
+}
+#find-species-modal .modal-body #faune-flore-choix-especes li.active a {
+	color: #2c67a9;
+}
+#find-species-modal .modal-body #faune-flore-choix-especes a:active, #find-species-modal .modal-body #faune-flore-choix-especes a:hover, #find-species-modal .modal-body #faune-flore-choix-especes a:focus, #find-species-modal .modal-body #faune-flore-choix-especes a:link {
+	outline: none;
+	text-decoration: none;
+	font-style: normal;
+	background: none;
+}
+
+hr.hr4 {
+	width: 40%;
+}
+hr.hr8 {
+	width: 80%;
+}
+
+#find-species-modal .modal-body #liste-vignettes {
+	text-align: center;
+}
+#find-species-modal .modal-body #liste-vignettes .img {
+	background-position: 0 0;
+	cursor: pointer;
+	display: inline-block;
+	margin: 10px 10px 0 0;
+	outline: 0 none;
+	width: 51px;
+	height: 51px;
+}
+#find-species-modal .modal-body #liste-vignettes .img:hover {
+	border: none;
+	border-radius: 5px;
+	box-shadow: 0px 0px 6px rgba(88,151,521, 0.7);
+}
+#find-species-modal .modal-body #liste-vignettes .img.active {
+	background-position: 0 51px;
+  border-radius: 5px;
+  box-shadow: 0 0 6px rgba(177, 177, 177, 0.4);
+}
+#find-species-modal .modal-body #description-groupe img {
+	height: 150px;
+	margin-top: 15px;
+}
+#find-species-modal .modal-body #liste-especes table th {
+	background-color: #2c67a9;
+	color: #fff;
+}
+#find-species-modal .modal-body #liste-especes table td {
+	cursor: pointer;
+}
+
+#find-species-modal .modal-body #liste-especes table td.nom_scientifique {
+	font-style: italic;
+}
+
+
+
+/***** Liste horizontale de choix du groupe taxo ************/
+
+
+.title-choix-taxo {
+	margin: 0px 0px 15px 24px;
+	color: #777;
+  font-size: 14px;
+}
+
+#module-choix-gpe-taxo {
+	position: relative;
+	width: 100%;
+	height: 150px;
+	margin: 0px auto;
+}
+
+#module-choix-gpe-taxo .viewport {
+	position: relative;
+	overflow: hidden;
+	margin: 0px auto;
+	height: 150px;
+	width: 88%;
+	display: block;
+}
+.float-content {
+	width: 100%;
+	position: relative;
+	height: 150px;
+	left: 0px;
+}
+
+
+.choix-gpe-prev, .choix-gpe-next {
+	position: absolute;
+	height: 100%;
+	width: 6%;
+	top: 0px;
+}
+.choix-gpe-prev {
+	left: 0;
+  border-width: 0 2px 0 0;
+	border-color: #038c8c;
+  border-style: solid;
+  color: #038c8c;
+}
+.choix-gpe-next {
+	right: 0;
+  border-width: 0 0 0 2px;
+	border-color: #038c8c;
+  border-style: solid;
+  color: #038c8c;
+}
+
+#module-choix-gpe-taxo .choix-gpe-prev, #module-choix-gpe-taxo .choix-gpe-next {
+	background-color: none;
+	text-align: center;
+	cursor: pointer;
+  color: #038c8c;
+}
+#module-choix-gpe-taxo .choix-gpe-prev span, #module-choix-gpe-taxo .choix-gpe-next span {
+	top: 64px;
+}
+#module-choix-gpe-taxo .choix-gpe-prev.disabled, #module-choix-gpe-taxo .choix-gpe-next.disabled {
+  cursor: default;
+  color: #D1D1D8;
+}
+
+
+
+#module-choix-gpe-taxo .choix-gpe-item {
+	position: relative;
+	display: block;
+	text-align: center;
+	cursor: pointer;
+	float: left;
+	height: 100%;
+	background-color: #FCFCFC;
+	border-style: solid;
+	border-color:  #ddd;
+	border-width: 1px 1px 1px 1px;
+	text-align: left;
+	padding: 0px;
+}
+#module-choix-gpe-taxo .choix-gpe-item ul {
+	list-style: none;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+#module-choix-gpe-taxo .choix-gpe-item ul li {
+	color: #888;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 0;
+  padding: 5px 10px;
+}
+#module-choix-gpe-taxo .choix-gpe-item ul li.active, #module-choix-gpe-taxo .choix-gpe-item ul li.active:hover {
+	background-color: #038c8c;
+  color: #fff;
+  font-weight: bold;
+}
+#module-choix-gpe-taxo .choix-gpe-item ul li:hover {
+	background-color: none;
+  color: #038c8c;
+  font-weight: bold;
+}
+
+
+#indicateurs_checkbox {
+	margin: 35px 0px 25px 0px;
+	padding: 0px 0px 0px 15px;
+}
+#indicateurs_checkbox label {
+	margin-bottom: 10px;
+}
+
+
+.fa-info-circle {
+	color:  #2c67a9;
+}
+
+
+
+/* Liste de resultat */
+.results-taxo-complete,
+.results-hab-complete
+ {
+  background: #fff none repeat scroll 0 0;
+  margin-top: 5px;
+  max-height: 300px;
+  min-height: 100px;
+  max-width: 89%;
+  overflow: auto;
+  position: absolute;
+  z-index: 100;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
+  margin: 4px 0 0;
+  padding: 0;
+}
+
+.results-taxo-complete ul,
+.results-hab-complete ul {
+    list-style: none;
+}
+
+.results-taxo-complete .title,
+.results-hab-complete .title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
+    background: rgba(156, 26, 31, 0.9);
+    padding-top: 20px;
+    display: table-cell;
+    width: 10px;
+    height: 100%;
+    position: relative;
+}
+.results-taxo-complete .title p,
+.results-hab-complete .tile p {
+    margin:0;
+    padding:0;
+    line-height: 23px;
+    color: #fff;
+}
+.results-taxo-complete .content > div,
+.results-hab-complete .content > div {
+    margin: 0;
+}
+.results-taxo-complete #liste-faune, 
+.results-taxo-complete #liste-flore, 
+.results-hab-complete #liste-habitat {
+    border-left: 1px solid #ddd;
+    padding: 0px;
+    
+}
+
+.results-taxo-complete .listes ul,
+.results-hab-complete .listes ul {
+    margin: 0px;
+    padding: 0px;
+}
+
+.results-taxo-complete .listes > ul,
+.results-hab-complete .listes ul {
+    list-style-type: none;
+    list-style: none;
+    padding-left: 20px;
+    display: table-cell;
+    padding: 10px;
+}
+
+.results-taxo-complete .listes > ul li.li-groupe > ul,
+.results-hab-complete .listes > ul li.li-groupe > ul {
+    padding: 5px 10px; 
+    border: 1px solid #fff;
+    margin-bottom: 5px;
+}
+
+.results-taxo-complete .listes > ul li.li-groupe.current > ul,
+.results-taxo-complete .listes > ul li.li-groupe > ul:hover,
+.results-hab-complete .listes > ul li.li-groupe.current > ul,
+.results-hab-complete .listes > ul li.li-groupe.current > ul {
+    background-color: #efefef;
+    border: 1px solid #ababab;
+    border-radius: 2px;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+    -webkit-box-shadow: 0px 0px 7px rgba(0,0,0,.4);
+    box-shadow: 0px 0px 7px rgba(0,0,0,.4);
+}
+
+.results-taxo-complete .listes > ul li.li-groupe > ul li p,
+.results-hab-complete .listes > ul li.li-groupe > ul li p {
+    margin: 0px; 
+    cursor: pointer;
+}
+
+.results-taxo-complete .listes > ul li.li-groupe > ul li.current p:not(.nom_vern),
+.results-taxo-complete .listes > ul li.li-groupe > ul li p:hover,
+.results-hab-complete .listes > ul li.li-groupe > ul li p:hover,
+.results-hab-complete .listes > ul li.li-groupe > ul li p:hover {
+    text-decoration: underline;
+}
+
+.results-taxo-complete .listes > ul li.li-groupe > ul li.li-valide p.nom_valide,
+.results-hab-complete .listes > ul li.li-groupe > ul li.li-valide p.nom_valide {
+    color: rgba(156, 26, 31, 0.9);; 
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.results-taxo-complete .listes > ul li.li-groupe > ul li.li-valide p.nom_valide:hover,
+.results-hab-complete .listes > ul li.li-groupe > ul li.li-valide p.nom_valide:hover {
+    color: #01663A; 
+}
+
+.results-taxo-complete .listes > ul li.li-groupe > ul li.li-valide p.nom_vern:hover,
+.results-hab-complete .listes > ul li.li-groupe > ul li.li-valide p.nom_vern:hover {
+    text-decoration: none;
+}
+
+.results-taxo-complete .listes > ul li.li-groupe > ul li.li-synonymes > ul,
+.results-hab-complete .listes > ul li.li-groupe > ul li.li-synonymes > ul {
+    border-left: 4px solid #01663a;
+    margin-left: 40px;
+}
+
+.results-taxo-complete .listes > ul li.li-groupe > ul li.li-synonymes > ul li.li-synonyme,
+.results-hab-complete .listes > ul li.li-groupe > ul li.li-synonymes > ul li.li-synonyme {
+    margin-left: 5px;
+}
+
+
+.organisme-info > img {
+	width: 18px;
+	vertical-align: -5px;
+	margin-left: 5px;
+}
+
+
+/**
+* noUi-slider
+*/
+
+.noUi-target {
+	height: 8px;
+}
+
+.noUi-horizontal .noUi-handle {
+	height: 19px;
+}
+
+.noUi-handle:after, 
+.noUi-handle:before {
+	height: 6px;
+}
+
+/**
+* FIN noUi-slider
+*/
+
+.filter-close {
+	height: 25px;
+    font-size: 20px;
+    color: #505050;
+}
+
+.filter-close>span{
+	float: right;
+	cursor: pointer;
+}
+
+.checkbox.lst-layer img {
+    height: 17px;
+    vertical-align: -4px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.uislider-content,
+.lst-felayer form {
+    display: none;
+    margin: 3px 8px;
+    padding: 7px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+}
+
+.uislider-label {
+    margin-right: 5px;
+    font-family: cursive;
+}
+
+.uislider-opa {
+    height: 7px;
+    width: 200px;
+    display: inline-block;
+}
+
+.noUi-horizontal .noUi-handle {
+    height: 17px;
+}
+
+.noUi-handle:after, .noUi-handle:before {
+    height: 7px;
+    top: 4px;
+}
+
+.uislider-values {
+    margin-left: 20px;
+    font-weight: bold;
+    font-family: cursive;couleur {
+
+    }
+}
+
+.lst-felayer {
+	margin-left: 30px;
+}
+
+.lst-felayer .ofsa-croix {
+	cursor: pointer;
+    vertical-align: 0px;
+    color: #B40404;
+}
+
+.lst-felayer [type="checkbox"] {
+	vertical-align: -5px;
+	height: 20px;
+	width: 20px;
+	margin: 0px 5px 0px 10px; 
+	cursor: pointer;
+}
+
+.lst-felayer img {
+	cursor: pointer;
+}
+
+.lst-felayer form {
+	margin-left: -20px;
+	margin-right: 40px;
+	background-color: #fff;
+}
+
+/** TAB INFOS **/
+#modal_data_infos ul.tabs {
+    height: 25px;
+}
+
+#modal_data_infos ul.tabs>li {
+    width: auto;
+    font-size: 14px;
+    height: 30px;
+}
+
+#modal_data_infos ul.tabs>li>a{
+    padding: 6px 10px 0px 10px;
+    height: 30px;
+}
+/** END TAB INFOS **/
+
+
+/**
+*	Legende
+**/
+
+#control-legende {
+	bottom: 40px;
+    background-color: #fff;
+    opacity: 0.8;
+    left: 10px;
+    padding: 5px 10px;
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    cursor: default;
+}
+
+.legende {
+
+}
+
+.legende .glyphicon {
+	cursor: pointer;
+	margin-right: 3px;
+}
+
+.legende .glyphicon-eye-open {
+	color: #0B610B;
+}
+
+.legende .titre{
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+.legende .legend-body{
+	margin-left: 15px;
+}
+
+
+.legende .couleur {
+	display: inline-block;
+	border: 1px solid #505050;
+	width: 20px;
+	height: 13px;
+	margin-right: 5px;
+}
+
+.legende .libelle {
+	vertical-align: 2px;
+	font-size: 11px;
+}
+
+.table-taxons {
+	padding: 15px 10px;
+    border: 1px solid #efefef;
+    border-radius: 2px;
+    background-color: #F7F7F7;
+    margin-top: 10px;
+}
+
+.table-taxons tr > td:nth-child(2) {
+	width: 45%;
+}
+
+input.display-statuts {
+
+}
+
+#lst-taxon {
+	padding: 5px 15px;
+}
+
+#lst-taxon .glyphicon {
+	margin-right: 5px; 
+	font-size: 15px;
+	cursor: pointer;
+}
+
+#lst-taxon .glyphicon-refresh {
+	color: #0029ff; 
+}
+
+#lst-taxon .bt-obsion-fiche {
+	margin-left: 10px;
+	width: 16px;
+	cursor: pointer;
+}
+
+#control-fly-to-commune {
+	left: 45px;
+	width: 180px;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #aaa;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #00653B;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #00653B;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 18px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.switch_auto_scale_label {
+	font-size: 15px;
+    margin-right: 5px;
+    vertical-align: 10px;
+    font-weight: bold;
+    color: #000;
+}
