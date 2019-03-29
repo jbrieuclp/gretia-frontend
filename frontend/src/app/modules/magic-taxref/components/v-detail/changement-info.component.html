@@ -1,0 +1,45 @@
+<h1 mat-dialog-title>{{ changes.length }} changement(s)</h1>
+<mat-dialog-content>
+  <table class="table" *ngFor="let change of changes">
+	  <thead>
+	    <tr>
+	      <th scope="col">#</th>
+	      <th scope="col">Valeur</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr>
+	      <th scope="row">cd_nom</th>
+	      <td>{{ change.cd_nom }}</td>
+	    </tr>
+	    <tr>
+	      <th scope="row">N° version init</th>
+	      <td>{{ change.num_version_init }}</td>
+	    </tr>
+	    <tr>
+	      <th scope="row">N° version fin</th>
+	      <td>{{ change.num_version_final }}</td>
+	    </tr>
+	    <tr>
+	      <th scope="row">Champ</th>
+	      <td>{{ change.champ }}</td>
+	    </tr>
+	    <tr>
+	      <th scope="row">Valeur init</th>
+	      <td>{{ change.valeur_init }}</td>
+	    </tr>
+	    <tr>
+	      <th scope="row">Valeur fin</th>
+	      <td>{{ change.valeur_final }}</td>
+	    </tr>
+	    <tr>
+	      <th scope="row">Type_changement</th>
+	      <td>{{ change.type_change }}</td>
+	    </tr>
+	  </tbody>
+	</table>
+	<div *ngIf="!changes.length">Pas de changement pour cette version.</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button type="button" mat-dialog-close>Fermer</button>
+</mat-dialog-actions>

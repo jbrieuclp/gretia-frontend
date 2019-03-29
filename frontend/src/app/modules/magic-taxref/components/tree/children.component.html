@@ -1,0 +1,7 @@
+<div style="width:100%;" >
+	<span class="branche" [ngStyle]="{'margin-left': indent*index + '%'}"><span class="btn-plus" (click)="getChildrens(taxon.cdRef)">+</span></span>
+	<span>{{ taxon.rang }} - [<a [routerLink]="['/taxref', 'taxon', taxon.cdNom]">{{ taxon.cdRef }}</a>] - {{ taxon.nomValide }}</span>
+</div>
+<ng-container *ngIf="childrens.length">
+	<mtax-tree-children *ngFor="let children of childrens" [taxon]="children" [indent]="indent" [index]="index+1"></mtax-tree-children>
+</ng-container>

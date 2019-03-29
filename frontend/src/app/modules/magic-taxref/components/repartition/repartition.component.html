@@ -1,0 +1,8 @@
+<mat-card class="card-repartition">
+	<div class="view-main-screen" #repartitionCard (resized)="onResized($event)">
+	  <iframe [src]="this.mapUrl" frameborder="0"
+	  	[width]="mapWidth" [height]="mapHeight"
+	    webkitallowfullscreen mozallowfullscreen allowfullscreen>
+	  </iframe>
+	</div>
+</mat-card>

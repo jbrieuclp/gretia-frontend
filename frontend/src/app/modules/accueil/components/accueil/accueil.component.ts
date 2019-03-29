@@ -20,13 +20,13 @@ export class AccueilComponent implements OnInit {
   	  	url: 'http://outils.gretia.org/carte/visualisation/',
         target: "_blank"
   	  },
-  /*	  {
+  	  {
   	  	title: 'Taxref'		,
   	  	text: '<p>Outil de consultation et de comparaison des données Taxref.</p>',
   	  	image: '/assets/images/taxref.png',
   	  	url: '/taxref',
         target: "_self"
-  	  },*/
+  	  },
   /*	  {
   	  	title: 'Metadonnées'		,
   	  	text: '<p>Outil de consultation des études et des lots de données intégrées dans la BDD.</p><p>Outil de depot de jeux de données à intégrer.</p>',

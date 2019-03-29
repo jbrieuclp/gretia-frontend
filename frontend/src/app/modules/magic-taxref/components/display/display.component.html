@@ -1,0 +1,25 @@
+<div class="row" style="margin-top: -30px;">
+  <div class="col-sm-6">
+	<mtax-searching (cdTaxonChange)="cdTaxonChange($event)"></mtax-searching>
+  </div>
+  
+</div>
+
+<div class="row" *ngIf="taxon?.cd_nom">
+  <div class="col-md-4">
+    <mtax-image [cd_ref]="taxon?.taxref12?.cdRef"></mtax-image>
+    <mat-card *ngIf="taxon">
+    	<ul class="list-group">
+        <li class="list-group-item list-group-item-success"><h5>CD Nom : {{ taxon.cd_nom }}</h5></li>
+        <li class="list-group-item list-group-item-light" *ngFor="let nom of taxon.nom_complet">{{ nom }}</li>
+      </ul>
+    </mat-card>
+    <mtax-repartition [cd_ref]="taxon?.taxref12?.cdRef"></mtax-repartition>
+    <mtax-synonyme [vTaxref]="12" [cd_ref]="taxon?.taxref12?.cdRef"></mtax-synonyme>
+    <mtax-tree [vTaxref]="12" [cd_ref]="taxon?.taxref12?.cdRef"></mtax-tree>
+	</div>
+
+	<div class="col-md-8">
+		<mtax-v-detail [taxon]="taxon"></mtax-v-detail>
+	</div>
+</div>
