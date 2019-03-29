@@ -1,0 +1,13 @@
+.consigne {
+	font-size: 11px;
+}
+
+.consigne .mat-icon {
+	vertical-align: -6px;
+}
+
+.verifMdp {
+	font-size: 13px;
+  font-weight: 500;
+  color: #777;
+}

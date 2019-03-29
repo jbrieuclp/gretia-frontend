@@ -15,6 +15,8 @@ import {
 
 //modules
 import { SharedModule } from './shared';
+import { LoginModule } from './modules/login/login.module';
+import { AccueilModule } from './modules/accueil/accueil.module';
 
 //services
 import { AuthService } from './shared';
@@ -46,6 +48,8 @@ export function tokenGetter() {
     MatSidenavModule,
     MatCheckboxModule,
     SharedModule,
+    LoginModule,
+    AccueilModule,
     AppRoutingModule
   ],
   providers: [

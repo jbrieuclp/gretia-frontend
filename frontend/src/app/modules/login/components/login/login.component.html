@@ -1,0 +1,51 @@
+<div class="container-fluid">
+	<div class="row justify-content-center">
+      <div class="col-md-4">
+			<mat-card>
+				<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+				  <mat-card-title>Se connecter</mat-card-title>
+				  <mat-card-content>
+				  	<div class="alert alert-danger" role="alert" [hidden]="!error">
+				  		<mat-icon>error</mat-icon>
+				  		<span>{{ error?.message }}</span>
+						</div>
+
+				  	<div>
+			      	<mat-form-field class="form-element">
+						    <input matInput 
+						    	id="username" 
+			          	placeholder="Identifiant"
+			          	autocomplete="off"
+			          	formControlName="username">
+						  </mat-form-field>
+				    </div>
+
+				    <div>
+			      	<mat-form-field class="form-element">
+						    <input matInput 
+						    	id="password" 
+			          	placeholder="Mot de passe"
+			          	autocomplete="off"
+			          	type="password"
+			          	formControlName="password">
+						  </mat-form-field>
+				    </div>
+
+
+				    <div>
+			      	<a routerLink="/inscription">Créer un compte</a>
+		      	</div>
+		        <div style="margin-left: auto; width: auto;">
+		      		<button mat-button
+		      			class="form-element waves-effect waves-light btn"
+		      			type="submit"
+		      			color="primary" 
+		      			mat-raised-button>Suivant</button>
+		      	</div>
+
+				  </mat-card-content>
+		    </form>
+		  </mat-card>
+		</div>
+	</div>
+</div>
