@@ -1,0 +1,45 @@
+app_index:
+    path: /
+    defaults: { _controller: APICoreBundle:Core:index }
+
+api_core:
+    resource: "@APICoreBundle/Resources/config/routing.yml"
+    prefix:   /
+
+api_login_check:
+    path: /login_check
+
+api_metadata:
+    resource: "@APIMetadataBundle/Resources/config/routing.yml"
+    prefix:   /metadata/
+
+api_biblio:
+    resource: "@APIBiblioBundle/Resources/config/routing.yml"
+    type: rest
+    prefix:   /biblio/
+
+api_magic_taxref:
+    resource: "@APIMagicTaxrefBundle/Resources/config/routing.yml"
+    type: rest
+    prefix:   /magic-taxref/
+
+api_serena:
+    resource: "@APISerenaBundle/Resources/config/routing.yml"
+    type: rest
+    prefix:   /
+
+api_projet:
+    resource: "@APIProjetBundle/Resources/config/routing.yml"
+    type: rest
+    prefix:   /etude/
+
+visu_consultation:
+    prefix:   /visualisation
+    resource: "@VisuConsultationBundle/Resources/config/routing.yml"
+
+api_test:
+    path:     /test
+    defaults: { _controller: APIBiblioBundle:Test:index }
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

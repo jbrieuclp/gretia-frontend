@@ -1,0 +1,4 @@
+api_biblio_form_publication:
+    path:     /publication
+    defaults: { _controller: APIBiblioBundle:Form:getPublication }
+    methods:    [GET]

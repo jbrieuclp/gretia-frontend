@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+	<title>{% block title %}GRETIA :: Visualisation{% endblock title %}</title>
+	
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="shortcut icon" type="image/x-icon" href="{{ asset('bundles/visuconsultation/carto/images/icones/favicon.ico') }}" />
+
+	{% block stylesheets %}
+
+        
+		{# Plutôt que d'inclure le page_head_style.html.twig de ezDemo, on inclut les css de eZDemo plus tous nos css particuliers #}
+        {% stylesheets filter='cssrewrite'
+            'http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css'
+            '@VisuConsultationBundle/Resources/public/lib/bootstrap-3.3.6/css/bootstrap.css'
+            '@VisuConsultationBundle/Resources/public/lib/bootstrap-3.3.6/css/bootstrap-theme.min.css'
+            '@VisuConsultationBundle/Resources/public/lib/select-2.4.0.1/css/select2.min.css'
+            '@VisuConsultationBundle/Resources/public/lib/select2-bootstrap3/select2-bootstrap.css'
+            '@VisuConsultationBundle/Resources/public/lib/OFSADBox/jquery.ofsadbox.css'
+            '@VisuConsultationBundle/Resources/public/lib/font-awesome-4.6.3/css/font-awesome.css'
+            '@VisuConsultationBundle/Resources/public/css/ofsa_fullscreen.css'
+        %}
+	    
+	   	{# hack dans les chemins du css, donc pas mettre min pour l'instant #}
+	    {# Le filtre cssrewrite est extrêmement important : il réécrit les liens des images dans les css pour qu'ils fonctionnent #}
+	   
+        <link rel="stylesheet" type="text/css" href="{{ asset_url }}"/>
+	    {% endstylesheets %}
+    {% endblock stylesheets %}
+	
+</head>
+
+<body>
+
+	{% block header %}
+		 {{ include("VisuConsultationBundle:include:_irpn3_navbar.html.twig") }}
+	{% endblock header %}
+
+	<div id="content">
+		{% block content %}{% endblock %}
+	</div>
+
+	{% block javascripts %}	
+		<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+		<script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>	
+
+		{% javascripts
+            '@VisuConsultationBundle/Resources/public/js/config.js'
+            '@VisuConsultationBundle/Resources/public/lib/jquery-1.12.1/jquery-1.12.1.min.js'
+            '@VisuConsultationBundle/Resources/public/lib/jquery-ui-1.10.4/jquery-ui.js'
+            '@VisuConsultationBundle/Resources/public/lib/bootstrap-3.3.6/js/bootstrap.min.js'
+            '@VisuConsultationBundle/Resources/public/lib/select-2.4.0.1/js/select2.min.js'
+            '@VisuConsultationBundle/Resources/public/js/ofsa.js'
+            '@VisuConsultationBundle/Resources/public/lib/OFSADBox/jquery.ofsadbox.js'
+        %}
+
+	      <script type="text/javascript" src="{{ asset_url }}"></script>
+	  	{% endjavascripts %}
+	{% endblock javascripts %}
+    
+</body>
+</html>

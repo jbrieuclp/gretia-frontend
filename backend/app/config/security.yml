@@ -1,0 +1,100 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+
+    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    encoders:
+#        FOS\UserBundle\Model\UserInterface: bcrypt
+        API\CoreBundle\Entity\UserApp:
+            algorithm: bcrypt
+            cost: 13   
+
+#    role_hierarchy:
+#        ROLE_ADMIN:       ROLE_READER
+#        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+    providers:
+#        fos_userbundle:
+#            id: fos_user.user_provider.username
+        geonature_userprovider:
+            entity:
+                class: APICoreBundle:UserApp
+#                property: username
+                manager_name: geonature_db
+
+    firewalls:
+
+        login:
+            pattern:  ^/login
+            stateless: true
+            anonymous: true
+            provider: geonature_userprovider
+            form_login:
+                check_path:               /login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                require_previous_session: false
+                username_parameter: username
+                password_parameter: password
+
+        register:
+            pattern: ^/inscription
+            anonymous: true
+            stateless: true
+
+
+        annuaire:
+            pattern: ^/biblio
+            anonymous: true
+            stateless: true
+
+        test:
+            pattern: ^/test
+            anonymous: true
+            stateless: true
+
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        carte:
+            pattern:             /visualisation
+#            host:                %ofsa_host_name%
+            form_login:
+                provider:        geonature_userprovider
+#                csrf_provider:   form.csrf_provider
+                login_path:      visu_security_login
+                use_forward:     false  #protection quand precedent
+                check_path:      visu_security_login
+                failure_path:    null
+                default_target_path: visu_consultation_carte
+            logout:              
+                path:            visu_security_logout
+                target:          visu_security_login
+            anonymous:           true
+
+#        magic_taxref:
+#            pattern:   ^/magic-taxref
+#            provider: fos_userbundle
+#            stateless: true
+#            anonymous: true
+#            lexik_jwt: ~
+#            guard:
+#                authenticators:
+#                    - lexik_jwt_authentication.jwt_token_authenticator
+
+        main:
+            pattern:   ^/
+            provider: geonature_userprovider
+            stateless: true
+            anonymous: true
+#            lexik_jwt: ~
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/inscription, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/test, role: IS_AUTHENTICATED_ANONYMOUSLY }

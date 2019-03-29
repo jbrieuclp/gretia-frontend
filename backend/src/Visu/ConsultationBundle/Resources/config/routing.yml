@@ -1,0 +1,13 @@
+visu_consultation_carto:
+    resource: "@VisuConsultationBundle/Resources/config/routes/carto/routing.yml"
+    prefix:   /
+
+visu_consultation_test:
+    path:     /consulter/test
+    defaults: { _controller: VisuConsultationBundle:Cartographie:test }
+
+visu_taxon_html:
+    path:     /taxon/recherche/liste.html
+    defaults: { _controller: VisuConsultationBundle:Taxon:getListHTML }
+    options:
+        expose: true

@@ -1,0 +1,334 @@
+<div id="global-content">
+
+	{# Left Tab #}
+	<div id="left-tab">
+	
+		<div id="left-tab-content">
+			{% block leftpanel %}	
+				<div id="resize-global" data-target="filter-restitution-form" title="Agrandir/Réduire">
+					<img src="{{ asset('bundles/visuconsultation/carto/images/icones/resize.png') }}" id="cc_panel_open">
+				</div>
+				
+				<div class="menu-separator"></div>
+
+				<div id="fonds_plans" class="menu-item" data-target="filter-restitution-form" title="Choisir le fond de plan">
+					<img src="{{ asset('bundles/visuconsultation/carto/images/icones/layers-control.png') }}">
+					<div class="bloc-ofsa left-tab-menu-ouvrant hide">
+						<p class="title">Fonds de cartes</p>
+						<div id="template_layerscontrol" data-prototype="&lt;input type=&quot;checkbox&quot; name=&quot;cc_control&quot; id=&quot;__ID__&quot; __CHECKED__&gt;__NAME__&lt;br&gt;"></div>
+					</div>
+				</div>
+
+				<div class="menu-separator"></div>
+
+				<div id="item_echelles" class="menu-item" data-target="filter-restitution-form" title="Changer l'échelle de restitution">
+					<img src="{{ asset('bundles/visuconsultation/carto/images/icones/grille.png') }}">
+					<div class="bloc-ofsa left-tab-menu-ouvrant hide">
+						<div class="panel panel-default">
+							<div class="panel-heading">Echelle de restitution</div>
+							<div class="panel-body">
+								{{ include("VisuConsultationBundle:Carto:include/_echelleCarto.html.twig") }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="item_datess" class="menu-item" data-target="filter-restitution-form" title="Filtrer sur les dates">
+					<img src="{{ asset('bundles/visuconsultation/carto/images/icones/time.png') }}">
+					<div class="bloc-ofsa left-tab-menu-ouvrant hide">
+						<div class="panel panel-default">
+							<div class="panel-heading">Dates des données</div>
+							<div class="panel-body">
+								{{ include("VisuConsultationBundle:Carto:include/_dates.html.twig") }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				{#<div id="item_sources" class="menu-item" data-target="filter-restitution-form" title="Filtrer sur des sources">
+					<img src="{{ asset('bundles/visuconsultation/carto/images/icones/sources.png') }}">
+					<div class="bloc-ofsa left-tab-menu-ouvrant hide">
+						<div class="panel panel-default">
+							<div class="panel-heading">Sources des données</div>
+							<div class="panel-body">
+								{{ include("VisuConsultationBundle:Carto:include/_sources.html.twig") }}
+							</div>
+						</div>
+					</div>
+				</div>#}
+
+				<div id="item_territoire" class="menu-item" data-target="filter-restitution-form" title="Filtrer sur des territoires">
+					<img src="{{ asset('bundles/visuconsultation/carto/images/icones/territoires.png') }}">
+					<div class="bloc-ofsa left-tab-menu-ouvrant hide">
+						<div class="panel panel-default">
+							<div class="panel-heading">Territoires</div>
+							<div class="panel-body">
+								{{ include("VisuConsultationBundle:Carto:include/_territoires.html.twig") }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="item_zonage" class="menu-item hide" data-target="filter-restitution-form" title="Filtrer sur des zonages">
+					<img src="{{ asset('bundles/visuconsultation/carto/images/icones/layers-control.png') }}">
+					<div class="bloc-ofsa left-tab-menu-ouvrant hide">
+						<div class="panel panel-default">
+							<div class="panel-heading">Zonages</div>
+							<div class="panel-body">
+								{{ include("VisuConsultationBundle:Carto:include/_zonages.html.twig") }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+			{% endblock %}			
+				
+		</div>
+		
+	</div>
+	{# END Left Tab #}
+
+
+	{# Carto Panel #}
+	<div id="control-fly-to-commune" class="hide hidden-xs">
+		<input id="fly-to-commune" type="text" class="form-control" autocomplete="off" placeholder="Rechercher une commune" class="hide"></input>
+	</div>
+	<div id="control-information" class="hide map-information">
+		<div class="alert alert-info" id="map_information" role="alert"><span><img src="{{ asset('bundles/visuconsultation/carto/images/icones/load-model.svg') }}"></span> Verification de la construction en cours...</div>
+	</div>
+	<div id="control-legende" class="hide hidden-xs">
+		<div>
+			<span class="legend-display-on pointer"><span class="glyphicon glyphicon-minus legend-minus" title="Masquer la légende"></span> Légende :</span>
+			<span class="legend-display-off hide"><img src="" title="Afficher la légende"></span>
+		</div>
+		<div id="legende" class="legende"></div>
+	</div>
+	<div>
+		<input type="hidden" name="extent[xmin]" id="extent_xmin" data-form="fmr-indicateur" value="">
+		<input type="hidden" name="extent[xmax]" id="extent_xmax" data-form="fmr-indicateur" value="">
+		<input type="hidden" name="extent[ymin]" id="extent_ymin" data-form="fmr-indicateur" value="">
+		<input type="hidden" name="extent[ymax]" id="extent_ymax" data-form="fmr-indicateur" value="">
+	</div>
+	<div id="map"></div>
+	{# END Carto Panel #}
+
+
+	{# Rigth Panel #}
+	<div id="right-tab">
+	
+		<div id="action-tab" class="hidetab"><img src="{{ asset('bundles/visuconsultation/carto/images/icones/slide.png') }}" id="cc_panel_open"></div>
+		
+		<div class="logo-sources">
+			<a href="http://www.ign.fr/" title="Accéder au site" target="_BLANK"><img src="{{ asset('bundles/visuconsultation/carto/images/logos/wh80px/ign.png') }}"></a>
+			<a href="http://gretia.org/" title="Accéder au site" target="_BLANK"><img src="{{ asset('bundles/visuconsultation/carto/images/logos/wh80px/gretia.png') }}"></a>
+			<span class="attrib-orga"></span>
+		</div>
+
+		{#<div id="principal-access-onglet">
+			<ul class="nav nav-pills nav-stacked">
+			{% block rightpanelOnglet %}
+				<li class="active" data-toggle="#flore-tab" style="background-image:url('{{ asset('/bundles/visuconsultation/carto/images/vignettes/vignette_espece.png') }}');">				
+				</li>
+			{% endblock %}
+			</ul>
+		</div>#}
+		
+		<div id="right-tab-content">
+		{% block rightpanelContent %}	
+			<div id="flore-tab" class="right-tab-element">
+			
+				<div class="tab-element">
+		            <ul class="tabs" role="tablist">
+		                <li role="presentation" class="active"><a href="#espece-unique" role="tab" data-toggle="tab">Par taxon</a></li>
+		                <li role="presentation"><a href="#espece-multiple" role="tab" data-toggle="tab">Par indicateur</a></li>
+		            </ul>
+		            <div class="sub-tab"></div>
+		        </div>
+				
+				<div id="flore-content" class="tab-content right-tab-content">
+				
+					<div id="espece-unique" class="tab-pane fade in active" role="tabpanel">
+					
+						<div class="titre-element">Afficher la repartition d'un taxon</div>
+						<div class="row">
+							<div class="col-lg-12 form-group" style="padding:0px 25px;">
+								<input id="search_taxon" class="form-control" placeholder="Nom scientifique">
+								<div class="results-taxo-complete hide">
+									<div class="loading load1 hide"></div>
+									<div class="content"></div>
+								</div>
+							</div>
+						</div>
+
+						<div>
+							<div class="titre-element">Liste des résultats</div>
+							<div id="lst-taxon"></div>
+						</div>
+							
+					</div> {# Fin espece unique #}
+
+
+
+
+
+					<div id="espece-multiple" class="tab-pane fade" role="tabpanel">
+
+<div class="hide">
+						<div class="titre-element">Affichage par groupe taxonomique</div>
+
+						<div id="module-choix-gpe-taxo">
+					  	<div class="choix-gpe-prev disabled"><span class="glyphicon glyphicon-chevron-left"></span></div>
+
+					  	<div class="viewport">
+					  		<div class="float-content">
+						    	<div data-level="1" class="choix-gpe-item">
+						    		<ul>
+					    				<li data-item="69" class="active">Tous groupes</li>
+					    			</ul>
+					    		</div>
+						    	<div data-level="2" class="choix-gpe-item">
+						    		<ul>
+					    				<li data-item="3">Flore</li>
+					    				<li data-item="63">Champignons</li>
+					    			</ul>
+					    		</div>
+						    </div>
+					  	</div> 
+					  	
+					  	<div class="choix-gpe-next disabled"><span class="glyphicon glyphicon-chevron-right"></span></div>
+						</div>
+</div>
+						<div class="ss-bloc bloc-indicateur">
+
+							<div class="titre-element">Indicateurs</div>
+
+							<!--div><span class="open-filter-panel"><button type="button" class="btn"><span class="glyphicon glyphicon-wrench"></span></button></span></div-->
+							<div style="position:relative;">
+								<div style="display:inline-block;">
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" name="indicateurs" data-layer="pressionconnaissance"> Pression d'observations
+										</label>
+									</div>
+
+									<div class="checkbox">
+										<label>
+											<input type="checkbox" name="indicateurs" data-layer="richessetaxo"> Richesse taxonomique
+										</label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="ss-bloc bloc-indicateur">
+
+							<div class="titre-element">Filtres spécifiques</div>
+
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" data-form="fmr-indicateur" name="filtres[]" value="esp_prot" data-target="indicateurs" data-color="red"> Espèces protégées
+								</label>
+							</div>
+
+							{#<div class="checkbox">
+								<label>
+									<input type="checkbox" data-form="fmr-indicateur" name="filtres[]" value="esp_determ" data-target="indicateurs" data-color="red"> Espèces déterminantes ZNIEFF
+								</label>
+							</div>#}
+
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" data-form="fmr-indicateur" name="filtres[]" value="esp_mena" data-target="indicateurs" data-color="red"> Espèces menacées
+								</label>
+							</div>
+
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" data-form="fmr-indicateur" name="filtres[]" value="esp_quasi_mena" data-target="indicateurs" data-color="red"> Espèces quasi-menacées
+								</label>
+							</div>
+
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" data-form="fmr-indicateur" name="filtres[]" value="esp_n2000" data-target="indicateurs" data-color="red"> Espèces de la directive Natura 2000
+								</label>
+							</div>
+
+							{#<div class="checkbox">
+								<label>
+									<input type="checkbox" data-form="fmr-indicateur" name="filtres[]" value="esp_zh" data-target="indicateurs" data-color="blue"> Espèces caractéristiques de zones humides (ZH)
+								</label>
+							</div>
+
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" data-form="fmr-indicateur" name="filtres[]" value="esp_messi" data-target="indicateurs" data-color="red"> Espèces messicoles
+								</label>
+							</div>
+
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" data-form="fmr-indicateur" name="filtres[]" value="esp_exo_ave" data-target="indicateurs" data-color="orange"> Espèces exotiques envahissantes avérées
+								</label>
+							</div>
+
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" data-form="fmr-indicateur" name="filtres[]" value="esp_exo_pot" data-target="indicateurs" data-color="orange"> Espèces exotiques envahissantes potentielles 
+								</label>
+							</div>
+
+							<div class="checkbox">
+								<label>
+									<input type="checkbox" data-form="fmr-indicateur" name="filtres[]" value="esp_exo_emerg" data-target="indicateurs" data-color="orange"> Espèces exotiques envahissantes émergentes 
+								</label>
+							</div>#}
+						</div>
+
+					</div>
+				
+
+				</div>
+					
+				
+			</div> {# Fin multi espece #}
+
+		{% endblock %}
+
+		</div>
+	</div>
+
+
+	{# END Rigth Panel #}
+
+
+
+	{# END Filter Panel #}
+	
+	<div id="template_fiche_espece" data-prototype="&lt;div&gt;&lt;form action=&quot;/cartographie/taxon/__CD_REF__.geojson&quot; method=&quot;post&quot;&gt;&lt;div class=&quot;row&quot;&gt;&lt;label class=&quot;radio-inline col-lg-offset-2 col-lg-4&quot;&gt;&lt;input type=&quot;radio&quot; name=&quot;fe_scale&quot; id=&quot;fe_maille10___IDX__&quot; value=&quot;maille10&quot;&gt; Mailles 10km&lt;/label&gt;&lt;label class=&quot;radio-inline col-lg-4&quot;&gt;&lt;input type=&quot;radio&quot; name=&quot;fe_scale&quot; id=&quot;fe_maille5___IDX__&quot; value=&quot;maille5&quot; checked=&quot;true&quot;&gt; Mailles 5km&lt;/label&gt;&lt;/div&gt;&lt;div class=&quot;row&quot;&gt;&lt;label class=&quot;radio-inline col-lg-offset-2 col-lg-4&quot;&gt;&lt;input type=&quot;radio&quot; name=&quot;fe_scale&quot; id=&quot;fe_maille1___IDX__&quot; value=&quot;maille1&quot;&gt; Mailles 1km&lt;/label&gt;&lt;label class=&quot;radio-inline col-lg-4&quot;&gt;&lt;input type=&quot;radio&quot; name=&quot;fe_scale&quot; id=&quot;fe_maille2___IDX__&quot; value=&quot;maille2&quot;&gt; Mailles 2km&lt;/label&gt;&lt;/div&gt;&lt;/form&gt;&lt;/div&gt;"></div>
+
+	<div id="template_legende_base" data-prototype="&lt;div&gt;&lt;span class=&quot;couleur&quot; style=&quot;background-color:__COLOR__;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;libelle&quot;&gt;De __MIN__ à __MAX__ __ELEMENT__&lt;/span&gt;&lt;/div&gt;"></div>
+
+	<div id="template_legende_max" data-prototype="&lt;div&gt;&lt;span class=&quot;couleur&quot; style=&quot;background-color:__COLOR__;&quot;&gt;&lt;/span&gt;&lt;span class=&quot;libelle&quot;&gt;> __MIN__ __ELEMENT__&lt;/span&gt;&lt;/div&gt;"></div>
+
+	<!-- Modal d'information-->
+	<div class="modal fade" id="modal_data_infos" data-backdrop="false" tabindex="-1" role="dialog" aria-labelledby="modal_data_infos_label">
+	    <div class="modal-dialog modal-lg" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	                <h4 class="modal-title" id="modal_data_infos_label">Informations</h4>
+	            </div>
+
+	            <div class="modal-body" id="modal_data_infos_content">
+	            	<div class="text-center"><img src="{{ asset('bundles/visuconsultation/carto/images/icones/load-model.svg') }}"></div>
+	            </div>
+
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-ofsa" data-dismiss="modal">Fermer</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+</div>
