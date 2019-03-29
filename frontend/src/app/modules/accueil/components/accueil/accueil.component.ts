@@ -20,6 +20,13 @@ export class AccueilComponent implements OnInit {
   	  	url: 'http://outils.gretia.org/carte/visualisation/',
         target: "_blank"
   	  },
+      {
+        title: 'Saisie'    ,
+        text: '<p>Outil de saisie et de consultation des données du GRETIA.</p>',
+        image: '/assets/images/app.png',
+        url: 'http://outils.gretia.org/geonature/',
+        target: "_blank"
+      },
   	  {
   	  	title: 'Taxref'		,
   	  	text: '<p>Outil de consultation et de comparaison des données Taxref.</p>',
@@ -27,25 +34,18 @@ export class AccueilComponent implements OnInit {
   	  	url: '/taxref',
         target: "_self"
   	  },
-  /*	  {
+  	  {
   	  	title: 'Metadonnées'		,
   	  	text: '<p>Outil de consultation des études et des lots de données intégrées dans la BDD.</p><p>Outil de depot de jeux de données à intégrer.</p>',
   	  	image: '/assets/images/app.png',
-  	  	url: '/cadres',
+  	  	url: 'http://outils.gretia.org/geonature/#/metadata',
         target: "_self"
-  	  },*/
+  	  },
   	  {
   	  	title: 'Import'		,
   	  	text: '<p>Outil de correction de fichier de données en vue d\'être intégré en BDD.</p>',
   	  	image: '/assets/images/import.png',
   	  	url: 'http://outils.gretia.org/import/',
-        target: "_blank"
-  	  },
-  	  {
-  	  	title: 'Saisie'		,
-  	  	text: '<p>Outil de saisie et de consultation des données du GRETIA.</p>',
-  	  	image: '/assets/images/app.png',
-  	  	url: 'http://outils.gretia.org/geonature/',
         target: "_blank"
   	  },
   	  {
