@@ -1,0 +1,23 @@
+<div>
+	<select id="znieff1" class="select2 zonages" style="width:100%;" placeHolder="ZNIEFF type 1">
+		<option></option>
+	<?php 
+		foreach ($znieff_1 as $data) {
+			echo '<option value="'.$data->id().'">'.$data->lib().'</option>';
+		}
+
+	?>
+	</select>
+</div>
+<br>
+<div>
+	<select id="znieff2" class="select2 zonages" style="width:100%;" placeHolder="ZNIEFF type 2">
+		<option></option>
+	<?php 
+		foreach ($znieff_2 as $data) {
+			echo '<option value="'.$data->id().'">'.$data->lib().'</option>';
+		}
+
+	?>
+	</select>
+</div>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title></title>
+        
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        {{ dump(data) }}
+        {#% for truc in data.universiteEcoles %}
+        {{ dump(truc) }}
+        {% endfor %#}
+    </body>
+</html>

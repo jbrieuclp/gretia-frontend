@@ -1,0 +1,4 @@
+api_magic_taxref:
+    resource: "@APIMagicTaxrefBundle/Controller/MagicTaxrefController.php"
+    type:     rest
+    prefix: /

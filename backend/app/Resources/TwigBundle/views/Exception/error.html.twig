@@ -1,0 +1,18 @@
+{# OPNA/UserBundle/Resources/views/user/accesReserve.html.twig #}
+{% extends "APICoreBundle::template.html.twig" %}
+
+{% block title %}
+    GRETIA :: Erreur
+{% endblock %}
+
+{% block header %}<div style="text-align: center;"><h2>Oups ! Une Erreur est survenue</h2></div>{% endblock header %}
+
+{% block chemin %}
+	{{ parent() }} / <span class="glyphicon glyphicon-leaf"></span> Aïe aïe aïe !!
+{% endblock %}
+
+{% block content %}
+
+<h4>Le serveur a retourné une erreur : "{{ status_code }} {{ status_text }}".</h4>
+<a href="{{ path('app_index') }}" class="waves-effect waves-light btn"><i class="material-icons left">home</i>Retour sur la page d'accueil</a>
+{% endblock %}

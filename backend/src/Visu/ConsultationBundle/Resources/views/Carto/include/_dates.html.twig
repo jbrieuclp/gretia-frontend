@@ -1,0 +1,40 @@
+<div>
+	<div class="sous-titre">Filtrer par périodes</div>
+	<div style="padding-left:20px;">
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" data-form="fmr-indicateur" name="type_date[]" value='recente'> Récentes (&gt; 2000)
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" data-form="fmr-indicateur" name="type_date[]" value='ancienne'> Anciennes ( 1950-2000 )
+			</label>
+		</div>
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" data-form="fmr-indicateur" name="type_date[]" value='historique'> Historiques (&lt; 1950)
+			</label>
+		</div>
+	</div>
+</div>
+
+	
+<div>
+	<div class="sous-titre">Filtrer par époque <span style="font-size: 16px;" class="glyphicon glyphicon-info-sign" data-toggle="popover" title="Comment saisir les dates" data-content="Années : aaaa - Mois mm/aaaa - jours : jj/mm/aaaa"></span></div>
+	<div class="row" style="padding:10px;">
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label for="date_min">Année min.</label>
+				<input type="text" data-form="fmr-indicateur" autocomplete="off" name="date_min" class="form-control" id="date_min" placeholder="jj/mm/aaaa">
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="form-group">
+				<label for="date_max">Année max.</label>
+				<input type="text" data-form="fmr-indicateur" autocomplete="off" name="date_max" class="form-control" id="date_max" placeholder="jj/mm/aaaa">
+			</div>
+		</div>
+	</div>
+
+</div>

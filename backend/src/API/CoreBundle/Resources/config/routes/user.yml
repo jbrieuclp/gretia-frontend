@@ -1,0 +1,3 @@
+core_user_inscription:
+    path: /user/inscription
+    defaults: { _controller: APICoreBundle:User:inscription }
