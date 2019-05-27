@@ -10,10 +10,10 @@
 	    </div>
 			<div class="float-right">
 				<ng-container *ngIf="user.isAuthenticated(); else connexionBlock">
-					<button mat-button [matMenuTriggerFor]="menu" matTooltip="Ouvrir le menu"><mat-icon>face</mat-icon><span class="name">{{ user.username }}</span></button>
+					<button mat-button><mat-icon>face</mat-icon><span class="name">{{ user.username }}</span></button>
+					<!--button mat-button [matMenuTriggerFor]="menu" matTooltip="Ouvrir le menu"><mat-icon>face</mat-icon><span class="name">{{ user.username }}</span></button>
 		    	<mat-menu #menu="matMenu" [yPosition]="'below'">
             <span mat-menu-item [disableRipple]="true" (click)="$event.stopPropagation()">
-            <!-- popover content begin -->
             <mat-list>
               <mat-list-item>
                 <a matLine routerLink="/droit">Gestion des droits
@@ -23,9 +23,8 @@
                 </a>
               </mat-list-item>
             </mat-list>
-            <!-- popover content end  -->
             </span>
-          </mat-menu>
+          </mat-menu-->
 
 		    	<button mat-icon-button>
 				    <mat-icon aria-label="Se deconnecter" (click)="logout()">exit_to_app</mat-icon>
