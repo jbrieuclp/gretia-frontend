@@ -1,0 +1,61 @@
+<div>
+	<a mat-icon-button routerLink='..'>
+    <mat-icon matTooltip="Revenir au menu précédent">arrow_back</mat-icon>
+  </a>
+</div>
+<div class="row">
+	<div class="col-sm-5">
+		<mat-card>
+			<mat-card-header>
+		    <button mat-raised-button color="primary" (click)="display='add-form'">Ajouter une catégorie</button>
+		  </mat-card-header>
+		  <mat-card-content>
+
+				<mat-list>
+				  <h3 mat-subheader>Catégories de projet</h3>
+				  <!--ng-container *ngIf="persons.length else nothing"-->
+					  <mat-list-item *ngFor="let category of categories" displayMouseOver>
+					  	<div class="float-right btn btn-edit d-none"><mat-icon mat-list-icon (click)="update(category)">edit</mat-icon></div>
+					  	<div class="float-right btn btn-delete d-none"><mat-icon mat-list-icon (click)="deleteConfirm(category)">delete_outline</mat-icon></div>
+					    <mat-icon mat-list-icon>folder</mat-icon>
+					    <h4 mat-line>{{category.libelle}}</h4>
+					    <p mat-line>Ordre : {{category.ordre}}</p>
+					  </mat-list-item>
+					<!--/ng-container-->
+					<!--ng-template #nothing>
+					  <mat-list-item>
+					    <mat-icon mat-list-icon>not_interested</mat-icon>
+					    <h4 mat-line>Aucune personne</h4> 
+					    <p mat-line>Utiliser le bouton ajouter</p>
+					  </mat-list-item>
+					</ng-template-->
+				</mat-list>
+
+			</mat-card-content>
+		</mat-card>
+	</div>
+	<div class="col-sm-4" *ngIf="display=='add-form'">
+		<mat-card>
+			<mat-card-content>
+				<app-projet-admin-category-form (saveChange)="save()"></app-projet-admin-category-form>
+			</mat-card-content>
+		</mat-card>
+	</div>
+	<div class="col-sm-4" *ngIf="display=='update-form'">
+		<mat-card>
+			<mat-card-content>
+				<app-projet-admin-category-form (saveChange)="save()" [updateCategory]="updateCategory"></app-projet-admin-category-form>
+			</mat-card-content>
+		</mat-card>
+	</div>
+	<div class="col-sm-4" *ngIf="display=='delete'">
+		<mat-card>
+			<mat-card-content>
+				<div>
+			  	<button mat-raised-button style="min-width: 0; margin-right: 5px;" (click)="display=null"><mat-icon>done</mat-icon> Annuler</button>
+			  	<button mat-raised-button style="min-width: 0; margin-left: 5px;" color="warn" (click)="delete(deleteCategory)"><mat-icon>done</mat-icon> Confirmer</button>
+			  </div>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>

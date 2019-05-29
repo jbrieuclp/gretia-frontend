@@ -46,6 +46,18 @@ class OrganismeController extends FOSRestController implements ClassResourceInte
 
     /**
     * @Rest\View(serializerGroups = {"organisme"})
+    * @ Security("has_role('METADATA')")
+    *
+    * @Rest\Get("/organisme/{id}")
+    * @ParamConverter("organisme", class="APIProjetBundle:Organisme", options={"entity_manager" = "gretiadb"})
+    */
+    public function getOrganismeAction(Organisme $organisme)
+    {
+        return $organisme;
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"organisme"})
     * @ Security("has_role('ROLE_READER')")
     *
     * @Rest\Get("/organismes/recherche")

@@ -1,0 +1,23 @@
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let projet of projets | async">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ projet.libelle }}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{ projet.objet }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="row">
+      <div class="col-sm-7">{{projet|json}}</div>
+      <div class="col-sm-5">
+        <mat-list>
+         <mat-list-item> Mission </mat-list-item>
+        </mat-list>
+        <a mat-mini-fab [routerLink]="[projet.id, 'missions', 'ajouter']">
+          <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+        </a>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

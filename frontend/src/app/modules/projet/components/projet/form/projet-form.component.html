@@ -1,0 +1,186 @@
+<form [formGroup]="form" (ngSubmit)="save()">
+	<div class="row">
+		<div class="col-9">
+			<mat-form-field>
+		    <input matInput placeholder="Intitulé"  
+		    			required
+		    			formControlName="libelle"
+		    			id="libelle">
+		  </mat-form-field>
+		</div>
+		<div class="col-3">
+			<mat-form-field>
+			  <mat-select placeholder="État" formControlName="etat">
+			    <mat-option *ngFor="let etat of etats | async" [value]="etat.id">
+			      {{ etat.libelle }}
+			    </mat-option>
+			  </mat-select>
+			</mat-form-field>
+		</div>
+	</div>
+
+<mat-card>
+	<mat-card-header>
+		<h4>Description</h4>
+	</mat-card-header>
+	<mat-card-content>
+
+		<div class="row">
+			<mat-form-field class="col-sm-4">
+		    <input matInput placeholder="Localisation"  
+		    			formControlName="localisation"
+		    			id="localisation">
+		  </mat-form-field>
+
+			<mat-form-field class="col-sm-4">
+			  <mat-select placeholder="Type de projet" formControlName="type">
+			  	<mat-option></mat-option>
+			    <mat-option *ngFor="let type of projetTypes | async" [value]="type.id">
+			      {{type.libelle}}
+			    </mat-option>
+			  </mat-select>
+			</mat-form-field>
+
+			<mat-form-field class="col-sm-4">
+			  <mat-select placeholder="Responsable" formControlName="responsable">
+			  	<mat-option></mat-option>
+			    <mat-option *ngFor="let responsable of projetResponsables | async" [value]="responsable.id">
+			      {{responsable.surnom}}
+			    </mat-option>
+			  </mat-select>
+			</mat-form-field>
+		</div>
+	</mat-card-content>
+</mat-card>
+
+
+	<div class="row">
+		<div class="col-6">
+			<mat-card>
+				<mat-card-header>
+					<h4>Partenaires financiers</h4>
+				</mat-card-header>
+				<mat-card-content>
+					<app-projet-projet-financier-form (organisme)="onOrgFinancierChoice($event)"></app-projet-projet-financier-form>
+					<div formArrayName="partenairesFinanciers" >
+						<div *ngFor="let organisme of orgFinancierFormArray.controls; let idx = index;" [formGroupName]="idx">
+							<button mat-icon-button color="primary" (click)="deleteOrgFinancier(idx)"><mat-icon aria-label="Example icon-button with a heart icon">clear</mat-icon></button>
+							<span>{{ organisme.value.nom }}</span>
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="col-6">
+			<mat-card>
+				<mat-card-header>
+					<h4>Partenaires techniques</h4>
+				</mat-card-header>
+				<mat-card-content>
+					<app-projet-projet-technique-form (organisme)="onOrgTechniqueChoice($event)"></app-projet-projet-technique-form>
+					<div formArrayName="partenairesTechniques" >
+						<div *ngFor="let organisme of orgTechniqueFormArray.controls; let idx = index;" [formGroupName]="idx">
+							<button mat-icon-button color="primary" (click)="deleteOrgTechnique(idx)"><mat-icon aria-label="Example icon-button with a heart icon">clear</mat-icon></button>
+							<span>{{ organisme.value.nom }}</span>
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-sm-4">
+			<mat-card>
+				<mat-card-header>
+					<h4>Détails</h4>
+				</mat-card-header>
+				<mat-card-content>
+
+					<mat-form-field>
+				    <input matInput placeholder="Objet de l'étude"  
+				    			formControlName="objet"
+				    			id="objet">
+				  </mat-form-field>
+
+				  <mat-form-field>
+				    <input matInput placeholder="Milieu(x) concerné(s)"  
+				    			formControlName="milieux"
+				    			id="milieux">
+				  </mat-form-field>
+
+				  <mat-form-field>
+				    <input matInput placeholder="Groupe(s) étudié(s)"  
+				    			formControlName="groupes"
+				    			id="groupes">
+				  </mat-form-field>
+				</mat-card-content>
+			</mat-card>
+
+		</div>
+		<div class="col-sm-4">
+			<mat-card>
+				<mat-card-header>
+					<h4>Coûts</h4>
+				</mat-card-header>
+				<mat-card-content>
+
+					<mat-form-field>
+				    <input matInput placeholder="Nombre de jour (hors ss-traitant)"  
+				    			formControlName="nbJour"
+				    			id="nbJour">
+				  </mat-form-field>
+
+				  <mat-form-field>
+				    <input matInput placeholder="Coût (sans autofin. et GRETIA seul)"  
+				    			formControlName="cout"
+				    			id="cout">
+				  </mat-form-field>
+
+				  <mat-form-field>
+				    <input matInput placeholder="Coût total du projet (si pluri, sans autofin.)"  
+				    			formControlName="coutTotal"
+				    			id="coutTotal">
+				  </mat-form-field>
+
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<div class="col-sm-4">	
+			<mat-card>
+				<mat-card-header>
+					<h4>Dates</h4>
+				</mat-card-header>
+				<mat-card-content>
+					<mat-form-field>
+						<input matInput placeholder="Date de début"
+									  [matDatepicker]="dateDebut"
+									  formControlName="dateDebut" 
+				    			  id="dateDebut">
+					  <mat-datepicker-toggle matSuffix [for]="dateDebut"></mat-datepicker-toggle>
+					  <mat-datepicker #dateDebut></mat-datepicker>
+				  </mat-form-field>
+				  <mat-form-field>
+				    <input matInput placeholder="Date de fin"  
+				    			formControlName="dateFin"
+				    			id="dateFin">
+				  </mat-form-field>
+				  <mat-form-field>
+				    <input matInput placeholder="Date de rendu"  
+				    			formControlName="dateRendu"
+				    			id="dateRendu">
+				  </mat-form-field>
+				</mat-card-content>
+			</mat-card>
+		</div>
+	</div>
+<!--app-projet-projet-add-person-form>
+	
+</app-projet-projet-add-person-form-->
+
+	<div>
+  	<button type="submit" mat-raised-button style="min-width: 0; margin-top: 20px;" color="primary" [disabled]="!form.valid"><mat-icon>done</mat-icon> Enregistrer</button>
+  </div>
+</form>

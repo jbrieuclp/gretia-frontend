@@ -53,6 +53,18 @@ class PersonController extends FOSRestController implements ClassResourceInterfa
     * @Rest\View(serializerGroups = {"personne"})
     * @ Security("has_role('METADATA')")
     *
+    * @Rest\Get("/personne/{id}")
+    * @ParamConverter("personne", class="APIProjetBundle:Personne", options={"entity_manager" = "gretiadb"})
+    */
+    public function getPersonAction(Personne $personne)
+    {
+        return $personne;
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"personne"})
+    * @ Security("has_role('METADATA')")
+    *
     * @Rest\Post("/personne")
     */
     public function postAction(Request $request)

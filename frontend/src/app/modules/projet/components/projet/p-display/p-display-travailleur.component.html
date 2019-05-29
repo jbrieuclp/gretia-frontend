@@ -1,0 +1,16 @@
+
+<mat-list-item displayMouseOver>
+	<div class="float-right btn btn-edit d-none"><mat-icon mat-list-icon (click)="travailleur.modif = !travailleur.modif">edit</mat-icon></div>
+	<div class="float-right btn btn-delete d-none"><mat-icon mat-list-icon (click)="deleteConfirm(type)">delete_outline</mat-icon></div>
+	<div class="row" mat-line *ngIf="personne">
+		<span class="col-sm-4">{{ personne.surnom}}</span> - 
+		<span class="col-sm-4">
+			<ng-container *ngIf="(travailleur.modif === undefined || !travailleur.modif); else modif">
+				{{ temps }} jour(s)
+			</ng-container>
+			<ng-template #modif>
+				<app-projet-temps-travailleur-form [travailleur]="travailleur" [projet]="projet"></app-projet-temps-travailleur-form>
+			</ng-template>
+		</span>
+	</div>
+</mat-list-item>

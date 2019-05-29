@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use API\ProjetBundle\Entity\Projet;
+use API\ProjetBundle\Entity\ProjetPersonne;
+use API\ProjetBundle\Entity\Personne;
 
 use API\ProjetBundle\Form\ProjetType;
 
@@ -29,6 +31,7 @@ use API\ProjetBundle\Form\ProjetType;
     GET /projet/id/partenaires-techniques : retourne les partenaires techniques de projet id
     GET /projet/id/type : retourne le type de projet id
     GET /projet/id/etat : retourne l'état de projet id
+    POST /projet/id/travailleur : ajoute un travailleur à un projet
 
     //MISSION
     GET /projet/id/missions : retourne les mission d'un projet
@@ -59,8 +62,20 @@ class ProjetController extends FOSRestController implements ClassResourceInterfa
     public function getProjetsAction()
     {
         $em = $this->getDoctrine()->getManager('gretiadb');
-        $cadres = $em->getRepository('APIMetadataBundle:CadreAcquisition')->findAll();
-        return $cadres;
+        $projets = $em->getRepository('APIProjetBundle:Projet')->findAll();
+        return $projets;
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"projet"})
+    * @ Security("has_role('METADATA')")
+    *
+    * @Rest\Get("/projet/{id}")
+    * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"entity_manager" = "gretiadb"})
+    */
+    public function getProjetAction(Projet $projet)
+    {
+        return $projet;
     }
 
     /**
@@ -85,6 +100,57 @@ class ProjetController extends FOSRestController implements ClassResourceInterfa
             return $form;
         }
 
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"projet"})
+    * @ Security("has_role('METADATA')")
+    *
+    * @Rest\Post("/projet/{projet}/travailleur")
+    * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"entity_manager" = "gretiadb"})
+    */
+    public function postTravailleurAction(Request $request, Projet $projet)
+    {
+     //   return $projet;
+        $data = json_decode($request->getContent(), true);
+        $em = $this->getDoctrine()->getManager('gretiadb');
+        $personne = $em->getRepository('APIProjetBundle:Personne')->find($data['personne']['id']);
+        $travailleur = $em->getRepository('APIProjetBundle:ProjetPersonne')->findOneBy(array('projet' => $projet, 'personne' => $personne));
+
+        if ($travailleur === null) {
+            $travailleur = new ProjetPersonne();
+            $travailleur->setPersonne($personne);
+            $travailleur->setTemps($data['temps']);
+            $projet->addTravailleur($travailleur);
+            $em->persist($projet);
+            $em->flush();
+        }
+
+        return $projet->getTravailleurs();
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"projet"})
+    * @ Security("has_role('METADATA')")
+    *
+    * @Rest\Put("/projet/{projet}/travailleur/{personne}")
+    * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"entity_manager" = "gretiadb"})
+    * @ParamConverter("personne", class="APIProjetBundle:Personne", options={"entity_manager" = "gretiadb"})
+    */
+    public function putTravailleurAction(Request $request, Projet $projet, Personne $personne)
+    {
+     //   return $projet;
+        $data = json_decode($request->getContent(), true);
+        $em = $this->getDoctrine()->getManager('gretiadb');
+        $travailleur = $em->getRepository('APIProjetBundle:ProjetPersonne')->findOneBy(array('projet' => $projet, 'personne' => $personne));
+
+        if ($travailleur !== null) {
+            $travailleur->setTemps($data['temps']);
+            $em->persist($travailleur);
+            $em->flush();
+        }
+
+        return $projet->getTravailleurs();
     }
 
 }

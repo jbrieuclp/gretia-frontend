@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 use API\ProjetBundle\Entity\Organisme;
+use API\ProjetBundle\Entity\ProjetPersonne;
 
 /**
 * @ORM\Entity
@@ -17,6 +18,7 @@ class Projet
 	public function __construct() {
     $this->partenairesFinanciers = new ArrayCollection();
     $this->partenairesTechniques = new ArrayCollection();
+    $this->travailleurs = new ArrayCollection();
   }
 
   /**
@@ -179,6 +181,13 @@ class Projet
    * @Serializer\Groups({"projet"})
    */
   private $compteUpdate;
+
+  /**
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\ProjetPersonne", mappedBy="projet", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   *
+   * @Serializer\Groups({"projet"})
+   */
+  private $travailleurs;
 
 
   /**
@@ -671,5 +680,25 @@ class Projet
     return $this->compteUpdate;
   }
 
+  public function addTravailleur(ProjetPersonne $item) {
+    // Ici, on utilise l'ArrayCollection vraiment comme un tableau
+    $this->travailleurs[] = $item;
+    
+    // On lie le releve au obseur orga
+    $item->setProjet($this);
+
+    return $this;
+  }
+
+  public function removeTravailleur(ProjetPersonne $item) {
+    // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
+    $this->travailleurs->removeElement($item);
+    $item->setProjet(null);
+  }
+
+  // Notez le pluriel, on récupère une liste de catégories ici !
+  public function getTravailleurs() {
+    return $this->travailleurs;
+  }
 
 }

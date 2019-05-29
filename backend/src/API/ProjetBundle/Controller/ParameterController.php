@@ -63,6 +63,22 @@ class ParameterController extends FOSRestController implements ClassResourceInte
     }
 
     /**
+    * @Rest\View(serializerGroups = {"projet"})
+    * @ Security("has_role('METADATA')")
+    *
+    * @Rest\Get("/{element}/{id}", requirements={"element"="categorie|etat|type"})
+    */
+    public function getAction(Request $request, $element, $id)
+    {
+        //parametrage de la serialization de retour
+        $request->attributes->get('_template')->setSerializerGroups(array($element));
+        
+        $em = $this->getDoctrine()->getManager('gretiadb');
+        $item = $em->getRepository('APIProjetBundle:'.ucfirst($element))->find($id);
+        return $item;
+    }
+
+    /**
     * @Rest\View(serializerGroups = {})
     * @ Security("has_role('METADATA')")
     *

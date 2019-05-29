@@ -3,7 +3,10 @@
 namespace API\ProjetBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
+
+use API\ProjetBundle\Entity\ProjetPersonne;
 
 /**
 * @ORM\Entity
@@ -11,13 +14,18 @@ use JMS\Serializer\Annotation as Serializer;
 */
 class Personne
 {
-	/**
+	
+  public function __construct() {
+    $this->projets = new ArrayCollection();
+  }
+
+  /**
 	 * @ORM\Id
 	 * @ORM\Column(name="id_personne", type="integer")
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.personne_id_personne_seq", allocationSize=1, initialValue=1)
 	 *
-	 * @Serializer\Groups({"personne"})
+	 * @Serializer\Groups({"personne", "projet"})
 	 */
 	private $id;
 
@@ -48,6 +56,13 @@ class Personne
    * @Serializer\Groups({"personne"})
    */
   private $compte;
+
+  /**
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\ProjetPersonne", mappedBy="personne", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   *
+   * @Serializer\Groups({"personne"})
+   */
+  private $projets;
 
   /**
    * Get id
@@ -151,4 +166,29 @@ class Personne
     return $this->compte;
   }
 
+  /**
+   * Add projets
+   *
+   * @param Projet $item
+   */
+  public function addProjet(ProjetPersonne $item) {
+    // Ici, on utilise l'ArrayCollection vraiment comme un tableau
+    $this->projets[] = $item;
+    
+    // On lie le releve au obseur orga
+    $item->setPersonne($this);
+
+    return $this;
+  }
+
+  public function removeProjet(ProjetPersonne $item) {
+    // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
+    $this->projets->removeElement($item);
+    $item->setPersonne(null);
+  }
+
+  // Notez le pluriel, on récupère une liste de catégories ici !
+  public function getProjets() {
+    return $this->projets;
+  }
 }

@@ -18,6 +18,7 @@ import { SharedModule } from './shared';
 import { LoginModule } from './modules/login/login.module';
 import { AccueilModule } from './modules/accueil/accueil.module';
 import { MagicTaxrefModule } from './modules/magic-taxref/magic-taxref.module';
+import { ProjetModule } from './modules/projet/projet.module';
 
 //services
 import { AuthService } from './shared';
@@ -52,6 +53,7 @@ export function tokenGetter() {
     LoginModule,
     AccueilModule,
     MagicTaxrefModule,
+    ProjetModule,
     AppRoutingModule
   ],
   providers: [

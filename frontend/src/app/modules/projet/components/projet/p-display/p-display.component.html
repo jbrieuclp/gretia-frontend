@@ -1,0 +1,158 @@
+<div class="row" *ngIf="projet">
+	<div class="col-sm-8">
+
+		<div class="row" >
+			<div class="col-9">
+				<h4>{{ projet.libelle }}</h4>
+			</div>
+			<div class="col-3">
+				<app-p-display-etat [etat]="projet.etat"></app-p-display-etat>
+			</div>
+		</div>
+
+	<mat-card>
+		<mat-card-content>
+			<div class="row">
+				<div class="col-sm-4">
+					<div>Localisation :</div>
+			    <div>{{ projet.localisation }}</div>
+			  </div>
+
+			  <div class="col-sm-4">
+					<div>Type de projet :</div>
+			    <div><app-p-display-type [type]="projet.type"></app-p-display-type></div>
+			  </div>
+
+			  <div class="col-sm-4">
+					<div>Responsable :</div>
+			    <div><app-p-display-responsable [responsable]="projet.responsable"></app-p-display-responsable></div>
+			  </div>
+			</div>
+		</mat-card-content>
+	</mat-card>
+
+
+		<div class="row">
+			<div class="col-6">
+				<mat-card>
+					<mat-card-header>
+						<h4>Partenaires financiers</h4>
+					</mat-card-header>
+					<mat-card-content>
+						<div *ngFor="let organisme of projet.partenairesFinanciers">
+							<span><app-p-display-part [organisme]="organisme"></app-p-display-part></span>
+						</div>
+					</mat-card-content>
+				</mat-card>
+			</div>
+
+			<div class="col-6">
+				<mat-card>
+					<mat-card-header>
+						<h4>Partenaires techniques</h4>
+					</mat-card-header>
+					<mat-card-content>
+						<div *ngFor="let organisme of projet.partenairesTechniques">
+							<span><app-p-display-part [organisme]="organisme"></app-p-display-part></span>
+						</div>
+					</mat-card-content>
+				</mat-card>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-sm-4">
+				<mat-card>
+					<mat-card-header>
+						<h4>Détails</h4>
+					</mat-card-header>
+					<mat-card-content>
+
+						<div class="">
+							<div>Objet de l'étude :</div>
+					    <div>{{ projet.objet }}</div>
+					  </div>
+
+					  <div class="">
+							<div>Milieu(x) concerné(s) :</div>
+					    <div>{{ projet.milieux }}</div>
+					  </div>
+
+					  <div class="">
+							<div>Groupe(s) étudié(s) :</div>
+					    <div>{{ projet.groupes }}</div>
+					  </div>
+					</mat-card-content>
+				</mat-card>
+
+			</div>
+			<div class="col-sm-4">
+				<mat-card>
+					<mat-card-header>
+						<h4>Coûts</h4>
+					</mat-card-header>
+					<mat-card-content>
+						<div class="">
+							<div>Nombre de jour (hors ss-traitant) :</div>
+					    <div>{{ projet.nbJour }}</div>
+					  </div>
+
+					  <div class="">
+							<div>Coût (sans autofin. et GRETIA seul) :</div>
+					    <div>{{ projet.cout }}</div>
+					  </div>
+
+					  <div class="">
+							<div>Coût total du projet (si pluri, sans autofin.) :</div>
+					    <div>{{ projet.coutTotal }}</div>
+					  </div>
+
+					</mat-card-content>
+				</mat-card>
+			</div>
+
+			<div class="col-sm-4">	
+				<mat-card>
+					<mat-card-header>
+						<h4>Dates</h4>
+					</mat-card-header>
+					<mat-card-content>
+						<div class="">
+							<div>Date de début :</div>
+					    <div>{{ projet.dateDebut }}</div>
+					  </div>
+
+					  <div class="">
+							<div>Date de fin :</div>
+					    <div>{{ projet.dateFin }}</div>
+					  </div>
+
+					  <div class="">
+							<div>Date de rendu :</div>
+					    <div>{{ projet.dateRendu }}</div>
+					  </div>
+						
+					</mat-card-content>
+				</mat-card>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="col-sm-4">
+		<mat-card>
+			<mat-card-header>
+		    <h4>Allocation du temps</h4>
+		  </mat-card-header>
+		  <mat-card-content>
+				<app-projet-projet-add-person-form [projet]="projet"></app-projet-projet-add-person-form>
+				<mat-divider *ngIf="projet.travailleurs.length"></mat-divider>
+				<mat-list>
+					<ng-container *ngFor="let travailleur of projet.travailleurs;" >
+						<app-p-display-travailleur [travailleur]="travailleur" [projet]="projet"></app-p-display-travailleur>
+					</ng-container>
+				</mat-list>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>
