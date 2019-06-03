@@ -27,7 +27,7 @@ class Projet
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.projet_id_projet_seq", allocationSize=1, initialValue=1)
 	 *
-	 * @Serializer\Groups({"projet"})
+	 * @Serializer\Groups({"projet", "mission"})
 	 */
 	private $id;
 

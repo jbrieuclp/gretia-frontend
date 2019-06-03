@@ -1,23 +1,51 @@
-<mat-accordion>
-  <mat-expansion-panel *ngFor="let projet of projets | async">
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        {{ projet.libelle }}
-      </mat-panel-title>
-      <mat-panel-description>
-        {{ projet.objet }}
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <div class="row">
-      <div class="col-sm-7">{{projet|json}}</div>
-      <div class="col-sm-5">
+<div class="container-fluid">
+  <div class="row">
+    <div class="form-group col-sm-7">
+      <mat-form-field>
+        <input matInput 
+          placeholder="Rechercher"  
+          (keyup)="updateSearchbar($event)">
+      </mat-form-field>
+    </div>  
+  </div>
+  <h4>Liste des cadres d'acquisition et des jeux de données associés</h4>
+  <mat-accordion [multi]="true">
+    <ng-container *ngFor="let projet of tempProjets; let idx = index">
+      <mat-expansion-panel *ngIf="isDisplayed(idx)" [expanded]="expandAccordions">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ projet.libelle | uppercase }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ projet.objet }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
         <mat-list>
-         <mat-list-item> Mission </mat-list-item>
+          <ng-container *ngFor="let mission of projet.missionsTemp; let last = last">
+            <mat-list-item>
+              <a class="bt-edit" 
+                title="Editer le jeu de données"
+                [routerLink]="['/metadata/dataset', mission.id]" >
+                <i class="fa fa-pencil-square" aria-hidden="true"></i>
+              </a>
+              <span>↳ {{ mission.libelle }}</span>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+          </ng-container>
+          <mat-list-item>
+            <a mat-stroked-button 
+              color="primary"
+              [routerLink]="[projet.id, 'missions', 'ajouter']">
+              + Ajouter une mission</a>
+          </mat-list-item>
         </mat-list>
-        <a mat-mini-fab [routerLink]="[projet.id, 'missions', 'ajouter']">
-          <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
-        </a>
-      </div>
-    </div>
-  </mat-expansion-panel>
-</mat-accordion>
+      </mat-expansion-panel>
+    </ng-container>
+  </mat-accordion>
+  <mat-paginator #paginator
+                [length]="tempProjets.length"
+                [pageSize]="pageSize"
+                [pageSizeOptions]="pageSizeOptions"
+                (page)="changePaginator($event)">
+  </mat-paginator>
+</div>

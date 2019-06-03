@@ -46,7 +46,7 @@ class ParameterController extends FOSRestController implements ClassResourceInte
     
     /**
     * @Rest\View(serializerGroups = {})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Get("/{element}", requirements={"element"="categories|etats|types"})
     */
@@ -64,7 +64,7 @@ class ParameterController extends FOSRestController implements ClassResourceInte
 
     /**
     * @Rest\View(serializerGroups = {"projet"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Get("/{element}/{id}", requirements={"element"="categorie|etat|type"})
     */
@@ -80,7 +80,7 @@ class ParameterController extends FOSRestController implements ClassResourceInte
 
     /**
     * @Rest\View(serializerGroups = {})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Post("/{element}", requirements={"element"="categorie|etat|type"})
     */
@@ -110,7 +110,7 @@ class ParameterController extends FOSRestController implements ClassResourceInte
 
     /**
     * @Rest\View(serializerGroups = {})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Put("/{element}/{id}", requirements={"element"="categorie|etat|type"})
     */
@@ -141,7 +141,7 @@ class ParameterController extends FOSRestController implements ClassResourceInte
 
     /**
     * @Rest\View(serializerGroups = {})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Delete("/{element}/{id}", requirements={"element"="categorie|etat|type"})
     */

@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   FormGroup,
   FormControl,
@@ -14,10 +15,8 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 
 import * as moment from 'moment';
 
-import { Projet, ProjetRepository } from '../../../repository/projet.repository';
-import { Organisme } from '../../../repository/organisme.repository';
-import { Personne, PersonRepository } from '../../../repository/person.repository';
-import { Type, TypeRepository } from '../../../repository/type.repository';
+import { Projet } from '../../../repository/projet.repository';
+import { Mission, MissionRepository } from '../../../repository/mission.repository';
 import { Etat, EtatRepository } from '../../../repository/etat.repository';
 
 
@@ -27,20 +26,21 @@ import { Etat, EtatRepository } from '../../../repository/etat.repository';
   styleUrls: ['./mission-form.component.css']
 })
 export class MissionFormComponent implements OnInit {
-form: FormGroup;
-	projet: Projet;
-  projetTypes: Observable<Type[]>;
-  projetResponsables: Observable<Personne[]>;
+  form: FormGroup;
+	mission: Mission;
+  @Input('projet') projet: Projet = null;
 
   @Output() saved: EventEmitter<number> = new EventEmitter();
-  types: Observable<Type[]>;
   etats: Observable<Etat[]>;
 
-  constructor(private fb: FormBuilder, private projetR: ProjetRepository, private typeR: TypeRepository, private personR: PersonRepository, private etatR: EtatRepository) { }
+  constructor(
+    private fb: FormBuilder, 
+    private missionR: MissionRepository, 
+    private etatR: EtatRepository,
+    private router: Router) { }
 
   ngOnInit() {
-    this.projet = {};
-    this.types = this.typeR.types();
+    this.mission = {};
     this.etats = this.etatR.etats();
   	this.createForm();
   }
@@ -52,9 +52,6 @@ form: FormGroup;
       nbJour: [],
       etat: []
     });
-
-    this.projetTypes = this.typeR.types();
-    this.projetResponsables = this.personR.personnes();
   }
 
   save() {
@@ -62,13 +59,12 @@ form: FormGroup;
   }
 
   add() {
-    let projet = Object.assign({}, this.form.value);
-    projet.partenairesFinanciers = projet.partenairesFinanciers.map(org => org.id);
-    projet.partenairesTechniques = projet.partenairesTechniques.map(org => org.id);
-		this.projetR.post(projet)
+    let mission = Object.assign({}, this.form.value);
+    mission.projet = this.projet.id;
+		this.missionR.post(mission)
 							  		.subscribe(res => {
-							          this.projet = res;
-                        this.saved.emit(this.projet.id);
+							          this.mission = res;
+                        this.router.navigate(['projet', this.projet.id]);
 							        },
 							        error => { /*this.errors = error.error;*/ }
 							      );

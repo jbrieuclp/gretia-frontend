@@ -65,6 +65,9 @@ export function tokenGetter() {
     AuthService,
     AuthGuard
   ],
+  exports: [
+    SharedModule
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

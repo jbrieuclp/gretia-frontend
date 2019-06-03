@@ -38,7 +38,7 @@ class PersonController extends FOSRestController implements ClassResourceInterfa
     
     /**
     * @Rest\View(serializerGroups = {"personne"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Get("/personnes")
     */
@@ -51,7 +51,7 @@ class PersonController extends FOSRestController implements ClassResourceInterfa
 
     /**
     * @Rest\View(serializerGroups = {"personne"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Get("/personne/{id}")
     * @ParamConverter("personne", class="APIProjetBundle:Personne", options={"entity_manager" = "gretiadb"})
@@ -63,7 +63,7 @@ class PersonController extends FOSRestController implements ClassResourceInterfa
 
     /**
     * @Rest\View(serializerGroups = {"personne"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Post("/personne")
     */
@@ -87,7 +87,7 @@ class PersonController extends FOSRestController implements ClassResourceInterfa
 
     /**
     * @Rest\View(serializerGroups = {"personne"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Put("/personne/{id}")
     */
@@ -115,7 +115,7 @@ class PersonController extends FOSRestController implements ClassResourceInterfa
 
     /**
     * @Rest\View(serializerGroups = {"personne"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Delete("/personne/{id}")
     */

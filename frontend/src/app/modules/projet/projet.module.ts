@@ -68,14 +68,6 @@ import { FinancierFormComponent } from './components/projet/form/financier-form.
 import { TechniqueFormComponent } from './components/projet/form/technique-form.component';
 import { PersonProjetFormComponent } from './components/projet/form/person-form.component';
 import { TempsTravailleurFormComponent } from './components/projet/form/temps-travailleur-form.component';
-
-//repository
-import { PersonRepository } from './repository/person.repository';
-import { CategoryRepository } from './repository/category.repository';
-import { EtatRepository } from './repository/etat.repository';
-import { TypeRepository } from './repository/type.repository';
-import { ProjetRepository } from './repository/projet.repository';
-import { OrganismeRepository } from './repository/organisme.repository';
 import { PDisplayComponent } from './components/projet/p-display/p-display.component';
 import { PDisplayEtatComponent } from './components/projet/p-display/p-display-etat.component';
 import { PDisplayResponsableComponent } from './components/projet/p-display/p-display-responsable.component';
@@ -85,6 +77,16 @@ import { PDisplayTravailleurComponent } from './components/projet/p-display/p-di
 import { PListComponent } from './components/projet/p-list/p-list.component';
 import { MAddComponent } from './components/mission/m-add/m-add.component';
 import { MissionFormComponent } from './components/mission/form/mission-form.component';
+
+//repository
+import { PersonRepository } from './repository/person.repository';
+import { CategoryRepository } from './repository/category.repository';
+import { EtatRepository } from './repository/etat.repository';
+import { TypeRepository } from './repository/type.repository';
+import { ProjetRepository } from './repository/projet.repository';
+import { OrganismeRepository } from './repository/organisme.repository';
+import { MissionRepository } from './repository/mission.repository';
+
 
 @NgModule({
   imports: [
@@ -167,7 +169,8 @@ import { MissionFormComponent } from './components/mission/form/mission-form.com
     EtatRepository,
     TypeRepository,
     ProjetRepository,
-    OrganismeRepository
+    OrganismeRepository,
+    MissionRepository
   ]
 })
 export class ProjetModule { }

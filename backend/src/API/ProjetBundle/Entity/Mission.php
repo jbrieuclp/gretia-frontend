@@ -66,7 +66,7 @@ class Mission
   private $dateCreate;
 
   /**
-   * @ORM\Column(name="compte_create_id", type="string", nullable=true)
+   * @ORM\Column(name="compte_create_id", type="integer", nullable=true)
    *
    * @Serializer\Groups({"mission"})
    */
@@ -80,7 +80,7 @@ class Mission
   private $dateUpdate;
 
   /**
-   * @ORM\Column(name="compte_update_id", type="string", nullable=true)
+   * @ORM\Column(name="compte_update_id", type="integer", nullable=true)
    *
    * @Serializer\Groups({"mission"})
    */

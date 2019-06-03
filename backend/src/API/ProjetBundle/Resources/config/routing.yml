@@ -3,6 +3,11 @@ api_projet_projet:
     type:     rest
     prefix: /
 
+api_projet_mission:
+    resource: "@APIProjetBundle/Controller/MissionController.php"
+    type:     rest
+    prefix: /
+
 api_projet_person:
     resource: "@APIProjetBundle/Controller/PersonController.php"
     type:     rest

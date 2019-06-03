@@ -33,7 +33,7 @@ class OrganismeController extends FOSRestController implements ClassResourceInte
     
     /**
     * @Rest\View(serializerGroups = {"organisme"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Get("/organismes")
     */
@@ -46,7 +46,7 @@ class OrganismeController extends FOSRestController implements ClassResourceInte
 
     /**
     * @Rest\View(serializerGroups = {"organisme"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Get("/organisme/{id}")
     * @ParamConverter("organisme", class="APIProjetBundle:Organisme", options={"entity_manager" = "gretiadb"})
@@ -58,7 +58,7 @@ class OrganismeController extends FOSRestController implements ClassResourceInte
 
     /**
     * @Rest\View(serializerGroups = {"organisme"})
-    * @ Security("has_role('ROLE_READER')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Get("/organismes/recherche")
     */
@@ -76,7 +76,7 @@ class OrganismeController extends FOSRestController implements ClassResourceInte
 
     /**
     * @Rest\View(serializerGroups = {"organisme"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Post("/organisme")
     */
@@ -100,7 +100,7 @@ class OrganismeController extends FOSRestController implements ClassResourceInte
 
     /**
     * @Rest\View(serializerGroups = {"organisme"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Put("/organisme/{id}")
     */
@@ -128,7 +128,7 @@ class OrganismeController extends FOSRestController implements ClassResourceInte
 
     /**
     * @Rest\View(serializerGroups = {"organisme"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Delete("/organisme/{id}")
     */

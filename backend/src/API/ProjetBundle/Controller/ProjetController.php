@@ -55,7 +55,7 @@ class ProjetController extends FOSRestController implements ClassResourceInterfa
     
     /**
     * @Rest\View(serializerGroups = {"projet"})
-    * @Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Get("/projets")
     */
@@ -68,7 +68,7 @@ class ProjetController extends FOSRestController implements ClassResourceInterfa
 
     /**
     * @Rest\View(serializerGroups = {"projet"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Get("/projet/{id}")
     * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"entity_manager" = "gretiadb"})
@@ -80,7 +80,7 @@ class ProjetController extends FOSRestController implements ClassResourceInterfa
 
     /**
     * @Rest\View(serializerGroups = {"projet"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Post("/projet")
     */
@@ -104,7 +104,7 @@ class ProjetController extends FOSRestController implements ClassResourceInterfa
 
     /**
     * @Rest\View(serializerGroups = {"projet"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Post("/projet/{projet}/travailleur")
     * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"entity_manager" = "gretiadb"})
@@ -131,7 +131,7 @@ class ProjetController extends FOSRestController implements ClassResourceInterfa
 
     /**
     * @Rest\View(serializerGroups = {"projet"})
-    * @ Security("has_role('METADATA')")
+    * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Put("/projet/{projet}/travailleur/{personne}")
     * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"entity_manager" = "gretiadb"})

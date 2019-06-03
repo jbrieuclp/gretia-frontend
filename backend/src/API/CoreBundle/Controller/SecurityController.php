@@ -65,6 +65,7 @@ class SecurityController extends FOSRestController implements ClassResourceInter
         'username'  => $user->getUsername(), 
         'lastLogin'  => $user->getLastLogin(), 
         'expires_at'  => date('c', time() + $time_to_expire),
+        'modules'  => $user->getRoles(),
     );
 
     return $response; 

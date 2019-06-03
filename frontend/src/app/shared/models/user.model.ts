@@ -7,6 +7,7 @@ export class User implements Deserializable {
 	lastLogin: number
 	token: string;
 	expires_at: Date;
+  modules?: Array<string>;
 
 	deserialize(input: any) {
     Object.assign(this, input);
@@ -20,5 +21,9 @@ export class User implements Deserializable {
 
   public isExpired(): boolean {
   	return this.expires_at.getTime() <= new Date().getTime();
+  }
+
+  public hasRole(role: string) {
+    return this.modules.indexOf(role) !== -1;
   }
 }
