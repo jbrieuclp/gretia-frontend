@@ -14,6 +14,9 @@
       <mat-expansion-panel *ngIf="isDisplayed(idx)" [expanded]="expandAccordions">
         <mat-expansion-panel-header>
           <mat-panel-title>
+            <a mat-icon-button [routerLink]="[projet.id]" class="bt-edit">
+              <mat-icon>edit</mat-icon>
+            </a>
             {{ projet.libelle | uppercase }}
           </mat-panel-title>
           <mat-panel-description>
@@ -21,12 +24,12 @@
           </mat-panel-description>
         </mat-expansion-panel-header>
         <mat-list>
-          <ng-container *ngFor="let mission of projet.missionsTemp; let last = last">
+          <ng-container *ngFor="let mission of projet.missionsTemp">
             <mat-list-item>
               <a class="bt-edit" 
-                title="Editer le jeu de données"
+                title="Editer la mission"
                 [routerLink]="['/metadata/dataset', mission.id]" >
-                <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                <mat-icon>edit</mat-icon>
               </a>
               <span>↳ {{ mission.libelle }}</span>
             </mat-list-item>

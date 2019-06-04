@@ -15,12 +15,16 @@
 	justify-content: flex-start;
 }
 
-.bt-edit {
+.bt-edit mat-icon{
 	font-size: 22px;
-    margin-right: 8px;
-    display: flex;
+  margin-right: 8px;
 }
 
 .bt-edit:hover {
 	text-decoration: none;
+}
+
+mat-panel-title .bt-edit {
+	line-height: 0px;
+	height: 0px;
 }

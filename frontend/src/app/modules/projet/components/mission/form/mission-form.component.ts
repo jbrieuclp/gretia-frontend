@@ -1,12 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
-import {
-  FormGroup,
-  FormControl,
-  FormArray,
-  Validators,
-  FormBuilder
-} from "@angular/forms";
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup } from "@angular/forms";
 import { Observable } from 'rxjs/Observable';
 
 import { ValidateDate } from '../../../../../shared/validators/date.validator';
@@ -15,7 +9,8 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 
 import * as moment from 'moment';
 
-import { Projet } from '../../../repository/projet.repository';
+import { Projet, ProjetRepository } from '../../../repository/projet.repository';
+import { ProjetFormService } from '../../../services/projet-form.service';
 import { Mission, MissionRepository } from '../../../repository/mission.repository';
 import { Etat, EtatRepository } from '../../../repository/etat.repository';
 
@@ -26,32 +21,35 @@ import { Etat, EtatRepository } from '../../../repository/etat.repository';
   styleUrls: ['./mission-form.component.css']
 })
 export class MissionFormComponent implements OnInit {
-  form: FormGroup;
-	mission: Mission;
-  @Input('projet') projet: Projet = null;
 
-  @Output() saved: EventEmitter<number> = new EventEmitter();
+  //formulaire
+  form: FormGroup;
+  //Mission si update, null si create
+	mission: Mission;
+  id_projet: number;
+  projet: Projet;
+
   etats: Observable<Etat[]>;
 
   constructor(
-    private fb: FormBuilder, 
+    private fs: ProjetFormService, 
     private missionR: MissionRepository, 
+    private projetR: ProjetRepository, 
     private etatR: EtatRepository,
+    private route: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit() {
-    this.mission = {};
+    console.log(this.route)
+    console.log(this.route.snapshot.paramMap.get('mission'))
+    console.log(Number(this.route.snapshot.paramMap.get('mission')))
+    console.log(isNaN(Number(this.route.snapshot.paramMap.get('mission'))));
     this.etats = this.etatR.etats();
-  	this.createForm();
+  	this.getForm();
   }
 
-  createForm() {
-  	this.form = this.fb.group({
-      libelle: [null, [Validators.required]],
-      detail: [],
-      nbJour: [],
-      etat: []
-    });
+  getForm() {
+  	this.form = this.fs.getMissionForm();
   }
 
   save() {
@@ -62,12 +60,20 @@ export class MissionFormComponent implements OnInit {
     let mission = Object.assign({}, this.form.value);
     mission.projet = this.projet.id;
 		this.missionR.post(mission)
-							  		.subscribe(res => {
-							          this.mission = res;
+                    .subscribe(res => {
+                        this.mission = res;
                         this.router.navigate(['projet', this.projet.id]);
-							        },
-							        error => { /*this.errors = error.error;*/ }
-							      );
+                      },
+                      error => { /*this.errors = error.error;*/ }
+                    );
   }
 
+  getProjet() {
+    this.projetR.get(this.id_projet)
+      .subscribe(
+        res => {
+          this.projet = res;
+        }
+      );
+  }
 }

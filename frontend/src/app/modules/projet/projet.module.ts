@@ -87,6 +87,9 @@ import { ProjetRepository } from './repository/projet.repository';
 import { OrganismeRepository } from './repository/organisme.repository';
 import { MissionRepository } from './repository/mission.repository';
 
+//services
+import { ProjetFormService } from './services/projet-form.service';
+
 
 @NgModule({
   imports: [
@@ -170,7 +173,8 @@ import { MissionRepository } from './repository/mission.repository';
     TypeRepository,
     ProjetRepository,
     OrganismeRepository,
-    MissionRepository
+    MissionRepository,
+    ProjetFormService
   ]
 })
 export class ProjetModule { }

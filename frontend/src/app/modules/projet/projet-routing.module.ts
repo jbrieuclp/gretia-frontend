@@ -12,14 +12,25 @@ import { TypeComponent } from './components/admin/type/type.component';
 import { PListComponent } from './components/projet/p-list/p-list.component';
 import { ProjetAddComponent } from './components/projet/p-add/projet-add.component';
 import { PDisplayComponent } from './components/projet/p-display/p-display.component';
-import { MAddComponent } from './components/mission/m-add/m-add.component';
+import { MissionFormComponent } from './components/mission/form/mission-form.component';
 
-export function id(url: UrlSegment[]) {
-	if (url.length === 1 && url[0].path.match(/^\d+$/)) {
+export function IdMatcher(url: UrlSegment[]) {
+
+	if (url.length === 0) {
+    return null;
+  }
+
+  const reg = /^\d+$/;
+  const param = url[ 0 ].toString();
+
+	console.log(url);
+	console.log(url[0].path.match(/^\d+$/));
+	console.log(new UrlSegment(url[0].path, {}));
+	if (param.match( reg )) {
 		return {
 			consumed: url,
 			posParams: {
-        id: new UrlSegment(url[0].path, {})
+        id: url[0]
       }
     }
 	}
@@ -37,13 +48,16 @@ const routes: Routes = [
 			{ path: 'projets', children: [
 				{ path: '', component: PListComponent, pathMatch: 'full' },
 				{ path: 'ajouter', component: ProjetAddComponent, pathMatch: 'full' },
-				{ path: ':id', children: [
+				{ matcher: IdMatcher, children: [
 					{ path: '', component: PDisplayComponent, pathMatch: 'full' },
-					{ path: 'missions', children: [
-						{ path: '', component: PListComponent, pathMatch: 'full' },
-						{ path: 'ajouter', component: MAddComponent, pathMatch: 'full' }
-					]}
+				//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
+					{ path: 'mission', component: MissionFormComponent, pathMatch: 'full' },
 				]},
+			]},
+			{ 
+				path: 'mission', children: [
+			//	{ path: 'info', component: MissionFormComponent, pathMatch: 'full' } //TODO: Detail
+				{ matcher: IdMatcher, component: MissionFormComponent }
 			]},
 			{ 
 				path: 'admin', 

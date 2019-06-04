@@ -1,50 +1,67 @@
-<form [formGroup]="form" (submit)="save()">
+<div class="row justify-content-center">
+	<div class="col-sm-8">
+	  <h4>{{ projet?.libelle }}</h4>
 
-<mat-card>
-	<mat-card-header>
-		<h4>Ajouter une mission au projet</h4>
-	</mat-card-header>
-	<mat-card-content>
-		<div class="row">
-			<div class="col-9">
+		<form [formGroup]="form" (submit)="save()">
+
+		<mat-accordion>
+
+			<mat-expansion-panel [expanded]="true">
+		    <mat-expansion-panel-header>
+		    	<h4>Ajouter une mission au projet</h4>
+		    </mat-expansion-panel-header>
+
+				<div class="row">
+					<div class="col-9">
+						<mat-form-field>
+					    <input matInput placeholder="Intitulé"  
+					    			required
+					    			formControlName="libelle"
+					    			id="libelle">
+					  </mat-form-field>
+					</div>
+					<div class="col-3">
+						<mat-form-field>
+						  <mat-select placeholder="État" formControlName="etat">
+						    <mat-option *ngFor="let etat of etats | async" [value]="etat.id">
+						      {{ etat.libelle }}
+						    </mat-option>
+						  </mat-select>
+						</mat-form-field>
+					</div>
+				</div>
+
+				<div class="row">
+					<mat-form-field class="col-sm-4">
+				    <input matInput 
+				    	placeholder="Nombre de jour"  
+			  			formControlName="nbJour"
+			  			id="nbJour">
+				  </mat-form-field>
+				</div>
 				<mat-form-field>
-			    <input matInput placeholder="Intitulé"  
-			    			required
-			    			formControlName="libelle"
-			    			id="libelle">
+					<textarea matInput 
+						placeholder="Détail..."
+						formControlName="detail"
+						id="detail"></textarea>
 			  </mat-form-field>
-			</div>
-			<div class="col-3">
-				<mat-form-field>
-				  <mat-select placeholder="État" formControlName="etat">
-				    <mat-option *ngFor="let etat of etats | async" [value]="etat.id">
-				      {{ etat.libelle }}
-				    </mat-option>
-				  </mat-select>
-				</mat-form-field>
-			</div>
-		</div>
 
-		<div class="row">
-			<mat-form-field class="col-sm-4">
-		    <input matInput 
-		    	placeholder="Nombre de jour"  
-    			formControlName="nbJour"
-    			id="nbJour">
-		  </mat-form-field>
-		</div>
-		<mat-form-field>
-			<textarea matInput 
-				placeholder="Détail..."
-				formControlName="detail"
-				id="detail"></textarea>
-	  </mat-form-field>
+			  <div>
+			  	<button type="submit" mat-raised-button style="min-width: 0; margin-top: 20px;" color="primary" [disabled]="!form.valid"><mat-icon>done</mat-icon> Enregistrer</button>
+			  </div>
+		  </mat-expansion-panel>
 
-	  <div>
-	  	<button type="submit" mat-raised-button style="min-width: 0; margin-top: 20px;" color="primary" [disabled]="!form.valid"><mat-icon>done</mat-icon> Enregistrer</button>
-	  </div>
-	</mat-card-content>
-</mat-card>
+			<mat-expansion-panel [expanded]="true">
+				<mat-expansion-panel-header>
+		    	<h4>Assignation du temps</h4>
+		    </mat-expansion-panel-header>
 
-	
-</form>
+
+			</mat-expansion-panel>
+
+		</mat-accordion>
+
+		</form>
+
+	</div>
+</div>
