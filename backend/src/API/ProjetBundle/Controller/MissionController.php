@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -78,25 +79,56 @@ class MissionController extends FOSRestController implements ClassResourceInterf
     * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Post("/mission")
+    * @ParamConverter("mission", converter="fos_rest.request_body")
     */
-    public function postAction(Request $request)
+    public function postAction(Mission $mission)
     {
-        $item = new Mission();
-        $form = $this->createForm(MissionType::class, $item);
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+      $errors = $this->get('validator')->validate($mission);
 
-        $form->submit(json_decode($request->getContent(), true)); // Validation des données
+      if (count($errors)) {
+          return $this->view($errors, Response::HTTP_BAD_REQUEST);
+      }
 
-        if ($form->isValid()) {
-            $item->setCompteCreate($user->getId());
-            $item->setCompteUpdate($user->getId());
-            $em = $this->getDoctrine()->getManager('gretiadb');
-            $em->persist($item);
-            $em->flush();
-            return $item;
-        } else {
-            return $form;
-        }
+      $em = $this->getDoctrine()->getManager('gretiadb');
 
+      $user = $this->get('security.token_storage')->getToken()->getUser();
+
+      $mission->setCompteCreate($user->getUsername());
+      $mission->setCompteUpdate($user->getUsername());
+
+      $em->persist($mission);
+      $em->flush();
+
+      return $mission;
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"mission"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Put("/mission/{id}")
+    * @ParamConverter("mission", converter="fos_rest.request_body")
+    */
+    public function putAction(Request $request, $id, Mission $mission)
+    {
+      $em = $this->getDoctrine()->getManager('gretiadb');
+      $item = $em->getRepository('APIProjetBundle:Mission')->find($id);
+
+      $mission->setDateCreate($item->getDateCreate());
+      $mission->setCompteCreate($item->getCompteCreate());
+
+      $errors = $this->get('validator')->validate($item);
+
+      if (count($errors)) {
+          return $this->view($errors, Response::HTTP_BAD_REQUEST);
+      }
+
+      $user = $this->get('security.token_storage')->getToken()->getUser();
+
+      $mission->setCompteUpdate($user->getUsername());
+
+      $em->merge($mission);
+      $em->flush();
+      return $mission;
     }
 }

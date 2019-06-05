@@ -28,7 +28,7 @@
             <mat-list-item>
               <a class="bt-edit" 
                 title="Editer la mission"
-                [routerLink]="['/metadata/dataset', mission.id]" >
+                [routerLink]="['/projet', 'mission', mission.id]" >
                 <mat-icon>edit</mat-icon>
               </a>
               <span>↳ {{ mission.libelle }}</span>
@@ -38,7 +38,7 @@
           <mat-list-item>
             <a mat-stroked-button 
               color="primary"
-              [routerLink]="[projet.id, 'missions', 'ajouter']">
+              [routerLink]="[projet.id, 'mission']">
               + Ajouter une mission</a>
           </mat-list-item>
         </mat-list>

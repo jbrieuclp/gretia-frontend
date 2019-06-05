@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup } from "@angular/forms";
+import { FormGroup, FormArray } from "@angular/forms";
 import { Observable } from 'rxjs/Observable';
 
 import { ValidateDate } from '../../../../../shared/validators/date.validator';
@@ -25,9 +25,10 @@ export class MissionFormComponent implements OnInit {
   //formulaire
   form: FormGroup;
   //Mission si update, null si create
-	mission: Mission;
+  id_mission: string = null;
   id_projet: number;
   projet: Projet;
+  firstPanelState: boolean = true;
 
   etats: Observable<Etat[]>;
 
@@ -37,35 +38,59 @@ export class MissionFormComponent implements OnInit {
     private projetR: ProjetRepository, 
     private etatR: EtatRepository,
     private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router
+  ) { }
 
   ngOnInit() {
-    console.log(this.route)
-    console.log(this.route.snapshot.paramMap.get('mission'))
-    console.log(Number(this.route.snapshot.paramMap.get('mission')))
-    console.log(isNaN(Number(this.route.snapshot.paramMap.get('mission'))));
+    
     this.etats = this.etatR.etats();
   	this.getForm();
   }
 
   getForm() {
-  	this.form = this.fs.getMissionForm();
+  	this.form = this.fs.missionForm;
+    let id_projet = this.route.snapshot.paramMap.get('projet');
+    if ( id_projet !== null && Number.isInteger(Number(id_projet)) ) {
+      this.form.patchValue({projet: {id: Number(id_projet)}});
+    }
+    this.id_mission = this.route.snapshot.paramMap.get('mission');
+    if ( this.id_mission !== null && Number.isInteger(Number(this.id_mission)) ) {
+      console.log(this.id_mission);
+      this.patchMission(Number(this.id_mission));
+    }
   }
 
   save() {
-    this.add();
+    if (this.form.valid) {
+      let mission = Object.assign({}, this.form.value);
+      if (this.id_mission === null) {
+      } else {
+        this.update(mission);
+      }
+
+    }
   }
 
-  add() {
-    let mission = Object.assign({}, this.form.value);
-    mission.projet = this.projet.id;
+  add(mission) {
 		this.missionR.post(mission)
-                    .subscribe(res => {
-                        this.mission = res;
-                        this.router.navigate(['projet', this.projet.id]);
-                      },
-                      error => { /*this.errors = error.error;*/ }
-                    );
+                   .subscribe((mission: Mission) => {
+                       this.router.navigate(['projet', mission.projet.id]);
+                     },
+                     error => { /*this.errors = error.error;*/ }
+                   );
+  }
+
+  update(mission) {
+    this.missionR.put(this.id_mission, mission)
+                   .subscribe((mission: Mission) => {
+                       this.router.navigate(['/projet', 'mission', mission.id]);
+                     },
+                     error => { /*this.errors = error.error;*/ }
+                   );
+  }
+
+  addTravailleur() {
+    this.fs.addTravailleur(<FormArray> this.form.get('travailleurs'));
   }
 
   getProjet() {
@@ -75,5 +100,28 @@ export class MissionFormComponent implements OnInit {
           this.projet = res;
         }
       );
+  }
+
+  patchMission(id: number) {
+                      console.log("plop");
+    this.missionR.get(id)
+                  .subscribe(
+                    res => {
+                      console.log(res);
+                      this.form.patchValue(res);
+                      if (res.travailleurs) {
+                        res.travailleurs.forEach((travailleur, idx) => {
+                          this.addTravailleur();
+                          (<FormArray> this.form.get('travailleurs')).controls[idx].patchValue(travailleur);
+                        });
+                      }
+
+                    },
+                    error => { /*this.errors = error.error;*/ }
+                  ); 
+  }
+
+  ngOnDestroy() {
+    this.fs.reset(this.form);
   }
 }

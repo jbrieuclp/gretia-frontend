@@ -1,0 +1,16 @@
+<div class="row" [formGroup]="travailleurForm">
+	<mat-form-field class="col-sm-7" formGroupName="personne">
+	  <mat-select placeholder="Personne" formControlName="id">
+	    <mat-option *ngFor="let person of persons | async" [value]="person.id">
+	      {{ person.surnom }}
+	    </mat-option>
+	  </mat-select>
+	</mat-form-field>
+
+	<mat-form-field class="col-sm-5">
+	  <input matInput 
+	  	placeholder="Temps assigné"  
+			formControlName="temps"
+			id="temps">
+	</mat-form-field>
+</div>

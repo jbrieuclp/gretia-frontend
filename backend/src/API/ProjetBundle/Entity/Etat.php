@@ -17,7 +17,7 @@ class Etat
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.etat_id_etat_seq", allocationSize=1, initialValue=1)
 	 *
-	 * @Serializer\Groups({"etat", "projet"})
+	 * @Serializer\Groups({"etat", "projet", "mission"})
 	 */
 	private $id;
 

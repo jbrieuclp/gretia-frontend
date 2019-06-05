@@ -21,6 +21,7 @@ export interface Mission {
   nbJour?: any,
   etat?: any,
   projet?: any,
+  travailleurs?: any
   dateCreate?: any,
   compteCreate?: any,
   dateUpdate?: any,
@@ -52,14 +53,12 @@ export class MissionRepository {
 
   /** GET mission par ID  **/
   get(id: number): Observable<Mission> {
-    const url = this.httpUrlBase + '/projet/'+id;
-    const options = {};
+    console.log("get");
+    const url = this.httpUrlBase + '/mission/'+id;
     return this.http
-      .get(url, options)
+      .get(url, httpOptions)
       .pipe(
-        map((res: Mission) => { 
-          return res;
-        })
+        map((res: Mission) => res)
         , retry(3)
        );
   }
@@ -69,7 +68,7 @@ export class MissionRepository {
     const url = this.httpUrlBase + '/mission';
     const options = JSON.stringify(data);
     return this.http
-      .post(url, options)
+      .post(url, options, httpOptions)
       .pipe(
         map((res: Mission) => { 
           return res;
@@ -78,11 +77,12 @@ export class MissionRepository {
   }
 
   /** PUT mission par ID  **/
-  put(init: Mission, update: Mission): Observable<Mission> {
-    const url = this.httpUrlBase + '/projet/'+init.id;
+  put(id: string, update: Mission): Observable<Mission> {
+    update.id = Number(id);
+    const url = this.httpUrlBase + '/mission/'+id;
     const options = JSON.stringify(update);
     return this.http
-      .put(url, options)
+      .put(url, options, httpOptions)
       .pipe(
         map((res: Mission) => { 
           return res;
@@ -92,7 +92,7 @@ export class MissionRepository {
 
   /** DELETE mission par ID **/
   delete(projet: Mission): Observable<Boolean> {
-    const url = this.httpUrlBase + '/projet/'+projet.id;
+    const url = this.httpUrlBase + '/mission/'+projet.id;
     const options = {};
     return this.http
       .delete(url, options)

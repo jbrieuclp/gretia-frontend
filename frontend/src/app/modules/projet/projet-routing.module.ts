@@ -48,7 +48,7 @@ const routes: Routes = [
 			{ path: 'projets', children: [
 				{ path: '', component: PListComponent, pathMatch: 'full' },
 				{ path: 'ajouter', component: ProjetAddComponent, pathMatch: 'full' },
-				{ matcher: IdMatcher, children: [
+				{ path: ':projet', children: [
 					{ path: '', component: PDisplayComponent, pathMatch: 'full' },
 				//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
 					{ path: 'mission', component: MissionFormComponent, pathMatch: 'full' },
@@ -57,7 +57,7 @@ const routes: Routes = [
 			{ 
 				path: 'mission', children: [
 			//	{ path: 'info', component: MissionFormComponent, pathMatch: 'full' } //TODO: Detail
-				{ matcher: IdMatcher, component: MissionFormComponent }
+				{ path: ':mission', component: MissionFormComponent, pathMatch: 'full' }
 			]},
 			{ 
 				path: 'admin', 

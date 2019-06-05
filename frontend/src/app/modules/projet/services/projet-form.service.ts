@@ -18,8 +18,8 @@ export class ProjetFormService {
 
   projet: Projet;
   projetForm: FormGroup;
-  mission: Mission;
-  missionForm: FormGroup;
+  mission: Mission = {};
+  private _missionForm: FormGroup;
 
 
 	constructor(
@@ -27,42 +27,58 @@ export class ProjetFormService {
     private projetR: ProjetRepository, 
     private missionR: MissionRepository,
     private route: ActivatedRoute,
-  ) {}
+  ) {
+    this.initMissionForm();
+  }
 
-  initProjetForm(): FormGroup{
+  initProjetForm(){
 
   }
 
-  getMissionForm(): FormGroup {
-    console.log(this.route)
-    let form = this.initMissionForm();
-    
-//    this.missionR.get()
-//                    .subscribe(
-//                      res => form.patchValue(res),
-//                      error => { /*this.errors = error.error;*/ }
-//                    );  
-    return form;
+  get missionForm(): FormGroup {
+    return this._missionForm;
   }
 
-  initMissionForm(): FormGroup{
-    return this.fb.group({
+  private initMissionForm(): void{
+    this._missionForm = this.fb.group({
       libelle: [null, [Validators.required]],
-      detail: [],
-      nbJour: [],
-      etat: [],
-      travailleurs: this.fb.array([this.createTravailleur()])
+      detail: [''],
+      nbJour: [''],
+      etat: this.fb.group({
+        id: [null, [Validators.required]]
+      }),
+      projet: this.fb.group({
+        id: [null, [Validators.required]]
+      }),
+      travailleurs: this.fb.array([])
     });
   }
 
-  createTravailleur(): FormGroup {
+  private createTravailleur(): FormGroup {
     return this.fb.group({
-      person: [null, [Validators.required]],
+      personne: this.fb.group({
+        id: [null, [Validators.required]]
+      }),
       temps: [null, [Validators.required]]
     });
   }
 
   addTravailleur(travailleurs: FormArray): void {
     travailleurs.push(this.createTravailleur());
+  }
+
+  reset(form: FormGroup): void {
+    for (var k in form.controls ){ 
+       if (form.controls[k] instanceof FormArray) {
+         this.clearFormArray(<FormArray> form.controls[k]);
+       }
+    }
+    form.reset();
+  }
+
+  private clearFormArray(formArray: FormArray): void {
+    while (formArray.length !== 0) {
+      formArray.removeAt(0)
+    }
   }
 }

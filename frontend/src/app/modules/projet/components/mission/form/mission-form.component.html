@@ -2,15 +2,17 @@
 	<div class="col-sm-8">
 	  <h4>{{ projet?.libelle }}</h4>
 
-		<form [formGroup]="form" (submit)="save()">
+		<form [formGroup]="form" (ngSubmit)="save()">
 
-		<mat-accordion>
+		<mat-accordion [multi]="true">
 
-			<mat-expansion-panel [expanded]="true">
+			<mat-expansion-panel 
+				[expanded]="firstPanelState"
+				(opened)="firstPanelState = true"
+       	(closed)="firstPanelState = false">
 		    <mat-expansion-panel-header>
 		    	<h4>Ajouter une mission au projet</h4>
 		    </mat-expansion-panel-header>
-
 				<div class="row">
 					<div class="col-9">
 						<mat-form-field>
@@ -20,9 +22,9 @@
 					    			id="libelle">
 					  </mat-form-field>
 					</div>
-					<div class="col-3">
+					<div class="col-3" formGroupName="etat">
 						<mat-form-field>
-						  <mat-select placeholder="État" formControlName="etat">
+						  <mat-select placeholder="État" formControlName="id">
 						    <mat-option *ngFor="let etat of etats | async" [value]="etat.id">
 						      {{ etat.libelle }}
 						    </mat-option>
@@ -46,16 +48,22 @@
 						id="detail"></textarea>
 			  </mat-form-field>
 
-			  <div>
+			  <div *ngIf="firstPanelState">
 			  	<button type="submit" mat-raised-button style="min-width: 0; margin-top: 20px;" color="primary" [disabled]="!form.valid"><mat-icon>done</mat-icon> Enregistrer</button>
 			  </div>
 		  </mat-expansion-panel>
 
-			<mat-expansion-panel [expanded]="true">
+			<mat-expansion-panel>
 				<mat-expansion-panel-header>
-		    	<h4>Assignation du temps</h4>
+		    	<h4>Assignation du temps<ng-container *ngIf="form.get('travailleurs').length"> - {{ form.get('travailleurs').length }} personne(s)</ng-container></h4>
 		    </mat-expansion-panel-header>
-
+		    <button mat-stroked-button color="primary" type="button" (click)="addTravailleur()" style="margin-right: 8px;"><mat-icon>add</mat-icon> Associer quelqu'un</button>
+		    <ng-container *ngIf="!firstPanelState">
+			  	<button type="submit" mat-raised-button style="min-width: 0; margin-top: 20px;" color="primary" [disabled]="!form.valid"><mat-icon>done</mat-icon> Enregistrer</button>
+			  </ng-container>
+		    <ng-container *ngFor="let travailleur of form.get('travailleurs').controls; let idx = index">
+		    	<app-projet-travailleur-form [travailleurForm]="travailleur"></app-projet-travailleur-form>
+		    </ng-container>
 
 			</mat-expansion-panel>
 

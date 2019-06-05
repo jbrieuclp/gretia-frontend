@@ -13,9 +13,9 @@ class Travail
 {
 	/**
 	 * @ORM\Id
-	 * @ORM\Column(name="id_personne", type="integer")
+	 * @ORM\Column(name="id", type="integer")
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
-   * @ORM\SequenceGenerator(sequenceName="projet.personne_id_personne_seq", allocationSize=1, initialValue=1)
+   * @ORM\SequenceGenerator(sequenceName="projet.travail_id_seq", allocationSize=1, initialValue=1)
 	 *
 	 * @Serializer\Groups({"travail"})
 	 */

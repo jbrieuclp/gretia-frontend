@@ -3,15 +3,28 @@
 namespace API\ProjetBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreFlushEventArgs;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\Type;
+use Symfony\Component\Validator\Constraints as Assert;
+
+use API\ProjetBundle\Entity\MissionPersonne;
 
 /**
 * @ORM\Entity
 * @ORM\Table(name="projet.mission")
+* @ORM\HasLifecycleCallbacks
 */
 class Mission
 {
-	/**
+	
+  public function __construct() {
+    $this->travailleurs = new ArrayCollection();
+  }
+
+  /**
 	 * @ORM\Id
 	 * @ORM\Column(name="id_mission", type="integer")
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
@@ -23,6 +36,11 @@ class Mission
 
   /**
    * @ORM\Column(name="libelle", type="string", nullable=true)
+   * @Assert\NotBlank(message="Le nom de la mission ne doit pas être vide.")
+   * @Assert\Length(
+   *      max = 512,
+   *      maxMessage = "Le nom de la mission ne doit pas faire plus de {{ limit }} caractères"
+   * )
    *
    * @Serializer\Groups({"mission"})
    */
@@ -43,16 +61,18 @@ class Mission
   private $nbJour;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Etat", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Etat")
    * @ORM\JoinColumn(name="etat_id", referencedColumnName="id_etat", nullable=true)
+   * @Assert\NotNull(message="L'état doit être spécifié.")
    *
    * @Serializer\Groups({"mission"})
    */
   private $etat;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Projet", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Projet")
    * @ORM\JoinColumn(name="projet_id", referencedColumnName="id_projet", nullable=true)
+   * @Assert\NotNull(message="La mission doit être associé à un projet.")
    *
    * @Serializer\Groups({"mission"})
    */
@@ -66,7 +86,7 @@ class Mission
   private $dateCreate;
 
   /**
-   * @ORM\Column(name="compte_create_id", type="integer", nullable=true)
+   * @ORM\Column(name="compte_create", type="string", nullable=true)
    *
    * @Serializer\Groups({"mission"})
    */
@@ -80,11 +100,17 @@ class Mission
   private $dateUpdate;
 
   /**
-   * @ORM\Column(name="compte_update_id", type="integer", nullable=true)
+   * @ORM\Column(name="compte_update", type="string", nullable=true)
    *
    * @Serializer\Groups({"mission"})
    */
   private $compteUpdate;
+
+  /**
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\MissionPersonne", mappedBy="mission", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   * @Serializer\Groups({"mission"})
+   */
+  private $travailleurs;
 
 
 
@@ -305,5 +331,71 @@ class Mission
     return $this->compteUpdate;
   }
 
+  /**
+   * Add Travailleur
+   *
+   * @param Travailleur $item
+   */
+  public function addTravailleur(MissionPersonne $item) {
+    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+    if (!$this->travailleurs->contains($item)) {
+      $this->travailleurs->add($item);
+    }
+  }
 
+  public function setTravailleurs($items) {
+    if ($items instanceof ArrayCollection || is_array($items)) {
+      foreach ($items as $item) {
+        $this->addTravailleur($item);
+        $item->setMission($this);
+      }
+    } elseif ($items instanceof MissionPersonne) {
+      $this->addTravailleur($items);
+      $item->setMission($this);
+    } else {
+      throw new \Exception("$items must be an instance of MissionPersonne or ArrayCollection");
+    }
+  }
+
+  /**
+   * Get ArrayCollection
+   *
+   * @return ArrayCollection $travailleurs
+   */
+  public function getTravailleurs() {
+    return $this->travailleurs;
+  }
+
+  /**
+  * @ORM\PrePersist()
+  */
+  public function prePersist(LifecycleEventArgs $args)
+  {
+    $em = $args->getEntityManager('gretiadb');
+
+    if ( !is_null($this->etat->getId()) ) 
+      $this->etat = $em->getReference('APIProjetBundle:Etat', $this->etat->getId());
+
+    if ( !is_null($this->projet->getId()) ) 
+      $this->projet = $em->getReference('APIProjetBundle:Projet', $this->projet->getId()); 
+
+    $this->dateCreate = new \Datetime();
+    $this->dateUpdate = new \Datetime();
+
+    $this->setTravailleurs($this->getTravailleurs());
+  }
+
+  /**
+  * @ORM\PreFlush()
+  */
+  public function preFlush(PreFlushEventArgs $args)
+  {
+    $em = $args->getEntityManager('gretiadb');
+    if ( !is_null($this->etat->getId()) ) 
+      $this->etat = $em->getReference('APIProjetBundle:Etat', $this->etat->getId());
+    if ( !is_null($this->projet->getId()) ) 
+      $this->projet = $em->getReference('APIProjetBundle:Projet', $this->projet->getId()); 
+    $this->dateUpdate = new \Datetime();
+    $this->setTravailleurs($this->getTravailleurs());
+  }
 }

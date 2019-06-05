@@ -89,6 +89,7 @@ import { MissionRepository } from './repository/mission.repository';
 
 //services
 import { ProjetFormService } from './services/projet-form.service';
+import { TravailleurFormComponent } from './components/person/form/travailleur-form.component';
 
 
 @NgModule({
@@ -164,7 +165,8 @@ import { ProjetFormService } from './services/projet-form.service';
     TempsTravailleurFormComponent,
     PListComponent,
     MAddComponent,
-    MissionFormComponent
+    MissionFormComponent,
+    TravailleurFormComponent
   ],
   providers: [
     PersonRepository,
