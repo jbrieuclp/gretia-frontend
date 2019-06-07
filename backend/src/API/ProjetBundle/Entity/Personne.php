@@ -27,7 +27,7 @@ class Personne
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.personne_id_personne_seq", allocationSize=1, initialValue=1)
 	 *
-	 * @Serializer\Groups({"personne", "projet", "mission"})
+	 * @Serializer\Groups({"personne"})
 	 */
 	private $id;
 
@@ -55,21 +55,21 @@ class Personne
   /**
    * @ORM\Column(name="compte_id", type="string", nullable=true)
    *
-   * @Serializer\Groups({"personne"})
+   * @Serializer\Groups({})
    */
   private $compte;
 
   /**
    * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\ProjetPersonne", mappedBy="personne", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
    *
-   * @Serializer\Groups({"personne"})
+   * @Serializer\Groups({})
    */
   private $projets;
 
   /**
    * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\MissionPersonne", mappedBy="personne", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
    *
-   * @Serializer\Groups({"personne"})
+   * @Serializer\Groups({})
    */
   private $missions;
 

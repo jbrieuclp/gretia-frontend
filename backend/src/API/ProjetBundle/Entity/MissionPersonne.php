@@ -22,7 +22,7 @@ class MissionPersonne
    * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Mission", inversedBy="travailleurs")
    * @ORM\JoinColumn(name="mission_id", referencedColumnName="id_mission", nullable=false)
    *
-   * @Serializer\Groups({"personne"})
+   * @Serializer\Groups({"mission"})
    */
   private $mission;
 
@@ -31,7 +31,7 @@ class MissionPersonne
    * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Personne", inversedBy="missions", fetch="EAGER")
    * @ORM\JoinColumn(name="personne_id", referencedColumnName="id_personne", nullable=false)
    *
-   * @Serializer\Groups({"mission"})
+   * @Serializer\Groups({"personne"})
    */
   private $personne;
 

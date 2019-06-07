@@ -331,30 +331,46 @@ class Mission
     return $this->compteUpdate;
   }
 
-  /**
-   * Add Travailleur
-   *
-   * @param Travailleur $item
-   */
+  // /**
+  //  * Add Travailleur
+  //  *
+  //  * @param Travailleur $item
+  //  */
+  // public function addTravailleur(MissionPersonne $item) {
+  //   // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+  //   if (!$this->travailleurs->contains($item)) {
+  //     $this->travailleurs->add($item);
+  //   }
+  // }
+
+  // public function setTravailleurs($items) {
+  //   if ($items instanceof ArrayCollection || is_array($items)) {
+  //     foreach ($items as $item) {
+  //       $this->addTravailleur($item);
+  //       $item->setMission($this);
+  //     }
+  //   } elseif ($items instanceof MissionPersonne) {
+  //     $this->addTravailleur($items);
+  //     $item->setMission($this);
+  //   } else {
+  //     throw new \Exception("$items must be an instance of MissionPersonne or ArrayCollection");
+  //   }
+  // }
+
   public function addTravailleur(MissionPersonne $item) {
-    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
-    if (!$this->travailleurs->contains($item)) {
-      $this->travailleurs->add($item);
-    }
+    // Ici, on utilise l'ArrayCollection vraiment comme un tableau
+    $this->travailleurs[] = $item;
+    
+    // On lie le releve au obseur orga
+    $item->setMission($this);
+
+    return $this;
   }
 
-  public function setTravailleurs($items) {
-    if ($items instanceof ArrayCollection || is_array($items)) {
-      foreach ($items as $item) {
-        $this->addTravailleur($item);
-        $item->setMission($this);
-      }
-    } elseif ($items instanceof MissionPersonne) {
-      $this->addTravailleur($items);
-      $item->setMission($this);
-    } else {
-      throw new \Exception("$items must be an instance of MissionPersonne or ArrayCollection");
-    }
+  public function removeTravailleur(MissionPersonne $item) {
+    // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
+    $this->travailleurs->removeElement($item);
+    $item->setMission(null);
   }
 
   /**
@@ -369,33 +385,15 @@ class Mission
   /**
   * @ORM\PrePersist()
   */
-  public function prePersist(LifecycleEventArgs $args)
-  {
-    $em = $args->getEntityManager('gretiadb');
-
-    if ( !is_null($this->etat->getId()) ) 
-      $this->etat = $em->getReference('APIProjetBundle:Etat', $this->etat->getId());
-
-    if ( !is_null($this->projet->getId()) ) 
-      $this->projet = $em->getReference('APIProjetBundle:Projet', $this->projet->getId()); 
-
+  public function prePersist(LifecycleEventArgs $args) {
     $this->dateCreate = new \Datetime();
     $this->dateUpdate = new \Datetime();
-
-    $this->setTravailleurs($this->getTravailleurs());
   }
 
   /**
   * @ORM\PreFlush()
   */
-  public function preFlush(PreFlushEventArgs $args)
-  {
-    $em = $args->getEntityManager('gretiadb');
-    if ( !is_null($this->etat->getId()) ) 
-      $this->etat = $em->getReference('APIProjetBundle:Etat', $this->etat->getId());
-    if ( !is_null($this->projet->getId()) ) 
-      $this->projet = $em->getReference('APIProjetBundle:Projet', $this->projet->getId()); 
+  public function preFlush(PreFlushEventArgs $args) {
     $this->dateUpdate = new \Datetime();
-    $this->setTravailleurs($this->getTravailleurs());
   }
 }

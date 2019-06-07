@@ -10,7 +10,7 @@ import { CategorieComponent } from './components/admin/categorie/categorie.compo
 import { EtatComponent } from './components/admin/etat/etat.component';
 import { TypeComponent } from './components/admin/type/type.component';
 import { PListComponent } from './components/projet/p-list/p-list.component';
-import { ProjetAddComponent } from './components/projet/p-add/projet-add.component';
+import { ProjetFormComponent } from './components/projet/form/projet-form.component';
 import { PDisplayComponent } from './components/projet/p-display/p-display.component';
 import { MissionFormComponent } from './components/mission/form/mission-form.component';
 
@@ -47,9 +47,9 @@ const routes: Routes = [
 			{ path: '', redirectTo: 'projets', pathMatch: 'full' },
 			{ path: 'projets', children: [
 				{ path: '', component: PListComponent, pathMatch: 'full' },
-				{ path: 'ajouter', component: ProjetAddComponent, pathMatch: 'full' },
+				{ path: 'ajouter', component: ProjetFormComponent, pathMatch: 'full' },
 				{ path: ':projet', children: [
-					{ path: '', component: PDisplayComponent, pathMatch: 'full' },
+					{ path: '', component: ProjetFormComponent, pathMatch: 'full' },
 				//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
 					{ path: 'mission', component: MissionFormComponent, pathMatch: 'full' },
 				]},

@@ -7,7 +7,10 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
+use API\ProjetBundle\Form\MissionPersonneType;
 
 use API\ProjetBundle\Entity\Mission;
 use API\ProjetBundle\Entity\Projet;
@@ -23,11 +26,6 @@ class MissionType extends AbstractType
     {
         $builder->add('libelle')
                 ->add('detail')
-                ->add('projet', EntityType::class, array(
-                                            'class' => Projet::class,
-                                            'em' => 'gretiadb',
-                                            'multiple' => false
-                                        ))
                 ->add('nbJour')
                 ->add('etat');
     }

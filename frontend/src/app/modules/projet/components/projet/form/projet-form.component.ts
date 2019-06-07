@@ -41,7 +41,13 @@ export class ProjetFormComponent implements OnInit {
   etats: Observable<Etat[]>;
 //  @Input('updateEtat') updateEtat: Etat = null;
 
-  constructor(private fb: FormBuilder, private projetR: ProjetRepository, private typeR: TypeRepository, private personR: PersonRepository, private etatR: EtatRepository) { }
+  constructor(
+    private fb: FormBuilder, 
+    private projetR: ProjetRepository, 
+    private typeR: TypeRepository, 
+    private personR: PersonRepository, 
+    private etatR: EtatRepository
+  ) { }
 
   ngOnInit() {
     this.projet = {};
@@ -54,8 +60,6 @@ export class ProjetFormComponent implements OnInit {
   	this.form = this.fb.group({
       libelle: [null, [Validators.required]],
       localisation: [],
-      partenairesFinanciers: this.fb.array([]),
-      partenairesTechniques: this.fb.array([]),
       type: [],
       objet: [],
       milieux: [],
@@ -67,7 +71,7 @@ export class ProjetFormComponent implements OnInit {
       dateDebut: [],
       dateFin: [],
       dateRendu: [],
-      etat: []
+      etat: [null, [Validators.required]]
     });
 
     this.projetTypes = this.typeR.types();
@@ -90,7 +94,7 @@ export class ProjetFormComponent implements OnInit {
 							        error => { /*this.errors = error.error;*/ }
 							      );
   }
-
+/*
   onOrgFinancierChoice($event) {
     if (typeof this.projet.partenairesFinanciers === 'undefined') {
       this.addOrgFinancier($event);
@@ -131,5 +135,5 @@ export class ProjetFormComponent implements OnInit {
   }
   deleteOrgTechnique(idx: number) {
     this.orgTechniqueFormArray.removeAt(idx);
-  }
+  }*/
 }

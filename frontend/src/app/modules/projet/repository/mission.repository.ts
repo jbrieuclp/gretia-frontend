@@ -28,6 +28,12 @@ export interface Mission {
   compteUpdate?: any
 }
 
+export interface MissionTravailleur {
+  mission?: Mission,
+  personne?: Personne,
+  temps?: number
+}
+
 @Injectable()
 export class MissionRepository {
 
@@ -52,9 +58,8 @@ export class MissionRepository {
   }
 
   /** GET mission par ID  **/
-  get(id: number): Observable<Mission> {
-    console.log("get");
-    const url = this.httpUrlBase + '/mission/'+id;
+  getMission(mission_id: number): Observable<Mission> {
+    const url = this.httpUrlBase + '/mission/'+mission_id;
     return this.http
       .get(url, httpOptions)
       .pipe(
@@ -64,29 +69,24 @@ export class MissionRepository {
   }
 
   /** POST mission par ID  **/
-  post(data: Mission): Observable<Mission> {
-    const url = this.httpUrlBase + '/mission';
+  postMission(projet_id: number, data: any): Observable<Mission> {
+    const url = this.httpUrlBase + '/projet/'+projet_id+'/missions';
     const options = JSON.stringify(data);
     return this.http
       .post(url, options, httpOptions)
       .pipe(
-        map((res: Mission) => { 
-          return res;
-        })
+        map((mission: Mission) => mission)
        );
   }
 
   /** PUT mission par ID  **/
-  put(id: string, update: Mission): Observable<Mission> {
-    update.id = Number(id);
-    const url = this.httpUrlBase + '/mission/'+id;
-    const options = JSON.stringify(update);
+  putMission(mission: Mission, data: any): Observable<Mission> {
+    const url = this.httpUrlBase + '/mission/'+mission.id;
+    const options = JSON.stringify(data);
     return this.http
       .put(url, options, httpOptions)
       .pipe(
-        map((res: Mission) => { 
-          return res;
-        })
+        map((mission: Mission) => mission)
        );
   }
 
@@ -101,6 +101,53 @@ export class MissionRepository {
           return res;
         })
         , retry(3)/*, catchError(this.handleError('deleteHero'))*/ );
+  }
+
+
+  /** GET travailleurs par ID  **/
+  getTravailleurs(mission_id: number): Observable<MissionTravailleur[]> {
+    const url = this.httpUrlBase + '/mission/'+mission_id+'/travailleurs';
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map((travailleurs: MissionTravailleur[]) => travailleurs)
+        , retry(3)
+       );
+  }
+
+  /** POST travailleur par ID  **/
+  postTravailleurs(mission_id: number, data: any): Observable<MissionTravailleur[]> {
+    const url = this.httpUrlBase + '/mission/'+mission_id+'/travailleurs';
+    const options = JSON.stringify(data);
+    return this.http
+      .post(url, options, httpOptions)
+      .pipe(
+        map((travailleurs: MissionTravailleur[]) => travailleurs)
+        , retry(3)
+       );
+  }
+
+  /** PUT travailleur par ID  **/
+  putTravailleurs(mission_id: number, trav_init_id: number, data: any): Observable<MissionTravailleur[]> {
+    const url = this.httpUrlBase + '/mission/'+mission_id+'/travailleur/'+trav_init_id;
+    const options = JSON.stringify(data);
+    return this.http
+      .put(url, options, httpOptions)
+      .pipe(
+        map((travailleurs: MissionTravailleur[]) => travailleurs)
+        , retry(3)
+       );
+  }
+
+  /** PUT travailleur par ID  **/
+  removeTravailleur(mission: Mission, travailleur: MissionTravailleur): Observable<MissionTravailleur[]> {
+    const url = this.httpUrlBase + '/mission/'+mission.id+'/travailleur/'+travailleur.personne.id;
+    return this.http
+      .delete(url, httpOptions)
+      .pipe(
+        map((travailleurs: MissionTravailleur[]) => travailleurs)
+        , retry(3)
+       );
   }
 
 }

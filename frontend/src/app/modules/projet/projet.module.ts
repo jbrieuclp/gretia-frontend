@@ -75,8 +75,8 @@ import { PDisplayTypeComponent } from './components/projet/p-display/p-display-t
 import { PDisplayPartComponent } from './components/projet/p-display/p-display-part.component';
 import { PDisplayTravailleurComponent } from './components/projet/p-display/p-display-travailleur.component';
 import { PListComponent } from './components/projet/p-list/p-list.component';
-import { MAddComponent } from './components/mission/m-add/m-add.component';
 import { MissionFormComponent } from './components/mission/form/mission-form.component';
+import { MissionTravailleurFormComponent } from './components/mission/form/m-travailleur-form.component';
 
 //repository
 import { PersonRepository } from './repository/person.repository';
@@ -164,9 +164,12 @@ import { TravailleurFormComponent } from './components/person/form/travailleur-f
     PDisplayTravailleurComponent,
     TempsTravailleurFormComponent,
     PListComponent,
-    MAddComponent,
     MissionFormComponent,
+    MissionTravailleurFormComponent,
     TravailleurFormComponent
+  ],
+  entryComponents: [
+    MissionTravailleurFormComponent
   ],
   providers: [
     PersonRepository,

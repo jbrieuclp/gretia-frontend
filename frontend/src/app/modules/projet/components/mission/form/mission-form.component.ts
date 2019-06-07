@@ -1,19 +1,21 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormArray } from "@angular/forms";
+import {
+  FormGroup,
+  FormControl,
+  FormArray,
+  Validators,
+  FormBuilder
+} from "@angular/forms";
 import { Observable } from 'rxjs/Observable';
-
-import { ValidateDate } from '../../../../../shared/validators/date.validator';
-import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-
-import * as moment from 'moment';
+import { MatDialog } from '@angular/material';
 
 import { Projet, ProjetRepository } from '../../../repository/projet.repository';
 import { ProjetFormService } from '../../../services/projet-form.service';
-import { Mission, MissionRepository } from '../../../repository/mission.repository';
+import { Mission, MissionTravailleur, MissionRepository } from '../../../repository/mission.repository';
 import { Etat, EtatRepository } from '../../../repository/etat.repository';
-
+import { MissionTravailleurFormComponent } from './m-travailleur-form.component';
+import { ConfirmationDialogComponent } from '../../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-projet-mission-form',
@@ -25,103 +27,146 @@ export class MissionFormComponent implements OnInit {
   //formulaire
   form: FormGroup;
   //Mission si update, null si create
-  id_mission: string = null;
+  mission: Mission = {};
+  travailleurs: MissionTravailleur[] = [];
   id_projet: number;
   projet: Projet;
   firstPanelState: boolean = true;
 
   etats: Observable<Etat[]>;
+  jourInUse: number = 0;
 
   constructor(
-    private fs: ProjetFormService, 
+    private fb: FormBuilder, 
     private missionR: MissionRepository, 
     private projetR: ProjetRepository, 
     private etatR: EtatRepository,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
-    
+    //get ID projet
+    let id_projet = this.route.snapshot.paramMap.get('projet');
+    this.id_projet = ( id_projet !== null && Number.isInteger(Number(id_projet)) ) ? Number(id_projet) : null;
+
+  	this.form = this.setForm();
+    this.getMission();
     this.etats = this.etatR.etats();
-  	this.getForm();
   }
 
-  getForm() {
-  	this.form = this.fs.missionForm;
-    let id_projet = this.route.snapshot.paramMap.get('projet');
-    if ( id_projet !== null && Number.isInteger(Number(id_projet)) ) {
-      this.form.patchValue({projet: {id: Number(id_projet)}});
-    }
-    this.id_mission = this.route.snapshot.paramMap.get('mission');
-    if ( this.id_mission !== null && Number.isInteger(Number(this.id_mission)) ) {
-      console.log(this.id_mission);
-      this.patchMission(Number(this.id_mission));
-    }
+  private setForm(): FormGroup{
+    return this.fb.group({
+      libelle: [null, [Validators.required]],
+      detail: [''],
+      nbJour: [''],
+      etat: [null, [Validators.required]]
+    });
+  }
+
+  private getMission(): void {
+    let id_mission = this.route.snapshot.paramMap.get('mission');
+    if ( id_mission !== null && Number.isInteger(Number(id_mission)) ) {
+      this.missionR.getMission(Number(id_mission))
+          .subscribe(
+            (mission: Mission) => {
+              this.mission = mission;
+              this.mission.etat = this.mission.etat.id;
+              this.form.patchValue(this.mission);
+              this.refreshJourInUse();
+            },
+            error => { /*this.errors = error.error;*/ }
+          );
+
+      this.missionR.getTravailleurs(Number(id_mission))
+          .subscribe(
+            (travailleurs: MissionTravailleur[]) => {
+              this.travailleurs = travailleurs;
+              this.refreshJourInUse();
+            },
+            error => { /*this.errors = error.error;*/ }
+          );
+    } 
   }
 
   save() {
     if (this.form.valid) {
-      let mission = Object.assign({}, this.form.value);
-      if (this.id_mission === null) {
+      if (this.mission.id === undefined) {
+        this.add();
       } else {
-        this.update(mission);
+        this.update();
       }
-
     }
   }
 
-  add(mission) {
-		this.missionR.post(mission)
+  add() {
+		this.missionR.postMission(this.id_projet, this.form.value)
                    .subscribe((mission: Mission) => {
-                       this.router.navigate(['projet', mission.projet.id]);
+                      this.router.navigate(['/projet', 'mission', mission.id]);
                      },
                      error => { /*this.errors = error.error;*/ }
                    );
   }
 
-  update(mission) {
-    this.missionR.put(this.id_mission, mission)
+  update() {
+    this.missionR.putMission(this.mission, this.form.value)
                    .subscribe((mission: Mission) => {
-                       this.router.navigate(['/projet', 'mission', mission.id]);
-                     },
-                     error => { /*this.errors = error.error;*/ }
-                   );
-  }
-
-  addTravailleur() {
-    this.fs.addTravailleur(<FormArray> this.form.get('travailleurs'));
-  }
-
-  getProjet() {
-    this.projetR.get(this.id_projet)
-      .subscribe(
-        res => {
-          this.projet = res;
-        }
-      );
-  }
-
-  patchMission(id: number) {
-                      console.log("plop");
-    this.missionR.get(id)
-                  .subscribe(
-                    res => {
-                      console.log(res);
-                      this.form.patchValue(res);
-                      if (res.travailleurs) {
-                        res.travailleurs.forEach((travailleur, idx) => {
-                          this.addTravailleur();
-                          (<FormArray> this.form.get('travailleurs')).controls[idx].patchValue(travailleur);
-                        });
-                      }
-
+                      this.mission = mission;
+                      this.form.reset();
+                      this.mission.etat = this.mission.etat.id;
+                      this.form.patchValue(this.mission);
+                      this.refreshJourInUse();
                     },
-                    error => { /*this.errors = error.error;*/ }
-                  ); 
+                     error => { /*this.errors = error.error;*/ }
+                   );
   }
 
-  ngOnDestroy() {
-    this.fs.reset(this.form);
+  removeTravailleur(travailleur) {
+    this.missionR.removeTravailleur(this.mission, travailleur)
+                   .subscribe(
+                     (travailleurs: MissionTravailleur[]) => {
+                       this.travailleurs = travailleurs;
+                       this.refreshJourInUse();
+                     },
+                     error => { /*this.errors = error.error;*/ }
+                   );
   }
+
+  openDialog(travailleur): void {
+    const dialogRef = this.dialog.open(MissionTravailleurFormComponent, {
+      width: '300px',
+      data: {
+        mission: this.mission,
+        travailleurs: this.travailleurs, 
+        travailleur: travailleur
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(travailleurs => {
+      this.travailleurs = travailleurs;
+      this.refreshJourInUse();
+    });
+  }
+
+  removeDialog(travailleur): void {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px',
+      data: "Confirmer la suppression de "+travailleur.personne.surnom+" pour cette mission ?"
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        this.removeTravailleur(travailleur);
+      }
+    });
+  }
+
+  refreshJourInUse():void {
+    let total = 0;
+    for (let travailleur of this.travailleurs) {
+      total += travailleur.temps;
+    }
+    this.jourInUse = total;
+  }
+
 }
