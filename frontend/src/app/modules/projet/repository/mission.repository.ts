@@ -128,7 +128,7 @@ export class MissionRepository {
   }
 
   /** PUT travailleur par ID  **/
-  putTravailleurs(mission_id: number, trav_init_id: number, data: any): Observable<MissionTravailleur[]> {
+  putTravailleur(mission_id: number, trav_init_id: number, data: any): Observable<MissionTravailleur[]> {
     const url = this.httpUrlBase + '/mission/'+mission_id+'/travailleur/'+trav_init_id;
     const options = JSON.stringify(data);
     return this.http

@@ -78,9 +78,9 @@ class OrganismeController extends FOSRestController implements ClassResourceInte
     * @Rest\View(serializerGroups = {"organisme"})
     * @Security("has_role('GESTION_PROJET')")
     *
-    * @Rest\Post("/organisme")
+    * @Rest\Post("/organismes")
     */
-    public function postAction(Request $request)
+    public function createOrganismeAction(Request $request)
     {
         $item = new Organisme();
         $form = $this->createForm(OrganismeType::class, $item);

@@ -1,6 +1,6 @@
+<h4>Dépôt d'une nouvelle étude</h4>
 <div class="row">
 	<div class="col-sm-8">
-		<h4>Dépôt d'une nouvelle étude</h4>
 
 		<form [formGroup]="form" (ngSubmit)="save()">
 
@@ -41,7 +41,7 @@
 						<mat-form-field class="col-sm-4">
 						  <mat-select placeholder="Type de projet" formControlName="type">
 						  	<mat-option></mat-option>
-						    <mat-option *ngFor="let type of projetTypes | async" [value]="type.id">
+						    <mat-option *ngFor="let type of types | async" [value]="type.id">
 						      {{type.libelle}}
 						    </mat-option>
 						  </mat-select>
@@ -50,7 +50,7 @@
 						<mat-form-field class="col-sm-4">
 						  <mat-select placeholder="Responsable" formControlName="responsable">
 						  	<mat-option></mat-option>
-						    <mat-option *ngFor="let responsable of projetResponsables | async" [value]="responsable.id">
+						    <mat-option *ngFor="let responsable of responsables | async" [value]="responsable.id">
 						      {{responsable.surnom}}
 						    </mat-option>
 						  </mat-select>
@@ -135,81 +135,114 @@
 					    </mat-expansion-panel-header>
 
 					    <mat-form-field>
-								<input matInput placeholder="Date de début"
-											  [matDatepicker]="dateDebut"
-											  formControlName="dateDebut" 
-						    			  id="dateDebut">
+								<input matInput 
+									placeholder="Date de début"
+								  [matDatepicker]="dateDebut"
+								  formControlName="dateDebut" 
+			    			  id="dateDebut">
 							  <mat-datepicker-toggle matSuffix [for]="dateDebut"></mat-datepicker-toggle>
 							  <mat-datepicker #dateDebut></mat-datepicker>
 						  </mat-form-field>
 						  <mat-form-field>
-						    <input matInput placeholder="Date de fin"  
-						    			formControlName="dateFin"
-						    			id="dateFin">
+						    <input matInput 
+						    	placeholder="Date de fin"  
+						    	[matDatepicker]="dateFin"
+				    			formControlName="dateFin"
+				    			id="dateFin">
+						    <mat-datepicker-toggle matSuffix [for]="dateFin"></mat-datepicker-toggle>
+							  <mat-datepicker #dateFin></mat-datepicker>
 						  </mat-form-field>
 						  <mat-form-field>
-						    <input matInput placeholder="Date de rendu"  
-						    			formControlName="dateRendu"
-						    			id="dateRendu">
+						    <input matInput 
+						    	placeholder="Date de rendu"  
+				    			[matDatepicker]="dateRendu"
+				    			formControlName="dateRendu"
+				    			id="dateRendu">
+						    <mat-datepicker-toggle matSuffix [for]="dateRendu"></mat-datepicker-toggle>
+							  <mat-datepicker #dateRendu></mat-datepicker>
 						  </mat-form-field>
 						</mat-expansion-panel>
 					</div>
 				</div>
 
+				<div class="row">
+					<div class="col-12">
+						<mat-expansion-panel *ngIf="projet.id !== undefined">
+							<mat-expansion-panel-header>
+					    	<h4>Assignation du temps<ng-container *ngIf="travailleurs.length"> - {{ travailleurs.length }} personne(s)</ng-container></h4>
+					    </mat-expansion-panel-header>
+					    <button mat-stroked-button color="primary" type="button" (click)="openTravailleurDialog({})" style="margin-right: 8px;">
+					    	<mat-icon>add</mat-icon> Associer quelqu'un
+					    </button>
+					    <div class="list-group list-group-flush">
+							  <div li class="list-group-item" *ngFor="let travailleur of travailleurs; let idx = index">
+							  	<div class="row">
+							  		<div class="col-sm-5">{{ travailleur.personne.surnom }}</div>
+							  		<div class="col-sm-4">{{ travailleur.temps }}</div>
+						  			<button type="button" mat-icon-button (click)="openTravailleurDialog(travailleur)">
+									    <mat-icon>edit</mat-icon>
+									  </button>
+										<button type="button" mat-icon-button (click)="removeTravailleurDialog(travailleur)">
+									    <mat-icon>clear</mat-icon>
+									  </button>
+							  	</div>
+								</div>
+							</div>
+						</mat-expansion-panel>
+					</div>
+				</div>
 			</mat-accordion>
 
 		</form>
 	</div>
+
+	<ng-container *ngIf="projet.id !== undefined">
+		<div class="col-sm-4">
+			<mat-accordion [multi]="true">
+				<mat-expansion-panel 
+					[expanded]="true">
+			    <mat-expansion-panel-header>
+			    	<h4>Partenaires financiers</h4>
+			    </mat-expansion-panel-header>
+
+			    <button mat-stroked-button color="primary" type="button" (click)="openPartenaireDialog('f', partFinanciers)" style="margin-right: 8px;"><mat-icon>add</mat-icon> Ajouter un partenaire</button>
+
+			    <div class="list-group list-group-flush">
+					  <div li class="list-group-item" *ngFor="let organisme of partFinanciers; let idx = index">
+					  	<div class="row">
+					  		<div class="col-sm-8" [matTooltip]="organisme.nom">{{ organisme.sigle }}</div>
+								<button type="button" mat-icon-button (click)="removePartenaireDialog('f', organisme)">
+							    <mat-icon>clear</mat-icon>
+							  </button>
+					  	</div>
+						</div>
+					</div>
+
+			  </mat-expansion-panel>
+
+			  <mat-expansion-panel 
+					[expanded]="true">
+			    <mat-expansion-panel-header>
+			    	<h4>Partenaires techniques</h4>
+			    </mat-expansion-panel-header>
+
+			    <button mat-stroked-button color="primary" type="button" (click)="openPartenaireDialog('t', partTechniques)" style="margin-right: 8px;"><mat-icon>add</mat-icon> Ajouter un partenaire</button>
+
+			    <div class="list-group list-group-flush">
+					  <div li class="list-group-item" *ngFor="let organisme of partTechniques; let idx = index">
+					  	<div class="row">
+					  		<div class="col-sm-8" [matTooltip]="organisme.nom">{{ organisme.sigle }}</div>
+								<button type="button" mat-icon-button (click)="removePartenaireDialog('t', organisme)">
+							    <mat-icon>clear</mat-icon>
+							  </button>
+					  	</div>
+						</div>
+					</div>
+
+			  </mat-expansion-panel>
+
+			</mat-accordion>
+		</div>
+	</ng-container>
+
 </div>
-
-
-
-
-<!--form [formGroup]="form" (ngSubmit)="save()">
-
-
-	<div class="row">
-		<div class="col-6">
-			<mat-card>
-				<mat-card-header>
-					<h4>Partenaires financiers</h4>
-				</mat-card-header>
-				<mat-card-content>
-					<app-projet-projet-financier-form (organisme)="onOrgFinancierChoice($event)"></app-projet-projet-financier-form>
-					<div formArrayName="partenairesFinanciers" >
-						<div *ngFor="let organisme of orgFinancierFormArray.controls; let idx = index;" [formGroupName]="idx">
-							<button mat-icon-button color="primary" (click)="deleteOrgFinancier(idx)"><mat-icon aria-label="Example icon-button with a heart icon">clear</mat-icon></button>
-							<span>{{ organisme.value.nom }}</span>
-						</div>
-					</div>
-				</mat-card-content>
-			</mat-card>
-		</div>
-
-		<div class="col-6">
-			<mat-card>
-				<mat-card-header>
-					<h4>Partenaires techniques</h4>
-				</mat-card-header>
-				<mat-card-content>
-					<app-projet-projet-technique-form (organisme)="onOrgTechniqueChoice($event)"></app-projet-projet-technique-form>
-					<div formArrayName="partenairesTechniques" >
-						<div *ngFor="let organisme of orgTechniqueFormArray.controls; let idx = index;" [formGroupName]="idx">
-							<button mat-icon-button color="primary" (click)="deleteOrgTechnique(idx)"><mat-icon aria-label="Example icon-button with a heart icon">clear</mat-icon></button>
-							<span>{{ organisme.value.nom }}</span>
-						</div>
-					</div>
-				</mat-card-content>
-			</mat-card>
-		</div>
-	</div-->
-
-	
-<!--app-projet-projet-add-person-form>
-	
-</app-projet-projet-add-person-form-->
-
-	<!--div>
-  	<button type="submit" mat-raised-button style="min-width: 0; margin-top: 20px;" color="primary" [disabled]="!form.valid"><mat-icon>done</mat-icon> Enregistrer</button>
-  </div>
-</form-->

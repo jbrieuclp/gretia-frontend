@@ -3,6 +3,8 @@
 namespace API\ProjetBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -12,6 +14,7 @@ use API\ProjetBundle\Entity\ProjetPersonne;
 /**
 * @ORM\Entity
 * @ORM\Table(name="projet.projet")
+* @ORM\HasLifecycleCallbacks
 */
 class Projet
 {
@@ -258,6 +261,18 @@ class Projet
     }
   }
 
+  /**
+   * Remove partenairesFinanciers
+   *
+   * @param Organisme $item
+   */
+  public function removePartenaireFinancier(Organisme $item) {
+    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+    if ($this->partenairesFinanciers->contains($item)) {
+      $this->partenairesFinanciers->removeElement($item);
+    }
+  }
+
   public function setPartenairesFinanciers($items) {
     if ($items instanceof ArrayCollection || is_array($items)) {
       foreach ($items as $item) {
@@ -288,6 +303,18 @@ class Projet
     // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
     if (!$this->partenairesTechniques->contains($item)) {
       $this->partenairesTechniques->add($item);
+    }
+  }
+
+  /**
+   * Remove partenairesTechniques
+   *
+   * @param Organisme $item
+   */
+  public function removePartenaireTechnique(Organisme $item) {
+    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+    if ($this->partenairesTechniques->contains($item)) {
+      $this->partenairesTechniques->removeElement($item);
     }
   }
 
@@ -699,6 +726,21 @@ class Projet
   // Notez le pluriel, on récupère une liste de catégories ici !
   public function getTravailleurs() {
     return $this->travailleurs;
+  }
+  
+  /**
+  * @ORM\PrePersist()
+  */
+  public function prePersist(LifecycleEventArgs $args) {
+    $this->dateCreate = new \Datetime();
+    $this->dateUpdate = new \Datetime();
+  }
+
+  /**
+  * @ORM\PreFlush()
+  */
+  public function preFlush(PreFlushEventArgs $args) {
+    $this->dateUpdate = new \Datetime();
   }
 
 }

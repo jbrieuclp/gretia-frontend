@@ -144,8 +144,10 @@ export class MissionFormComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(travailleurs => {
-      this.travailleurs = travailleurs;
-      this.refreshJourInUse();
+      if (travailleurs !== undefined) {
+        this.travailleurs = travailleurs;
+        this.refreshJourInUse();
+      }
     });
   }
 
@@ -158,7 +160,7 @@ export class MissionFormComponent implements OnInit {
       if(result) {
         this.removeTravailleur(travailleur);
       }
-    });
+    });    
   }
 
   refreshJourInUse():void {

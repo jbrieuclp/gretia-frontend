@@ -4,6 +4,8 @@ namespace API\ProjetBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use JMS\Serializer\Annotation as Serializer;
 
 use API\ProjetBundle\Entity\ProjetPersonne;
@@ -12,6 +14,7 @@ use API\ProjetBundle\Entity\MissionPersonne;
 /**
 * @ORM\Entity
 * @ORM\Table(name="projet.personne")
+* @UniqueEntity(fields="surnom", message="Une personne au même surnom existe déjà.")
 */
 class Personne
 {
@@ -27,33 +30,33 @@ class Personne
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.personne_id_personne_seq", allocationSize=1, initialValue=1)
 	 *
-	 * @Serializer\Groups({"personne"})
+	 * @Serializer\Groups({"personne", "projet"})
 	 */
 	private $id;
 
 	/**
-   * @ORM\Column(name="nom", type="string", nullable=true)
+   * @ORM\Column(name="nom", type="string", nullable=false)
    *
    * @Serializer\Groups({"personne"})
    */
   private $nom;
 
   /**
-   * @ORM\Column(name="prenom", type="string", nullable=true)
+   * @ORM\Column(name="prenom", type="string", nullable=false)
    *
    * @Serializer\Groups({"personne"})
    */
   private $prenom;
 
   /**
-   * @ORM\Column(name="surnom", type="string", nullable=true)
+   * @ORM\Column(name="surnom", type="string", nullable=false, unique=true)
    *
    * @Serializer\Groups({"personne"})
    */
   private $surnom;
 
   /**
-   * @ORM\Column(name="compte_id", type="string", nullable=true)
+   * @ORM\Column(name="compte_gn_id", type="integer", nullable=true)
    *
    * @Serializer\Groups({})
    */

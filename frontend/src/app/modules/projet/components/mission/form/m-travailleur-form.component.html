@@ -11,6 +11,9 @@
 	      {{ person.surnom }}
 	    </mat-option>
 	  </mat-select>
+	  <mat-error *ngIf="form.get('personne').hasError('required')">
+      Ce champ est obligatoire.
+    </mat-error>
 	</mat-form-field>
 
 	<mat-form-field>
@@ -19,10 +22,16 @@
 			formControlName="temps"
 			id="temps"
 			cdkFocusInitial>
+		<mat-error *ngIf="form.get('temps').hasError('required')">
+      Ce champ est obligatoire.
+    </mat-error>
+    <mat-error *ngIf="form.get('temps').hasError('max')">
+      Trop de jours donnés ({{ form.get('temps').errors.max.actual }} jours - {{ form.get('temps').errors.max.max }} sont encore disponibles.
+    </mat-error>
 	</mat-form-field>
 
 	<div mat-dialog-actions>
 	  <button type="button" mat-stroked-button (click)="cancel()" style="margin-right: 8px;">Annuler</button>
-	  <button type="submit" mat-raised-button color="primary">{{ (data.travailleur.personne !== undefined) ? 'Modifier' : 'Ajouter' }}</button>
+	  <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid">{{ (data.travailleur.personne !== undefined) ? 'Modifier' : 'Ajouter' }}</button>
 	</div>
 </form>

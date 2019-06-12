@@ -3,8 +3,6 @@
 namespace API\ProjetBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\Type;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -12,7 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
 * @ORM\Entity
 * @ORM\Table(name="projet.a_mission_personne")
-* @ORM\HasLifecycleCallbacks
 */
 class MissionPersonne
 {
@@ -111,33 +108,5 @@ class MissionPersonne
   public function getTemps()
   {
       return $this->temps;
-  }
-
-  /**
-  * @ORM\PrePersist()
-  */
-  public function prePersist(LifecycleEventArgs $args)
-  {
-    $em = $args->getEntityManager('gretiadb');
-
-    if ( !is_null($this->mission) and !is_null($this->mission->getId()) ) 
-      $this->mission = $em->getReference('APIProjetBundle:Mission', $this->mission->getId());
-
-    if ( !is_null($this->personne) and !is_null($this->personne->getId()) ) 
-      $this->personne = $em->getReference('APIProjetBundle:Personne', $this->personne->getId());  
-  }
-
-  /**
-  * @ORM\PreFlush()
-  */
-  public function preFlush(PreFlushEventArgs $args)
-  {
-    $em = $args->getEntityManager('gretiadb');
-
-    if ( !is_null($this->mission) and !is_null($this->mission->getId()) ) 
-      $this->mission = $em->getReference('APIProjetBundle:Mission', $this->mission->getId());
-
-    if ( !is_null($this->personne) and !is_null($this->personne->getId()) ) 
-      $this->personne = $em->getReference('APIProjetBundle:Personne', $this->personne->getId());  
   }
 }

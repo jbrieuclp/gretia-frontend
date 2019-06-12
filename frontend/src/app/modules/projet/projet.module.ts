@@ -62,21 +62,16 @@ import { EtatComponent } from './components/admin/etat/etat.component';
 import { EtatFormComponent } from './components/admin/etat/form/etat-form.component';
 import { TypeComponent } from './components/admin/type/type.component';
 import { TypeFormComponent } from './components/admin/type/form/type-form.component';
-import { ProjetAddComponent } from './components/projet/p-add/projet-add.component';
 import { ProjetFormComponent } from './components/projet/form/projet-form.component';
-import { FinancierFormComponent } from './components/projet/form/financier-form.component';
-import { TechniqueFormComponent } from './components/projet/form/technique-form.component';
-import { PersonProjetFormComponent } from './components/projet/form/person-form.component';
-import { TempsTravailleurFormComponent } from './components/projet/form/temps-travailleur-form.component';
-import { PDisplayComponent } from './components/projet/p-display/p-display.component';
-import { PDisplayEtatComponent } from './components/projet/p-display/p-display-etat.component';
-import { PDisplayResponsableComponent } from './components/projet/p-display/p-display-responsable.component';
-import { PDisplayTypeComponent } from './components/projet/p-display/p-display-type.component';
-import { PDisplayPartComponent } from './components/projet/p-display/p-display-part.component';
-import { PDisplayTravailleurComponent } from './components/projet/p-display/p-display-travailleur.component';
+import { PartenaireFormComponent } from './components/projet/form/partenaire-form.component';
+import { ProjetTravailleurFormComponent } from './components/projet/form/p-travailleur-form.component';
 import { PListComponent } from './components/projet/p-list/p-list.component';
 import { MissionFormComponent } from './components/mission/form/mission-form.component';
 import { MissionTravailleurFormComponent } from './components/mission/form/m-travailleur-form.component';
+import { TravailleurFormComponent } from './components/person/form/travailleur-form.component';
+import { SListComponent } from './components/suiveuse/s-list/s-list.component';
+import { MySListComponent } from './components/suiveuse/my-s-list/my-s-list.component';
+import { SFormComponent } from './components/suiveuse/s-form/s-form.component';
 
 //repository
 import { PersonRepository } from './repository/person.repository';
@@ -86,10 +81,10 @@ import { TypeRepository } from './repository/type.repository';
 import { ProjetRepository } from './repository/projet.repository';
 import { OrganismeRepository } from './repository/organisme.repository';
 import { MissionRepository } from './repository/mission.repository';
+import { SuiveuseRepository } from './repository/suiveuse.repository';
 
 //services
 import { ProjetFormService } from './services/projet-form.service';
-import { TravailleurFormComponent } from './components/person/form/travailleur-form.component';
 
 
 @NgModule({
@@ -151,25 +146,21 @@ import { TravailleurFormComponent } from './components/person/form/travailleur-f
     EtatFormComponent,
     TypeComponent,
     TypeFormComponent,
-    ProjetAddComponent,
     ProjetFormComponent,
-    FinancierFormComponent,
-    TechniqueFormComponent,
-    PersonProjetFormComponent,
-    PDisplayComponent,
-    PDisplayEtatComponent,
-    PDisplayResponsableComponent,
-    PDisplayTypeComponent,
-    PDisplayPartComponent,
-    PDisplayTravailleurComponent,
-    TempsTravailleurFormComponent,
+    PartenaireFormComponent,
+    ProjetTravailleurFormComponent,
     PListComponent,
     MissionFormComponent,
     MissionTravailleurFormComponent,
-    TravailleurFormComponent
+    TravailleurFormComponent,
+    SListComponent,
+    MySListComponent,
+    SFormComponent
   ],
   entryComponents: [
-    MissionTravailleurFormComponent
+    MissionTravailleurFormComponent,
+    PartenaireFormComponent,
+    ProjetTravailleurFormComponent
   ],
   providers: [
     PersonRepository,
@@ -179,6 +170,7 @@ import { TravailleurFormComponent } from './components/person/form/travailleur-f
     ProjetRepository,
     OrganismeRepository,
     MissionRepository,
+    SuiveuseRepository,
     ProjetFormService
   ]
 })

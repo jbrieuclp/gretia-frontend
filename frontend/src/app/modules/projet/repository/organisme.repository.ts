@@ -42,9 +42,8 @@ export class OrganismeRepository {
   /** GET personnes par ID (cd_nom) **/
   organismes(limit?: number): Observable<Organisme[]> {
   	const url = this.httpUrlBase + '/organismes';
-  	const options = {};
     return this.http
-    	.get(url, options)
+    	.get(url, httpOptions)
     	.pipe(
         map((res: Organisme[]) => { 
           return res;
@@ -56,9 +55,8 @@ export class OrganismeRepository {
   /** GET personnes par ID (cd_nom) **/
   get(id: number): Observable<Organisme> {
     const url = this.httpUrlBase + '/organisme/'+id;
-    const options = {};
     return this.http
-      .get(url, options)
+      .get(url, httpOptions)
       .pipe(
         map((res: Organisme) => { 
           return res;
@@ -69,10 +67,10 @@ export class OrganismeRepository {
 
   /** POST personnes par ID (cd_nom) **/
   post(data: Organisme): Observable<Organisme> {
-    const url = this.httpUrlBase + '/organisme';
-    const options = JSON.stringify(data);
+    const url = this.httpUrlBase + '/organismes';
+    const sources = JSON.stringify(data);
     return this.http
-      .post(url, options)
+      .post(url, sources, httpOptions)
       .pipe(
         map((res: Organisme) => { 
           return res;
@@ -83,9 +81,9 @@ export class OrganismeRepository {
   /** PUT personnes par ID (cd_nom) **/
   put(init: Organisme, update: Organisme): Observable<Organisme> {
     const url = this.httpUrlBase + '/organisme/'+init.id;
-    const options = JSON.stringify(update);
+    const sources = JSON.stringify(update);
     return this.http
-      .put(url, options)
+      .put(url, sources, httpOptions)
       .pipe(
         map((res: Organisme) => { 
           return res;
@@ -96,9 +94,8 @@ export class OrganismeRepository {
   /** DELETE personnes par ID (cd_nom) **/
   delete(organisme: Organisme): Observable<Boolean> {
     const url = this.httpUrlBase + '/organisme/'+organisme.id;
-    const options = {};
     return this.http
-      .delete(url, options)
+      .delete(url, httpOptions)
       .pipe( 
         map((res: Boolean) => { 
           return res;

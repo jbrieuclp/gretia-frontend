@@ -11,14 +11,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use API\ProjetBundle\Entity\Projet;
 use API\ProjetBundle\Entity\ProjetPersonne;
 use API\ProjetBundle\Entity\Personne;
+use API\ProjetBundle\Entity\Organisme;
 
 use API\ProjetBundle\Form\ProjetType;
+use API\ProjetBundle\Form\ProjetPersonneType;
 
 /**
     //PROJET
@@ -71,20 +74,26 @@ class ProjetController extends FOSRestController implements ClassResourceInterfa
     * @Security("has_role('GESTION_PROJET')")
     *
     * @Rest\Get("/projet/{id}")
-    * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"entity_manager" = "gretiadb"})
     */
-    public function getProjetAction(Projet $projet)
+    public function getProjetAction($id)
     {
-        return $projet;
+      $em = $this->getDoctrine()->getManager('gretiadb');
+      $projet = $em->getRepository('APIProjetBundle:Projet')->find($id);
+
+      if (empty($projet)) {
+          return new JsonResponse(['message' => 'Projet not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      return $projet;
     }
 
     /**
     * @Rest\View(serializerGroups = {"projet"})
     * @Security("has_role('GESTION_PROJET')")
     *
-    * @Rest\Post("/projet")
+    * @Rest\Post("/projets")
     */
-    public function postAction(Request $request)
+    public function createProjetAction(Request $request)
     {
         $item = new Projet();
         $form = $this->createForm(ProjetType::class, $item);
@@ -106,51 +115,225 @@ class ProjetController extends FOSRestController implements ClassResourceInterfa
     * @Rest\View(serializerGroups = {"projet"})
     * @Security("has_role('GESTION_PROJET')")
     *
-    * @Rest\Post("/projet/{projet}/travailleur")
-    * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"entity_manager" = "gretiadb"})
+    * @Rest\Put("/projet/{id}")
     */
-    public function postTravailleurAction(Request $request, Projet $projet)
+    public function updateProjetAction(Request $request, $id)
     {
-     //   return $projet;
-        $data = json_decode($request->getContent(), true);
-        $em = $this->getDoctrine()->getManager('gretiadb');
-        $personne = $em->getRepository('APIProjetBundle:Personne')->find($data['personne']['id']);
-        $travailleur = $em->getRepository('APIProjetBundle:ProjetPersonne')->findOneBy(array('projet' => $projet, 'personne' => $personne));
+      $em = $this->getDoctrine()->getManager('gretiadb');
+      $item = $em->getRepository('APIProjetBundle:Projet')->find($id);
 
-        if ($travailleur === null) {
-            $travailleur = new ProjetPersonne();
-            $travailleur->setPersonne($personne);
-            $travailleur->setTemps($data['temps']);
-            $projet->addTravailleur($travailleur);
-            $em->persist($projet);
-            $em->flush();
-        }
+      if (empty($item)) {
+          return new JsonResponse(['message' => 'Projet not found'], Response::HTTP_NOT_FOUND);
+      }
 
-        return $projet->getTravailleurs();
+      $form = $this->createForm(ProjetType::class, $item);
+
+      $form->submit($request->request->all());
+
+      if ($form->isValid()) {
+          $em->merge($item);
+          $em->flush();
+          return $item;
+      } else {
+          return $form;
+      }
     }
 
     /**
-    * @Rest\View(serializerGroups = {"projet"})
+    * @Rest\View(serializerGroups = {"personne"})
     * @Security("has_role('GESTION_PROJET')")
     *
-    * @Rest\Put("/projet/{projet}/travailleur/{personne}")
+    * @Rest\Get("/projet/{id}/travailleurs")
     * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"entity_manager" = "gretiadb"})
-    * @ParamConverter("personne", class="APIProjetBundle:Personne", options={"entity_manager" = "gretiadb"})
     */
-    public function putTravailleurAction(Request $request, Projet $projet, Personne $personne)
+    public function getTravailleursAction(Projet $projet)
     {
-     //   return $projet;
-        $data = json_decode($request->getContent(), true);
         $em = $this->getDoctrine()->getManager('gretiadb');
-        $travailleur = $em->getRepository('APIProjetBundle:ProjetPersonne')->findOneBy(array('projet' => $projet, 'personne' => $personne));
+        $travailleurs = $em->getRepository('APIProjetBundle:ProjetPersonne')->findByProjet($projet);
+        return $travailleurs;
+    }
 
-        if ($travailleur !== null) {
-            $travailleur->setTemps($data['temps']);
-            $em->persist($travailleur);
-            $em->flush();
-        }
 
-        return $projet->getTravailleurs();
+    /**
+    * @Rest\View(serializerGroups = {"personne"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Post("/projet/{projet_id}/travailleurs")
+    */
+    public function createTravailleurAction(Request $request, $projet_id)
+    {
+      $em = $this->getDoctrine()->getManager('gretiadb');
+
+      $projet = $em->getRepository('APIProjetBundle:Projet')->find($projet_id);
+
+      if (empty($projet)) {
+          return new JsonResponse(['message' => 'Projet not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      $item = new ProjetPersonne();
+      $item->setProjet($projet);
+
+      $form = $this->createForm(ProjetPersonneType::class, $item);
+
+      $form->submit($request->request->all());
+
+      if ($form->isValid()) {
+          $em->persist($item);
+          $em->flush();
+          return $em->getRepository('APIProjetBundle:ProjetPersonne')->findByProjet($projet);
+      } else {
+          return $form;
+      }
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"personne"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Put("/projet/{projet_id}/travailleur/{trav_id}")
+    */
+    public function updateTravailleurAction(Request $request, $projet_id, $trav_id)
+    {
+      $em = $this->getDoctrine()->getManager('gretiadb');
+      $item = $em->getRepository('APIProjetBundle:ProjetPersonne')->findOneBy(
+                                      ['projet' => $em->getReference('APIProjetBundle:Projet', $projet_id),
+                                      'personne' => $em->getReference('APIProjetBundle:Personne', $trav_id)]
+                                    );
+
+      if (empty($item)) {
+          return new JsonResponse(['message' => 'Travailleur not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      $form = $this->createForm(ProjetPersonneType::class, $item);
+
+      $form->submit($request->request->all());
+
+      if ($form->isValid()) {
+          $em->merge($item);
+          $em->flush();
+          return $em->getRepository('APIProjetBundle:ProjetPersonne')->findByProjet($em->getReference('APIProjetBundle:Projet', $projet_id));
+      } else {
+          return $form;
+      }
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"personne"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Delete("/projet/{projet_id}/travailleur/{trav_id}")
+    */
+    public function removeTravailleurAction($projet_id, $trav_id)
+    {
+      $em = $this->getDoctrine()->getManager('gretiadb');
+      $item = $em->getRepository('APIProjetBundle:ProjetPersonne')->findOneBy(
+                                      ['projet' => $em->getReference('APIProjetBundle:Projet', $projet_id),
+                                      'personne' => $em->getReference('APIProjetBundle:Personne', $trav_id)]
+                                    );
+
+      if (empty($item)) {
+          return new JsonResponse(['message' => 'Travailleur not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      $em->remove($item);
+      $em->flush();
+      return $em->getRepository('APIProjetBundle:ProjetPersonne')->findByProjet($em->getReference('APIProjetBundle:Projet', $projet_id));
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"organisme"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Get("/projet/{id}/partenaires-financiers")
+    * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"entity_manager" = "gretiadb"})
+    */
+    public function getPartenairesFinanciersAction(Projet $projet)
+    {
+        $em = $this->getDoctrine()->getManager('gretiadb');
+        return $em->getRepository('APIProjetBundle:Organisme')->findByProjetsFinances($projet);
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"organisme"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Post("/projet/{projet_id}/partenaires-financiers/{organisme_id}")
+    * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"mapping": {"projet_id": "id"}, "entity_manager" = "gretiadb"})
+    * @ParamConverter("organisme", class="APIProjetBundle:Organisme", options={"mapping": {"organisme_id": "id"}, "entity_manager" = "gretiadb"})
+    */
+    public function addPartenairesFinanciersAction(Projet $projet, Organisme $organisme)
+    {
+        $em = $this->getDoctrine()->getManager('gretiadb');
+        $projet->addPartenaireFinancier($organisme);
+        $em->merge($projet);
+        $em->flush();
+
+        return $this->getPartenairesFinanciersAction($projet);
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"organisme"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Delete("/projet/{projet_id}/partenaire-financier/{organisme_id}")
+    * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"mapping": {"projet_id": "id"}, "entity_manager" = "gretiadb"})
+    * @ParamConverter("organisme", class="APIProjetBundle:Organisme", options={"mapping": {"organisme_id": "id"}, "entity_manager" = "gretiadb"})
+    */
+    public function removePartenaireFinancierAction(Projet $projet, Organisme $organisme)
+    {
+      $em = $this->getDoctrine()->getManager('gretiadb');
+      $projet->removePartenaireFinancier($organisme);
+      $em->merge($projet);
+      $em->flush();
+      return $this->getPartenairesFinanciersAction($projet);
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"organisme"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Get("/projet/{id}/partenaires-techniques")
+    * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"entity_manager" = "gretiadb"})
+    */
+    public function getPartenairesTechniquesAction(Projet $projet)
+    {
+        $em = $this->getDoctrine()->getManager('gretiadb');
+        return $em->getRepository('APIProjetBundle:Organisme')->findByProjetsTechniques($projet);
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"organisme"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Post("/projet/{projet_id}/partenaires-techniques/{organisme_id}")
+    * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"mapping": {"projet_id": "id"}, "entity_manager" = "gretiadb"})
+    * @ParamConverter("organisme", class="APIProjetBundle:Organisme", options={"mapping": {"organisme_id": "id"}, "entity_manager" = "gretiadb"})
+    */
+    public function addPartenairesTechniquesAction(Projet $projet, Organisme $organisme)
+    {
+        $em = $this->getDoctrine()->getManager('gretiadb');
+        $projet->addPartenaireTechnique($organisme);
+        $em->merge($projet);
+        $em->flush();
+
+        return $this->getPartenairesTechniquesAction($projet);
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"organisme"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Delete("/projet/{projet_id}/partenaire-technique/{organisme_id}")
+    * @ParamConverter("projet", class="APIProjetBundle:Projet", options={"mapping": {"projet_id": "id"}, "entity_manager" = "gretiadb"})
+    * @ParamConverter("organisme", class="APIProjetBundle:Organisme", options={"mapping": {"organisme_id": "id"}, "entity_manager" = "gretiadb"})
+    */
+    public function removePartenaireTechniqueAction(Projet $projet, Organisme $organisme)
+    {
+      $em = $this->getDoctrine()->getManager('gretiadb');
+      $projet->removePartenaireTechnique($organisme);
+      $em->merge($projet);
+      $em->flush();
+      return $this->getPartenairesTechniquesAction($projet);
     }
 
 }

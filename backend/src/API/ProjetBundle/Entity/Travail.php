@@ -31,14 +31,14 @@ class Travail
 
   /**
    * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Personne", cascade={"all"})
-   * @ORM\JoinColumn(name="personne_id", referencedColumnName="id_personne", nullable=true)
+   * @ORM\JoinColumn(name="personne_id", referencedColumnName="id_personne", nullable=false)
    *
    * @Serializer\Groups({"travail"})
    */
   private $personne;
 
   /**
-   * @ORM\Column(name="date", type="datetime", nullable=true)
+   * @ORM\Column(name="date", type="datetime", nullable=false)
    *
    * @Serializer\Groups({"travail"})
    */
@@ -53,7 +53,7 @@ class Travail
   private $categorie;
 
   /**
-   * @ORM\Column(name="duree", type="float", nullable=true)
+   * @ORM\Column(name="duree", type="dateinterval", nullable=true)
    *
    * @Serializer\Groups({"travail"})
    */

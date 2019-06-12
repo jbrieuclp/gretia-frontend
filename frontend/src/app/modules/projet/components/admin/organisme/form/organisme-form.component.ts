@@ -16,7 +16,7 @@ export class OrganismeFormComponent implements OnInit {
 
 	form: FormGroup;
 	organisme: Organisme;
-  @Output() saveChange: EventEmitter<boolean> = new EventEmitter();
+  @Output() saveChange: EventEmitter<Organisme> = new EventEmitter();
   @Input('updateOrganisme') updateOrganisme: Organisme = null;
 
   constructor(private fb: FormBuilder, private organismeR: OrganismeRepository) { }
@@ -51,7 +51,7 @@ export class OrganismeFormComponent implements OnInit {
 		this.organismeR.post(this.form.value)
 							  		.subscribe(res => {
 							          this.organisme = res;
-                        this.saveChange.emit();
+                        this.saveChange.emit(this.organisme);
 							        },
 							        error => { /*this.errors = error.error;*/ }
 							      );

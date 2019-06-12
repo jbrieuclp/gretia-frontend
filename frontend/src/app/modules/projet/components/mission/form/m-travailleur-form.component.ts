@@ -49,7 +49,6 @@ export class MissionTravailleurFormComponent implements OnInit {
                               }))
                              );
     this.form = this.setForm();
-
     if (this.data.travailleur.personne !== undefined) {
       this.form.patchValue({
         personne: this.data.travailleur.personne.id, 
@@ -78,7 +77,7 @@ export class MissionTravailleurFormComponent implements OnInit {
   save() {
     if (this.form.valid) {
       if (this.data.travailleur.personne !== undefined) {
-        this.missionR.putTravailleurs(this.data.mission.id, this.data.travailleur.personne.id, this.form.value)
+        this.missionR.putTravailleur(this.data.mission.id, this.data.travailleur.personne.id, this.form.value)
                       .subscribe(travailleurs => this.dialogRef.close(travailleurs));
       } else {
         this.missionR.postTravailleurs(this.data.mission.id, this.form.value)

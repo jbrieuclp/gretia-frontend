@@ -14,7 +14,7 @@
       <mat-expansion-panel *ngIf="isDisplayed(idx)" [expanded]="expandAccordions">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <a mat-icon-button [routerLink]="[projet.id]" class="bt-edit">
+            <a mat-icon-button [routerLink]="['..', 'projet', projet.id]" class="bt-edit">
               <mat-icon>edit</mat-icon>
             </a>
             {{ projet.libelle | uppercase }}

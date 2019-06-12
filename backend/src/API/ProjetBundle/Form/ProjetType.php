@@ -10,7 +10,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use API\ProjetBundle\Entity\Projet;
-use API\ProjetBundle\Entity\Organisme;
+use API\ProjetBundle\Entity\Personne;
+use API\ProjetBundle\Entity\Etat;
+use API\ProjetBundle\Entity\Type;
 
 class ProjetType extends AbstractType
 {
@@ -23,28 +25,30 @@ class ProjetType extends AbstractType
     {
         $builder->add('libelle')
                 ->add('localisation')
-                ->add('partenairesFinanciers', EntityType::class, array(
-                                            'class' => Organisme::class,
+                ->add('type', EntityType::class, array(
+                                            'class' => Type::class,
                                             'em' => 'gretiadb',
-                                            'multiple' => true
+                                            'multiple' => false
                                         ))
-                ->add('partenairesTechniques', EntityType::class, array(
-                                            'class' => Organisme::class,
-                                            'em' => 'gretiadb',
-                                            'multiple' => true
-                                        ))
-                ->add('type')
                 ->add('objet')
                 ->add('milieux')
                 ->add('groupes')
                 ->add('nbJour')
                 ->add('cout')
                 ->add('coutTotal')
-                ->add('responsable')
+                ->add('responsable', EntityType::class, array(
+                                            'class' => Personne::class,
+                                            'em' => 'gretiadb',
+                                            'multiple' => false
+                                        ))
                 ->add('dateDebut')
                 ->add('dateFin')
                 ->add('dateRendu')
-                ->add('etat');
+                ->add('etat', EntityType::class, array(
+                                            'class' => Etat::class,
+                                            'em' => 'gretiadb',
+                                            'multiple' => false
+                                        ));
     }
     
     /**

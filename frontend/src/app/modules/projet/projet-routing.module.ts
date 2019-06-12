@@ -11,31 +11,10 @@ import { EtatComponent } from './components/admin/etat/etat.component';
 import { TypeComponent } from './components/admin/type/type.component';
 import { PListComponent } from './components/projet/p-list/p-list.component';
 import { ProjetFormComponent } from './components/projet/form/projet-form.component';
-import { PDisplayComponent } from './components/projet/p-display/p-display.component';
 import { MissionFormComponent } from './components/mission/form/mission-form.component';
-
-export function IdMatcher(url: UrlSegment[]) {
-
-	if (url.length === 0) {
-    return null;
-  }
-
-  const reg = /^\d+$/;
-  const param = url[ 0 ].toString();
-
-	console.log(url);
-	console.log(url[0].path.match(/^\d+$/));
-	console.log(new UrlSegment(url[0].path, {}));
-	if (param.match( reg )) {
-		return {
-			consumed: url,
-			posParams: {
-        id: url[0]
-      }
-    }
-	}
-	return null;
-}
+import { SListComponent } from './components/suiveuse/s-list/s-list.component';
+import { MySListComponent } from './components/suiveuse/my-s-list/my-s-list.component';
+import { SFormComponent } from './components/suiveuse/s-form/s-form.component';
 
 // routes definition
 const routes: Routes = [
@@ -45,31 +24,36 @@ const routes: Routes = [
 		canActivate: [AuthGuard],
 		children: [
 			{ path: '', redirectTo: 'projets', pathMatch: 'full' },
-			{ path: 'projets', children: [
-				{ path: '', component: PListComponent, pathMatch: 'full' },
-				{ path: 'ajouter', component: ProjetFormComponent, pathMatch: 'full' },
+			{ path: 'projets', component: PListComponent, pathMatch: 'full'},
+			{ path: 'projet', children: [
+				{ path: '', component: ProjetFormComponent, pathMatch: 'full' },
 				{ path: ':projet', children: [
 					{ path: '', component: ProjetFormComponent, pathMatch: 'full' },
 				//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
 					{ path: 'mission', component: MissionFormComponent, pathMatch: 'full' },
 				]},
 			]},
-			{ 
-				path: 'mission', children: [
+			{ path: 'mission', children: [
 			//	{ path: 'info', component: MissionFormComponent, pathMatch: 'full' } //TODO: Detail
 				{ path: ':mission', component: MissionFormComponent, pathMatch: 'full' }
 			]},
-			{ 
-				path: 'admin', 
-				children: [
-					{ path: '', component: AdminComponent, pathMatch: 'full' },
-					{ path: 'personne', component: PersonComponent, pathMatch: 'full' },
-					{ path: 'organisme', component: OrganismeComponent, pathMatch: 'full' },
-					{ path: 'categorie', component: CategorieComponent, pathMatch: 'full' },
-					{ path: 'etat', component: EtatComponent, pathMatch: 'full' },
-					{ path: 'type', component: TypeComponent, pathMatch: 'full' }
-				]
-			}
+			{ path: 'suiveuses', component: SListComponent, pathMatch: 'full'},
+			{ path: 'suiveuse', children: [
+				{ path: '', component: MySListComponent, pathMatch: 'full' },
+				{ path: ':person', children: [
+					{ path: '', component: MySListComponent, pathMatch: 'full' },
+				//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
+					{ path: 'ajouter', component: SFormComponent, pathMatch: 'full' }
+				]}
+			]},
+			{ path: 'admin', children: [
+				{ path: '', component: AdminComponent, pathMatch: 'full' },
+				{ path: 'personne', component: PersonComponent, pathMatch: 'full' },
+				{ path: 'organisme', component: OrganismeComponent, pathMatch: 'full' },
+				{ path: 'categorie', component: CategorieComponent, pathMatch: 'full' },
+				{ path: 'etat', component: EtatComponent, pathMatch: 'full' },
+				{ path: 'type', component: TypeComponent, pathMatch: 'full' }
+			]}
 		]
 	}
 ];

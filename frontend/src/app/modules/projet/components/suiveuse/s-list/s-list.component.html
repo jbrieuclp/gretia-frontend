@@ -1,0 +1,5 @@
+<mat-nav-list>
+	<ng-container *ngFor="let person of persons | async"> 
+    <a mat-list-item [routerLink]="['..', 'suiveuse', person.surnom]"> {{ person.surnom }} </a>
+  </ng-container>
+</mat-nav-list>

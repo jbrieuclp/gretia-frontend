@@ -24,4 +24,28 @@ class OrganismeRepository extends EntityRepository
       return $qb->getQuery()->getResult();
     }
 
+    public function findByProjetsFinances($projet) {
+
+      $qb = $this->_em->createQueryBuilder();
+      $qb->select('e')
+         ->from($this->_entityName, 'e')
+         ->join('e.projetsFinances', 'p')
+         ->where('p = :projet')
+         ->setParameter('projet', $projet);
+
+      return $qb->getQuery()->getResult();
+    }
+
+    public function findByProjetsTechniques($projet) {
+
+      $qb = $this->_em->createQueryBuilder();
+      $qb->select('e')
+         ->from($this->_entityName, 'e')
+         ->join('e.projetsTechniques', 'p')
+         ->where('p = :projet')
+         ->setParameter('projet', $projet);
+
+      return $qb->getQuery()->getResult();
+    }
+
 }
