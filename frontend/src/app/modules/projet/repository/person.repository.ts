@@ -67,6 +67,20 @@ export class PersonRepository {
        );
   }
 
+  /** GET personnes par ID (cd_nom) **/
+  getUser(name?: string): Observable<Personne> {
+    let urlOption = name === null ? '' :  `/${name}`;
+    const url = this.httpUrlBase + `/user${urlOption}`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map((res: Personne) => { 
+          return res;
+        })
+        , retry(3)
+       );
+  }
+
   /** POST personnes par ID (cd_nom) **/
   post(data: Personne): Observable<Personne> {
     const url = this.httpUrlBase + '/personne';

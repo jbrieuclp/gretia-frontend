@@ -40,6 +40,24 @@ class PersonController extends FOSRestController implements ClassResourceInterfa
     * @Rest\View(serializerGroups = {"personne"})
     * @Security("has_role('GESTION_PROJET')")
     *
+    * @Rest\Get("/user/{surnom}", requirements={"surnom" = ".+"}, defaults={"surnom" = null})
+    * @ParamConverter("personne", class="APIProjetBundle:Personne", options={"mapping": {"surnom": "surnom"}, "entity_manager" = "gretiadb"})
+    */
+    public function getUserAction(?Personne $personne = null)
+    {
+        if (!empty($personne)) 
+            return $personne;
+
+        $cpt_id = $this->get('security.token_storage')->getToken()->getUser()->getId();
+
+        $em = $this->getDoctrine()->getManager('gretiadb');
+        return $em->getRepository('APIProjetBundle:Personne')->findOneByCompte($cpt_id);
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"personne"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
     * @Rest\Get("/personnes")
     */
     public function getPersonsAction()

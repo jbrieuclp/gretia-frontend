@@ -24,6 +24,17 @@ export class SuiveuseRepository {
     this.httpUrlBase = AppConfig.URL_PROJET;
   }
 
-  
+  /** GET personnes par ID (cd_nom) **/
+  dashboard(user?: string): Observable<any> {
+  	const url = this.httpUrlBase + '/suiveuse/'+user||null;
+    return this.http
+    	.get(url, httpOptions)
+    	.pipe(
+        map(res => { 
+          return res;
+        })
+        , retry(3)
+	   	);
+  }
 
 }
