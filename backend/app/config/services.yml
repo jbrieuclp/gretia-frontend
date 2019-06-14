@@ -1,6 +1,7 @@
 imports:
     - { resource: "@APIBiblioBundle/Resources/config/services.yml" }
     - { resource: "@APICoreBundle/Resources/config/services.yml" }
+    - { resource: "@APICartoBundle/Resources/config/services.yml" }
     - { resource: "@APISerenaBundle/Resources/config/services.yml" }
     - { resource: "@APIMetadataBundle/Resources/config/services.yml" }
     - { resource: "@APIProjetBundle/Resources/config/services.yml" }

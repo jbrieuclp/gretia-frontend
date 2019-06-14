@@ -11,7 +11,7 @@ const layout = {title: 'Magic Taxref',
 
 @Component({
   selector: 'app-jdd-init',
-  template: '<router-outlet></router-outlet>'
+  template: '<div class="container-fluid"><router-outlet></router-outlet></div>'
 })
 export class MagicTaxrefInitComponent {
 
