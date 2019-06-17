@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ElementRef } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -18,6 +18,7 @@ export class CartoService {
   private _resolutions = new Array(14); 
   private _matrixIds = new Array(14);
   private _key_ign = 'v0bxp1xur57ztiai9djszgjw';
+  private _mapview: ElementRef;
 
   constructor() { 
     this.map = this.initMap();
@@ -26,6 +27,10 @@ export class CartoService {
 
   get map() { return this._map; }
   set map(map: Map) { this._map = map; }
+
+  get mapview() { return this._mapview; }
+  set mapview(mapview: ElementRef) { this._mapview = mapview; }
+
   get epsg3857() { return this._epsg3857; }
   get formatGeoJSON() { return this._formatGeoJSON; }
   get resolutions() { return this._resolutions; }

@@ -10,7 +10,12 @@ import {
   MatTooltipModule,
   MatExpansionModule,
   MatCheckboxModule,
-  MatSliderModule
+  MatSliderModule,
+  MatSidenavModule,
+  MatTabsModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatAutocompleteModule
  } from '@angular/material';
 
 //modules
@@ -21,9 +26,12 @@ import { CartoComponent } from './components/carto.component';
 import { FondsPlanPanelComponent, FondsPlanDialog } from './components/template/left-panel/fonds-plan.component';
 import { CartoInitComponent } from './carto-init.component';
 import { LeftPanelComponent } from './components/template/left-panel/left-panel.component';
+import { RightPanelComponent } from './components/template/right-panel/right-panel.component';
+import { RightPanelDialog } from './components/template/right-panel/right-panel.component';
 
 //services
 import { CartoService } from './carto.service';
+import { SearchTaxonComponent } from './components/template/right-panel/search-taxon/search-taxon.component';
 
 @NgModule({
   exports: [
@@ -39,6 +47,11 @@ import { CartoService } from './carto.service';
     MatExpansionModule,
     MatCheckboxModule,
     MatSliderModule,
+    MatSidenavModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
     CartoRoutingModule
   ],
   declarations: [
@@ -46,10 +59,14 @@ import { CartoService } from './carto.service';
     CartoInitComponent,
     LeftPanelComponent,
     FondsPlanPanelComponent,
-    FondsPlanDialog
+    FondsPlanDialog,
+    RightPanelComponent,
+    RightPanelDialog,
+    SearchTaxonComponent
   ],
   entryComponents: [ 
-    FondsPlanDialog 
+    FondsPlanDialog,
+    RightPanelDialog
   ],
   providers: [
     CartoService

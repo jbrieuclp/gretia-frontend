@@ -1,0 +1,20 @@
+<button 
+	class="close-dialog" 
+	mat-mini-fab 
+	matDialogClose 
+	color="primary">
+  <mat-icon>clear</mat-icon>
+</button>
+
+<mat-tab-group color="primary" backgroundColor="accent" mat-stretch-tabs>
+  <mat-tab label="Taxons"> 
+  	<div class="tab-content">
+
+	  	<div class="category">
+	  		Recherche un taxon pour afficher sa répartition
+	  	</div>
+	  	<app-carto-search-taxon></app-carto-search-taxon>
+		</div>
+  </mat-tab>
+  <mat-tab label="Indicateurs" class="mat-tab-body"> Indicateurs </mat-tab>
+</mat-tab-group>

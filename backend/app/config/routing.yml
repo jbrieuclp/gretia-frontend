@@ -9,10 +9,9 @@ api_core:
 api_login_check:
     path: /login_check
     
-api_core:
+api_carto:
     resource: "@APICartoBundle/Resources/config/routing.yml"
     prefix:   /carto
-
 
 api_metadata:
     resource: "@APIMetadataBundle/Resources/config/routing.yml"

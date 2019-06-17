@@ -1,0 +1,21 @@
+.nom-valide {
+	color: #495AEA;
+	font-size: .9em;
+	font-weight: bold;
+	line-height: 0px;
+}
+
+.nom-vern {
+	font-size: .8em;
+	color: #555;
+}
+
+.nom-valide:hover {
+	text-decoration: underline;
+}
+
+.synonyme {
+	font-size: .8em;
+	border-left: 4px solid #01663a;
+	margin-left: 40px
+}

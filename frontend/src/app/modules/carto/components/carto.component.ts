@@ -27,6 +27,7 @@ export class CartoComponent implements OnInit {
 
   ngOnInit() {
     this.map = this.cartoS.map;
+    this.cartoS.mapview = this.mapView;
   }
 
   ngAfterViewInit() {

@@ -1,0 +1,19 @@
+.right-tab
+{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	height: 100%;
+	width: auto;
+	opacity: 0.9;
+	display: block;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.open-dialog {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
