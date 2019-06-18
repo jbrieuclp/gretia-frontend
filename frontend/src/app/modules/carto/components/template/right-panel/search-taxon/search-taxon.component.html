@@ -11,7 +11,7 @@
     	<ng-container *ngFor="let val of autocomplete">
 	      <mat-option (click)=selectTaxon(val) [value]="val.cd_ref">
 	      	<div class="nom-valide">{{ val.nom_valide.nom_valide }}</div>
-	      	<div class="nom-vern">{{ val.nom_valide.nom_vern }}</div>
+	      	<!--div class="nom-vern">{{ val.nom_valide.nom_vern }}</div-->
 	      </mat-option>
 	    	<!-- Synonymes -->
 	      <mat-option *ngFor="let synonyme of val.synonymes" (click)=selectTaxon(val) [value]="val.cd_nom">

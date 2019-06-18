@@ -4,7 +4,7 @@ import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
 
-import { CartoService } from '../carto.service';
+import { CartoService } from '../services/carto.service';
 
 @Component({
   selector: 'app-carto',

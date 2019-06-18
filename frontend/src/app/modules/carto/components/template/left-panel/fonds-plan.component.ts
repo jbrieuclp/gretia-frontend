@@ -7,8 +7,8 @@ import WMTS from 'ol/source/WMTS';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import * as extent from 'ol/extent';
 
-import { CartoService } from '../../../carto.service';
-import { layers } from '../../../layers.config';
+import { CartoService } from '../../../services/carto.service';
+import { layers } from '../../../services/layers.config';
 
 @Component({
   selector: 'app-carto-fond-plan-panel',

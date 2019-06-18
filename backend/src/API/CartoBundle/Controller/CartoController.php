@@ -20,7 +20,7 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
     
     /**
     * @Rest\View(serializerGroups = {"projet"})
-    * @Security("has_role('METADATA')")
+    * @Security("has_role('CARTO_SYNTHESE')")
     *
     * @Rest\Get("/projets")
     */
@@ -29,6 +29,19 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
         $em = $this->getDoctrine()->getManager('gretiadb');
         $cadres = $em->getRepository('APIMetadataBundle:CadreAcquisition')->findAll();
         return $cadres;
+    }
+
+    /**
+    * @ Rest\View()
+    * @ Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/repartition/{cd_ref}.geojson")
+    */
+    public function repartitionTaxonAction()
+    {
+        $service = $this->get('api_carto.service.repartition_taxonomique');
+
+        return new Response($service->getGeoJson(3857));
     }
 
 }

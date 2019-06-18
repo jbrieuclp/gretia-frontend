@@ -30,7 +30,9 @@ import { RightPanelComponent } from './components/template/right-panel/right-pan
 import { RightPanelDialog } from './components/template/right-panel/right-panel.component';
 
 //services
-import { CartoService } from './carto.service';
+import { CartoService } from './services/carto.service';
+import { LayerService } from './services/layer.service';
+import { RepartitionService } from './services/repartition.service';
 import { SearchTaxonComponent } from './components/template/right-panel/search-taxon/search-taxon.component';
 
 @NgModule({
@@ -69,7 +71,9 @@ import { SearchTaxonComponent } from './components/template/right-panel/search-t
     RightPanelDialog
   ],
   providers: [
-    CartoService
+    CartoService,
+    LayerService,
+    RepartitionService
   ],
   bootstrap: [CartoComponent]
 })

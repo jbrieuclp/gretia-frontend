@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
 
-import { CartoService } from '../../../carto.service';
+import { CartoService } from '../../../services/carto.service';
 
 @Component({
   selector: 'app-carto-right-panel',
