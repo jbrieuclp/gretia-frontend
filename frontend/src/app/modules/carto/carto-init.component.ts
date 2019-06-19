@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { LayoutService } from '../../shared/layout/layout.service';
 
 const layout = {title: 'Visualisation carto',
+                navbarColor: {background: '#378AB1', text: "#fff"},
                 sidenav: []};
 
 @Component({

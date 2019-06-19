@@ -22,10 +22,7 @@ export class CartoService {
   private _key_ign = 'v0bxp1xur57ztiai9djszgjw';
   private _mapview: ElementRef;
 
-  constructor() { 
-    this.map = this.initMap();
-    
-  }
+  constructor() { }
 
   get map() { return this._map; }
   set map(map: Map) { this._map = map; }
@@ -48,7 +45,7 @@ export class CartoService {
     }
   }
 
-  private initMap(): Map {
+  public initMap(): Map {
     let map = new Map({
       view: new View({
         center: new proj.transform([-0.18, 48.08], 'EPSG:4326', 'EPSG:3857'),
@@ -63,7 +60,8 @@ export class CartoService {
 
     this.setResolution();
 
-    return map;
+    this.map = map;
+    return this.map;
   }
 
   public resizeMap(width, height) {

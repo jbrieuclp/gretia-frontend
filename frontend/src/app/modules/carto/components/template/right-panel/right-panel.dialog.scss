@@ -4,8 +4,13 @@
 	right: 500px;
 }
 
+.tabs-rigth-panel.mat-tab-group, .tabs-rigth-panel .mat-tab-body-wrapper {
+  height: 100%;
+}
+
+.mat-tab-body-content { display: block; }
 .tab-content {
-	padding: 10px;
+	padding: 15px 25px 15px 15px;
 }
 
 .category {

@@ -1,38 +1,50 @@
 <mat-form-field class="form-element" id="search-taxon-zone">
-  <input matInput #zone [matAutocomplete]="auto" 
+  <input matInput #zone 
   	(keyup)="searchTerm$.next(zone.value)" 
-  	placeholder="Rechercher un taxon" 
+  	placeholder="Recherche un taxon pour afficher sa répartition" 
   	id="autocomplete-input" 
+    autocomplete="off"
   	class="autocomplete" 
   	value="{{ textTaxon }}">
-  <mat-autocomplete #auto="matAutocomplete">
-    <ng-container *ngIf="(!isWaiting && autocomplete.length)">
-    	<!-- NOM VALIDE -->
-    	<ng-container *ngFor="let val of autocomplete">
-	      <mat-option (click)=selectTaxon(val) [value]="val.cd_ref">
-	      	<div class="nom-valide">{{ val.nom_valide.nom_valide }}</div>
-	      	<!--div class="nom-vern">{{ val.nom_valide.nom_vern }}</div-->
-	      </mat-option>
-	    	<!-- Synonymes -->
-	      <mat-option *ngFor="let synonyme of val.synonymes" (click)=selectTaxon(val) [value]="val.cd_nom">
-	      	<div class="synonyme">
-		        <span class="right circle"><i class="mdi mdi-phone"></i></span>
-		        <span><i>{{ synonyme.nom_latin }}</i> {{ synonyme.decouvreur }}</span>
-		      </div>
-	      </mat-option>
-	    </ng-container>
-    </ng-container>
-    <ng-container *ngIf="isWaiting && zone.value.length">
-      <mat-option disabled>
-        <span class="left loader"></span>
-        <span>Recherche en cours</span>
-      </mat-option>
-    </ng-container>
-    <ng-container *ngIf="!isWaiting && !autocomplete.length && zone.value.length">
-      <mat-option disabled>
-        <mat-icon>error</mat-icon>
-        <span>Aucun résultat ne correspond à la recherche</span>
-      </mat-option>
-    </ng-container>
-  </mat-autocomplete>
 </mat-form-field>
+
+<ng-container *ngIf="(zone.value.length || isWaiting) && autocomplete !== null && showSearchList">
+  <mat-progress-bar mode="query" *ngIf="isWaiting && zone.value.length"></mat-progress-bar>
+  <div [ngClass]="{'panel-result': true, 'waiting' : (isWaiting && zone.value.length)}">
+    <div class="panel-result-content">
+
+      <!-- RESULTATS OK -->
+      <ng-container *ngIf="(!isWaiting && autocomplete.length)">
+        <ul>
+          <li *ngFor="let val of autocomplete" class="groupe-result">
+            <ul>
+              <li class="valide pointer" (click)=selectTaxon(val)>
+                <p class="nom_valide">{{ val.nom_valide.nom_valide }}</p>
+                <p class="nom_vern" *ngIf="val.nom_valide.nom_vern != null">{{ val.nom_valide.nom_vern }}</p>
+              </li>
+              <li class="synonyme" *ngFor="let synonyme of val.synonymes">
+                <span class="pointer" (click)=selectTaxon(val)><i>{{ synonyme.nom_latin }}</i> {{ synonyme.decouvreur }}</span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </ng-container>
+
+      <!-- Recherche en cours -->
+      <ng-container *ngIf="isWaiting && zone.value.length">
+        <div class="info">
+          <mat-icon>search</mat-icon>
+          <span>Recherche en cours</span>
+        </div>
+      </ng-container>
+
+      <!-- Pas de resultat -->
+      <ng-container *ngIf="!isWaiting && !autocomplete.length && zone.value.length">
+        <div class="info">
+          <mat-icon>error</mat-icon>
+          <span>Aucun résultat ne correspond à la recherche</span>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>

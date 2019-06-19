@@ -41,12 +41,18 @@ const STYLE_LAYER = {
                       }
                   };
 
+export interface LAYER {
+  state: 'load' | 'done' | 'error',
+  olLayer: VectorLayer,
+  taxon: {cd_ref: number, nom_valide: string, nom_vern?: string}
+};
+
 @Injectable()
 export class RepartitionService extends LayerService {
 
   httpUrlBase: string;
 
-  layers: any = {};
+  layers: Array<LAYER> = [];
 
   constructor(
     private cartoS: CartoService,
@@ -64,14 +70,37 @@ export class RepartitionService extends LayerService {
       .post(taxonUrl, sources, httpOptions);
   }
 
+  isLoad(cd_ref): boolean {
+    let bool = false;
+    this.layers.forEach((e) => {
+      if ( e.taxon.cd_ref == cd_ref ) {
+        bool = true;
+      }
+    })
+    return bool;
+  }
 
-  addLayer(cd_ref) {
-    let source = new VectorSource({format:this.cartoS.formatGeoJSON});
+  getLayer(cd_ref) {
+    let layer = null;
+    this.layers.forEach((e) => {
+      if ( e.taxon.cd_ref == cd_ref ) {
+        layer = e;
+      }
+    })
+    return layer;
+  }
+
+  addLayer(taxon): void {
+    if ( this.isLoad(taxon.cd_ref) ) {
+      this.reloadLayer(taxon.cd_ref, true);
+      return;
+    } 
+
     let olLayer = new VectorLayer({
                         title: "Repartition de ....", 
                         queryable: true,
                         displayInLegend: true,
-                        source: source, 
+                        source: new VectorSource({format:this.cartoS.formatGeoJSON}), 
                         style: function(feature, resolution){
                           let defaultStroke = new Stroke({color: '#505050', width: 0.5});
                           let rgba = STYLE_LAYER['non_traitee']["color"];
@@ -95,11 +124,30 @@ export class RepartitionService extends LayerService {
                   });
 
     this.cartoS.map.addLayer(olLayer);
-    this.layers[cd_ref] = olLayer;
-    this.getGeoJSON(cd_ref)
+    let layer: LAYER = {state: 'load', olLayer: olLayer, taxon: taxon};
+
+    this.layers.push(layer);
+    this.loadLayer(layer);
+  }
+
+  loadLayer(layer: LAYER) {
+    console.log(layer);
+    let source = layer.olLayer.getSource();
+    layer.state = "load";
+    this.getGeoJSON(layer.taxon.cd_ref)
           .subscribe((geosjon: Response) => {
+            layer.state = "done";
             source.clear();
             source.addFeatures(this.cartoS.formatGeoJSON.readFeatures(geosjon));
           });
+  }
+
+  reloadLayer(cd_ref:number, visibility:boolean = null) {
+    let layer:LAYER = this.getLayer(cd_ref);
+    console.log(layer);
+    this.loadLayer(layer);
+    if (visibility !== null) {
+      layer.olLayer.setVisible(visibility);
+    }
   }
 }

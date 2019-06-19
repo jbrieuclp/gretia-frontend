@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, HostListener, ViewChild, ElementRef } from '@angular/core';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -26,7 +26,7 @@ export class CartoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.map = this.cartoS.map;
+    this.map = this.cartoS.initMap();
     this.cartoS.mapview = this.mapView;
   }
 

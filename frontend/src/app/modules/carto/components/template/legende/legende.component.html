@@ -1,0 +1,15 @@
+<div class="legend-panel">
+	<div class="legend-panel-header">légende</div>
+	<div class="legend-panel-content">
+		<div *ngFor="let layer of repartS.layers">
+			<ng-container *ngIf="layer.state == 'done'">
+				<div class="legend-layer">
+					<mat-icon class="pointer"
+						(click)="layer.olLayer.setVisible(!layer.olLayer.getVisible())">
+						{{ (layer.olLayer.getVisible()) ? 'visibility' : 'visibility_off' }}
+					</mat-icon> {{layer.taxon.nom_valide}}
+				</div>
+			</ng-container>
+		</div>
+	</div>
+</div>

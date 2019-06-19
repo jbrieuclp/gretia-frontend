@@ -15,7 +15,9 @@ import {
   MatTabsModule,
   MatFormFieldModule,
   MatInputModule,
-  MatAutocompleteModule
+  MatProgressBarModule,
+  MatSlideToggleModule,
+  MatProgressSpinnerModule
  } from '@angular/material';
 
 //modules
@@ -34,6 +36,8 @@ import { CartoService } from './services/carto.service';
 import { LayerService } from './services/layer.service';
 import { RepartitionService } from './services/repartition.service';
 import { SearchTaxonComponent } from './components/template/right-panel/search-taxon/search-taxon.component';
+import { TaxonsPanelComponent } from './components/template/right-panel/taxons-panel/taxons-panel.component';
+import { LegendeComponent } from './components/template/legende/legende.component';
 
 @NgModule({
   exports: [
@@ -53,8 +57,10 @@ import { SearchTaxonComponent } from './components/template/right-panel/search-t
     MatTabsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatAutocompleteModule,
-    CartoRoutingModule
+    MatProgressBarModule,
+    MatSlideToggleModule,
+    MatProgressSpinnerModule,
+    CartoRoutingModule,
   ],
   declarations: [
     CartoComponent,
@@ -64,7 +70,9 @@ import { SearchTaxonComponent } from './components/template/right-panel/search-t
     FondsPlanDialog,
     RightPanelComponent,
     RightPanelDialog,
-    SearchTaxonComponent
+    SearchTaxonComponent,
+    TaxonsPanelComponent,
+    LegendeComponent
   ],
   entryComponents: [ 
     FondsPlanDialog,
