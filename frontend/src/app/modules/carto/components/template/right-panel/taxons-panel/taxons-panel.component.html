@@ -3,13 +3,13 @@
 <div *ngFor="let layer of repartS.layers">
 
 	<ng-container *ngIf="layer.state == 'load'">
-		<span class="float-left" style="margin-right: 10px;"><mat-spinner diameter="20" strokeWidth="2"></mat-spinner></span> {{layer.taxon.nom_valide}}
+		<span class="float-left" style="margin-right: 10px;"><mat-spinner diameter="20" strokeWidth="2"></mat-spinner></span> {{layer.properties.taxon.nom_valide}}
 	</ng-container>
 
 	<ng-container *ngIf="layer.state == 'done'">
 		<mat-slide-toggle 
 			color="primary"
 			[checked]="layer.olLayer.getVisible()"
-			(change)="layer.olLayer.setVisible($event.checked)"> {{layer.taxon.nom_valide}} </mat-slide-toggle>
+			(change)="layer.olLayer.setVisible($event.checked)"> {{layer.properties.taxon.nom_valide}} </mat-slide-toggle>
 	</ng-container>
 </div>

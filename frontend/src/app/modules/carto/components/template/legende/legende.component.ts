@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { RepartitionService, LAYER } from '../../../services/repartition.service';
+import { RepartitionService } from '../../../services/repartition.service';
 
 @Component({
   selector: 'app-carto-legende',

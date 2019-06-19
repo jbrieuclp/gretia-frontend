@@ -38,6 +38,7 @@ import { RepartitionService } from './services/repartition.service';
 import { SearchTaxonComponent } from './components/template/right-panel/search-taxon/search-taxon.component';
 import { TaxonsPanelComponent } from './components/template/right-panel/taxons-panel/taxons-panel.component';
 import { LegendeComponent } from './components/template/legende/legende.component';
+import { IndicateursPanelComponent } from './components/template/right-panel/indicateurs-panel/indicateurs-panel.component';
 
 @NgModule({
   exports: [
@@ -72,7 +73,8 @@ import { LegendeComponent } from './components/template/legende/legende.componen
     RightPanelDialog,
     SearchTaxonComponent,
     TaxonsPanelComponent,
-    LegendeComponent
+    LegendeComponent,
+    IndicateursPanelComponent
   ],
   entryComponents: [ 
     FondsPlanDialog,

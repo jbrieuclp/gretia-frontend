@@ -13,16 +13,10 @@ import Style from 'ol/style/Style';
 
 import { AppConfig } from '../../../shared/app.config';
 import { CartoService } from './carto.service';
-import { LayerService } from './layer.service';
+import { LayerService, LAYER } from './layer.service';
 
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/json',
-    'Authorization': 'my-auth-token'
-  })
-};
 
-const STYLE_LAYER = {
+const REPART_STYLE_LAYER = {
                       "historique": {
                           "color": "rgba(88, 41, 0, 0.8)",
                           "label": "Données historiques (<1950)"
@@ -41,113 +35,64 @@ const STYLE_LAYER = {
                       }
                   };
 
-export interface LAYER {
-  state: 'load' | 'done' | 'error',
-  olLayer: VectorLayer,
-  taxon: {cd_ref: number, nom_valide: string, nom_vern?: string}
-};
-
-@Injectable()
-export class RepartitionService extends LayerService {
-
-  httpUrlBase: string;
-
-  layers: Array<LAYER> = [];
-
-  constructor(
-    private cartoS: CartoService,
-    private http: HttpClient
-  ) {
-    super(cartoS);
-    this.httpUrlBase = AppConfig.URL_API_CARTO;
-  }
-
-  /** GET taxon par ID (cd_nom) **/
-  getGeoJSON(cd_ref: number = 189435): Observable<any> {
-    const taxonUrl = `${this.httpUrlBase}/repartition/${cd_ref}.geojson`;
-    const sources = {};
-    return this.http
-      .post(taxonUrl, sources, httpOptions);
-  }
-
-  isLoad(cd_ref): boolean {
-    let bool = false;
-    this.layers.forEach((e) => {
-      if ( e.taxon.cd_ref == cd_ref ) {
-        bool = true;
-      }
-    })
-    return bool;
-  }
-
-  getLayer(cd_ref) {
-    let layer = null;
-    this.layers.forEach((e) => {
-      if ( e.taxon.cd_ref == cd_ref ) {
-        layer = e;
-      }
-    })
-    return layer;
-  }
-
-  addLayer(taxon): void {
-    if ( this.isLoad(taxon.cd_ref) ) {
-      this.reloadLayer(taxon.cd_ref, true);
-      return;
-    } 
-
-    let olLayer = new VectorLayer({
-                        title: "Repartition de ....", 
-                        queryable: true,
-                        displayInLegend: true,
-                        source: new VectorSource({format:this.cartoS.formatGeoJSON}), 
-                        style: function(feature, resolution){
+const REPART_STYLE_FUNCTION = function(feature, resolution){
                           let defaultStroke = new Stroke({color: '#505050', width: 0.5});
-                          let rgba = STYLE_LAYER['non_traitee']["color"];
+                          let rgba = REPART_STYLE_LAYER['non_traitee']["color"];
 
                           if ( feature.get('validation') == 0) {
-                              rgba = STYLE_LAYER['non_traitee']["color"];
+                              rgba = REPART_STYLE_LAYER['non_traitee']["color"];
                           } else if ( feature.get('annee_max') >= 2000) {
-                              rgba = STYLE_LAYER['recente']["color"];
+                              rgba = REPART_STYLE_LAYER['recente']["color"];
                           } else if ( feature.get('annee_max') >= 1950 ) {
-                              rgba = STYLE_LAYER['ancienne']["color"];
+                              rgba = REPART_STYLE_LAYER['ancienne']["color"];
                           } else {
-                              rgba = STYLE_LAYER['historique']["color"];
+                              rgba = REPART_STYLE_LAYER['historique']["color"];
                           }
 
                           return [new Style({
                                     fill: new Fill({color: rgba}),
                                     stroke: defaultStroke,
                                   })];
-                        },
-                        visible: true
-                  });
+                        };
 
-    this.cartoS.map.addLayer(olLayer);
-    let layer: LAYER = {state: 'load', olLayer: olLayer, taxon: taxon};
+export interface REPARTITION_LAYER extends LAYER {
+  properties: {taxon:{cd_ref: number, nom_valide: string, nom_vern?: string}}
+};
 
-    this.layers.push(layer);
-    this.loadLayer(layer);
+@Injectable()
+export class RepartitionService extends LayerService {
+
+
+  constructor(
+    protected cartoS: CartoService,
+    protected http: HttpClient
+  ) {
+    super(cartoS, http);
   }
 
-  loadLayer(layer: LAYER) {
-    console.log(layer);
-    let source = layer.olLayer.getSource();
-    layer.state = "load";
-    this.getGeoJSON(layer.taxon.cd_ref)
-          .subscribe((geosjon: Response) => {
-            layer.state = "done";
-            source.clear();
-            source.addFeatures(this.cartoS.formatGeoJSON.readFeatures(geosjon));
-          });
+  setLayer(taxon): void {
+
+    let layer: REPARTITION_LAYER = {
+                ID: taxon.cd_ref,
+                url: `/repartition/${taxon.cd_ref}.geojson`,
+                title: `Repartition de ${taxon.nom_valide}`,
+                queryable: true, 
+                visible: true, 
+                displayInLegend: true,
+                style: REPART_STYLE_FUNCTION,
+                state: 'init',
+                properties: {taxon: taxon}
+              };
+
+    this.addLayer(layer);
   }
 
-  reloadLayer(cd_ref:number, visibility:boolean = null) {
-    let layer:LAYER = this.getLayer(cd_ref);
-    console.log(layer);
-    this.loadLayer(layer);
-    if (visibility !== null) {
-      layer.olLayer.setVisible(visibility);
-    }
+  getLegende() {
+    let legende = new Array();
+    legende.push(REPART_STYLE_LAYER.recente);
+    legende.push(REPART_STYLE_LAYER.ancienne);
+    legende.push(REPART_STYLE_LAYER.historique);
+    legende.push(REPART_STYLE_LAYER.non_traitee);
+    return legende;
   }
 }

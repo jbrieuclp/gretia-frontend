@@ -72,7 +72,7 @@ export class SearchTaxonComponent {
   selectTaxon(val: any){
     let taxon = val.nom_valide || null;
     if (taxon !== null) {
-      this.repartitionS.addLayer(taxon);
+      this.repartitionS.setLayer(taxon);
       this.showSearchList = false;
       this.zone.nativeElement.value = '';
     }
