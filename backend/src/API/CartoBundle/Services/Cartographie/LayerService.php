@@ -120,13 +120,13 @@ abstract class LayerService
     }
 
     protected function setEchelle(/*$maille_id = null*/) {
-        $echelleDemandee = $this->request->request->get('echelle', 'maille5');
+        $echelleDemandee = $this->request->request->get('scale', 'maille5');
 
         $this->echelle = $this->verifEchelle($echelleDemandee);
     }
 
     protected function getEchelle(/*$maille_id = null*/) {
-        $echelleDemandee = $this->request->request->get('echelle', 'maille5');
+        $echelleDemandee = $this->request->request->get('scale', 'maille5');
 
         $this->echelle = $this->verifEchelle($echelleDemandee);
 

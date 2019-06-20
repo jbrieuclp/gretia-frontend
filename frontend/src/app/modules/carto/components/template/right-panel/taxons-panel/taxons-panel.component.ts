@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { RepartitionService } from '../../../../services/repartition.service';
+import { LayerService } from '../../../../services/layer.service';
 
 @Component({
   selector: 'app-carto-taxons-panel',
@@ -11,7 +11,7 @@ export class TaxonsPanelComponent implements OnInit {
 
 
   constructor(
-    public repartS: RepartitionService
+    public layerS: LayerService
   ) { }
 
   ngOnInit() {

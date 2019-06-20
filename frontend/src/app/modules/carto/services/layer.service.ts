@@ -5,6 +5,10 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 
 import { AppConfig } from '../../../shared/app.config';
+import { Layer } from '../entities/layer';
+import { RepartitionLayer } from '../entities/repartition-layer';
+import { PressionLayer } from '../entities/pression-layer';
+import { RichesseLayer } from '../entities/richesse-layer';
 import { CartoService } from './carto.service';
 
 const httpOptions = {
@@ -14,41 +18,87 @@ const httpOptions = {
   })
 };
 
-export interface LAYER {
-  ID: string,
-  url: string,
-  title: string,
-  queryable: boolean, 
-  visible: boolean, 
-  displayInLegend: boolean
-  style?: any,
-  state: 'init'|'load'|'done'|'error',
-  olLayer?: VectorLayer,
-  properties?: any
+export interface PARAMS {
+  scale: string
 };
 
 @Injectable()
 export class LayerService {
 
+  httpUrlBase: string;
+  layers: Array<RepartitionLayer> = [];
+  params: PARAMS = {
+    scale: 'maille5'
+  };
+
   constructor( 
-  	protected cartoS: CartoService,
-  	protected http: HttpClient 
+  	private cartoS: CartoService,
+  	private http: HttpClient 
   ) {
   	this.httpUrlBase = AppConfig.URL_API_CARTO;
   }
 
-  httpUrlBase: string;
-  layers: Array<LAYER> = [];
+  /***********************
+  *
+  *  Accesseurs
+  *
+  ************************/
+  get scale() { return this.params.scale; }
+  set scale(scale: string) { 
+    this.params.scale = scale;
+    this.reloadLayers();
+  }
 
-  /** GET taxon par ID (cd_nom) **/
-  // getGeoJSON(cd_ref: number = 189435): Observable<any> {
-  //   const taxonUrl = `${this.httpUrlBase}/repartition/${cd_ref}.geojson`;
-  //   const sources = {};
-  //   return this.http
-  //     .post(taxonUrl, sources, httpOptions);
-  // }
 
-  protected isLoad(ID): boolean {
+  /***********************
+  *
+  *  Fonctions publiques
+  *
+  ************************/
+  public addRepartitionLayer(taxon): void {
+    let ID = taxon.cd_ref;
+    if ( this.layerExist(ID) ) {
+      this.reloadLayer(ID, true);
+      return;
+    }
+    let layer = new RepartitionLayer(taxon);
+    this.addLayer(layer);
+  }
+
+  public addIndicateurLayer(ID): void {
+    if ( this.layerExist(ID) ) {
+      this.reloadLayer(ID, true);
+      return;
+    }
+
+    if ( ID == 'PRESSION_LAYER') {
+      let layer = new PressionLayer();
+      this.addLayer(layer);
+      return;
+    } else if ( ID == 'RICHESSE_LAYER') {
+      let layer = new RichesseLayer();
+      this.addLayer(layer);
+      return;
+    }
+  }
+
+  public getLegende(layer): void {
+    return layer.getLegende();
+  }
+
+  public removeLayer(ID) {
+    let layer = this.getLayer(ID);
+    this.cartoS.map.removeLayer(layer.olLayer);
+    this.layers = this.layers.filter((layer) => {layer.ID !== ID});
+  }
+
+
+  /***********************
+  *
+  *  Fonctions de service
+  *
+  ************************/
+  public layerExist(ID): boolean {
     let bool = false;
     this.layers.forEach((e) => {
       if ( e.ID == ID ) {
@@ -58,7 +108,17 @@ export class LayerService {
     return bool;
   }
 
-  protected getLayer(ID) {
+  public isVisible(ID): boolean {
+    let bool = false;
+    this.layers.forEach((e) => {
+      if ( e.ID == ID && e.olLayer.getVisible()) {
+        bool = true;
+      }
+    })
+    return bool;
+  }
+
+  public getLayer(ID) {
     let layer = null;
     this.layers.forEach((e) => {
       if ( e.ID == ID ) {
@@ -69,11 +129,6 @@ export class LayerService {
   }
 
   protected addLayer(layer): void {
-
-    if ( this.isLoad(layer.ID) ) {
-      this.reloadLayer(layer.ID, true);
-      return;
-    } 
     let olLayer = new VectorLayer({
                         title: layer.title, 
                         queryable: layer.queryable,
@@ -90,7 +145,7 @@ export class LayerService {
     this.loadLayer(layer);
   }
 
-  protected loadLayer(layer: LAYER) {
+  protected loadLayer(layer: Layer) {
     let source = layer.olLayer.getSource();
     layer.state = "load";
     this.getGeoJSON(layer)
@@ -102,19 +157,43 @@ export class LayerService {
   }
 
   protected reloadLayer(ID, visibility:boolean = null) {
-    let layer:LAYER = this.getLayer(ID);
+    let layer:Layer = this.getLayer(ID);
     this.loadLayer(layer);
     if (visibility !== null) {
       layer.olLayer.setVisible(visibility);
     }
   }
 
+  protected reloadLayers() {
+    this.layers.forEach((e) => {
+      if ( e.olLayer.getVisible() ) {
+        this.loadLayer(e);
+      }
+    })
+  }
+
+
+
+
+  /**************
+  *
+  *  Lien API
+  *
+  ***************/
+
   /** GET taxon par ID (cd_nom) **/
-  private getGeoJSON(layer, params: any = {}): Observable<any> {
+  private getGeoJSON(layer, params: any = this.params): Observable<any> {
     const taxonUrl = `${this.httpUrlBase}${layer.url}`;
     const sources = params;
     return this.http
       .post(taxonUrl, sources, httpOptions);
+  }
+
+  /** GET AvailablesScales **/
+  public getAvailablesScales(): Observable<any> {
+    const taxonUrl = `${this.httpUrlBase}/scales`;
+    return this.http
+      .get(taxonUrl, httpOptions);
   }
 
 }

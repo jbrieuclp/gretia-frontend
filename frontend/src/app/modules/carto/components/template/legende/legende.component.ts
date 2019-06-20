@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { RepartitionService } from '../../../services/repartition.service';
+import { LayerService } from '../../../services/layer.service';
 
 @Component({
   selector: 'app-carto-legende',
@@ -10,7 +10,7 @@ import { RepartitionService } from '../../../services/repartition.service';
 export class LegendeComponent implements OnInit {
 
   constructor(
-  	public repartS: RepartitionService
+  	public layerS: LayerService
   ) { }
 
   ngOnInit() {

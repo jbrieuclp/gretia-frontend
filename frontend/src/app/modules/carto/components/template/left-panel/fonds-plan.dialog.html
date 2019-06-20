@@ -9,13 +9,17 @@
       
       <ng-container *ngFor="let layer of group.getLayers().getArray(); let i = index">
         <div *ngIf="layer.get('displayInLayerSwitcher')">
-          <mat-checkbox [checked]="layer.getVisible()" (change)="layer.setVisible(!layer.getVisible())">{{ layer.get('title') }}</mat-checkbox>
+          <mat-checkbox 
+            color="primary"
+            [checked]="layer.getVisible()" 
+            (change)="layer.setVisible(!layer.getVisible())">{{ layer.get('title') }}</mat-checkbox>
           <button mat-icon-button color="primary" (click)="switchOpacity(layer)">
             <mat-icon>brightness_medium</mat-icon>
           </button>
           <br>
           <div *ngIf="displayOpacity(layer)">
             <mat-slider
+              color="primary"
               [value]="layer.getOpacity()*100"
               (change)="layer.setOpacity( $event.value / 100 )"
               tickInterval="1"

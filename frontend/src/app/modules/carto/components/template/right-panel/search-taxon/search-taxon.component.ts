@@ -3,7 +3,7 @@ import { Subject, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 
 import { TaxonService } from '../../../../services/taxon.service';
-import { RepartitionService } from '../../../../services/repartition.service';
+import { LayerService } from '../../../../services/layer.service';
 
 @Component({
   selector: 'app-carto-search-taxon',
@@ -33,7 +33,7 @@ export class SearchTaxonComponent {
   constructor( 
     private eRef: ElementRef,
   	private taxonS: TaxonService,
-    private repartitionS: RepartitionService
+    private layerS: LayerService
   ) { 
       //callback de resultat
       this.searchTaxons(this.searchTerm$).subscribe(results => true);
@@ -72,10 +72,9 @@ export class SearchTaxonComponent {
   selectTaxon(val: any){
     let taxon = val.nom_valide || null;
     if (taxon !== null) {
-      this.repartitionS.setLayer(taxon);
+      this.layerS.addRepartitionLayer(taxon);
       this.showSearchList = false;
       this.zone.nativeElement.value = '';
     }
-
   }
 }

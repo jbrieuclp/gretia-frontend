@@ -11,18 +11,18 @@ import { CartoService } from '../../../services/carto.service';
 import { layers } from '../../../services/layers.config';
 
 @Component({
-  selector: 'app-carto-fond-plan-panel',
+  selector: 'app-carto-time-panel',
   template: `
-  	<div id="fonds_plans" 
+  	<div
   		class="menu-item"
-			matTooltip="Choisir le fond de plan"
+			matTooltip="Appliquer un filtre temporel"
 			(click)="openDialog()">
-			<img src="/assets/images/carto/icones/layers-control.png">
+			<img src="/assets/images/carto/icones/time.png">
 		</div>
   `,
   styleUrls: ['./left-panel.component.scss']
 })
-export class FondsPlanPanelComponent {
+export class TimePanelComponent {
 
   constructor(
   	public dialog: MatDialog
@@ -37,7 +37,7 @@ export class FondsPlanPanelComponent {
   	dialogConfig.width = '485px';
   	dialogConfig.position = {left: '55px', top: '70px'};
 
-    const dialogRef = this.dialog.open(FondsPlanDialog, dialogConfig);
+    const dialogRef = this.dialog.open(TimePanelDialog, dialogConfig);
   }
 
 }
@@ -49,15 +49,15 @@ export class FondsPlanPanelComponent {
 * DIALOG
 **********/
 @Component({
-  selector: 'app-carto-fond-plan-dialog',
-  templateUrl: 'fonds-plan.dialog.html'
+  selector: 'app-carto-time-panel-dialog',
+  templateUrl: 'time-panel.dialog.html'
 })
-export class FondsPlanDialog implements OnInit {
+export class TimePanelDialog implements OnInit {
 
 	layers = layers
 
   constructor (
-    public dialogRef: MatDialogRef<FondsPlanDialog>,
+    public dialogRef: MatDialogRef<TimePanelDialog>,
     private cartoS: CartoService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}

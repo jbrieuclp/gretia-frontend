@@ -17,7 +17,8 @@ import {
   MatInputModule,
   MatProgressBarModule,
   MatSlideToggleModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatRadioModule
  } from '@angular/material';
 
 //modules
@@ -28,13 +29,13 @@ import { CartoComponent } from './components/carto.component';
 import { FondsPlanPanelComponent, FondsPlanDialog } from './components/template/left-panel/fonds-plan.component';
 import { CartoInitComponent } from './carto-init.component';
 import { LeftPanelComponent } from './components/template/left-panel/left-panel.component';
-import { RightPanelComponent } from './components/template/right-panel/right-panel.component';
-import { RightPanelDialog } from './components/template/right-panel/right-panel.component';
+import { GridsPanelComponent, GridsPanelDialog } from './components/template/left-panel/grids-panel.component';
+import { RightPanelComponent, RightPanelDialog } from './components/template/right-panel/right-panel.component';
+import { TimePanelComponent, TimePanelDialog } from './components/template/left-panel/time-panel.component';
 
 //services
 import { CartoService } from './services/carto.service';
 import { LayerService } from './services/layer.service';
-import { RepartitionService } from './services/repartition.service';
 import { SearchTaxonComponent } from './components/template/right-panel/search-taxon/search-taxon.component';
 import { TaxonsPanelComponent } from './components/template/right-panel/taxons-panel/taxons-panel.component';
 import { LegendeComponent } from './components/template/legende/legende.component';
@@ -61,6 +62,7 @@ import { IndicateursPanelComponent } from './components/template/right-panel/ind
     MatProgressBarModule,
     MatSlideToggleModule,
     MatProgressSpinnerModule,
+    MatRadioModule,
     CartoRoutingModule,
   ],
   declarations: [
@@ -74,16 +76,21 @@ import { IndicateursPanelComponent } from './components/template/right-panel/ind
     SearchTaxonComponent,
     TaxonsPanelComponent,
     LegendeComponent,
-    IndicateursPanelComponent
+    IndicateursPanelComponent,
+    GridsPanelComponent,
+    GridsPanelDialog,
+    TimePanelComponent, 
+    TimePanelDialog
   ],
   entryComponents: [ 
     FondsPlanDialog,
-    RightPanelDialog
+    RightPanelDialog,
+    GridsPanelDialog,
+    TimePanelDialog
   ],
   providers: [
     CartoService,
-    LayerService,
-    RepartitionService
+    LayerService
   ],
   bootstrap: [CartoComponent]
 })

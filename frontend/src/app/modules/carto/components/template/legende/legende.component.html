@@ -1,22 +1,29 @@
 <div class="legend-panel">
 	<div class="legend-panel-header">légende</div>
 	<div class="legend-panel-content">
-		<div *ngFor="let layer of repartS.layers">
-			<ng-container *ngIf="layer.state == 'done'">
-				<div class="legend-layer">
-					<div>
-							<mat-icon class="float-left pointer"
-							(click)="layer.olLayer.setVisible(!layer.olLayer.getVisible())">
-							{{ (layer.olLayer.getVisible()) ? 'visibility' : 'visibility_off' }}
-						</mat-icon> {{layer.properties.taxon.nom_valide}}
-					</div>
-					<div class="legend-layer-color">
-						<div *ngFor="let element of repartS.getLegende()">
-							<span class="color" [ngStyle]="{'background-color': element.color}"></span><span class="libelle">{{element.label}}</span>
+		<div *ngFor="let layer of layerS.layers">
+			<ng-container [ngSwitch]="layer.type">
+				
+			  <ng-container *ngSwitchCase="'repartition'">
+				  <ng-container *ngIf="layer.state == 'done'">
+						<div class="legend-layer">
+							<div>
+									<mat-icon class="float-left pointer"
+									(click)="layer.olLayer.setVisible(!layer.olLayer.getVisible())">
+									{{ (layer.olLayer.getVisible()) ? 'visibility' : 'visibility_off' }}
+								</mat-icon> {{layer.properties.taxon.nom_valide}}
+							</div>
+							<div class="legend-layer-color">
+								<div *ngFor="let element of layerS.getLegende(layer)">
+									<span class="color" [ngStyle]="{'background-color': element.color}"></span><span class="libelle">{{element.label}}</span>
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
+					</ng-container>
+			  </ng-container>
+
 			</ng-container>
+			
 		</div>
 	</div>
 </div>

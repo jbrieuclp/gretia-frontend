@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
+use \Symfony\Component\Yaml\Parser;
 
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -18,6 +19,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 class CartoController extends FOSRestController implements ClassResourceInterface
 {
     
+    /**
+    * @Rest\View()
+    * @ Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Get("/scales")
+    */
+    public function getScalesAction()
+    {
+        $parser = new Parser;
+        $data = $parser->parse(file_get_contents(__DIR__ . '/../Resources/config/parameter.yml'));
+        return $data['parameters']['availables_scales'];
+    }
+
     /**
     * @Rest\View(serializerGroups = {"projet"})
     * @Security("has_role('CARTO_SYNTHESE')")
@@ -32,14 +46,37 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
     }
 
     /**
-    * @ Rest\View()
     * @ Security("has_role('CARTO_SYNTHESE')")
     *
-    * @Rest\Post("/repartition/{cd_ref}.geojson")
+    * @Rest\Post("/layer/repartition/{cd_ref}.geojson")
     */
-    public function repartitionTaxonAction()
+    public function layerRepartitionAction()
     {
         $service = $this->get('api_carto.service.repartition_taxonomique');
+
+        return new Response($service->getGeoJson(3857));
+    }
+
+    /**
+    * @ Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/layer/pression-inventaires.geojson")
+    */
+    public function layerPressionAction()
+    {
+        $service = $this->get('visu_consultation.service.pression_connaissance');
+
+        return new Response($service->getGeoJson(3857));
+    }
+
+    /**
+    * @ Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/layer/richesse-taxonomique.geojson")
+    */
+    public function layerRichesseTaxoAction()
+    {
+        $service = $this->get('visu_consultation.service.richesse_taxonomique');
 
         return new Response($service->getGeoJson(3857));
     }

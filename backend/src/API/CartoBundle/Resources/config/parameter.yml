@@ -1,4 +1,6 @@
 parameters:
+    availables_scales: [communes, maille10, maille5, maille2, maille1]
+    
     communes:
         geom:
             id: insee_comm

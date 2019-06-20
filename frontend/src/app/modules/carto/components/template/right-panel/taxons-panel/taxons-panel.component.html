@@ -1,15 +1,16 @@
 <app-carto-search-taxon></app-carto-search-taxon>
 
-<div *ngFor="let layer of repartS.layers">
+<div *ngFor="let layer of layerS.layers">
+	<ng-container *ngIf="layer.type == 'repartition'">
+		<ng-container *ngIf="layer.state == 'load'">
+			<span class="float-left" style="margin-right: 10px;"><mat-spinner diameter="20" strokeWidth="2"></mat-spinner></span> {{layer.properties.taxon.nom_valide}}
+		</ng-container>
 
-	<ng-container *ngIf="layer.state == 'load'">
-		<span class="float-left" style="margin-right: 10px;"><mat-spinner diameter="20" strokeWidth="2"></mat-spinner></span> {{layer.properties.taxon.nom_valide}}
-	</ng-container>
-
-	<ng-container *ngIf="layer.state == 'done'">
-		<mat-slide-toggle 
-			color="primary"
-			[checked]="layer.olLayer.getVisible()"
-			(change)="layer.olLayer.setVisible($event.checked)"> {{layer.properties.taxon.nom_valide}} </mat-slide-toggle>
+		<ng-container *ngIf="layer.state == 'done'">
+			<mat-slide-toggle 
+				color="primary"
+				[checked]="layer.olLayer.getVisible()"
+				(change)="layer.olLayer.setVisible($event.checked)"> {{layer.properties.taxon.nom_valide}} </mat-slide-toggle>
+		</ng-container>
 	</ng-container>
 </div>

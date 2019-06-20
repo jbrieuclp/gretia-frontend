@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>Temporalité</h1>
+
+<p>Permet de filtrer les données selon une temporalité.</p>
+
+<h5>Filtrer par périodes prédéfies</h5>
+
+<div>
+<mat-checkbox
+	color="primary"> Données récentes (&gt; 2000)</mat-checkbox>
+</div>
+<div>
+<mat-checkbox
+	color="primary"> Données anciennes ( 1950-2000 )</mat-checkbox>
+</div>
+<div>
+<mat-checkbox
+	color="primary"> Données historiques (&lt; 1950)</mat-checkbox>
+</div>
+
+
+<h5>Filtrer par dates</h5>
+
+
+<div class="row" style="padding:10px;">
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label for="date_min">Année min.</label>
+			<input type="text" data-form="fmr-indicateur" autocomplete="off" name="date_min" class="form-control" id="date_min" placeholder="jj/mm/aaaa">
+		</div>
+	</div>
+	<div class="col-xs-6">
+		<div class="form-group">
+			<label for="date_max">Année max.</label>
+			<input type="text" data-form="fmr-indicateur" autocomplete="off" name="date_max" class="form-control" id="date_max" placeholder="jj/mm/aaaa">
+		</div>
+	</div>
+</div>
