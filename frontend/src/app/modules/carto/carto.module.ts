@@ -40,6 +40,7 @@ import { SearchTaxonComponent } from './components/template/right-panel/search-t
 import { TaxonsPanelComponent } from './components/template/right-panel/taxons-panel/taxons-panel.component';
 import { LegendeComponent } from './components/template/legende/legende.component';
 import { IndicateursPanelComponent } from './components/template/right-panel/indicateurs-panel/indicateurs-panel.component';
+import { TooltipDialog } from './components/tooltip/tooltip.dialog';
 
 @NgModule({
   exports: [
@@ -80,13 +81,15 @@ import { IndicateursPanelComponent } from './components/template/right-panel/ind
     GridsPanelComponent,
     GridsPanelDialog,
     TimePanelComponent, 
-    TimePanelDialog
+    TimePanelDialog, 
+    TooltipDialog
   ],
   entryComponents: [ 
     FondsPlanDialog,
     RightPanelDialog,
     GridsPanelDialog,
-    TimePanelDialog
+    TimePanelDialog,
+    TooltipDialog
   ],
   providers: [
     CartoService,

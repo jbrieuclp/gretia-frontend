@@ -1,7 +1,7 @@
 <?php
 namespace API\CartoBundle\Services\Cartographie;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
@@ -12,21 +12,9 @@ use API\CartoBundle\Services\Cartographie\LayerService;
 
 class RepartitionTaxonomiqueService extends LayerService
 {
-    protected $echelles = array('communes' => '',
-                                'maille10' => '',
-                                'maille5' => '',
-                                'maille_utm_10' => '',
-                                'maille2' => '',
-                                'maille1' => '',
-                                'maille500' => '',
-                                'maille200' => '',
-                                'maille100' => '',
-                                'precise'   => ''
-                                //'precise'   => 'ROLE_PC_PRECISE',
-                              );
-
-    public function __construct(Connection $dbalConnection, AuthorizationChecker $authorization, TokenStorage $context, Router $router, RequestStack $request)  {
-        parent::__construct($dbalConnection, $authorization, $context, $router, $request);
+    
+    public function __construct(EntityManager $em, AuthorizationChecker $authorization, TokenStorage $context, Router $router, RequestStack $request)  {
+        parent::__construct($em, $authorization, $context, $router, $request);
 
         //$this->setStatutTaxon();        
     }
@@ -76,14 +64,14 @@ class RepartitionTaxonomiqueService extends LayerService
 
     protected function setGeojsonQuery() {
         $qb = $this->queryBuilder;
-        $qb->select("id_unique, 
-                     max(EXTRACT('year' from d.date)) annee_max, 
-                     max(validation) validation, 
-                     ST_AsGeoJSON(ST_Transform(the_geom, 3857), 0) as the_geom ")
-           ->addSelect("'".str_replace('AAA', "'||d.id_unique", $this->router->generate('visu_carto_taxon_repartition_infobulle', array('cd_ref' => $this->request->get('cd_ref'), 'echelle' => $this->getEchelle(), 'maille_id' => 'AAA'))).' AS url')
-           ->from('referentiel.indicateur_'.$this->getEchelle(), 'd')
-           ->groupBy('id_unique')
-           ->addGroupBy('the_geom');
+        $qb->select("a.area_code, 
+                     max(EXTRACT('year' from s.date_max)) annee_max, 
+                     ST_AsGeoJSON(ST_Transform(a.geom, 3857), 0) as the_geom ")
+           ->from('ref_geo.l_areas', 'a')
+           ->innerJoin('a', 'pr_atlas.atlas', 'atlas', 'a.area_code = atlas.type_'.$this->getScale()->getType())
+           ->innerJoin('atlas', 'gn_synthese.v_synthese_for_web_app', 's', 'atlas.id_synthese = s.id_synthese')
+           ->groupBy('a.area_code')
+           ->addGroupBy('a.geom');
     }
 
 
@@ -157,7 +145,9 @@ class RepartitionTaxonomiqueService extends LayerService
         if (!is_numeric($taxon))
             return;
 
-        $this->queryBuilder->andWhere("(".$taxon." = ANY(d.code_sup) OR ".$taxon." = d.taxon)");
+        $this->queryBuilder
+        ->join('s', 'taxonomie.taxref_tree_tot', 'tx_tree', 's.cd_ref = tx_tree.cd_ref')
+        ->andWhere("(".$taxon." = ANY(tx_tree.cd_ref_sup) OR ".$taxon." = s.cd_ref)");
     }
 
 }

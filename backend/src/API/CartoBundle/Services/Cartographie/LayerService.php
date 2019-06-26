@@ -1,13 +1,13 @@
 <?php
 namespace API\CartoBundle\Services\Cartographie;
 
-use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\EntityManager;
 
 use \Symfony\Component\Yaml\Parser;
 
@@ -17,6 +17,7 @@ abstract class LayerService
     *
     * @var Connection
     */
+    protected $em;
     protected $connection;
     private $context;
     protected $router;
@@ -37,22 +38,21 @@ abstract class LayerService
     protected $parameters;
     protected $queryBuilder;
     protected $criteres;
-    protected $echelle;
+    protected $scale;
     protected $projection = 3857;
+    protected $geojsonData = [];
 
 
-    public function __construct(Connection $dbalConnection, AuthorizationChecker $authorization, TokenStorage $context, Router $router, RequestStack $request)  {
-        $this->connection = $dbalConnection;    
+    public function __construct(EntityManager $em, AuthorizationChecker $authorization, TokenStorage $context, Router $router, RequestStack $request)  {
+        $this->em = $em;    
+        $this->connection = $em->getConnection();    
         $this->authorization = $authorization; 
         $this->context = $context; 
         $this->router = $router; 
         $this->request = $request->getCurrentRequest();   
-        $this->queryBuilder = $this->connection->createQueryBuilder(); 
-        
-        $parser = new Parser;
-        $data = $parser->parse(file_get_contents(__DIR__ . '/../../Resources/config/parameter.yml'));
-        $this->parameters = (object) $data['parameters'];
+        $this->queryBuilder = $this->newQuery(); 
 
+        $this->setScale();
         $this->setCriteres();
     }
 	
@@ -63,6 +63,11 @@ abstract class LayerService
     public function getGeoJson($projection = 3857)
     {
         $this->setProjection($projection);
+
+        //verification des droits d'accès aux données
+        if ($this->checkScale()) {
+            $this->setGeojsonData();
+        }
     }
 
     /**
@@ -74,10 +79,14 @@ abstract class LayerService
         $this->addCriteres('maille', $this->request->get('maille_id'));
     }
 	
-    protected function getGeojsonData() {
+    protected function setGeojsonData() {
         $this->setGeojsonQuery();
         $this->setWhere();
-        return $this->queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
+        $this->geojsonData = $this->queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    protected function getGeojsonData() {
+        return $this->geojsonData;
     }
     
     protected function setCriteres(/*$maille_id = null*/) {
@@ -93,6 +102,8 @@ abstract class LayerService
                     'territoire' => $this->request->request->get('territoire'),
                     'suivi' => $this->request->request->get('suivi'),
                   );
+
+        $this->setScalefilter();
     }
 
     protected function addCriteres($critere, $value) {
@@ -119,18 +130,27 @@ abstract class LayerService
         unset($this->criteres[$critere]);
     }
 
-    protected function setEchelle(/*$maille_id = null*/) {
-        $echelleDemandee = $this->request->request->get('scale', 'maille5');
-
-        $this->echelle = $this->verifEchelle($echelleDemandee);
+    /**
+     * Cette fonction permet de vérifier si l'utilisateur possède les droits d'accès à la données
+     * Sortie : l'echelle autorisée
+     */
+    protected function checkScale()
+    {
+        return $this->getScale() !== null;
     }
 
-    protected function getEchelle(/*$maille_id = null*/) {
-        $echelleDemandee = $this->request->request->get('scale', 'maille5');
+    protected function setScale() {
+        $this->scale = null;
+        $scales = $this->em->getRepository('APICartoBundle:Scale')->getScaleForUser($this->context->getToken()->getUser()->getId());
+        foreach ($scales as $scale) {
+            if ($scale === $this->em->getRepository('APICartoBundle:Scale')->findOneByType($this->request->request->get('scale'))) {
+                $this->scale = $scale;
+            }
+        }
+    }
 
-        $this->echelle = $this->verifEchelle($echelleDemandee);
-
-        return $this->echelle;
+    protected function getScale() {
+        return $this->scale;
     }
 	
     /**
@@ -179,6 +199,7 @@ abstract class LayerService
         return '{"type": "FeatureCollection", "crs": {"type": "name", "properties": {"name": "EPSG:'.$this->projection.'"}}, "features": ['.implode(',', $features).']}';
     }
 
+
     /**
      * Cette fonction permet de retourner un tableau asso formatant le geojson correctement
      * Sortie : array('header' => $header, 'features' => $features, 'footer' => $footer);
@@ -190,39 +211,8 @@ abstract class LayerService
         return $this->queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Cette fonction permet de vérifier si l'utilisateur possède les droits d'accès à la données
-     * Sortie : l'echelle autorisée
-     */
-    protected function verifEchelle($echelle)
-    {
-        $role = $this->echelles[$echelle];
+    
 
-        if ( empty($role) OR $this->authorization->isGranted($role) ) { // On autorise
-                
-            // Vérifier si droit spatial ok
-            // avec un intersects sur la géom autorisée
-            if ( !empty($role) AND $this->context->getToken()->getUser()->getRestriction()->hasGeomRestriction($role) ) {
-                $this->addCriteres('geometry', $this->context->getToken()->getUser()->getRestriction()->getGeom($role));
-            }
-
-            return $echelle;
-
-            // Ou alors avec table territoire et filtrer sur code insee
-
-        } else { // On tente l'échelle supérieure
-            foreach ($this->echelles as $key => $value) {
-                if ( $echelle == $key) { 
-                    break;
-                }
-                $echelleSup = $key;
-            }
-            if ( empty($echelleSup) )
-                throw new NotFoundHttpException("Page not found");
-
-            return $this->verifEchelle($echelleSup);
-        }
-    }
 
     /**
      * Fonctions internes nécessaires aux indicateurs 
@@ -403,10 +393,34 @@ abstract class LayerService
     private function setMaille($maille)
     {
         if (is_null($maille)) return;
-		
-	// Problème pour passer l'id de la maille pour avoir l'info-bulle de la richesse taxonomique
-	//$this->queryBuilder->andWhere("d.id_unique = :maille")
-	//                   ->setParameter("maille", $maille);
-	$this->queryBuilder->andWhere("d.id_unique = '".$maille."'");
+    		
+    	// Problème pour passer l'id de la maille pour avoir l'info-bulle de la richesse taxonomique
+    	//$this->queryBuilder->andWhere("d.id_unique = :maille")
+    	//                   ->setParameter("maille", $maille);
+    	$this->queryBuilder->andWhere("d.id_unique = '".$maille."'");
+    }
+
+    private function setScaleFilter()
+    {
+        $max = $this->em->getRepository('APICartoBundle:Scale')->getMaxRightForUser($this->getScale()->getType(), $this->context->getToken()->getUser()->getId());
+        switch ($max) {
+            case 2: //mes données
+                $this->setMyData($this->context->getToken()->getUser()->getId());
+                break;
+            case 3: //mes données + organisme
+                $this->setMyOrgData($this->context->getToken()->getUser()->getOrganisme());
+                break;
+        }
+    }
+
+    private function setMyData($id) {
+        $this->queryBuilder->join('s', 'pr_occtax.v_cor_counting_role_org', 'mydata', 's.entity_source_pk_value = mydata.id_counting_occtax AND ARRAY['.$id.']::integer[] && mydata.roles');
+    }
+
+    private function setMyOrgData($id) {
+        $this->queryBuilder
+        ->join('s', 'pr_occtax.v_cor_counting_role_org', 'mydata', 's.entity_source_pk_value = mydata.id_counting_occtax')
+        ->join('s', 'pr_occtax.v_cor_counting_role_org', 'myorgdata', 's.entity_source_pk_value = myorgdata.id_counting_occtax')
+        ->addWhere('(ARRAY['.$id.']::integer[] && mydata.roles OR ARRAY['.$id.']::integer[] && myorgdata.organismes)');
     }
 }

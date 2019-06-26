@@ -19,7 +19,7 @@ const httpOptions = {
 };
 
 export interface PARAMS {
-  scale: string
+  scale: number
 };
 
 @Injectable()
@@ -28,7 +28,7 @@ export class LayerService {
   httpUrlBase: string;
   layers: Array<RepartitionLayer> = [];
   params: PARAMS = {
-    scale: 'maille5'
+    scale: 32
   };
 
   constructor( 
@@ -44,7 +44,7 @@ export class LayerService {
   *
   ************************/
   get scale() { return this.params.scale; }
-  set scale(scale: string) { 
+  set scale(scale: number) { 
     this.params.scale = scale;
     this.reloadLayers();
   }
