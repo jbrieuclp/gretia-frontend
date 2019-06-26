@@ -13,8 +13,7 @@ import { layers } from '../../../services/layers.config';
 @Component({
   selector: 'app-carto-time-panel',
   template: `
-  	<div
-  		class="menu-item"
+  	<div class="menu-item"
 			matTooltip="Appliquer un filtre temporel"
 			(click)="openDialog()">
 			<img src="/assets/images/carto/icones/time.png">

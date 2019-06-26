@@ -12,8 +12,7 @@ import { LayerService } from '../../../services/layer.service';
 @Component({
   selector: 'app-carto-grids-panel',
   template: `
-  	<div id="fonds_plans" 
-  		class="menu-item"
+  	<div class="menu-item"
 			matTooltip="Changer le type de restitution"
 			(click)="openDialog()">
 			<img src="/assets/images/carto/icones/grille.png">

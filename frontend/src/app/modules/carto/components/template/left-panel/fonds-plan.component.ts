@@ -13,8 +13,7 @@ import { layers } from '../../../services/layers.config';
 @Component({
   selector: 'app-carto-fond-plan-panel',
   template: `
-  	<div id="fonds_plans" 
-  		class="menu-item"
+  	<div class="menu-item"
 			matTooltip="Choisir le fond de plan"
 			(click)="openDialog()">
 			<img src="/assets/images/carto/icones/layers-control.png">

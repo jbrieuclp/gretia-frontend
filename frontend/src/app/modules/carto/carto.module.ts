@@ -32,6 +32,7 @@ import { LeftPanelComponent } from './components/template/left-panel/left-panel.
 import { GridsPanelComponent, GridsPanelDialog } from './components/template/left-panel/grids-panel.component';
 import { RightPanelComponent, RightPanelDialog } from './components/template/right-panel/right-panel.component';
 import { TimePanelComponent, TimePanelDialog } from './components/template/left-panel/time-panel.component';
+import { TerritoryPanelComponent, TerritoryPanelDialog } from './components/template/left-panel/territory-panel.component';
 
 //services
 import { CartoService } from './services/carto.service';
@@ -80,13 +81,16 @@ import { IndicateursPanelComponent } from './components/template/right-panel/ind
     GridsPanelComponent,
     GridsPanelDialog,
     TimePanelComponent, 
-    TimePanelDialog
+    TimePanelDialog,
+    TerritoryPanelComponent, 
+    TerritoryPanelDialog
   ],
   entryComponents: [ 
     FondsPlanDialog,
     RightPanelDialog,
     GridsPanelDialog,
-    TimePanelDialog
+    TimePanelDialog,
+    TerritoryPanelDialog
   ],
   providers: [
     CartoService,
