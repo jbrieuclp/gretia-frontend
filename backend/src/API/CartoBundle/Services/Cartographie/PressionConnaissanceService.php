@@ -10,27 +10,13 @@ use API\CartoBundle\Services\Cartographie\IndicateurService;
 
 class PressionConnaissanceService extends IndicateurService
 {
-    protected $echelles = array('communes'  => '',
-                                'maille_utm_10' => '',
-                                'maille10'  => '',
-                                'maille5'   => '',
-                                'maille2'   => '',
-                                'maille1'   => '',
-                                'maille500' => 'ROLE_PC_500M',
-                                'maille200' => 'ROLE_PC_200M',
-                                'maille100' => 'ROLE_PC_100M',
-                                'precise'   => 'ROLE_PC_100M',
-                              );
-	
-	protected function setGeojsonQuery() {
+    protected function setGeojsonQuery() {
         parent::setGeojsonQuery();
 
         $qb = $this->queryBuilder;
 
-        $qb->addSelect("'".str_replace('AAA', "'||d.id_unique", $this->router->generate('visu_carto_pc_infobulle', array('echelle' => $this->getEchelle(), 'maille_id' => 'AAA'))).' AS url');
-
         // En fonction de si filtre sur taxon ou pas on change le select
-        $qb->addSelect('count(DISTINCT data_id) AS total');
+        $qb->addSelect('count(DISTINCT unique_id_sinp) AS total');
     }
 	
 	protected function setInformationQuery() {
@@ -39,7 +25,7 @@ class PressionConnaissanceService extends IndicateurService
         $qb = $this->queryBuilder;
 
         // En fonction de si filtre sur taxon ou pas on change le select
-        $qb->addSelect('count(DISTINCT data_id) AS somme');
+        $qb->addSelect('count(DISTINCT unique_id_sinp) AS somme');
     }
 	
     /**

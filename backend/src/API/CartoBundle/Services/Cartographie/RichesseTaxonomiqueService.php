@@ -10,27 +10,13 @@ use API\CartoBundle\Services\Cartographie\IndicateurService;
 
 class RichesseTaxonomiqueService extends IndicateurService
 {
-    protected $echelles = array('communes'  => '',
-                                'maille_utm_10' => '',
-                                'maille10'  => '',
-                                'maille5'   => '',
-                                'maille2'   => '',
-                                'maille1'   => '',
-                                'maille500' => 'ROLE_RICH_TAXO_500M',
-                                'maille200' => 'ROLE_RICH_TAXO_200M',
-                                'maille100' => 'ROLE_RICH_TAXO_100M',
-                                'precise'   => 'ROLE_RICH_TAXO_100M',
-                              );
-
     protected function setGeojsonQuery() {
         parent::setGeojsonQuery();
 
         $qb = $this->queryBuilder;
         
-        $qb->addSelect("'".str_replace('AAA', "'||d.id_unique", $this->router->generate('visu_carto_richesse_taxo_infobulle', array('echelle' => $this->getEchelle(), 'maille_id' => 'AAA'))).' AS url');
-
         // En fonction de si filtre sur taxon ou pas on change le select
-        $qb->addSelect('array_length(array_remove(array_agg(DISTINCT taxon), NULL),1) AS total ');
+        $qb->addSelect('count(distinct cd_ref) AS total ');
     }
 
     protected function setInformationQuery() {

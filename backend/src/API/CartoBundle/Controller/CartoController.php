@@ -20,16 +20,17 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
 {
     
     /**
-    * @Rest\View()
+    * @Rest\View(serializerGroups = {"scale"})
     * @ Security("has_role('CARTO_SYNTHESE')")
     *
     * @Rest\Get("/scales")
     */
     public function getScalesAction()
     {
-        $parser = new Parser;
-        $data = $parser->parse(file_get_contents(__DIR__ . '/../Resources/config/parameter.yml'));
-        return $data['parameters']['availables_scales'];
+        $cpt_id = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        $em = $this->getDoctrine()->getManager('geonature_db');
+        $scales = $em->getRepository('APICartoBundle:Scale')->getScaleForUser($cpt_id);
+        return $scales;
     }
 
     /**
@@ -64,7 +65,7 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
     */
     public function layerPressionAction()
     {
-        $service = $this->get('visu_consultation.service.pression_connaissance');
+        $service = $this->get('api_carto.service.pression_connaissance');
 
         return new Response($service->getGeoJson(3857));
     }
@@ -76,7 +77,7 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
     */
     public function layerRichesseTaxoAction()
     {
-        $service = $this->get('visu_consultation.service.richesse_taxonomique');
+        $service = $this->get('api_carto.service.richesse_taxonomique');
 
         return new Response($service->getGeoJson(3857));
     }

@@ -19,10 +19,12 @@ abstract class IndicateurService extends LayerService
 
     protected function setGeojsonQuery() {
         $qb = $this->queryBuilder;
-        $qb->select("d.id_unique, ST_AsGeoJSON(ST_Transform(d.the_geom, 3857), 0) AS the_geom ")
-           ->from('referentiel.indicateur_'.$this->getEchelle(), 'd')
-           ->groupBy('d.id_unique')
-           ->addGroupBy('d.the_geom');
+        $qb->select("a.area_code, ST_AsGeoJSON(ST_Transform(a.geom, 3857), 0) AS the_geom ")
+           ->from('ref_geo.l_areas', 'a')
+           ->innerJoin('a', 'pr_atlas.atlas', 'atlas', 'a.area_code = atlas.type_'.$this->getScale()->getType())
+           ->innerJoin('atlas', 'gn_synthese.v_synthese_for_web_app', 's', 'atlas.id_synthese = s.id_synthese')
+           ->groupBy('a.area_code')
+           ->addGroupBy('a.geom');
     }
 
 

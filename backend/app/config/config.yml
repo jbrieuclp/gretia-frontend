@@ -177,7 +177,7 @@ doctrine:
                 auto_mapping: false
                 mappings:
                     APICoreBundle: ~
-                    APIBiblioBundle: ~
+                    APICartoBundle: ~
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
