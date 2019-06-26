@@ -74,9 +74,9 @@ abstract class LayerService
     * Cette fonction recupère les données attributaire liées à une maille
     * Sortie : tableau associatif des données
     */
-    public function getInfoBulle()
+    public function getInfoBulle($area)
 	{
-        $this->addCriteres('maille', $this->request->get('maille_id'));
+        $this->addCriteres('area', $area);
     }
 	
     protected function setGeojsonData() {
@@ -208,7 +208,8 @@ abstract class LayerService
     {
         $this->setInformationQuery();
         $this->setWhere();
-        return $this->queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $this->queryBuilder->execute()->fetch(\PDO::FETCH_ASSOC);
     }
 
     
@@ -390,14 +391,14 @@ abstract class LayerService
         $qb->andWhere("ST_Intersects(d.the_geom, ST_Transform(ST_SetSRID(ST_GeomFromGeoJSON('".$geom."'), 3857), 2154))");
     }
 
-    private function setMaille($maille)
+    private function setArea($area)
     {
-        if (is_null($maille)) return;
+        if (is_null($area)) return;
     		
     	// Problème pour passer l'id de la maille pour avoir l'info-bulle de la richesse taxonomique
     	//$this->queryBuilder->andWhere("d.id_unique = :maille")
     	//                   ->setParameter("maille", $maille);
-    	$this->queryBuilder->andWhere("d.id_unique = '".$maille."'");
+    	$this->queryBuilder->andWhere("a.area_code = '".$area."'");
     }
 
     private function setScaleFilter()

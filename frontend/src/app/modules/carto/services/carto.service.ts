@@ -1,6 +1,4 @@
 import { Injectable, ElementRef } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material';
-import { TooltipDialog } from '../components/tooltip/tooltip.dialog'
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -28,8 +26,9 @@ export class CartoService {
   private _matrixIds = new Array(14);
   private _key_ign = 'v0bxp1xur57ztiai9djszgjw';
   private _mapview: ElementRef;
+  private _clickFunctions: Array<any> = [];
 
-  constructor(public dialog: MatDialog) { }
+  constructor() { }
 
   get map() { return this._map; }
   set map(map: Map) { this._map = map; }
@@ -43,6 +42,12 @@ export class CartoService {
   get resolutions() { return this._resolutions; }
   get matrixIds() { return this._matrixIds; }
   get key_ign() { return this._key_ign; }
+  set addClickFunction(fct: any) {
+    this._clickFunctions.push(fct);
+  }
+  get clickFunctions() {
+    return this._clickFunctions;
+  }
 
   setResolution() {
     let size = extent.getWidth(this.epsg3857.getExtent()) / 256;
@@ -70,7 +75,7 @@ export class CartoService {
     this.map = map;
 
     //configuration des elements de la map (ajout de controls)
-    this.addQueryControl();
+    this.addClickControl();
 
     return this.map;
   }
@@ -83,7 +88,7 @@ export class CartoService {
     this.map.addLayer(layer);
   }
 
-  private addQueryControl() {
+  private addClickControl() {
 
     let selectStyle = (function() {
 
@@ -119,45 +124,10 @@ export class CartoService {
     let $this = this;
 
     this.map.on('click', function(evt) {
-      $this.displayFeatureInfo(evt.pixel, evt.coordinate);
-    });
-
-
-  }
-
-
-  //fonction d'ouverture de l'infobulle d'information de carte
-  displayFeatureInfo(pixel, coordinate) {
-    let features = {};
-    this.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
-      if ( layer !== null && layer.get('queryable') ) {
-        var title = layer.get('title');
-        var id = title.replace(/ /g, '_');
-        if( !(id in features) ){ 
-          features[id] = {
-            'name': title,
-            'id': id,
-            'data': []
-          };
-        }
-        features[id]['data'].push(feature)
+      for (let e of $this.clickFunctions) {
+        e.fct(e.this, evt);
       }
     });
-
-
-    if (Object.keys(features).length !== 0) {
-      const dialogConfig = new MatDialogConfig();
-
-      dialogConfig.data = features;
-      dialogConfig.width = '600px';
-      dialogConfig.height = '500px';
-      dialogConfig.hasBackdrop = true;
-      dialogConfig.closeOnNavigation = true;
-
-      const dialogRef = this.dialog.open(TooltipDialog, dialogConfig);
-    }
-
   }
-
   
 }

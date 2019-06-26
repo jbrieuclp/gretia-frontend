@@ -25,7 +25,7 @@ class PressionConnaissanceService extends IndicateurService
         $qb = $this->queryBuilder;
 
         // En fonction de si filtre sur taxon ou pas on change le select
-        $qb->addSelect('count(DISTINCT unique_id_sinp) AS somme');
+        $qb->addSelect('count(DISTINCT unique_id_sinp) AS nb_obs');
     }
 	
     /**
@@ -43,9 +43,9 @@ class PressionConnaissanceService extends IndicateurService
     * Cette fonction récupère les données attributaires liées à une maille
     * Sortie : tableau associatif des données
     */
-    public function getInfoBulle()
+    public function getInfoBulle($area)
     {
-        parent::getInfoBulle();
+        parent::getInfoBulle($area);
 
         return $this->makeInfoBulle();
     }

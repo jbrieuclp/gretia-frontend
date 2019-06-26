@@ -33,15 +33,22 @@ import { GridsPanelComponent, GridsPanelDialog } from './components/template/lef
 import { RightPanelComponent, RightPanelDialog } from './components/template/right-panel/right-panel.component';
 import { TimePanelComponent, TimePanelDialog } from './components/template/left-panel/time-panel.component';
 import { TerritoryPanelComponent, TerritoryPanelDialog } from './components/template/left-panel/territory-panel.component';
-
-//services
-import { CartoService } from './services/carto.service';
-import { LayerService } from './services/layer.service';
 import { SearchTaxonComponent } from './components/template/right-panel/search-taxon/search-taxon.component';
 import { TaxonsPanelComponent } from './components/template/right-panel/taxons-panel/taxons-panel.component';
 import { LegendeComponent } from './components/template/legende/legende.component';
 import { IndicateursPanelComponent } from './components/template/right-panel/indicateurs-panel/indicateurs-panel.component';
 import { TooltipDialog } from './components/tooltip/tooltip.dialog';
+import { TooltipContentComponent } from './components/tooltip/tooltip-content.component';
+import { PressionInfoComponent } from './layers/template/pression/pression-info.component';
+import { RepartitionInfoComponent } from './layers/template/repartition/repartition-info.component';
+import { RichesseInfoComponent } from './layers/template/richesse/richesse-info.component';
+
+//services
+import { CartoService } from './services/carto.service';
+import { LayerService } from './services/layer.service';
+
+//directives
+import { LayerInfoDirective } from './layers/template/layer-info.directive';
 
 @NgModule({
   exports: [
@@ -85,7 +92,12 @@ import { TooltipDialog } from './components/tooltip/tooltip.dialog';
     TimePanelDialog,
     TerritoryPanelComponent, 
     TerritoryPanelDialog,
-    TooltipDialog
+    TooltipDialog,
+    PressionInfoComponent,
+    LayerInfoDirective,
+    RepartitionInfoComponent,
+    RichesseInfoComponent,
+    TooltipContentComponent
   ],
   entryComponents: [ 
     FondsPlanDialog,
@@ -93,7 +105,10 @@ import { TooltipDialog } from './components/tooltip/tooltip.dialog';
     GridsPanelDialog,
     TimePanelDialog,
     TerritoryPanelDialog,
-    TooltipDialog
+    TooltipDialog,
+    PressionInfoComponent,
+    RichesseInfoComponent,
+    RepartitionInfoComponent
   ],
   providers: [
     CartoService,

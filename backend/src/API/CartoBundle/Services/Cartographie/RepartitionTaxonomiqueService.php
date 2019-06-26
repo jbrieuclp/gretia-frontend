@@ -90,9 +90,9 @@ class RepartitionTaxonomiqueService extends LayerService
     * Cette fonction recupère les données attributaire liées à une maille
     * Sortie : tableau associatif des données
     */
-    public function getInfoBulle()
+    public function getInfoBulle($area)
     {
-        parent::getInfoBulle();
+        parent::getInfoBulle($area);
 
         return $this->setInformationQuery();
     }

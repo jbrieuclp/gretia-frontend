@@ -34,19 +34,6 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
     }
 
     /**
-    * @Rest\View(serializerGroups = {"projet"})
-    * @Security("has_role('CARTO_SYNTHESE')")
-    *
-    * @Rest\Get("/projets")
-    */
-    public function getProjetsAction()
-    {
-        $em = $this->getDoctrine()->getManager('gretiadb');
-        $cadres = $em->getRepository('APIMetadataBundle:CadreAcquisition')->findAll();
-        return $cadres;
-    }
-
-    /**
     * @ Security("has_role('CARTO_SYNTHESE')")
     *
     * @Rest\Post("/layer/repartition/{cd_ref}.geojson")
@@ -80,6 +67,49 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
         $service = $this->get('api_carto.service.richesse_taxonomique');
 
         return new Response($service->getGeoJson(3857));
+    }
+
+    /**
+    * @Rest\View()
+    * @ Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/layer/pression-inventaires/{area}")
+    */
+    public function infoPressionAction($area)
+    {
+        $service = $this->get('api_carto.service.pression_connaissance');
+
+        $data = $service->getInfoBulle($area);
+
+        //mise au propre des données
+        $data['observateurs'] = json_decode($data['observateurs']);
+        $data['datasets'] = json_decode($data['datasets'], true);
+        $data['afs'] = json_decode($data['afs'], true);
+        $data['communes'] = json_decode($data['communes'], true);
+
+        return $data;
+    }
+
+    /**
+    * @Rest\View()
+    * @ Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/layer/richesse-taxonomique/{area}")
+    */
+    public function infoRichesseTaxoAction($area)
+    {
+        $service = $this->get('api_carto.service.richesse_taxonomique');
+
+        $data = $service->getInfoBulle($area);
+
+        //mise au propre des données
+        $data['observateurs'] = json_decode($data['observateurs']);
+        $data['datasets'] = json_decode($data['datasets'], true);
+        $data['afs'] = json_decode($data['afs'], true);
+        $data['communes'] = json_decode($data['communes'], true);
+        $data['taxons'] = json_decode($data['taxons'], true);
+
+        return $data;
     }
 
 }
