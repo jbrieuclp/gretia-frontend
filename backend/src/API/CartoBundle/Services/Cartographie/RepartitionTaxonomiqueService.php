@@ -64,13 +64,14 @@ class RepartitionTaxonomiqueService extends LayerService
 
     protected function setGeojsonQuery() {
         $qb = $this->queryBuilder;
-        $qb->select("a.area_code, 
+        $qb->select("a.id_area, 
                      max(EXTRACT('year' from s.date_max)) annee_max, 
                      ST_AsGeoJSON(ST_Transform(a.geom, 3857), 0) as the_geom ")
            ->from('ref_geo.l_areas', 'a')
-           ->innerJoin('a', 'pr_atlas.atlas', 'atlas', 'a.area_code = atlas.type_'.$this->getScale()->getType())
+           ->innerJoin('a', 'pr_atlas.vm_atlas', 'atlas', 'a.id_area = atlas.id_area AND a.id_type = :type_geom')
+           ->setParameter('type_geom', $this->getScale()->getType())
            ->innerJoin('atlas', 'gn_synthese.v_synthese_for_web_app', 's', 'atlas.id_synthese = s.id_synthese')
-           ->groupBy('a.area_code')
+           ->groupBy('a.id_area')
            ->addGroupBy('a.geom');
     }
 

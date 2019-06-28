@@ -395,10 +395,7 @@ abstract class LayerService
     {
         if (is_null($area)) return;
     		
-    	// Problème pour passer l'id de la maille pour avoir l'info-bulle de la richesse taxonomique
-    	//$this->queryBuilder->andWhere("d.id_unique = :maille")
-    	//                   ->setParameter("maille", $maille);
-    	$this->queryBuilder->andWhere("a.area_code = '".$area."'");
+    	$this->queryBuilder->andWhere("a.id_area = '".$area."'");
     }
 
     private function setScaleFilter()

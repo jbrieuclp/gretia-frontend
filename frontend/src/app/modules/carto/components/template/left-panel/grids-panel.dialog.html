@@ -3,7 +3,7 @@
 <p>Permet de choisir l'échelle de restitution des informations sur la carte.</p>
 
 <mat-progress-bar mode="query" *ngIf="!scales.length"></mat-progress-bar>
-{{layerS.scale|json}}
+
 <mat-radio-group class="row" *ngIf="scales.length">
   <ng-container *ngFor="let scale of scales">
     <mat-radio-button class="col-4" style="margin-bottom:15px;" [value]="scale.type" (change)="layerS.scale = scale.type" [checked]="scale.type == layerS.scale"> {{ scale.label }} </mat-radio-button>

@@ -14,3 +14,24 @@
 		<mat-slide-toggle color="primary" [checked]="isVisible('RICHESSE_LAYER')" (change)="switchIndicateur($event.checked, 'RICHESSE_LAYER')"> Richesse taxonomique </mat-slide-toggle>
 	</ng-template>
 </div>
+
+
+<div>
+	<h5 class="ss-titre">Ajouter des critères de filtres</h5>
+
+	<mat-checkbox 
+    color="primary"
+    value="PROT"
+    (change)="setStatut($event)">Espèces protégées</mat-checkbox>
+
+  <mat-checkbox 
+    color="primary"
+    value="ZDET"
+    (change)="setStatut($event)">Espèces déterminantes ZNIEFF</mat-checkbox>
+
+  <mat-checkbox 
+    color="primary"
+    value="N2000"
+    (change)="setStatut($event)">Espèces de la directive Natura 2000</mat-checkbox>
+
+</div>

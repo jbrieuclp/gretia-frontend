@@ -3,7 +3,7 @@ import { Component, OnInit, Input } from '@angular/core';
 @Component({
   selector: 'app-repartition-info',
   templateUrl: './repartition-info.component.html',
-  styleUrls: ['./repartition-info.component.scss']
+  styleUrls: ['../tooltip-layer.scss']
 })
 export class RepartitionInfoComponent implements OnInit {
 
@@ -19,7 +19,7 @@ export class RepartitionInfoComponent implements OnInit {
   getInfo() {
   	let layer = this.data.layer;
   	let feature = this.data.feature;
-  	this.data.layerS.getFeatureInfo(layer, feature.get('area_code'))
+  	this.data.layerS.getFeatureInfo(layer, feature.get('id_area'))
   									.subscribe(res => this.info = res);
   }
 

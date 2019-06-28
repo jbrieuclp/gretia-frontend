@@ -35,4 +35,8 @@ export class IndicateursPanelComponent implements OnInit {
   	return this.layerS.isVisible(ID);
   }
 
+  setStatut(event):void {
+    event.checked ? this.layerS.addStatut(event.source.value) : this.layerS.removeStatut(event.source.value);
+  }
+
 }

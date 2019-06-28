@@ -22,7 +22,8 @@ const httpOptions = {
 
 export interface PARAMS {
   scale: number,
-  feature?: string
+  feature?: string,
+  statuts?: Array<string>
 };
 
 @Injectable()
@@ -32,7 +33,8 @@ export class LayerService {
   layers: Array<RepartitionLayer> = [];
   //parametres par defaut
   params: PARAMS = {
-    scale: 32 //maille 5km
+    scale: 32, //maille 5km
+    statuts: []
   };
   $this = this;
 
@@ -54,6 +56,24 @@ export class LayerService {
   get scale() { return this.params.scale; }
   set scale(scale: number) { 
     this.params.scale = scale;
+    this.reloadLayers();
+  }
+
+  get statuts() { return this.params.statuts; }
+  set statuts(statuts: Array<string>) { 
+    this.params.statuts = statuts;
+    this.reloadLayers();
+  }
+  addStatut(statut: string) {
+    if (this.params.statuts.indexOf(statut) === -1) {
+      this.params.statuts.push(statut);
+    };
+    this.reloadLayers();
+  }
+  removeStatut(statut: string) {
+    if (this.params.statuts.indexOf(statut) !== -1) {
+      this.params.statuts.splice(this.params.statuts.indexOf(statut),1);
+    }
     this.reloadLayers();
   }
 
@@ -189,8 +209,6 @@ export class LayerService {
     let items = {};
     $this.cartoS.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
       if ( layer !== null && layer.get('queryable') ) {
-        console.log(layer);
-        console.log(feature);
         let id = layer.get('ID');
         if( !(id in items) ){ 
           items[id] = {
