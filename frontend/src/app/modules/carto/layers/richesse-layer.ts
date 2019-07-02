@@ -5,36 +5,33 @@ import Circle from 'ol/style/Circle';
 import { Layer, LAYER_INTERFACE } from './layer';
 import { RichesseInfoComponent } from './template/richesse/richesse-info.component';
 
-const RICHESSE_STYLE_LAYER = [{
-                                "min": 1,
-                                "max": 10,
-                                "color": "rgba(230, 255, 213, 0.8)",
-                                "label": "De 1 à 10 observations"
-                            },
-                            {
-                                "min": 11,
-                                "max": 100,
-                                "color": "rgba(175, 255, 122, 0.8)",
-                                "label": "De 11 à 100 observations"
-                            },
-                            {
-                                "min": 101,
-                                "max": 500,
-                                "color": "rgba(130, 202, 82, 0.8)",
-                                "label": "De 101 à 500 observations"
-                            },
-                            {
-                                "min": 501,
-                                "max": 2000,
-                                "color": "rgba(75, 116, 47, 0.8)",
-                                "label": "De 501 à 2000 observations"
-                            },
-                            {
-                                "min": 2001,
-                                "max": Infinity,
-                                "color": "rgba(0, 0, 0, 0.8)",
-                                "label": ">2000 observations"
-                            }];
+const RICHESSE_STYLE_LAYER = [
+                                {
+                                    "min": 1,
+                                    "max": 15,
+                                    "color": "rgba(221, 244, 255, 0.5)",
+                                    "label": "De 1 à 15 taxons"
+                                },
+                                {
+                                    "min": 16,
+                                    "max": 40,
+                                    "color": "rgba(113, 191, 255, 0.8)",
+                                    "label": "De 16 à 40 taxons"
+                                },
+                                {
+                                    "min": 41,
+                                    "max": 80,
+                                    "color": "rgba(61, 98, 235, 0.8)",
+                                    "label": "De 41 à 80 taxons"
+                                },
+                                {
+                                    "min": 81,
+                                    "max": Infinity,
+                                    "color": "rgba(0, 15, 72, 0.8)",
+                                    "label": ">80 taxons"
+                                }
+                                
+                            ];
 
 const RICHESSE_STYLE_FUNCTION = function(feature, resolution) {
                         var defaultStroke = new Stroke({color: '#505050', width: 0.5});
@@ -89,7 +86,7 @@ export class RichesseLayer extends Layer {
   }
 
   getLegende() {
-    let legende = new Array();
+    let legende = RICHESSE_STYLE_LAYER;
 
     return legende;
   }

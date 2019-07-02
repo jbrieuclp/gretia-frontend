@@ -17,4 +17,8 @@ export class TaxonsPanelComponent implements OnInit {
   ngOnInit() {
   }
 
+  sliderChange(checked: boolean, layer) {
+		layer.olLayer.setVisible(checked);
+		layer.olLayer.set('displayInLegend', checked);
+  }
 }

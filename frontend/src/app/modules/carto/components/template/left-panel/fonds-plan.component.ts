@@ -49,7 +49,8 @@ export class FondsPlanPanelComponent {
 **********/
 @Component({
   selector: 'app-carto-fond-plan-dialog',
-  templateUrl: 'fonds-plan.dialog.html'
+  templateUrl: 'fonds-plan.dialog.html',
+  styleUrls: ['./dialog.scss']
 })
 export class FondsPlanDialog implements OnInit {
 

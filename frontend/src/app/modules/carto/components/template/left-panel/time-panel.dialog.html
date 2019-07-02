@@ -1,37 +1,185 @@
-<h1 mat-dialog-title>Temporalité</h1>
+<h1 mat-dialog-title class="ss-titre">Temporalité</h1>
 
 <p>Permet de filtrer les données selon une temporalité.</p>
 
-<h5>Filtrer par périodes prédéfies</h5>
-
-<div>
-<mat-checkbox
-	color="primary"> Données récentes (&gt; 2000)</mat-checkbox>
-</div>
-<div>
-<mat-checkbox
-	color="primary"> Données anciennes ( 1950-2000 )</mat-checkbox>
-</div>
-<div>
-<mat-checkbox
-	color="primary"> Données historiques (&lt; 1950)</mat-checkbox>
-</div>
-
-
-<h5>Filtrer par dates</h5>
-
-
-<div class="row" style="padding:10px;">
-	<div class="col-xs-6">
-		<div class="form-group">
-			<label for="date_min">Année min.</label>
-			<input type="text" data-form="fmr-indicateur" autocomplete="off" name="date_min" class="form-control" id="date_min" placeholder="jj/mm/aaaa">
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Par périodes prédéfinies
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div>
+			<mat-checkbox
+				color="primary"> Données récentes (&gt; 2000)</mat-checkbox>
+			</div>
+			<div>
+			<mat-checkbox
+				color="primary"> Données anciennes ( 1950-2000 )</mat-checkbox>
+			</div>
+			<div>
+			<mat-checkbox
+				color="primary"> Données historiques (&lt; 1950)</mat-checkbox>
 		</div>
-	</div>
-	<div class="col-xs-6">
-		<div class="form-group">
-			<label for="date_max">Année max.</label>
-			<input type="text" data-form="fmr-indicateur" autocomplete="off" name="date_max" class="form-control" id="date_max" placeholder="jj/mm/aaaa">
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Par période personnalisée
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="row" [formGroup]="formPeriode">
+			<mat-form-field class="col-sm-6">
+				<mat-label>Date de début</mat-label>
+			  <input matInput 
+				  autocomplete="off"
+				  [matDatepicker]="periodeStart" 
+				  formControlName="start" 
+				  placeholder="jj/mm/aaaa">
+			  <mat-datepicker-toggle matSuffix [for]="periodeStart"></mat-datepicker-toggle>
+			  <mat-datepicker #periodeStart></mat-datepicker>
+			</mat-form-field>
+
+			<mat-form-field class="col-sm-6">
+				<mat-label>Date de fin</mat-label>
+			  <input matInput 
+			  	autocomplete="off"
+				  [matDatepicker]="periodeEnd" 
+				  formControlName="end" 
+				  placeholder="jj/mm/aaaa">
+			  <mat-datepicker-toggle matSuffix [for]="periodeEnd"></mat-datepicker-toggle>
+			  <mat-datepicker #periodeEnd></mat-datepicker>
+			</mat-form-field>
+
+			<button mat-raised-button 
+		  type="button" 
+		  style="margin-top:10px;" 
+		  [disabled]="!formPeriode.valid"
+		  (click)="setPeriode()">Valider la période</button>
+			
 		</div>
-	</div>
-</div>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Par saisons prédéfinies
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div>
+			<mat-checkbox
+				color="primary"> Printemps (21/03 - 21/06) </mat-checkbox>
+		</div>
+		<div>
+			<mat-checkbox
+				color="primary"> Été (21/06 - 21/09) </mat-checkbox>
+		</div>
+		<div>
+			<mat-checkbox
+				color="primary"> Automne (21/09 - 21/12) </mat-checkbox>
+		</div>
+		<div>
+			<mat-checkbox
+				color="primary"> Hiver (21/12 - 21/03) </mat-checkbox>
+		</div>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Par saisons personnalisées
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="row" [formGroup]="formSaison">
+    	<div class="col-6">
+
+	    	<mat-form-field>
+			    <mat-label>Début de période</mat-label>
+			    <input matInput 
+				    #periode_start
+				    autocomplete="off"
+				    placeholder="Format jj/mm" 
+				    formControlName="start" 
+				    (keyup)="switchCalendar()">
+			    <mat-icon matSuffix (click)="switchCalendar('start')">date_range</mat-icon>
+			    <mat-hint>Hint</mat-hint>
+			  </mat-form-field>
+
+			</div>
+
+			<div class="col-6">
+
+	    	<mat-form-field>
+			    <mat-label>Fin de période</mat-label>
+			    <input matInput 
+				    #periode_end
+				    autocomplete="off"
+				    placeholder="Format jj/mm" 
+				    formControlName="end" 
+				    (keyup)="switchCalendar()">
+			    <mat-icon matSuffix (click)="switchCalendar('end')">date_range</mat-icon>
+			    <mat-hint>Hint</mat-hint>
+			  </mat-form-field>
+
+			</div>
+		</div>
+
+	  <div class="calendar start" *ngIf="calendars.start">
+	  	<mat-form-field style="width: 40%;">
+			  <mat-label>Mois</mat-label>
+			  <mat-select #month_saison_start value="1">
+			    <mat-option value="1">Janvier</mat-option>
+			    <mat-option value="2">Février</mat-option>
+			    <mat-option value="3">Mars</mat-option>
+			    <mat-option value="4">Avril</mat-option>
+			    <mat-option value="5">Mai</mat-option>
+			    <mat-option value="6">Juin</mat-option>
+			    <mat-option value="7">Juillet</mat-option>
+			    <mat-option value="8">Août</mat-option>
+			    <mat-option value="9">Septembre</mat-option>
+			    <mat-option value="10">Octobre</mat-option>
+			    <mat-option value="11">Novembre</mat-option>
+			    <mat-option value="12">Décembre</mat-option>
+			  </mat-select>
+			</mat-form-field>
+
+			<div class="days">
+				<span *ngFor="let day of getDaysByMonth(month_saison_start.value)" class="day" (click)="setDate('start', day, month_saison_start.value)">{{ day }}</span>
+			</div>
+	  </div>
+
+	  <div class="calendar end" *ngIf="calendars.end">
+	  	<mat-form-field style="width: 40%;">
+			  <mat-label>Mois</mat-label>
+			  <mat-select #month_saison_end value="1">
+			    <mat-option value="1">Janvier</mat-option>
+			    <mat-option value="2">Février</mat-option>
+			    <mat-option value="3">Mars</mat-option>
+			    <mat-option value="4">Avril</mat-option>
+			    <mat-option value="5">Mai</mat-option>
+			    <mat-option value="6">Juin</mat-option>
+			    <mat-option value="7">Juillet</mat-option>
+			    <mat-option value="8">Août</mat-option>
+			    <mat-option value="9">Septembre</mat-option>
+			    <mat-option value="10">Octobre</mat-option>
+			    <mat-option value="11">Novembre</mat-option>
+			    <mat-option value="12">Décembre</mat-option>
+			  </mat-select>
+			</mat-form-field>
+
+			<div class="days">
+				<span *ngFor="let day of getDaysByMonth(month_saison_end.value)" class="day" (click)="setDate('end', day, month_saison_end.value)">{{ day }}</span>
+			</div>
+	  </div>
+
+	  <button mat-raised-button 
+		  type="button" 
+		  style="margin-top:10px;" 
+		  [disabled]="!formSaison.valid"
+		  (click)="setPeriode()">Valider la saison</button>
+
+  </mat-expansion-panel>
+
+</mat-accordion>
+

@@ -21,6 +21,7 @@ export class IndicateursPanelComponent implements OnInit {
   	}
   	//sinon on switch la visibilité
   	this.getLayer(ID).olLayer.setVisible(checked);
+    this.getLayer(ID).olLayer.set('displayInLegend', checked);
   }
 
   layerExist(ID: 'PRESSION_LAYER'|'RICHESSE_LAYER'): boolean {
@@ -31,8 +32,8 @@ export class IndicateursPanelComponent implements OnInit {
   	return this.layerS.getLayer(ID);
   }
 
-  isVisible(ID: 'PRESSION_LAYER'|'RICHESSE_LAYER') {
-  	return this.layerS.isVisible(ID);
+  isInLegend(ID: 'PRESSION_LAYER'|'RICHESSE_LAYER') {
+  	return this.layerS.isInLegend(ID);
   }
 
   setStatut(event):void {

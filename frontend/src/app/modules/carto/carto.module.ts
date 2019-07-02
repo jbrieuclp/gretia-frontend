@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { 
   MatToolbarModule,
   MatButtonModule,
+  MatButtonToggleModule,
   MatListModule,
   MatIconModule,
   MatDialogModule,
@@ -18,7 +19,9 @@ import {
   MatProgressBarModule,
   MatSlideToggleModule,
   MatProgressSpinnerModule,
-  MatRadioModule
+  MatRadioModule,
+  MatDatepickerModule,
+  MatSelectModule
  } from '@angular/material';
 
 //modules
@@ -55,8 +58,11 @@ import { LayerInfoDirective } from './layers/template/layer-info.directive';
   ],
   imports: [
     CommonModule,
+    FormsModule, 
+    ReactiveFormsModule,
     MatToolbarModule,
     MatButtonModule,
+    MatButtonToggleModule,
     MatListModule,
     MatIconModule,
     MatDialogModule,
@@ -72,6 +78,8 @@ import { LayerInfoDirective } from './layers/template/layer-info.directive';
     MatSlideToggleModule,
     MatProgressSpinnerModule,
     MatRadioModule,
+    MatDatepickerModule,
+    MatSelectModule,
     CartoRoutingModule,
   ],
   declarations: [

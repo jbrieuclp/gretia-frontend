@@ -412,13 +412,13 @@ abstract class LayerService
     }
 
     private function setMyData($id) {
-        $this->queryBuilder->join('s', 'pr_occtax.v_cor_counting_role_org', 'mydata', 's.entity_source_pk_value = mydata.id_counting_occtax AND ARRAY['.$id.']::integer[] && mydata.roles');
+        $this->queryBuilder->join('s', 'pr_occtax.v_releve_role_org', 'mydata', 's.unique_id_sinp_grp = mydata.unique_id_sinp_grp AND ARRAY['.$id.']::integer[] && mydata.roles');
     }
 
     private function setMyOrgData($id) {
         $this->queryBuilder
-        ->join('s', 'pr_occtax.v_cor_counting_role_org', 'mydata', 's.entity_source_pk_value = mydata.id_counting_occtax')
-        ->join('s', 'pr_occtax.v_cor_counting_role_org', 'myorgdata', 's.entity_source_pk_value = myorgdata.id_counting_occtax')
+        ->join('s', 'pr_occtax.v_releve_role_org', 'mydata', 's.unique_id_sinp_grp = mydata.unique_id_sinp_grp')
+        ->join('s', 'pr_occtax.v_releve_role_org', 'myorgdata', 's.unique_id_sinp_grp = myorgdata.unique_id_sinp_grp')
         ->addWhere('(ARRAY['.$id.']::integer[] && mydata.roles OR ARRAY['.$id.']::integer[] && myorgdata.organismes)');
     }
 }

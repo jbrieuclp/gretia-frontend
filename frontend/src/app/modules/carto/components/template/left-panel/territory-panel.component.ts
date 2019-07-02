@@ -48,7 +48,8 @@ export class TerritoryPanelComponent {
 **********/
 @Component({
   selector: 'app-carto-territory-panel-dialog',
-  templateUrl: 'territory-panel.dialog.html'
+  templateUrl: 'territory-panel.dialog.html',
+  styleUrls: ['./dialog.scss']
 })
 export class TerritoryPanelDialog implements OnInit {
 
@@ -62,12 +63,8 @@ export class TerritoryPanelDialog implements OnInit {
 
 
   ngOnInit() { 
-    this.getScales();
   }
 
-  getScales() {
-    this.layerS.getAvailablesScales().subscribe(scales => this.scales = scales)
-  }
 
   onNoClick(): void {
     this.dialogRef.close();

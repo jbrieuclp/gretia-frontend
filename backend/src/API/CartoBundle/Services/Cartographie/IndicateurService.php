@@ -44,7 +44,7 @@ abstract class IndicateurService extends LayerService
            ->innerJoin('a', 'pr_atlas.vm_atlas', 'atlas', 'a.id_area = atlas.id_area AND a.id_type = :type_geom')
            ->setParameter('type_geom', $this->getScale()->getType())
            ->innerJoin('atlas', 'gn_synthese.v_synthese_for_web_app', 's', 'atlas.id_synthese = s.id_synthese')
-           ->leftJoin('s', 'pr_occtax.v_cor_counting_role_org', 'obseur', 's.entity_source_pk_value = obseur.id_counting_occtax')
+           ->leftJoin('s', 'pr_occtax.v_releve_role_org', 'obseur', 's.unique_id_sinp_grp = obseur.unique_id_sinp_grp')
            ->leftJoin('obseur', 'utilisateurs.t_roles', 'roles', 'roles.id_role = ANY(obseur.roles)')
            ->leftJoin('s', 'gn_meta.t_datasets', 'dts', 'dts.id_dataset = s.id_dataset')
            ->leftJoin('dts', 'gn_meta.t_acquisition_frameworks', 'afs', 'dts.id_acquisition_framework = afs.id_acquisition_framework')

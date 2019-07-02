@@ -89,7 +89,7 @@ export class PressionLayer extends Layer {
   }
 
   getLegende() {
-    let legende = new Array();
+    let legende = PRESSION_STYLE_LAYER;
 
     return legende;
   }

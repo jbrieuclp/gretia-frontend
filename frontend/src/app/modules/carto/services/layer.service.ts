@@ -20,10 +20,22 @@ const httpOptions = {
   })
 };
 
+export interface PERIODE {
+  start: string,
+  end: string
+};
+
+export interface SAISON {
+  start: string,
+  end: string
+};
+
 export interface PARAMS {
   scale: number,
   feature?: string,
-  statuts?: Array<string>
+  statuts?: Array<string>,
+  periodes?: Array<PERIODE>,
+  saisons?: Array<SAISON>
 };
 
 @Injectable()
@@ -140,6 +152,16 @@ export class LayerService {
     let bool = false;
     this.layers.forEach((e) => {
       if ( e.ID == ID && e.olLayer.getVisible()) {
+        bool = true;
+      }
+    })
+    return bool;
+  }
+
+  public isInLegend(ID): boolean {
+    let bool = false;
+    this.layers.forEach((e) => {
+      if ( e.ID == ID && e.olLayer.get('displayInLegend')) {
         bool = true;
       }
     })

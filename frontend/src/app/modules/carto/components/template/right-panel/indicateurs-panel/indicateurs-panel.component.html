@@ -3,7 +3,7 @@
 		<span class="float-left" style="margin-right: 10px;"><mat-spinner diameter="20" strokeWidth="2"></mat-spinner></span> Pression d'inventaires
 	</ng-container>
 	<ng-template #PRESSION_SWITCHER>
-		<mat-slide-toggle color="primary" [checked]="isVisible('PRESSION_LAYER')" (change)="switchIndicateur($event.checked, 'PRESSION_LAYER')"> Pression d'inventaires </mat-slide-toggle>
+		<mat-slide-toggle color="primary" [checked]="isInLegend('PRESSION_LAYER')" (change)="switchIndicateur($event.checked, 'PRESSION_LAYER')"> Pression d'inventaires </mat-slide-toggle>
 	</ng-template>
 </div>
 <div>
@@ -11,7 +11,7 @@
 		<span class="float-left" style="margin-right: 10px;"><mat-spinner diameter="20" strokeWidth="2"></mat-spinner></span> Richesse taxonomique
 	</ng-container>
 	<ng-template #RICHESSE_SWITCHER>
-		<mat-slide-toggle color="primary" [checked]="isVisible('RICHESSE_LAYER')" (change)="switchIndicateur($event.checked, 'RICHESSE_LAYER')"> Richesse taxonomique </mat-slide-toggle>
+		<mat-slide-toggle color="primary" [checked]="isInLegend('RICHESSE_LAYER')" (change)="switchIndicateur($event.checked, 'RICHESSE_LAYER')"> Richesse taxonomique </mat-slide-toggle>
 	</ng-template>
 </div>
 

@@ -48,7 +48,8 @@ export class GridsPanelComponent {
 **********/
 @Component({
   selector: 'app-carto-grids-panel-dialog',
-  templateUrl: 'grids-panel.dialog.html'
+  templateUrl: 'grids-panel.dialog.html',
+  styleUrls: ['./dialog.scss']
 })
 export class GridsPanelDialog implements OnInit {
 
