@@ -4,8 +4,16 @@
 	    	<button mat-fab color="primary" (click)="openSidenav()" *ngIf="layout.hasSidenav()">
 			    <mat-icon aria-label="Ouvrir le menu">menu</mat-icon>
 			  </button>
+			  <a mat-mini-fab *ngIf="!layout.hasSidenav()"
+			  	[ngStyle]="{'background-color': layout.getNavbarColor()?.background, color: layout.getNavbarColor()?.text}" 
+			  	routerLink="/" 
+			  	matTooltip="Retour à l'accueil"
+        	matTooltipPosition="right">
+			    <mat-icon aria-label="Ouvrir le menu">home</mat-icon>
+			  </a>
 			</div>
 	    <div>
+	    	<img class="logo" src="assets/images/logoGretia_rond.png">
 		    <span class="app-titre" [ngStyle]="{'color': layout.getNavbarColor()?.text}">{{ layout.getTitle() }}</span>
 	    </div>
 			<div class="float-right">
@@ -27,7 +35,9 @@
           </mat-menu-->
 
 		    	<button mat-icon-button>
-				    <mat-icon aria-label="Se deconnecter" (click)="logout()">exit_to_app</mat-icon>
+				    <mat-icon 
+				    	matTooltip="Se deconnecter"
+				    	(click)="logout()">exit_to_app</mat-icon>
 				  </button>
 		    </ng-container>
 		    <ng-template #connexionBlock>

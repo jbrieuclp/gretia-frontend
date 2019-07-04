@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
+import * as _ from 'lodash';
 
 import { AppConfig } from '../../../shared/app.config';
 import { Layer } from '../layers/layer';
@@ -46,7 +47,9 @@ export class LayerService {
   //parametres par defaut
   params: PARAMS = {
     scale: 32, //maille 5km
-    statuts: []
+    statuts: [],
+    periodes: [],
+    saisons: []
   };
   $this = this;
 
@@ -83,12 +86,47 @@ export class LayerService {
     this.reloadLayers();
   }
   removeStatut(statut: string) {
-    if (this.params.statuts.indexOf(statut) !== -1) {
+    if ( this.params.statuts.indexOf(statut) !== -1) {
       this.params.statuts.splice(this.params.statuts.indexOf(statut),1);
     }
     this.reloadLayers();
   }
 
+  get periodes() { return this.params.periodes; }
+  set periodes(periodes: Array<PERIODE>) { 
+    this.params.periodes = periodes;
+    this.reloadLayers();
+  }
+  addPeriode(periode: PERIODE) {
+    if ( this.params.periodes.indexOf(periode) === -1) {
+      this.params.periodes.push(periode);
+    };
+    this.reloadLayers();
+  }
+  removePeriode(periode: PERIODE) {
+    if ( this.indexOf(this.params.periodes, periode) !== -1) {
+      this.params.periodes.splice(this.indexOf(this.params.periodes, periode),1);
+    }
+    this.reloadLayers();
+  }
+
+  get saisons() { return this.params.saisons; }
+  set saisons(saisons: Array<SAISON>) { 
+    this.params.saisons = saisons;
+    this.reloadLayers();
+  }
+  addSaison(saison: SAISON) {
+    if ( this.indexOf(this.params.saisons, saison) === -1) {
+      this.params.saisons.push(saison);
+    };
+    this.reloadLayers();
+  }
+  removeSaison(saison: SAISON) {
+    if ( this.indexOf(this.params.saisons, saison) !== -1) {
+      this.params.saisons.splice(this.indexOf(this.params.saisons, saison),1);
+    }
+    this.reloadLayers();
+  }
 
   /***********************
   *
@@ -256,6 +294,16 @@ export class LayerService {
       const dialogRef = $this.dialog.open(TooltipDialog, dialogConfig);
     }
 
+  }
+
+  private indexOf(array: Array<any>, value:any): number {
+    let result = -1;
+    for (let i = 0; i < array.length ; i++) {
+      if (_.isEqual(value, array[i])) {
+        result = i;
+      }
+    }
+    return result;
   }
 
   /**************

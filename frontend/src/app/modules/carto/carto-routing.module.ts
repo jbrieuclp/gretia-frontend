@@ -10,6 +10,7 @@ const routes: Routes = [
 	{ 
 		path: 'carto', 
 		component: CartoInitComponent,
+		canActivate: [AuthGuard],
 		children: [
 	    {
 	      path: '',

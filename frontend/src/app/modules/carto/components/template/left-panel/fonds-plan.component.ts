@@ -24,7 +24,8 @@ import { layers } from '../../../services/layers.config';
 export class FondsPlanPanelComponent {
 
   constructor(
-  	public dialog: MatDialog
+  	public dialog: MatDialog,
+    private cartoS: CartoService
   ) { }
 
   openDialog(): void {
@@ -32,7 +33,7 @@ export class FondsPlanPanelComponent {
   	const dialogConfig = new MatDialogConfig();
 
   	dialogConfig.data = {};
-  	dialogConfig.maxHeight = 485;
+  	dialogConfig.maxHeight = (this.cartoS.mapview.nativeElement.offsetHeight - 11)+'px';
   	dialogConfig.width = '485px';
   	dialogConfig.position = {left: '55px', top: '70px'};
 
@@ -64,7 +65,7 @@ export class FondsPlanDialog implements OnInit {
 
 
   ngOnInit() {
-
+    console.log(this.layers);
   }
 
   formatLabel(value: number | null) {

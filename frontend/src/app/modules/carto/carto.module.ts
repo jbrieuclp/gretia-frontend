@@ -21,7 +21,8 @@ import {
   MatProgressSpinnerModule,
   MatRadioModule,
   MatDatepickerModule,
-  MatSelectModule
+  MatSelectModule,
+  MatBadgeModule
  } from '@angular/material';
 
 //modules
@@ -80,6 +81,7 @@ import { LayerInfoDirective } from './layers/template/layer-info.directive';
     MatRadioModule,
     MatDatepickerModule,
     MatSelectModule,
+    MatBadgeModule,
     CartoRoutingModule,
   ],
   declarations: [

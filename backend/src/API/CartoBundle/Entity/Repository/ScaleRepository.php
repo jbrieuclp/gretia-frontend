@@ -25,7 +25,8 @@ class ScaleRepository extends EntityRepository
 							LEFT JOIN utilisateurs.cor_roles g ON g.id_role_groupe = ra.id_role
 							LEFT JOIN utilisateurs.t_roles r ON r.id_role = ra.id_role
 							WHERE (r.id_role = :role OR g.id_role_utilisateur = :role) AND ra.id_filter > 1
-							GROUP BY e.id_restitution_level, e.id_type, e.label, e.priority";
+							GROUP BY e.id_restitution_level, e.id_type, e.label, e.priority
+							ORDER BY e.priority ASC";
 
 			$query = $this->_em->createNativeQuery($sql, $rsm);
 			$query->setParameter('role', $user_id);

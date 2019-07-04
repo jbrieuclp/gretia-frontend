@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, Inject, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { CartoService } from '../../../services/carto.service';
   templateUrl: './right-panel.component.html',
   styleUrls: ['./right-panel.component.scss']
 })
-export class RightPanelComponent {
+export class RightPanelComponent implements OnInit {
   
   data: any = {}
 
@@ -20,6 +20,10 @@ export class RightPanelComponent {
 
   ngOnInit() {
     this.data.active = new BehaviorSubject<boolean>(true);
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => {this.openDialog();}, 0);
   }
 
   openDialog(): void {

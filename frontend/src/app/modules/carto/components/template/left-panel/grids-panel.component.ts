@@ -8,6 +8,7 @@ import WMTSTileGrid from 'ol/tilegrid/WMTS';
 import * as extent from 'ol/extent';
 
 import { LayerService } from '../../../services/layer.service';
+import { CartoService } from '../../../services/carto.service';
 
 @Component({
   selector: 'app-carto-grids-panel',
@@ -23,7 +24,8 @@ import { LayerService } from '../../../services/layer.service';
 export class GridsPanelComponent {
 
   constructor(
-  	public dialog: MatDialog
+  	public dialog: MatDialog,
+    private cartoS: CartoService
   ) { }
 
   openDialog(): void {
@@ -31,7 +33,7 @@ export class GridsPanelComponent {
   	const dialogConfig = new MatDialogConfig();
 
   	dialogConfig.data = {};
-  	dialogConfig.maxHeight = 485;
+  	dialogConfig.maxHeight = (this.cartoS.mapview.nativeElement.offsetHeight - 11)+'px';
   	dialogConfig.width = '485px';
   	dialogConfig.position = {left: '55px', top: '70px'};
 

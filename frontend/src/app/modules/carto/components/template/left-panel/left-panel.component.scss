@@ -52,11 +52,11 @@
 }
 
 .menu-separator {
-	position: relative;
-	width: 60%;
-	text-align: center;
-	margin: 0px 0px 15px 20%;
-	border-bottom: 1px dotted #bbb;
+	margin: 0px auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 20px;
+  background: #fff;
 }
 
 .menu-separator:first-child {

@@ -91,16 +91,10 @@ abstract class LayerService
     
     protected function setCriteres(/*$maille_id = null*/) {
         $this->criteres = array(
-                    //'maille_id' => $maille_id,
-                    'departements' => $this->request->request->get('departements'),
-                    'date_min' => $this->request->request->get('date_min'),
-                    'date_max' => $this->request->request->get('date_max'),
-                    'type_date' => $this->request->request->get('type_date'),
-                    'origine' => $this->request->request->get('origine'),
-                    'type_releve' => $this->request->request->get('type_releve'),
+                    'saisons' => $this->request->request->get('saisons'),
+                    'periodes' => $this->request->request->get('periodes'),
                     'organisme' => $this->request->request->get('organisme'),
                     'territoire' => $this->request->request->get('territoire'),
-                    'suivi' => $this->request->request->get('suivi'),
                   );
 
         $this->setScalefilter();
@@ -208,35 +202,10 @@ abstract class LayerService
     {
         $this->setInformationQuery();
         $this->setWhere();
-
         return $this->queryBuilder->execute()->fetch(\PDO::FETCH_ASSOC);
     }
 
     
-
-
-    /**
-     * Fonctions internes nécessaires aux indicateurs 
-     *
-     */
-	
-    private function setDepartements($departements)
-    {
-        if (!is_array($departements)) return;
-		
-        $val_ok = array();
-        //recuperation des données directos de la requete issues des input name="departements[]"
-        foreach ($departements as $valeur) {
-            if ( ctype_digit($valeur) ) {
-                $val_ok[] = "'".(int) $valeur."'";
-            }
-        }
-        
-        if (count($val_ok) ) {
-            $this->queryBuilder->andWhere("(departement IN (:departement))")
-                               ->setParameter('departement', implode(',',$val_ok));
-        }
-    }
 
     private function getMailleId($maille_id)
     {
@@ -245,124 +214,48 @@ abstract class LayerService
         return $sql;
     }
 
-    private function setDateMin($dateMin)
+    protected function setSaisons($saisons)
     {
-        $date = null;
-        if ( preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $dateMin, $matches) ) {
-            $date = $matches[0];
-        } elseif ( preg_match('/^([0-9]{4})-([0-9]{2})$/', $dateMin, $matches) ) {
-            $date = $matches[0].'-01';
-        } elseif ( preg_match('/^([0-9]{4})$/', $dateMin, $matches) ) {
-            $date = $matches[0].'-01-01';
-        } elseif ( preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/', $dateMin, $matches) ) {
-            $date = $matches[3].'-'.$matches[2].'-'.$matches[1];
-        } elseif ( preg_match('/^([0-9]{2})\/([0-9]{4})$/', $dateMin, $matches) ) {
-            $date = $matches[2].'-'.$matches[1].'-01';
-        } else {
-            return;
-        }
+      if (!is_array($saisons) or !count($saisons)) return;
 
-        $this->queryBuilder->andWhere("(date >= :datemin)")
-                           ->setParameter('datemin', $date);
+      $qb = $this->queryBuilder;
+      $orModule = $qb->expr()->orx();
+
+      foreach ($saisons as $saison) {
+        $start = null;
+        $end = null;
+        if ( preg_match('/^([0-9]{2})\/([0-9]{2})$/', $saison['start']) and preg_match('/^([0-9]{2})\/([0-9]{2})$/', $saison['end'])) {
+          $start = explode('/', $saison['start']);
+          $end = explode('/', $saison['end']);
+          $sql = "(extract('MONTH' FROM s.date_min) > ".(int)$start[1]." OR (extract('MONTH' FROM s.date_min) = ".(int)$start[1]." AND extract('DAY' FROM s.date_min) >= ".(int)$start[0]."))
+                  AND (extract('MONTH' FROM s.date_max) < ".(int)$end[1]." OR (extract('MONTH' FROM s.date_max) = ".(int)$end[1]." AND extract('DAY' FROM s.date_max) <= ".(int)$end[0]."))";
+          $orModule->add($sql);
+        }
+      }
+      $qb->andWhere($orModule);
     }
 
-    private function setDateMax($dateMax)
+    protected function setPeriodes($periodes)
     {
-        $date = null;
-        if ( preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $dateMax, $matches) ) {
-            $date = $matches[0];
-        } elseif ( preg_match('/^([0-9]{4})-([0-9]{2})$/', $dateMax, $matches) ) {
-            $date = $matches[0].'-01';
-        } elseif ( preg_match('/^([0-9]{4})$/', $dateMax, $matches) ) {
-            $date = $matches[0].'-12-01';
-        } elseif ( preg_match('/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/', $dateMax, $matches) ) {
-            $date = $matches[3].'-'.$matches[2].'-'.$matches[1];
-        } elseif ( preg_match('/^([0-9]{2})\/([0-9]{4})$/', $dateMax, $matches) ) {
-            $date = $matches[2].'-'.$matches[1].'-01';
-        } else {
-            return;
-        }
+      if (!is_array($periodes) or !count($periodes)) return;
 
-        $this->queryBuilder->andWhere("(date <= :datemax)")
-                           ->setParameter('datemax', date("Y-m-t", strtotime($date)));
-    }
+      $qb = $this->queryBuilder;
+      $orModule = $qb->expr()->orx();
 
-    private function setTypeDate($typeDate)
-    {
-        if (!is_array($typeDate)) return;
-		            
-        $sqlDate = array();
-        if (in_array('historique', $typeDate)) {
-            $sqlDate[] = "(date < '1950-01-01' OR date IS NULL)";
+      foreach ($periodes as $periode) {
+        if ( (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $periode['start']) or is_null($periode['start'])) 
+            and (preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})$/', $periode['end']) or is_null($periode['end'])) ) {
+          $andModule = $qb->expr()->andx();
+          if ( !is_null($periode['start']) ) {
+            $andModule->add("s.date_min >= '".$periode['start']."'");
+          }
+          if ( !is_null($periode['end']) ) {
+            $andModule->add("s.date_max <= '".$periode['end']."'");
+          }
+          $orModule->add($andModule);
         }
-
-        if (in_array('ancienne', $typeDate)) {
-            $sqlDate[] = "(date >= '1950-01-01' AND date < '2000-01-01')";
-        }
-
-        if (in_array('recente', $typeDate)) {
-            $sqlDate[] = "(date >= '2000-01-01')";
-        }
-        
-        // S'il y a des éléments dans le tableau on les sépare avec des OR sinon on retourne du vide
-        if ( count($sqlDate) ) 
-            $this->queryBuilder->andWhere('('.implode(' OR ', $sqlDate).')');
-    }
-
-    private function setOrigine($origine)
-    {
-        if (!is_array($origine)) return;
-		
-		$val_ok = array();
-		
-        // Récuperation des données directos de la requête issues des input name="departements[]"
-        foreach ($origine as $valeur) {
-            if ( ctype_digit($valeur) ) {
-                $val_ok[] = (int) $valeur;
-            }
-        }
-        
-        if (count($val_ok) ) {
-            $this->queryBuilder->andWhere("(origine IN (:origine))")
-                               ->setParameter('origine', implode(',',$val_ok));
-        }
-    }
-
-    private function setTypeReleve($typeReleve)
-    {
-        if (!is_array($typeReleve)) return;
-		
-        $val_ok = array();
-		
-		// Récuperation des données directos de la requête issues des input name="departements[]"
-        foreach ($typeReleve as $valeur) {
-            if ( ctype_digit($valeur) ) {
-                $val_ok[] = (int) $valeur;
-            }
-        }
-        
-        if (count($val_ok) ) {
-            $this->queryBuilder->andWhere("(type_releve IN (:typeReleve))")
-                               ->setParameter('typeReleve', implode(',',$val_ok));
-		}
-	}
-
-    private function setOrganisme($organisme)
-    {
-        if (!is_array($organisme)) return;
-		
-		$val_ok = array();
-        foreach ($organisme as $valeur) {
-            if ( ctype_digit($valeur) ) {
-                $val_ok[] = (int) $valeur;
-            } else if ( count($valeurs = preg_split("/[^0-9]/", $valeur, -1, PREG_SPLIT_NO_EMPTY)) ) { //organisme composé : on check si des valeurs respectent le pattern
-                $val_ok = array_merge($val_ok, $valeurs);
-            }
-        }
-
-        if (count($val_ok) ) {
-            $this->queryBuilder->andWhere("(ARRAY[".implode(',',$val_ok)."]::integer[] && organisme)");
-        }
+      }
+      $qb->andWhere($orModule);
     }
 
     private function setTerritoire($territoire)

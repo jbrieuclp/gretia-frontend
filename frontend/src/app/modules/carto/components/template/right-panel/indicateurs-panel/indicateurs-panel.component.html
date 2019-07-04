@@ -22,16 +22,19 @@
 	<mat-checkbox 
     color="primary"
     value="PROT"
+    [checked]="layerS.statuts.indexOf('PROT') !== -1"
     (change)="setStatut($event)">Espèces protégées</mat-checkbox>
 
   <mat-checkbox 
     color="primary"
     value="ZDET"
+    [checked]="layerS.statuts.indexOf('ZDET') !== -1"
     (change)="setStatut($event)">Espèces déterminantes ZNIEFF</mat-checkbox>
 
   <mat-checkbox 
     color="primary"
     value="N2000"
+    [checked]="layerS.statuts.indexOf('N2000') !== -1"
     (change)="setStatut($event)">Espèces de la directive Natura 2000</mat-checkbox>
 
 </div>
