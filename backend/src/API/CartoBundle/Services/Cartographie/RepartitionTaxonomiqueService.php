@@ -98,6 +98,17 @@ class RepartitionTaxonomiqueService extends LayerService
         return $this->setInformationQuery();
     }
 
+    /**
+    * Cette fonction recupère les données attributaire liées à une maille
+    * Sortie : tableau associatif des données
+    */
+    public function getInfoCommune($area)
+    {
+        parent::getInfoCommune($area);
+
+        return $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
 
     protected function setInformationQuery() {
 

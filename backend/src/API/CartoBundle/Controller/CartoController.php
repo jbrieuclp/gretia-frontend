@@ -112,4 +112,19 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
         return $data;
     }
 
+    /**
+    * @Rest\View()
+    * @ Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/info/communes/{area}/{cd_ref}")
+    */
+    public function infoRichesseTaxoAction($area, $cd_ref = null)
+    {
+        $service = $this->get('api_carto.service.richesse_taxonomique');
+
+        $data = $service->getInfoBulle($area);
+
+        return $data;
+    }
+
 }

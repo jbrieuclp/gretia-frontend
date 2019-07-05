@@ -78,6 +78,24 @@ abstract class LayerService
 	{
         $this->addCriteres('area', $area);
     }
+
+    /**
+    * Cette fonction recupère les données attributaire liées à une maille
+    * Sortie : tableau associatif des données
+    */
+    public function getInfoCommune($area)
+    {
+        $this->addCriteres('area', $area);
+
+        $qb = $this->queryBuilder;
+        $qb->select("commune.area_code as insee_com, commune.area_name as nom_com")
+           ->from('ref_geo.l_areas', 'a')
+           ->innerJoin('a', 'pr_atlas.vm_atlas', 'atlas', 'a.id_area = atlas.id_area AND a.id_type = :type_geom')
+           ->setParameter('type_geom', $this->getScale()->getType())
+           ->innerJoin('atlas', 'gn_synthese.v_synthese_for_web_app', 's', 'atlas.id_synthese = s.id_synthese')
+           ->innerJoin('atlas', 'ref_geo.l_areas', 'commune', 'commune.id_area = atlas.id_area_commune')
+           ->groupBy('commune.area_code, commune.area_name');
+    }
 	
     protected function setGeojsonData() {
         $this->setGeojsonQuery();
