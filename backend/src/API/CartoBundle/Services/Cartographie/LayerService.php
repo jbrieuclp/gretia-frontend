@@ -330,6 +330,6 @@ abstract class LayerService
         $this->queryBuilder
         ->join('s', 'pr_occtax.v_releve_role_org', 'mydata', 's.unique_id_sinp_grp = mydata.unique_id_sinp_grp')
         ->join('s', 'pr_occtax.v_releve_role_org', 'myorgdata', 's.unique_id_sinp_grp = myorgdata.unique_id_sinp_grp')
-        ->addWhere('(ARRAY['.$id.']::integer[] && mydata.roles OR ARRAY['.$id.']::integer[] && myorgdata.organismes)');
+        ->andWhere('(ARRAY['.$id.']::integer[] && mydata.roles OR ARRAY['.$id.']::integer[] && myorgdata.organismes)');
     }
 }
