@@ -59,7 +59,7 @@ export class RepartitionLayer extends Layer {
                 ID: taxon.cd_ref,
                 type: 'repartition',
                 url: `/layer/repartition/${taxon.cd_ref}.geojson`,
-                url_info: `/layer/repartition/${taxon.cd_ref}.geojson`,
+                url_info: `/layer-info/repartition/${taxon.cd_ref}`,
                 title: `Repartition de ${taxon.nom_valide}`,
                 queryable: true, 
                 visible: true, 

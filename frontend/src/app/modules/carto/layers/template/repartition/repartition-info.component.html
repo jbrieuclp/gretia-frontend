@@ -1,0 +1,76 @@
+<div class="row">
+	<div class="col-sm-4" *ngIf="counts !== null">
+		<div class="info-bloc">
+			<mat-icon>visibility</mat-icon>
+			<span class="info-text">
+				{{ counts.nb_obs }} <span class="small">observation<ng-container *ngIf="counts.nb_obs > 1">s</ng-container></span>
+			</span>
+		</div>
+
+		<div class="info-bloc">
+			<mat-icon>bug_report</mat-icon>
+			<span class="info-text">
+				{{ counts.nb_taxon }} <span class="small">taxon<ng-container *ngIf="counts.nb_taxon > 1">s</ng-container></span>
+			</span>
+		</div>
+
+		<div class="info-bloc">
+			<mat-icon>event</mat-icon>
+			<span class="info-text">
+				<p><span class="small">Du</span> {{ counts.date_min | date:'dd/MM/yyyy' }}</p>
+				<p><span class="small">au</span> {{ counts.date_max | date:'dd/MM/yyyy' }}</p>
+			</span>
+		</div>
+
+	</div>
+
+	<div class="col-sm-8">
+		<mat-tab-group mat-stretch-tabs>
+
+			<mat-tab label="Commune"> 
+				<div class="tab-content">
+					<mat-progress-bar mode="query" *ngIf="communes === null"></mat-progress-bar>
+		  		<div class="commune" *ngFor="let commune of communes">{{ commune.name }} ({{ commune.insee | slice:0:2 }})</div>
+		  	</div>
+		  </mat-tab>
+
+		  <mat-tab label="Observateurs"> 
+		  	<div class="tab-content">
+		  		<mat-progress-bar mode="query" *ngIf="observateurs === null"></mat-progress-bar>
+			  	<div class="observateur" *ngFor="let observateur of observateurs">{{ observateur.nom }} {{ observateur.prenom }}</div>
+			  </div>
+		  </mat-tab>
+
+		  <mat-tab label="Jeux de données"> 
+		  	<div class="tab-content">
+			  	<mat-accordion>
+
+					  <mat-expansion-panel *ngFor="let af of afs">
+					    <mat-expansion-panel-header>
+					      <mat-panel-title>
+					        {{ af.name }} 
+					        <a href="/geonature/#/metadata/af/{{af.id}}" target="_BLANK" mat-icon-button>
+										<mat-icon matTooltip="Ouvrir de cadre d'acquisition dans une nouvelle fenêtre">open_in_new</mat-icon>
+									</a>
+					      </mat-panel-title>
+					    </mat-expansion-panel-header>
+
+					    <ng-container *ngFor="let jdd of af.datasets">
+					    	<div>
+					    		{{ jdd.name }} 
+					    		<a href="/geonature/#/metadata/dataset/{{jdd.id}}" target="_BLANK" mat-icon-button>
+										<mat-icon matTooltip="Ouvrir de jeu de données dans une nouvelle fenêtre">open_in_new</mat-icon>
+									</a>
+					    	</div>
+					    </ng-container>
+
+					  </mat-expansion-panel>
+
+					</mat-accordion>
+				</div>
+
+		  </mat-tab>
+
+		</mat-tab-group>
+	</div>
+</div>

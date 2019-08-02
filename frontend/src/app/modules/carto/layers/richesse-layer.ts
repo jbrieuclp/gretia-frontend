@@ -71,7 +71,7 @@ export class RichesseLayer extends Layer {
                 ID: 'RICHESSE_LAYER',
                 type: 'richesse',
                 url: `/layer/richesse-taxonomique.geojson`,
-                url_info: `/layer/richesse-taxonomique`,
+                url_info: `/layer-info/richesse-taxonomique`,
                 title: `Richesse taxonomique`,
                 queryable: true, 
                 visible: true, 

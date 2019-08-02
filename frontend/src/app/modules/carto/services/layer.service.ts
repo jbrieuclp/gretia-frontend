@@ -328,6 +328,38 @@ export class LayerService {
       .post(url, sources, httpOptions);
   }
 
+  /** GET taxon par ID (cd_nom) **/
+  public getObservateursInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
+    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/observateurs`;
+    const sources = params;
+    return this.http
+      .post(url, sources, httpOptions);
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  public getJDDsInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
+    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/datasets`;
+    const sources = params;
+    return this.http
+      .post(url, sources, httpOptions);
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  public getCommunesInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
+    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/communes`;
+    const sources = params;
+    return this.http
+      .post(url, sources, httpOptions);
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  public getCountsInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
+    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/counts`;
+    const sources = params;
+    return this.http
+      .post(url, sources, httpOptions);
+  }
+
   /** GET AvailablesScales **/
   public getAvailablesScales(): Observable<any> {
     const url = `${this.httpUrlBase}/scales`;

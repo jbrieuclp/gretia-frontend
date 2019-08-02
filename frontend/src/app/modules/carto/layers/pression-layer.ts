@@ -74,7 +74,7 @@ export class PressionLayer extends Layer {
                 ID: 'PRESSION_LAYER',
                 type: 'pression',
                 url: `/layer/pression-inventaires.geojson`,
-                url_info: `/layer/pression-inventaires`,
+                url_info: `/layer-info/pression-inventaires`,
                 title: `Pression d'inventaires`,
                 queryable: true, 
                 visible: true, 

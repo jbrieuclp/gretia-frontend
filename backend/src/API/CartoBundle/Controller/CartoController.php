@@ -73,7 +73,7 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
     * @Rest\View()
     * @ Security("has_role('CARTO_SYNTHESE')")
     *
-    * @Rest\Post("/layer/pression-inventaires/{area}")
+    * @Rest\Post("/layer-info/pression-inventaires/{area}")
     */
     public function infoPressionAction($area)
     {
@@ -94,7 +94,7 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
     * @Rest\View()
     * @ Security("has_role('CARTO_SYNTHESE')")
     *
-    * @Rest\Post("/layer/richesse-taxonomique/{area}")
+    * @Rest\Post("/layer-info/richesse-taxonomique/{area}")
     */
     public function infoRichesseTaxoAction($area)
     {
@@ -110,6 +110,50 @@ class CartoController extends FOSRestController implements ClassResourceInterfac
         $data['taxons'] = json_decode($data['taxons'], true);
 
         return $data;
+    }
+
+    /**
+    * @Rest\View()
+    * @ Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/layer-info/repartition/{cd_ref}/{area}/observateurs")
+    */
+    public function infoObservateursRepartitionAction($area) {
+        $service = $this->get('api_carto.service.repartition_taxonomique');
+        return $service->getInfoObservateurs($area);
+    }
+
+    /**
+    * @Rest\View()
+    * @ Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/layer-info/repartition/{cd_ref}/{area}/datasets")
+    */
+    public function infoDatasetsRepartitionAction($area) {
+        $service = $this->get('api_carto.service.repartition_taxonomique');
+        return $service->getInfoJDDs($area);
+    }
+
+    /**
+    * @Rest\View()
+    * @ Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/layer-info/repartition/{cd_ref}/{area}/communes")
+    */
+    public function infoCommunesRepartitionAction($area) {
+        $service = $this->get('api_carto.service.repartition_taxonomique');
+        return $service->getInfoCommunes($area);
+    }
+
+    /**
+    * @Rest\View()
+    * @ Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/layer-info/repartition/{cd_ref}/{area}/counts")
+    */
+    public function infoCountRepartitionAction($area) {
+        $service = $this->get('api_carto.service.repartition_taxonomique');
+        return $service->getInfoCounts($area);
     }
 
 }
