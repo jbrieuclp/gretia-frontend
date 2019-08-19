@@ -14,7 +14,7 @@ import { LayoutModule } from './layout/layout.module';
     RouterModule,
     LayoutModule
   ],
-  declarations: [ ],
+  declarations: [],
   exports: [
     CommonModule,
     FormsModule,

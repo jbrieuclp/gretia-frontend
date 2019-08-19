@@ -9,7 +9,7 @@ import { LayerService } from '../../../../services/layer.service';
 })
 export class TaxonsPanelComponent implements OnInit {
 
-
+  cd_refs = [85740];
   constructor(
     public layerS: LayerService
   ) { }
@@ -20,5 +20,9 @@ export class TaxonsPanelComponent implements OnInit {
   sliderChange(checked: boolean, layer) {
 		layer.olLayer.setVisible(checked);
 		layer.olLayer.set('displayInLegend', checked);
+  }
+
+  cdRefSelect(event) {
+    console.log(event);
   }
 }

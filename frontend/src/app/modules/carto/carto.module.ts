@@ -22,8 +22,11 @@ import {
   MatRadioModule,
   MatDatepickerModule,
   MatSelectModule,
-  MatBadgeModule
+  MatBadgeModule,
+  MatTableModule
  } from '@angular/material';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { GrPanelModule } from '../../shared/templates/gr-panel/gr-panel.module';
 
 //modules
 import { CartoRoutingModule } from './carto-routing.module';
@@ -43,16 +46,15 @@ import { LegendeComponent } from './components/template/legende/legende.componen
 import { IndicateursPanelComponent } from './components/template/right-panel/indicateurs-panel/indicateurs-panel.component';
 import { TooltipDialog } from './components/tooltip/tooltip.dialog';
 import { TooltipContentComponent } from './components/tooltip/tooltip-content.component';
-import { PressionInfoComponent } from './layers/template/pression/pression-info.component';
-import { RepartitionInfoComponent } from './layers/template/repartition/repartition-info.component';
-import { RichesseInfoComponent } from './layers/template/richesse/richesse-info.component';
+import { TooltipTaxonsComponent } from './components/tooltip/composents/tt-taxons.component';
+import { ImagesComponent, ImageDialog } from './components/template/images/images.component';
 
 //services
 import { CartoService } from './services/carto.service';
 import { LayerService } from './services/layer.service';
+import { TaxrefApiService } from '../../shared/services/taxref-api.service';
 
 //directives
-import { LayerInfoDirective } from './layers/template/layer-info.directive';
 
 @NgModule({
   exports: [
@@ -82,7 +84,10 @@ import { LayerInfoDirective } from './layers/template/layer-info.directive';
     MatDatepickerModule,
     MatSelectModule,
     MatBadgeModule,
+    MatTableModule,
     CartoRoutingModule,
+    NgbModule,
+    GrPanelModule
   ],
   declarations: [
     CartoComponent,
@@ -103,11 +108,10 @@ import { LayerInfoDirective } from './layers/template/layer-info.directive';
     TerritoryPanelComponent, 
     TerritoryPanelDialog,
     TooltipDialog,
-    PressionInfoComponent,
-    LayerInfoDirective,
-    RepartitionInfoComponent,
-    RichesseInfoComponent,
-    TooltipContentComponent
+    TooltipContentComponent,
+    TooltipTaxonsComponent,
+    ImagesComponent, 
+    ImageDialog
   ],
   entryComponents: [ 
     FondsPlanDialog,
@@ -116,13 +120,12 @@ import { LayerInfoDirective } from './layers/template/layer-info.directive';
     TimePanelDialog,
     TerritoryPanelDialog,
     TooltipDialog,
-    PressionInfoComponent,
-    RichesseInfoComponent,
-    RepartitionInfoComponent
+    ImageDialog
   ],
   providers: [
     CartoService,
-    LayerService
+    LayerService,
+    TaxrefApiService
   ],
   bootstrap: [CartoComponent]
 })

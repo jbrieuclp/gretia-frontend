@@ -58,4 +58,25 @@ export class TaxonService {
           map((response: Response) => response)
         );
   }
+
+  getSparqlImages(cd_ref: number): Observable<any> {
+    const SPARQL_URL = 'https://query.wikidata.org/sparql';
+
+    let query = `SELECT ?image WHERE {
+        ?TAXREF_v12_0 wdt:P3186 "${cd_ref}".
+        OPTIONAL { ?TAXREF_v12_0 wdt:P18 ?image. }
+      }
+      LIMIT 100`;
+
+    return this.http
+      .get(`${SPARQL_URL}`, {
+        params: new HttpParams().set('query', query)
+      })
+      .pipe(
+        map((response: object): any => { 
+          return response;
+        })
+       );
+  }
+
 }

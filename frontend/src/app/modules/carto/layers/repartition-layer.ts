@@ -2,7 +2,6 @@ import Stroke from 'ol/style/Stroke';
 import Fill from 'ol/style/Fill';
 import Style from 'ol/style/Style';
 import { Layer, LAYER_INTERFACE } from './layer';
-import { RepartitionInfoComponent } from './template/repartition/repartition-info.component';
 
 const REPART_STYLE_LAYER = {
                       "historique": {
@@ -59,7 +58,7 @@ export class RepartitionLayer extends Layer {
                 ID: taxon.cd_ref,
                 type: 'repartition',
                 url: `/layer/repartition/${taxon.cd_ref}.geojson`,
-                url_info: `/layer-info/repartition/${taxon.cd_ref}`,
+                url_info: `/layer/info/${taxon.cd_ref}`,
                 title: `Repartition de ${taxon.nom_valide}`,
                 queryable: true, 
                 visible: true, 
@@ -67,7 +66,6 @@ export class RepartitionLayer extends Layer {
                 style: REPART_STYLE_FUNCTION,
                 state: 'init',
                 properties: {taxon: taxon},
-                template_component: RepartitionInfoComponent
               };
 
     this.assign(layer);

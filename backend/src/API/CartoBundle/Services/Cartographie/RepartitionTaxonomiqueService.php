@@ -135,20 +135,4 @@ class RepartitionTaxonomiqueService extends LayerService
         return $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-
-    /**
-     * Fonctions internes nécessaires aux indicateurs 
-     *
-     */
-
-    protected function setTaxon($taxon)
-    {
-        if (!is_numeric($taxon))
-            return;
-
-        $this->queryBuilder
-        ->join('s', 'taxonomie.taxref_tree_tot', 'tx_tree', 's.cd_ref = tx_tree.cd_ref')
-        ->andWhere("(".$taxon." = ANY(tx_tree.cd_ref_sup) OR ".$taxon." = s.cd_ref)");
-    }
-
 }

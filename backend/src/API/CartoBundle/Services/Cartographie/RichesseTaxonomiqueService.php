@@ -19,13 +19,6 @@ class RichesseTaxonomiqueService extends IndicateurService
         $qb->addSelect('count(distinct s.cd_ref) AS total ');
     }
 
-    protected function setInformationQuery() {
-
-        parent::setInformationQuery();
-        $this->queryBuilder->addSelect("json_agg(DISTINCT (json_build_object('cd_ref', s.cd_ref, 'nom_valide', s.nom_valide))::jsonb) as taxons");
-    }
-
-
     /**
      * Cette fonction recupère les données permettant de generer un geojson pour une echelle spécifié
      * Sortie : tableau associatif des données
@@ -36,16 +29,4 @@ class RichesseTaxonomiqueService extends IndicateurService
 
         return $this->makeGeoJson();
     }
-
-    /**
-    * Cette fonction recupère les données attributaire liées à une maille
-    * Sortie : tableau associatif des données
-    */
-    public function getInfoBulle($area)
-    {
-        parent::getInfoBulle($area);
-
-        return $this->makeInfoBulle();
-    }
-
 }

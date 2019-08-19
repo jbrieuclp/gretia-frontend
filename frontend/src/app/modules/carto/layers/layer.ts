@@ -14,7 +14,6 @@ export interface LAYER_INTERFACE {
   state: 'init'|'load'|'done'|'error',
   olLayer?: VectorLayer,
   properties?: any,
-  template_component?: Type<any>
 };
 
 export abstract class Layer {
@@ -31,7 +30,6 @@ export abstract class Layer {
   protected _state: 'init'|'load'|'done'|'error';
   protected _olLayer: VectorLayer;
   protected _properties: any;
-  protected _template_component: Type<any>;
 
   public get ID(){ return this._ID; }
   public set ID(ID) { this._ID = ID}
@@ -57,8 +55,6 @@ export abstract class Layer {
   public set olLayer(olLayer) { this._olLayer = olLayer}
   public get properties(){ return this._properties; }
   public set properties(properties) { this._properties = properties}
-  public get template_component(){ return this._template_component; }
-  public set template_component(template_component) { this._template_component = template_component}
 
 
 

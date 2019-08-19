@@ -360,6 +360,14 @@ export class LayerService {
       .post(url, sources, httpOptions);
   }
 
+  /** GET taxon par ID (cd_nom) **/
+  public getTaxonsInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
+    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/taxons`;
+    const sources = params;
+    return this.http
+      .post(url, sources, httpOptions);
+  }
+
   /** GET AvailablesScales **/
   public getAvailablesScales(): Observable<any> {
     const url = `${this.httpUrlBase}/scales`;

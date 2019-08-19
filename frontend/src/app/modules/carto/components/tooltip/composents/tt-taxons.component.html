@@ -1,0 +1,69 @@
+<mat-progress-bar mode="query" *ngIf="taxons === null"></mat-progress-bar>
+
+<ng-container *ngIf="taxons !== null">
+
+  <gr-panel>
+    coucou
+  </gr-panel>
+  <div class="gr-panel" *ngFor="let taxon of taxons">
+    <div class="gr-panel-header">
+      <a [routerLink]="['/', 'taxref', 'taxon', taxon.cd_ref]" target="_BLANK" mat-icon-button>
+        <mat-icon matTooltip="Fiche INPN">open_in_new</mat-icon>
+      </a>
+      <span>{{ taxon.cd_ref }} - {{ taxon.nom_valide }}</span>
+    </div>
+
+    <div class="gr-panel-body">
+
+      <div class="element-detail">
+        <div class="bloc-ligne" *ngIf="taxon.date_min != taxon.date_max">Observé du {{ taxon.date_min | date:'dd/MM/yyyy' }} au {{ taxon.date_max | date:'dd/MM/yyyy' }}</div>
+        <div class="bloc-ligne" *ngIf="taxon.date_min == taxon.date_max">Observé le {{ taxon.date_min | date:'dd/MM/yyyy' }}</div>
+        <ng-container *ngIf="(getStatuts(taxon.statuts)).length; else noStatutBlock">
+          <div class="statuts">
+            <header >Liste des statuts associés au taxon</header>
+            <ul>
+              <li *ngFor="let statut of getStatuts(taxon.statuts)">{{ statut }}</li>
+            </ul>
+          </div>
+        </ng-container>
+        <ng-template #noStatutBlock><div class="bloc-ligne">Pas de statut pour ce taxon</div></ng-template>
+      </div>
+
+    </div>
+
+  </div>
+
+
+</ng-container>
+
+<!-- <mat-accordion *ngIf="taxons !== null"
+  multi="true">
+
+  <mat-expansion-panel *ngFor="let taxon of taxons">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <a [routerLink]="['/', 'taxref', 'taxon', taxon.cd_ref]" target="_BLANK" mat-icon-button>
+          <mat-icon matTooltip="Fiche INPN">open_in_new</mat-icon>
+        </a>
+        <span>{{ taxon.cd_ref }} - {{ taxon.nom_valide }}</span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="element-detail">
+      <div class="bloc-ligne" *ngIf="taxon.date_min != taxon.date_max">Observé du {{ taxon.date_min | date:'dd/MM/yyyy' }} au {{ taxon.date_max | date:'dd/MM/yyyy' }}</div>
+      <div class="bloc-ligne" *ngIf="taxon.date_min == taxon.date_max">Observé le {{ taxon.date_min | date:'dd/MM/yyyy' }}</div>
+      <ng-container *ngIf="(getStatuts(taxon.statuts)).length; else noStatutBlock">
+        <div class="statuts">
+          <header >Liste des statuts associés au taxon</header>
+          <ul>
+            <li *ngFor="let statut of getStatuts(taxon.statuts)">{{ statut }}</li>
+          </ul>
+        </div>
+      </ng-container>
+      <ng-template #noStatutBlock><div class="bloc-ligne">Pas de statut pour ce taxon</div></ng-template>
+    </div>
+
+  </mat-expansion-panel>
+
+</mat-accordion>
+ -->

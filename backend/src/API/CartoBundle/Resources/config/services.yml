@@ -27,6 +27,12 @@ services:
         tags:
             - { name: service.repartition_taxonomique, alias: api_carto_service_repartition_taxonomique }
 
+    api_carto.service.layer_info:
+        class: API\CartoBundle\Services\Cartographie\LayerInfoService
+        parent: api_carto.service.layer
+        tags:
+            - { name: service.layer_info, alias: api_carto_service_layer_info }
+
 
 parameters:
     nb_taxon_par_page: 30

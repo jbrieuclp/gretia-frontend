@@ -2,7 +2,6 @@ import { Component, Input, Inject, ViewChild, ComponentFactoryResolver } from '@
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
 
 import { LayerService } from '../../services/layer.service';
-import { LayerInfoDirective } from '../../layers/template/layer-info.directive';
 
 @Component({
   selector: 'app-carto-tooltip',
