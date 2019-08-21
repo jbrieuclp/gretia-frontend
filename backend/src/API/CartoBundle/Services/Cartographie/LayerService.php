@@ -327,20 +327,25 @@ abstract class LayerService
                 $this->setMyData($this->context->getToken()->getUser()->getId());
                 break;
             case 3: //mes données + organisme
+
                 $this->setMyOrgData($this->context->getToken()->getUser()->getOrganisme());
                 break;
         }
     }
 
     private function setMyData($id) {
-        $this->queryBuilder->join('s', 'pr_occtax.v_releve_role_org', 'mydata', 's.unique_id_sinp_grp = mydata.unique_id_sinp_grp AND '.$id.' = ANY(mydata.roles)');
+        $this->queryBuilder->join('s', 'pr_occtax.v_releve_role_org', 'mydata', 's.unique_id_sinp_grp = mydata.unique_id_sinp_grp AND '.$this->context->getToken()->getUser()->getId().' = ANY(mydata.roles)');
     }
 
     private function setMyOrgData($id) {
         $this->queryBuilder
         ->join('s', 'pr_occtax.v_releve_role_org', 'mydata', 's.unique_id_sinp_grp = mydata.unique_id_sinp_grp')
-        ->join('s', 'pr_occtax.v_releve_role_org', 'myorgdata', 's.unique_id_sinp_grp = myorgdata.unique_id_sinp_grp')
-        ->addWhere('('.$id.' = ANY(mydata.roles) OR '.$id.' = ANY(myorgdata.organismes))');
+        ->join('s', 'pr_occtax.v_releve_role_org', 'myorgdata', 's.unique_id_sinp_grp = myorgdata.unique_id_sinp_grp');
+        if ($this->context->getToken()->getUser()->getOrganisme() === null) {
+          $this->queryBuilder->andWhere('('.$this->context->getToken()->getUser()->getId().' = ANY(mydata.roles))');
+        } else {
+          $this->queryBuilder->andWhere('('.$this->context->getToken()->getUser()->getId().' = ANY(mydata.roles) OR '.$this->context->getToken()->getUser()->getOrganisme().' = ANY(myorgdata.organismes))');
+        }
     }
 
 
