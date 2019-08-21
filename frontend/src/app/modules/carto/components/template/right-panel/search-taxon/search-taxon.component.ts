@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, HostListener, ViewChild, EventEmitter, Output } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
 
@@ -18,6 +18,7 @@ export class SearchTaxonComponent {
   autocomplete: Array<any> = null;
   textTaxon: string = '';
   showSearchList:boolean = false;
+  @Output() select: EventEmitter<number> = new EventEmitter();
 
   @HostListener('document:click', ['$event'])
   clickout(event) {
@@ -75,6 +76,7 @@ export class SearchTaxonComponent {
       this.layerS.addRepartitionLayer(taxon);
       this.showSearchList = false;
       this.zone.nativeElement.value = '';
+      this.select.emit(val.nom_valide.cd_ref);
     }
   }
 }

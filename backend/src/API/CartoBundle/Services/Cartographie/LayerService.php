@@ -70,33 +70,6 @@ abstract class LayerService
         }
     }
 
-    /**
-    * Cette fonction recupère les données attributaire liées à une maille
-    * Sortie : tableau associatif des données
-    */
-    public function getInfoBulle($area)
-	{
-        $this->addCriteres('area', $area);
-    }
-
-    /**
-    * Cette fonction recupère les données attributaire liées à une maille
-    * Sortie : tableau associatif des données
-    */
-    public function getInfoCommune($area)
-    {
-        $this->addCriteres('area', $area);
-
-        $qb = $this->queryBuilder;
-        $qb->select("commune.area_code as insee_com, commune.area_name as nom_com")
-           ->from('ref_geo.l_areas', 'a')
-           ->innerJoin('a', 'pr_atlas.vm_atlas', 'atlas', 'a.id_area = atlas.id_area AND a.id_type = :type_geom')
-           ->setParameter('type_geom', $this->getScale()->getType())
-           ->innerJoin('atlas', 'gn_synthese.v_synthese_for_web_app', 's', 'atlas.id_synthese = s.id_synthese')
-           ->innerJoin('atlas', 'ref_geo.l_areas', 'commune', 'commune.id_area = atlas.id_area_commune')
-           ->groupBy('commune.area_code, commune.area_name');
-    }
-	
     protected function setGeojsonData() {
         $this->setGeojsonQuery();
         $this->setWhere();
@@ -211,20 +184,6 @@ abstract class LayerService
         return '{"type": "FeatureCollection", "crs": {"type": "name", "properties": {"name": "EPSG:'.$this->projection.'"}}, "features": ['.implode(',', $features).']}';
     }
 
-
-    /**
-     * Cette fonction permet de retourner un tableau asso formatant le geojson correctement
-     * Sortie : array('header' => $header, 'features' => $features, 'footer' => $footer);
-     */
-    public function makeInfoBulle()
-    {
-        $this->setInformationQuery();
-        $this->setWhere();
-        return $this->queryBuilder->execute()->fetch(\PDO::FETCH_ASSOC);
-    }
-
-    
-
     private function getMailleId($maille_id)
     {
 		$sql = " (id_unique = '".str_replace("'", "''", $maille_id)."') ";
@@ -309,6 +268,57 @@ abstract class LayerService
     	$this->queryBuilder->andWhere("a.id_area = '".$area."'");
     }
 
+    /**
+     * Fonctions internes nécessaires aux indicateurs 
+     *
+     */
+
+    protected function setTaxon($taxon)
+    {
+        if (!is_numeric($taxon))
+            return;
+
+        $this->queryBuilder
+        ->join('s', 'taxonomie.taxref_tree_tot', 'tx_tree', 's.cd_ref = tx_tree.cd_ref')
+        ->andWhere("(".$taxon." = ANY(tx_tree.cd_ref_sup) OR ".$taxon." = s.cd_ref)");
+    }
+
+    /**
+     * Fonctions internes nécessaires aux indicateurs 
+     *
+     */
+
+    protected function setStatuts($statuts)
+    {
+      if (!is_array($statuts)) return;
+
+      $qb = $this->queryBuilder;
+
+      if (count($statuts)) {
+        $qb->innerJoin('s', 'taxonomie.vm_esp_statut', 'statuts', 's.cd_ref = statuts.cd_ref AND atlas.departement = ANY(statuts.departements)');
+        $orModule = $qb->expr()->orx();
+      }
+
+      foreach ($statuts as $statut) {
+        switch ($statut) {
+          case 'PROT':
+            $orModule->add($qb->expr()->in("statuts.cd_type_statut", "'PR', 'PN', 'PD'"));
+            break;
+          case 'ZDET':
+            $orModule->add($qb->expr()->eq("statuts.cd_type_statut", "'ZDET'"));
+            break;
+          case 'N2000':
+            $orModule->add($qb->expr()->in("statuts.cd_type_statut", "'DH', 'DO'"));
+            break;
+          
+          default:
+            # code...
+            break;
+        }
+      }
+      $qb->andWhere($orModule);
+    }
+
     private function setScaleFilter()
     {
         $max = $this->em->getRepository('APICartoBundle:Scale')->getMaxRightForUser($this->getScale()->getType(), $this->context->getToken()->getUser()->getId());
@@ -323,13 +333,15 @@ abstract class LayerService
     }
 
     private function setMyData($id) {
-        $this->queryBuilder->join('s', 'pr_occtax.v_releve_role_org', 'mydata', 's.unique_id_sinp_grp = mydata.unique_id_sinp_grp AND ARRAY['.$id.']::integer[] && mydata.roles');
+        $this->queryBuilder->join('s', 'pr_occtax.v_releve_role_org', 'mydata', 's.unique_id_sinp_grp = mydata.unique_id_sinp_grp AND '.$id.' = ANY(mydata.roles)');
     }
 
     private function setMyOrgData($id) {
         $this->queryBuilder
         ->join('s', 'pr_occtax.v_releve_role_org', 'mydata', 's.unique_id_sinp_grp = mydata.unique_id_sinp_grp')
         ->join('s', 'pr_occtax.v_releve_role_org', 'myorgdata', 's.unique_id_sinp_grp = myorgdata.unique_id_sinp_grp')
-        ->andWhere('(ARRAY['.$id.']::integer[] && mydata.roles OR ARRAY['.$id.']::integer[] && myorgdata.organismes)');
+        ->addWhere('('.$id.' = ANY(mydata.roles) OR '.$id.' = ANY(myorgdata.organismes))');
     }
+
+
 }

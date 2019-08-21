@@ -1,0 +1,12 @@
+<div class="gr-panel">
+	<div [ngClass]="['_gr-panel-header', state]" (click)='animateMe()'>
+		<div class="gr-panel-header">
+		  <ng-content select=".gr-panel-header"></ng-content>
+		</div>
+		<mat-icon class="state-icon">expand_more</mat-icon>
+	</div>
+
+	<div class="gr-panel-content" [@detailExpand]='state'>
+	  <ng-content select=".gr-panel-content"></ng-content>
+	</div>
+</div>

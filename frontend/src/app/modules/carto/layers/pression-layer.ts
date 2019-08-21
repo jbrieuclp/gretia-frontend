@@ -3,7 +3,6 @@ import Fill from 'ol/style/Fill';
 import Style from 'ol/style/Style';
 import Circle from 'ol/style/Circle';
 import { Layer, LAYER_INTERFACE } from './layer';
-import { PressionInfoComponent } from './template/pression/pression-info.component';
 
 const PRESSION_STYLE_LAYER = [{
                                 "min": 1,
@@ -74,15 +73,14 @@ export class PressionLayer extends Layer {
                 ID: 'PRESSION_LAYER',
                 type: 'pression',
                 url: `/layer/pression-inventaires.geojson`,
-                url_info: `/layer/pression-inventaires`,
+                url_info: `/layer/info`,
                 title: `Pression d'inventaires`,
                 queryable: true, 
                 visible: true, 
                 displayInLegend: true,
                 style: PRESSION_STYLE_FUNCTION,
                 state: 'init',
-                properties: properties,
-                template_component: PressionInfoComponent
+                properties: properties
               };
 
     this.assign(layer);

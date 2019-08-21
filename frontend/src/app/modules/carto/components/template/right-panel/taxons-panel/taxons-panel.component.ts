@@ -9,7 +9,6 @@ import { LayerService } from '../../../../services/layer.service';
 })
 export class TaxonsPanelComponent implements OnInit {
 
-
   constructor(
     public layerS: LayerService
   ) { }

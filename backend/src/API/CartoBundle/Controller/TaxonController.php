@@ -18,7 +18,7 @@ class TaxonController extends FOSRestController implements ClassResourceInterfac
 {
     /**
     * @Rest\View()
-    * @ Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('CARTO_SYNTHESE')")
     *
     * @Rest\Get("/taxons")
     */

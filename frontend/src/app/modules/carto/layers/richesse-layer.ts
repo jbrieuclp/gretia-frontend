@@ -3,7 +3,6 @@ import Fill from 'ol/style/Fill';
 import Style from 'ol/style/Style';
 import Circle from 'ol/style/Circle';
 import { Layer, LAYER_INTERFACE } from './layer';
-import { RichesseInfoComponent } from './template/richesse/richesse-info.component';
 
 const RICHESSE_STYLE_LAYER = [
                                 {
@@ -71,7 +70,7 @@ export class RichesseLayer extends Layer {
                 ID: 'RICHESSE_LAYER',
                 type: 'richesse',
                 url: `/layer/richesse-taxonomique.geojson`,
-                url_info: `/layer/richesse-taxonomique`,
+                url_info: `/layer/info`,
                 title: `Richesse taxonomique`,
                 queryable: true, 
                 visible: true, 
@@ -79,7 +78,6 @@ export class RichesseLayer extends Layer {
                 style: RICHESSE_STYLE_FUNCTION,
                 state: 'init',
                 properties: properties,
-                template_component: RichesseInfoComponent
               };
 
     this.assign(layer);

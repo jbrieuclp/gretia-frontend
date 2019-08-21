@@ -1,0 +1,8 @@
+<div class="content-carousel">
+	<ngb-carousel *ngIf="images.length">
+	  <ng-template *ngFor="let image of images" ngbSlide>
+	   <img [src]="image.media" [alt]="image.title" (click)="openDialog(image)">
+	    <div class="image-legende">{{ image.title }}</div>
+	  </ng-template>
+	</ngb-carousel>
+</div>

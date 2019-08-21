@@ -8,7 +8,7 @@ export class GlobalsService {
   protected navbarColor: BehaviorSubject<string> = new BehaviorSubject<string>('#673ab7');
 	protected sidenav: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>([{title: 'Accueil', url: '/', img: 'home', tooltip: 'Accueil'}]);
 
-  constructor() { }
+  constructor() {}
 
   public setTitle(title: string) {
     this.title.next(title);
@@ -38,5 +38,25 @@ export class GlobalsService {
   	let sidenav = this.sidenav.value;
   	sidenav.push(element);
     this.sidenav.next(sidenav);
+  }
+
+  searchInObject(searchterm: string, object: Object, keys: Array<string>): boolean {
+    //vérification de la chaine non vide
+    if (!searchterm.trim().length) return true;
+
+    let terms: Array<string> = (searchterm.trim()).split(' ');
+    let isInObject: number = 0;
+
+    terms.forEach(function(term) {
+      keys.forEach(function(key) {
+        if (String(object[key]).toLowerCase().indexOf(term.toLowerCase()) !== -1) {
+          isInObject += 1;
+          return;  
+        }
+      });
+
+    });
+
+    return isInObject == terms.length;
   }
 }

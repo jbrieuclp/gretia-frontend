@@ -19,15 +19,6 @@ class PressionConnaissanceService extends IndicateurService
         $qb->addSelect('count(DISTINCT unique_id_sinp) AS total');
     }
 	
-	protected function setInformationQuery() {
-		parent::setInformationQuery();
-
-        $qb = $this->queryBuilder;
-
-        // En fonction de si filtre sur taxon ou pas on change le select
-        $qb->addSelect('count(DISTINCT unique_id_sinp) AS nb_obs');
-    }
-	
     /**
 	 * Cette fonction récupère les données permettant de générer un geojson pour une échelle spécifiée
 	 * Sortie : tableau associatif des données
@@ -37,16 +28,5 @@ class PressionConnaissanceService extends IndicateurService
         parent::getGeoJson($projection);
 
         return $this->makeGeoJson();
-    }
-
-    /**
-    * Cette fonction récupère les données attributaires liées à une maille
-    * Sortie : tableau associatif des données
-    */
-    public function getInfoBulle($area)
-    {
-        parent::getInfoBulle($area);
-
-        return $this->makeInfoBulle();
     }
 }
