@@ -1,6 +1,7 @@
 import { Injectable, ElementRef } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
+import { catchError, retry, map } from 'rxjs/operators';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -317,7 +318,11 @@ export class LayerService {
     const url = `${this.httpUrlBase}${layer.url}`;
     const sources = params;
     return this.http
-      .post(url, sources, httpOptions);
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
   }
 
   /** GET taxon par ID (cd_nom) **/
@@ -325,7 +330,11 @@ export class LayerService {
     const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}`;
     const sources = params;
     return this.http
-      .post(url, sources, httpOptions);
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
   }
 
   /** GET taxon par ID (cd_nom) **/
@@ -333,7 +342,11 @@ export class LayerService {
     const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/observateurs`;
     const sources = params;
     return this.http
-      .post(url, sources, httpOptions);
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
   }
 
   /** GET taxon par ID (cd_nom) **/
@@ -341,7 +354,11 @@ export class LayerService {
     const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/datasets`;
     const sources = params;
     return this.http
-      .post(url, sources, httpOptions);
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
   }
 
   /** GET taxon par ID (cd_nom) **/
@@ -349,7 +366,11 @@ export class LayerService {
     const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/communes`;
     const sources = params;
     return this.http
-      .post(url, sources, httpOptions);
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
   }
 
   /** GET taxon par ID (cd_nom) **/
@@ -357,7 +378,11 @@ export class LayerService {
     const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/counts`;
     const sources = params;
     return this.http
-      .post(url, sources, httpOptions);
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
   }
 
   /** GET taxon par ID (cd_nom) **/
@@ -365,14 +390,22 @@ export class LayerService {
     const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/taxons`;
     const sources = params;
     return this.http
-      .post(url, sources, httpOptions);
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
   }
 
   /** GET AvailablesScales **/
   public getAvailablesScales(): Observable<any> {
     const url = `${this.httpUrlBase}/scales`;
     return this.http
-      .get(url, httpOptions);
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
   }
 
 }

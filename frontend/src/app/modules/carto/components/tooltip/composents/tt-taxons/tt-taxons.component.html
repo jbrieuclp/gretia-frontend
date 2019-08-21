@@ -2,7 +2,15 @@
 
 <ng-container *ngIf="taxons !== null">
 
-  <gr-panel *ngFor="let taxon of taxons">
+  <mat-form-field class="form-element">
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput #searchZone
+      (keyup)="searchTerm$.next(searchZone.value)" 
+      placeholder="Filtrer dans la liste" 
+      autocomplete="off">
+  </mat-form-field>
+
+  <gr-panel *ngFor="let taxon of taxonsFilter">
     <div class="gr-panel-header">
       <a [routerLink]="['/', 'taxref', 'taxon', taxon.cd_ref]" target="_BLANK" mat-icon-button>
         <mat-icon matTooltip="Fiche Taxref">open_in_new</mat-icon>

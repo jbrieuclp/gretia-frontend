@@ -9,7 +9,7 @@ const layout = {title: 'Visualisation carto',
 
 @Component({
   selector: 'app-carto-init',
-  template: '<router-outlet></router-outlet>'
+  template: '<router-outlet></router-outlet>',
 })
 export class CartoInitComponent {
 

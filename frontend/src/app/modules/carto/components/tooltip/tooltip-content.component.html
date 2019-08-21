@@ -43,15 +43,13 @@
 
 			<mat-tab label="Commune"> 
 				<div class="tab-content">
-					<mat-progress-bar mode="query" *ngIf="communes === null"></mat-progress-bar>
-		  		<div class="commune" *ngFor="let commune of communes">{{ commune.name }} ({{ commune.insee | slice:0:2 }})</div>
+					<app-carto-tooltip-content-communes [layer]="layer" [feature]="feature"></app-carto-tooltip-content-communes>
 		  	</div>
 		  </mat-tab>
 
 		  <mat-tab label="Observateurs"> 
 		  	<div class="tab-content">
-		  		<mat-progress-bar mode="query" *ngIf="observateurs === null"></mat-progress-bar>
-			  	<div class="observateur" *ngFor="let observateur of observateurs">{{ observateur.nom }} {{ observateur.prenom }}</div>
+					<app-carto-tooltip-content-observateurs [layer]="layer" [feature]="feature"></app-carto-tooltip-content-observateurs>
 			  </div>
 		  </mat-tab>
 

@@ -46,8 +46,10 @@ import { LegendeComponent } from './components/template/legende/legende.componen
 import { IndicateursPanelComponent } from './components/template/right-panel/indicateurs-panel/indicateurs-panel.component';
 import { TooltipDialog } from './components/tooltip/tooltip.dialog';
 import { TooltipContentComponent } from './components/tooltip/tooltip-content.component';
-import { TooltipTaxonsComponent } from './components/tooltip/composents/tt-taxons.component';
+import { TooltipTaxonsComponent } from './components/tooltip/composents/tt-taxons/tt-taxons.component';
 import { ImagesComponent, ImageDialog } from './components/template/images/images.component';
+import { TooltipCommunesComponent } from './components/tooltip/composents/tt-communes/tt-communes.component';
+import { TooltipObservateursComponent } from './components/tooltip/composents/tt-observateurs/tt-observateurs.component';
 
 //services
 import { CartoService } from './services/carto.service';
@@ -111,7 +113,9 @@ import { TaxrefApiService } from '../../shared/services/taxref-api.service';
     TooltipContentComponent,
     TooltipTaxonsComponent,
     ImagesComponent, 
-    ImageDialog
+    ImageDialog, 
+    TooltipCommunesComponent, 
+    TooltipObservateursComponent
   ],
   entryComponents: [ 
     FondsPlanDialog,

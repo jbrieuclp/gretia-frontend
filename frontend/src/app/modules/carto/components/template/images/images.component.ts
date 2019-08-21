@@ -12,8 +12,6 @@ import { LayerService } from '../../../services/layer.service';
 })
 export class ImagesComponent implements OnInit {
 
-  @Input('cds_ref') cds_ref: Array<number>;
-
   images: any;
   iterableDiffer;
 
@@ -28,8 +26,6 @@ export class ImagesComponent implements OnInit {
 
   ngOnInit() { 
     this.images = [];
-    for (let cd_ref of this.cds_ref) {
-    }
   }
 
   ngDoCheck() {

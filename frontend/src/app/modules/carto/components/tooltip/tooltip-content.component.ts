@@ -40,9 +40,6 @@ export class TooltipContentComponent implements OnInit {
   }
 
   getInfo() {
-    this.layerS.getObservateursInfo(this.layer, this.feature.get('id_area'))
-                    .subscribe(res => this.observateurs = res);
-
     this.layerS.getJDDsInfo(this.layer, this.feature.get('id_area'))
                     .subscribe(res => {
                       let transit_afs = new Array();
@@ -59,9 +56,6 @@ export class TooltipContentComponent implements OnInit {
                         this.afs.push(transit_afs[framwork])
                       }
                     });
-
-    this.layerS.getCommunesInfo(this.layer, this.feature.get('id_area'))
-                    .subscribe(res => this.communes = res);
 
     this.layerS.getCountsInfo(this.layer, this.feature.get('id_area'))
                     .subscribe(res => this.counts = res);

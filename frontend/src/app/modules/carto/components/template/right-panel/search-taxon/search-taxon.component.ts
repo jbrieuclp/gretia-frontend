@@ -76,7 +76,6 @@ export class SearchTaxonComponent {
       this.layerS.addRepartitionLayer(taxon);
       this.showSearchList = false;
       this.zone.nativeElement.value = '';
-      console.log(val);
       this.select.emit(val.nom_valide.cd_ref);
     }
   }
