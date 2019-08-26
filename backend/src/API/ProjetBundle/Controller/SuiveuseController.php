@@ -30,10 +30,23 @@ class SuiveuseController extends FOSRestController implements ClassResourceInter
 {
     
     /**
+    * @Rest\View(serializerGroups = {"categorie"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Get("/suiveuse/categories")
+    */
+    public function getCategoriesAction()
+    {
+        $em = $this->getDoctrine()->getManager('gretiadb');
+        $categories = $em->getRepository('APIProjetBundle:Categorie')->findBy([], ['ordre'=>'ASC']);
+        return $categories;
+    }
+
+    /**
     * @Rest\View(serializerGroups = {"projet"})
     * @Security("has_role('GESTION_PROJET')")
     *
-    * @Rest\Get("/suiveuse/{user}")
+    * @Rest\Get("/suiveuse/personne/{user}")
     * @ParamConverter("user", class="APIProjetBundle:Personne", options={"mapping": {"user": "surnom"}, "entity_manager" = "gretiadb"})
     */
     public function dashboardAction(Personne $user)
@@ -43,5 +56,4 @@ class SuiveuseController extends FOSRestController implements ClassResourceInter
     }
 
     
-
 }

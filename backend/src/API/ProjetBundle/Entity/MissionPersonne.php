@@ -16,7 +16,7 @@ class MissionPersonne
 
 	/**
    * @ORM\Id
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Mission", inversedBy="travailleurs")
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Mission", inversedBy="travailleurs", fetch="EAGER")
    * @ORM\JoinColumn(name="mission_id", referencedColumnName="id_mission", nullable=false)
    *
    * @Serializer\Groups({"mission"})

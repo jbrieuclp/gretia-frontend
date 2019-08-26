@@ -150,4 +150,22 @@ class PersonController extends FOSRestController implements ClassResourceInterfa
         }
     }
 
+    /**
+    * @Rest\View(serializerGroups = {"mission"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Get("/personne/{id}/missions")
+    */
+    public function getMissionsAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager('gretiadb');
+        $personne = $em->getRepository('APIProjetBundle:Personne')->find($id);
+
+        if ($personne === null) {
+            return new NotFoundHttpException("Personne non trouvée", 1);   
+        }
+
+        return $personne->getMissions();
+    }
+
 }

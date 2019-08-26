@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 
 import { Personne, PersonRepository } from '../../repository/person.repository';
@@ -8,7 +8,7 @@ import { Personne, PersonRepository } from '../../repository/person.repository';
 @Injectable()
 export class SuiveuseService {
 
-  protected _user: Observable<Personne>;
+  protected _user: BehaviorSubject<Personne> = new BehaviorSubject(null);
   httpUrlBase: string;
 
   constructor(
@@ -23,11 +23,11 @@ export class SuiveuseService {
   }
 
   set user(user) {
-    this._user = this.personR.getUser(user);
+    this.personR.getUser(user).subscribe(person=>this._user.next(person));
   }
 
   get user(): any {
-    this._user.subscribe(res => res);
+    return this._user;
   }
   
 }

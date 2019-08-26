@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 
+import { Mission } from './mission.repository';
 
 import { AppConfig } from '../../../shared/app.config';
 import { Projet } from './projet.repository';
@@ -128,6 +129,20 @@ export class PersonRepository {
       .get(url, options)
       .pipe(
         map((res: Personne[]) => { 
+          return res;
+        })
+        , retry(3)
+       );
+  }
+
+  /** GET all mission **/
+  getMissions(person_id: number, limit?: number): Observable<Mission[]> {
+    const url = `${this.httpUrlBase}/personne/${person_id}/missions`;
+    const options = {};
+    return this.http
+      .get(url, options)
+      .pipe(
+        map((res: Mission[]) => { 
           return res;
         })
         , retry(3)

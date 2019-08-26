@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { SuiveuseRepository } from '../../../repository/suiveuse.repository';
-import { Personne, PersonRepository } from '../../../repository/person.repository';
+import { Personne } from '../../../repository/person.repository';
 import { SuiveuseService } from '../suiveuse.service';
 
 @Component({
@@ -12,28 +11,11 @@ import { SuiveuseService } from '../suiveuse.service';
 })
 export class MySListComponent implements OnInit {
 
-  constructor(
-  	private route: ActivatedRoute,
-    private router: Router,
-    private suiveuseR: SuiveuseRepository,
-    private personR: PersonRepository,
-    private suiveuseS: SuiveuseService
-  ) { }
+  constructor(private suiveuseS: SuiveuseService) {}
 
-  addSuiveuseDisp: boolean = false;
+  user: Personne;
 
   ngOnInit() {
-    console.log(this.suiveuseS.user);
-   //  if (this.suiveuseS.user )
-  	// let user = this.route.snapshot.paramMap.get('person');
-  	// if (user === null || user === 'ajouter') {
-  	// 	this.personR.getUser().subscribe(res => {
-  	// 		this.router.navigate([res.surnom], {relativeTo: this.route});
-  	// 		this.addSuiveuseDisp = true;
-  	// 	});
-  	// } else { this.addSuiveuseDisp = true; }
-
-    
+    this.user = this.suiveuseS.user;
   }
-
 }

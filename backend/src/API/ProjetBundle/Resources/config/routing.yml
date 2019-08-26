@@ -18,6 +18,11 @@ api_projet_organisme:
     type:     rest
     prefix: /
 
+api_projet_suiveuse:
+    resource: "@APIProjetBundle/Controller/SuiveuseController.php"
+    type:     rest
+    prefix: /
+
 api_projet_parameter:
     resource: "@APIProjetBundle/Controller/ParameterController.php"
     type:     rest
