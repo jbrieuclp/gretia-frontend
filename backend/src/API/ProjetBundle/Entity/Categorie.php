@@ -17,14 +17,14 @@ class Categorie
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.travail_categorie_id_travail_categ_seq", allocationSize=1, initialValue=1)
 	 *
-	 * @Serializer\Groups({"categorie", "projet"})
+	 * @Serializer\Groups({"categorie", "projet", "travail"})
 	 */
 	private $id;
 
 	/**
 	 * @ORM\Column(name="libelle", type="string", nullable=false)
 	 *
-	 * @Serializer\Groups({"categorie"})
+	 * @Serializer\Groups({"categorie", "travail"})
 	 */
 	private $libelle;
 

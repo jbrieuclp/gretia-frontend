@@ -30,7 +30,7 @@ class Mission
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.mission_id_mission_seq", allocationSize=1, initialValue=1)
 	 *
-	 * @Serializer\Groups({"mission"})
+	 * @Serializer\Groups({"mission", "travail"})
 	 */
 	private $id;
 
@@ -42,7 +42,7 @@ class Mission
    *      maxMessage = "Le nom de la mission ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @Serializer\Groups({"mission"})
+   * @Serializer\Groups({"mission", "travail"})
    */
   private $libelle;
 

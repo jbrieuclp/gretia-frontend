@@ -12,9 +12,9 @@ import { TypeComponent } from './components/admin/type/type.component';
 import { PListComponent } from './components/projet/p-list/p-list.component';
 import { ProjetFormComponent } from './components/projet/form/projet-form.component';
 import { MissionFormComponent } from './components/mission/form/mission-form.component';
-import { SListComponent } from './components/suiveuse/s-list/s-list.component';
+import { SListUserComponent } from './components/suiveuse/list-user/list-user.component';
 import { MySListComponent } from './components/suiveuse/my-s-list/my-s-list.component';
-import { SFormComponent } from './components/suiveuse/s-form/s-form.component';
+import { AddTravailComponent } from './components/suiveuse/add-travail/add-travail.component';
 
 // routes definition
 const routes: Routes = [
@@ -37,13 +37,14 @@ const routes: Routes = [
 			//	{ path: 'info', component: MissionFormComponent, pathMatch: 'full' } //TODO: Detail
 				{ path: ':mission', component: MissionFormComponent, pathMatch: 'full' }
 			]},
-			{ path: 'suiveuses', component: SListComponent, pathMatch: 'full'},
+			{ path: 'suiveuses', component: SListUserComponent, pathMatch: 'full'},
 			{ path: 'suiveuse', children: [
 				{ path: '', component: MySListComponent, pathMatch: 'full' },
-				{ path: ':person', children: [
+				{ path: 'ajouter', component: AddTravailComponent, pathMatch: 'full' },
+				{ path: 'user/:person', children: [
 					{ path: '', component: MySListComponent, pathMatch: 'full' },
 				//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
-					{ path: 'ajouter', component: SFormComponent, pathMatch: 'full' }
+					{ path: 'ajouter', component: AddTravailComponent, pathMatch: 'full' },
 				]}
 			]},
 			{ path: 'admin', children: [

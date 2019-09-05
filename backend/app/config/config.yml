@@ -209,6 +209,7 @@ fos_rest:
         enabled: true
     body_converter:
         enabled: true
+    param_fetcher_listener: force
 
 jms_serializer:
     handlers:

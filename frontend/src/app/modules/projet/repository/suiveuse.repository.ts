@@ -24,6 +24,12 @@ export interface TravailCategorie {
   ordre?: number
 }
 
+export interface TRAVAIL_OPTIONS {
+  startAt?: string,
+  endAt?: string,
+  limit?: number
+}
+
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
@@ -42,7 +48,7 @@ export class SuiveuseRepository {
 
   /** GET personnes par ID (cd_nom) **/
   dashboard(user?: string): Observable<any> {
-    let user = user||null
+    user = user||null
   	const url = `${this.httpUrlBase}/suiveuse/personne/${user}`;
     return this.http
     	.get(url, httpOptions)
@@ -65,6 +71,85 @@ export class SuiveuseRepository {
         })
         , retry(3)
        );
+  }
+
+  /** GET personnes par ID (cd_nom) **/
+  getSynthese(user: number, options: TRAVAIL_OPTIONS): Observable<any[]> {
+    const params = Object.keys(options).map(key => key + '=' + options[key]).join('&');
+    const url = `${this.httpUrlBase}/personne/${user}/synthese?${params}`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map((res: Travail[]) => { 
+          return res;
+        })
+        , retry(3)
+       );
+  }
+
+  /** GET personnes par ID (cd_nom) **/
+  getTravaux(user: number, options: TRAVAIL_OPTIONS): Observable<Travail[]> {
+    const params = Object.keys(options).map(key => key + '=' + options[key]).join('&');
+    const url = `${this.httpUrlBase}/personne/${user}/travaux?${params}`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map((res: Travail[]) => { 
+          return res;
+        })
+        , retry(3)
+       );
+  }
+
+  /** GET personnes par ID (cd_nom) **/
+  getTravail(id_travail: number): Observable<Travail> {
+    const url = `${this.httpUrlBase}/travail/${id_travail}`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map((res: Travail) => { 
+          return res;
+        })
+        , retry(3)
+       );
+  }
+
+  /** POST personnes par ID (cd_nom) **/
+  postTravail(data: any): Observable<Travail> {
+    const url = `${this.httpUrlBase}/travail`;
+    const sources = JSON.stringify(data);
+    return this.http
+      .post(url, sources, httpOptions)
+      .pipe(
+        map((travail: Travail) => { 
+          return travail;
+        })
+       );
+  }
+
+  /** PUT personnes par ID (cd_nom) **/
+  putTravail(travail: Travail, data: any): Observable<Travail> {
+    const url = `${this.httpUrlBase}/travail/${travail.id}`;
+    const sources = JSON.stringify(data);
+    return this.http
+      .put(url, sources, httpOptions)
+      .pipe(
+        map((travail: Travail) => { 
+          return travail;
+        })
+       );
+  }
+
+  /** DELETE personnes par ID (cd_nom) **/
+  deleteTravail(travail: Travail): Observable<Boolean> {
+    const url = `${this.httpUrlBase}/travail/${travail.id}`;
+    return this.http
+      .delete(url, httpOptions)
+      .pipe( 
+        map((res: Boolean) => { 
+          return res;
+        })
+        , retry(3)/*, catchError(this.handleError('deleteHero'))*/ );
   }
 
 }

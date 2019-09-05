@@ -69,9 +69,10 @@ import { PListComponent } from './components/projet/p-list/p-list.component';
 import { MissionFormComponent } from './components/mission/form/mission-form.component';
 import { MissionTravailleurFormComponent } from './components/mission/form/m-travailleur-form.component';
 import { TravailleurFormComponent } from './components/person/form/travailleur-form.component';
-import { SListComponent } from './components/suiveuse/s-list/s-list.component';
+import { SListUserComponent } from './components/suiveuse/list-user/list-user.component';
 import { MySListComponent } from './components/suiveuse/my-s-list/my-s-list.component';
-import { SFormComponent } from './components/suiveuse/s-form/s-form.component';
+import { TravailFormComponent } from './components/suiveuse/travail-form/travail-form.component';
+import { AddTravailComponent } from './components/suiveuse/add-travail/add-travail.component';
 
 //repository
 import { PersonRepository } from './repository/person.repository';
@@ -154,9 +155,10 @@ import { SuiveuseService } from './components/suiveuse/suiveuse.service';
     MissionFormComponent,
     MissionTravailleurFormComponent,
     TravailleurFormComponent,
-    SListComponent,
+    SListUserComponent,
     MySListComponent,
-    SFormComponent
+    TravailFormComponent,
+    AddTravailComponent
   ],
   entryComponents: [
     MissionTravailleurFormComponent,

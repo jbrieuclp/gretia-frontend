@@ -4,11 +4,11 @@ import { Observable } from 'rxjs/Observable';
 import { Personne, PersonRepository } from '../../../repository/person.repository';
 
 @Component({
-  selector: 'app-s-list',
-  templateUrl: './s-list.component.html',
-  styleUrls: ['./s-list.component.css']
+  selector: 'app-s-list-user',
+  templateUrl: './list-user.component.html',
+  styleUrls: ['./list-user.component.css']
 })
-export class SListComponent implements OnInit {
+export class SListUserComponent implements OnInit {
 
 	persons: Observable<Personne[]>;
 

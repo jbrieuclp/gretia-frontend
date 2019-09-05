@@ -1,0 +1,43 @@
+<mat-card>
+	<mat-card-title>Suiveuse</mat-card-title>
+
+	<mat-card-content>
+		<mat-form-field class="col-sm-3">
+			<input matInput 
+				(dateChange)="addEvent($event)"
+				placeholder="Jour"
+				autocomplete="off" 
+			  [matDatepicker]="datePicker"
+			  id="date">
+		  <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+		  <mat-datepicker #datePicker></mat-datepicker>
+	  </mat-form-field>
+
+	  <div class="row">
+			<div class="offset-sm-1 col-sm-8">
+			  <app-projet-travail-form [date]="date" (onValidChange)="onFormTravailValid($event)" (onSave)="addTravail($event)"></app-projet-travail-form>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="offset-sm-1 col-sm-3">
+	  		<button color="primary"
+	  			type="button"
+	  			style="margin-top: 10px;"
+	  			(click)="submitForm()"
+		  		mat-raised-button 
+		  		[disabled]="!formValid"><mat-icon aria-label="Icon représentant un V de validation">save</mat-icon> Enregistrer</button>
+			</div>
+		</div>
+
+		<ng-container *ngIf="travaux.length">
+			<mat-divider></mat-divider>
+			<div class="travaux-journee">
+				<div class="row" *ngFor="let travail of travaux">
+					{{travail|json}}
+				</div>
+			</div>
+		</ng-container>
+
+	</mat-card-content>
+</mat-card>

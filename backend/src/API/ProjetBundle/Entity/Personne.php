@@ -30,7 +30,7 @@ class Personne
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.personne_id_personne_seq", allocationSize=1, initialValue=1)
 	 *
-	 * @Serializer\Groups({"personne", "projet"})
+	 * @Serializer\Groups({"personne", "projet", "travail"})
 	 */
 	private $id;
 

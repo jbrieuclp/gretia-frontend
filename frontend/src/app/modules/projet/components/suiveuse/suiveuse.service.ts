@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationStart, RoutesRecognized, NavigationEnd } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { Personne, PersonRepository } from '../../repository/person.repository';
 
@@ -15,6 +16,10 @@ export class SuiveuseService {
     private personR: PersonRepository,
     private router: Router
   ) {
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(truc=>this.checkRoute())
+  }
+
+  checkRoute() {
     let route = this.router.routerState.root;
     while (route.firstChild && route.snapshot.paramMap.get('person') === null ) {
       route = route.firstChild;
@@ -29,5 +34,8 @@ export class SuiveuseService {
   get user(): any {
     return this._user;
   }
-  
+
+  clearUser() {
+    this._user.next(null);
+  }  
 }

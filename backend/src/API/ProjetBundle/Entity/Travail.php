@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
-* @ORM\Entity
+* @ORM\Entity(repositoryClass="API\ProjetBundle\Entity\Repository\TravailRepository")
 * @ORM\Table(name="projet.travail")
 */
 class Travail
@@ -38,7 +38,7 @@ class Travail
   private $personne;
 
   /**
-   * @ORM\Column(name="date", type="datetime", nullable=false)
+   * @ORM\Column(name="date", type="string", nullable=false)
    *
    * @Serializer\Groups({"travail"})
    */
@@ -53,7 +53,7 @@ class Travail
   private $categorie;
 
   /**
-   * @ORM\Column(name="duree", type="dateinterval", nullable=true)
+   * @ORM\Column(name="duree", type="string", nullable=true)
    *
    * @Serializer\Groups({"travail"})
    */
