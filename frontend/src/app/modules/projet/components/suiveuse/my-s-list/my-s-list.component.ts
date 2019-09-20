@@ -13,7 +13,7 @@ import { SuiveuseService } from '../suiveuse.service';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'app-my-s-list',
+  selector: 'app-projet-my-s-list',
   templateUrl: './my-s-list.component.html',
   styleUrls: ['./my-s-list.component.css'],
   animations: [

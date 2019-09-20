@@ -1,0 +1,22 @@
+
+<div class="row">
+
+	<ng-container *ngIf="this.loading === false; else loadingBlock;">
+		<div class="col-12">
+			<ul class="list-group">
+			  <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let travail of travaux">
+			    {{ travail.mission.libelle }}
+			    <span class="badge badge-primary badge-pill">{{ travail.duree }}</span>
+			  </li>
+			</ul>
+		</div>
+	</ng-container>
+
+	<ng-template #loadingBlock>
+		<div class="col-sm-4 col-xs-12">
+			<mat-progress-bar mode="query"></mat-progress-bar>
+			coucou
+		</div>
+	</ng-template>
+
+</div>
