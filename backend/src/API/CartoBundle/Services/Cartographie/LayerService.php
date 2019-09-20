@@ -73,6 +73,7 @@ abstract class LayerService
     protected function setGeojsonData() {
         $this->setGeojsonQuery();
         $this->setWhere();
+      //  print_r($this->queryBuilder->getSQL());
         $this->geojsonData = $this->queryBuilder->execute()->fetchAll(\PDO::FETCH_ASSOC);
     }
 
@@ -279,8 +280,9 @@ abstract class LayerService
             return;
 
         $this->queryBuilder
-        ->join('s', 'taxonomie.taxref_tree_tot', 'tx_tree', 's.cd_ref = tx_tree.cd_ref')
-        ->andWhere("(".$taxon." = ANY(tx_tree.cd_ref_sup) OR ".$taxon." = s.cd_ref)");
+        ->join('s', 'taxonomie.taxref', 'taxon', 's.cd_nom = taxon.cd_nom')
+        ->join('taxon', 'taxonomie.taxref_tree_tot', 'tx_tree', 'taxon.cd_ref = tx_tree.cd_ref')
+        ->andWhere("(".$taxon." = ANY(tx_tree.cd_ref_sup) OR ".$taxon." = taxon.cd_ref)");
     }
 
     /**
@@ -295,7 +297,9 @@ abstract class LayerService
       $qb = $this->queryBuilder;
 
       if (count($statuts)) {
-        $qb->innerJoin('s', 'taxonomie.vm_esp_statut', 'statuts', 's.cd_ref = statuts.cd_ref AND atlas.departement = ANY(statuts.departements)');
+        $qb
+          ->innerJoin('s', 'taxonomie.taxref', 'taxref_statut', 's.cd_nom = taxref_statut.cd_nom')
+          ->innerJoin('taxref_statut', 'taxonomie.vm_esp_statut', 'statuts', 'taxref_statut.cd_ref = statuts.cd_ref AND atlas.departement = ANY(statuts.departements)');
         $orModule = $qb->expr()->orx();
       }
 

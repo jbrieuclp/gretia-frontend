@@ -71,7 +71,7 @@ class LayerInfoService extends LayerService
          ->from('ref_geo.l_areas', 'a')
          ->innerJoin('a', 'pr_atlas.vm_atlas', 'atlas', 'a.id_area = atlas.id_area AND a.id_type = :type_geom')
          ->setParameter('type_geom', $this->getScale()->getType())
-         ->innerJoin('atlas', 'gn_synthese.v_synthese_for_web_app', 's', 'atlas.id_synthese = s.id_synthese')
+         ->innerJoin('atlas', 'gn_synthese.synthese', 's', 'atlas.id_synthese = s.id_synthese')
          ->innerJoin('s', 'pr_occtax.v_releve_role_org', 'obseur', 's.unique_id_sinp_grp = obseur.unique_id_sinp_grp')
          ->innerJoin('obseur', 'utilisateurs.t_roles', 'roles', 'roles.id_role = ANY(obseur.roles)')
          ->groupBy('roles.nom_role, roles.prenom_role');
@@ -83,7 +83,7 @@ class LayerInfoService extends LayerService
          ->from('ref_geo.l_areas', 'a')
          ->innerJoin('a', 'pr_atlas.vm_atlas', 'atlas', 'a.id_area = atlas.id_area AND a.id_type = :type_geom')
          ->setParameter('type_geom', $this->getScale()->getType())
-         ->innerJoin('atlas', 'gn_synthese.v_synthese_for_web_app', 's', 'atlas.id_synthese = s.id_synthese')
+         ->innerJoin('atlas', 'gn_synthese.synthese', 's', 'atlas.id_synthese = s.id_synthese')
          ->innerJoin('s', 'gn_meta.t_datasets', 'dts', 'dts.id_dataset = s.id_dataset')
          ->innerJoin('dts', 'gn_meta.t_acquisition_frameworks', 'afs', 'dts.id_acquisition_framework = afs.id_acquisition_framework')
          ->groupBy('afs.id_acquisition_framework, afs.acquisition_framework_name, dts.id_dataset, dts.dataset_name');
@@ -98,7 +98,7 @@ class LayerInfoService extends LayerService
          ->from('ref_geo.l_areas', 'a')
          ->innerJoin('a', 'pr_atlas.vm_atlas', 'atlas', 'a.id_area = atlas.id_area AND a.id_type = :type_geom')
          ->setParameter('type_geom', $this->getScale()->getType())
-         ->innerJoin('atlas', 'gn_synthese.v_synthese_for_web_app', 's', 'atlas.id_synthese = s.id_synthese')
+         ->innerJoin('atlas', 'gn_synthese.synthese', 's', 'atlas.id_synthese = s.id_synthese')
          ->innerJoin('atlas', 'ref_geo.l_areas', 'commune', 'commune.id_area = atlas.id_area_commune')
          ->groupBy('commune.area_code, commune.area_name');
     }
@@ -108,26 +108,28 @@ class LayerInfoService extends LayerService
       $qb->select("count(DISTINCT s.id_synthese) AS nb_obs")
          ->addSelect("min(s.date_min)::date as date_min")
          ->addSelect("max(s.date_max)::date as date_max")
-         ->addSelect("count(DISTINCT s.cd_ref) AS nb_taxon")
+         ->addSelect("count(DISTINCT taxref.cd_ref) AS nb_taxon")
          ->from('ref_geo.l_areas', 'a')
          ->innerJoin('a', 'pr_atlas.vm_atlas', 'atlas', 'a.id_area = atlas.id_area AND a.id_type = :type_geom')
          ->setParameter('type_geom', $this->getScale()->getType())
-         ->innerJoin('atlas', 'gn_synthese.v_synthese_for_web_app', 's', 'atlas.id_synthese = s.id_synthese');
+         ->innerJoin('atlas', 'gn_synthese.synthese', 's', 'atlas.id_synthese = s.id_synthese')
+         ->innerjoin('s', 'taxonomie.taxref', 'taxref', 's.cd_nom = taxref.cd_nom');
     }
 
     protected function setTaxonsQuery() {
       $qb = $this->queryBuilder;
-      $qb->select("s.cd_ref, s.nom_valide")
+      $qb->select("taxref.cd_ref, taxref.nom_valide")
          ->addSelect("min(s.date_min)::date as date_min")
          ->addSelect("max(s.date_max)::date as date_max")
          ->addSelect("count(DISTINCT s.id_synthese) AS nb_obs")
-         ->addSelect("array_to_json(array_remove(array_agg(DISTINCT statut_espece.lb_type_statut), NULL)) as statuts")
+         ->addSelect("array_to_json(array_remove(array_agg(DISTINCT NULLIF(concat_ws(' ', statut_espece.lb_type_statut, '('||statut_espece.code_statut||')'), '')), NULL)) as statuts")
          ->from('ref_geo.l_areas', 'a')
          ->innerJoin('a', 'pr_atlas.vm_atlas', 'atlas', 'a.id_area = atlas.id_area AND a.id_type = :type_geom')
          ->setParameter('type_geom', $this->getScale()->getType())
-         ->innerJoin('atlas', 'gn_synthese.v_synthese_for_web_app', 's', 'atlas.id_synthese = s.id_synthese')
-         ->leftJoin('s', 'taxonomie.vm_esp_statut', 'statut_espece', 's.cd_ref = statut_espece.cd_ref AND atlas.departement = ANY(statut_espece.departements)')
-         ->groupBy('s.cd_ref, s.nom_valide')
-         ->orderBy('s.nom_valide');
+         ->innerJoin('atlas', 'gn_synthese.synthese', 's', 'atlas.id_synthese = s.id_synthese')
+         ->innerjoin('s', 'taxonomie.taxref', 'taxref', 's.cd_nom = taxref.cd_nom')
+         ->leftJoin('taxref', 'taxonomie.vm_esp_statut', 'statut_espece', 'taxref.cd_ref = statut_espece.cd_ref AND atlas.departement = ANY(statut_espece.departements)')
+         ->groupBy('taxref.cd_ref, taxref.nom_valide')
+         ->orderBy('taxref.nom_valide');
     }
 }
