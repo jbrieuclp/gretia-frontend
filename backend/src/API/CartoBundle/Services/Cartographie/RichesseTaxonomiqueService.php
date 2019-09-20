@@ -16,7 +16,7 @@ class RichesseTaxonomiqueService extends IndicateurService
         $qb = $this->queryBuilder;
         
         // En fonction de si filtre sur taxon ou pas on change le select
-        $qb->addSelect('count(distinct s.cd_ref) AS total ');
+        $qb->addSelect('count(distinct taxref.cd_ref) AS total ');
     }
 
     /**
