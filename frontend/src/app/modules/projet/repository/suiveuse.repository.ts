@@ -15,7 +15,8 @@ export interface Travail {
   personne?: any,
   date?: Date,
   categorie?: any,
-  duree?: number
+  duree?: number,
+  detail?: string
 }
 
 export interface TravailCategorie {

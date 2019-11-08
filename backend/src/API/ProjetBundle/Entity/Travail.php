@@ -60,6 +60,13 @@ class Travail
   private $duree;
 
   /**
+   * @ORM\Column(name="detail", type="string", nullable=true)
+   *
+   * @Serializer\Groups({"travail"})
+   */
+  private $detail;
+
+  /**
    * Get id
    *
    * @return integer 
@@ -182,6 +189,29 @@ class Travail
   public function getDuree()
   {
     return $this->duree;
+  }
+
+  /**
+   * Set detail
+   *
+   * @param string $detail
+   * @return string
+   */
+  public function setDetail($detail)
+  {
+    $this->detail = $detail;
+
+    return $this;
+  }
+
+  /**
+   * Get detail
+   *
+   * @return integer 
+   */
+  public function getDetail()
+  {
+    return $this->detail;
   }
 
 }

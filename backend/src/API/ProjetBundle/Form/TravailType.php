@@ -41,7 +41,8 @@ class TravailType extends AbstractType
                         'invalid_message' => 'You entered an invalid value, it should include %num% letters',
                         'invalid_message_parameters' => ['%num%' => 6],
                     ])*/
-                    ->add('duree');
+                    ->add('duree')
+                    ->add('detail');
 
         $builder->get('duree')
                 ->addModelTransformer(new CallbackTransformer(

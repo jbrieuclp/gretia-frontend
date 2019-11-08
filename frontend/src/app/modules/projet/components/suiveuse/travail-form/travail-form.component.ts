@@ -68,7 +68,8 @@ export class TravailFormComponent implements OnInit {
       mission: [null, [Validators.required]],
       date: [this.date, [Validators.required]],
       categorie: [null, [Validators.required]],
-      duree: [null, [Validators.pattern('^[0-9]+\.?[0-9]*$')]]
+      duree: [null, [Validators.pattern('^[0-9]+\.?[0-9]*$')]],
+      detail: [null, []]
     });
     //changes event
     this.form.statusChanges.subscribe(val => {
