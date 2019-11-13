@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 
 use API\ProjetBundle\Entity\Organisme;
+use API\ProjetBundle\Entity\Mission;
 use API\ProjetBundle\Entity\ProjetPersonne;
 
 /**
@@ -21,6 +22,7 @@ class Projet
 	public function __construct() {
     $this->partenairesFinanciers = new ArrayCollection();
     $this->partenairesTechniques = new ArrayCollection();
+    $this->missions = new ArrayCollection();
     $this->travailleurs = new ArrayCollection();
   }
 
@@ -184,6 +186,13 @@ class Projet
    * @Serializer\Groups({"projet"})
    */
   private $compteUpdate;
+
+  /**
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Mission", mappedBy="projet", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   *
+   * @Serializer\Groups({"mission", "projet"})
+   */
+  private $missions;
 
   /**
    * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\ProjetPersonne", mappedBy="projet", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
@@ -727,6 +736,33 @@ class Projet
   public function getTravailleurs() {
     return $this->travailleurs;
   }
+
+  /**
+  * Mission
+  */
+  public function addMission(Mission $mission)
+  {
+      // Ici, on utilise l'ArrayCollection vraiment comme un tableau
+      $this->missions[] = $mission;
+      
+      // On lie le observation au obseur orga
+      $mission->setProjet($this);
+
+      return $this;
+  }
+
+  public function removeMission(Mission $mission)
+  {
+      // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
+      $this->missions->removeElement($mission);
+      $mission->setProjet(null);
+  }
+
+  // Notez le pluriel, on récupère une liste de catégories ici !
+  public function getMissions()
+  {
+      return $this->missions;
+  }
   
   /**
   * @ORM\PrePersist()
@@ -741,6 +777,34 @@ class Projet
   */
   public function preFlush(PreFlushEventArgs $args) {
     $this->dateUpdate = new \Datetime();
+  }
+
+  /**
+   * @Serializer\VirtualProperty
+   * @Serializer\SerializedName("usage_jour")
+   * @Serializer\Groups({"projet"})
+   */
+  public function getUsageJours() {
+    $temps_utilise = new \DateTime('00:00');
+    foreach ($this->missions as $mission) {
+      list($hours, $minutes, $seconds) = sscanf('14:30:00', '%d:%d:%d');
+      $interval = new \DateInterval(sprintf('PT%dH%dM%dS', $hours, $minutes, $seconds));
+      $temps_utilise->add($interval);
+    }
+    $heures = $temps_utilise->format("H");
+    $minutes = $temps_utilise->format("I");
+
+    $jours = ($heures/7) + ($minutes/3660);
+    return round($jours, 2);
+  }
+
+  /**
+   * @Serializer\VirtualProperty
+   * @Serializer\SerializedName("usage_pc")
+   * @Serializer\Groups({"projet"})
+   */
+  public function getUsagePC() {
+    return $this->nbJour ? round($this->getUsageJours() / $this->nbJour * 100) : null;
   }
 
 }

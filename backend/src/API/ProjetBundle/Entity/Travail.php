@@ -22,7 +22,7 @@ class Travail
 	private $id;
 
 	/**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Mission", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Mission", inversedBy="travails", cascade={"all"})
    * @ORM\JoinColumn(name="mission_id", referencedColumnName="id_mission", nullable=true)
    *
    * @Serializer\Groups({"travail"})
@@ -55,7 +55,7 @@ class Travail
   /**
    * @ORM\Column(name="duree", type="string", nullable=true)
    *
-   * @Serializer\Groups({"travail"})
+   * @Serializer\Groups({"travail", "projet"})
    */
   private $duree;
 

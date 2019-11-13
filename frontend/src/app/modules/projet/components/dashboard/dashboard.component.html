@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<!-- <div class="container-fluid">
   <div class="row">
     <div class="form-group col-sm-7">
       <mat-form-field>
@@ -8,18 +8,16 @@
       </mat-form-field>
     </div>  
   </div>
-  <h4>Liste des projets</h4>
+  <h4>Liste des cadres d'acquisition et des jeux de données associés</h4>
   <mat-accordion [multi]="true">
     <ng-container *ngFor="let projet of tempProjets; let idx = index">
       <mat-expansion-panel *ngIf="isDisplayed(idx)" [expanded]="expandAccordions">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <div>
-              <a mat-icon-button [routerLink]="['..', 'projet', projet.id]" class="bt-edit">
-                <mat-icon>edit</mat-icon>
-              </a>
-              {{ projet.libelle | uppercase }}
-            </div>
+            <a mat-icon-button [routerLink]="['..', 'projet', projet.id]" class="bt-edit">
+              <mat-icon>edit</mat-icon>
+            </a>
+            {{ projet.libelle | uppercase }}
           </mat-panel-title>
           <mat-panel-description>
             {{ projet.objet }}
@@ -53,4 +51,4 @@
                 [pageSizeOptions]="pageSizeOptions"
                 (page)="changePaginator($event)">
   </mat-paginator>
-</div>
+</div> -->

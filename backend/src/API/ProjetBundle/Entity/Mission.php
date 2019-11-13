@@ -22,6 +22,7 @@ class Mission
 	
   public function __construct() {
     $this->travailleurs = new ArrayCollection();
+    $this->travails = new ArrayCollection();
   }
 
   /**
@@ -56,7 +57,7 @@ class Mission
   /**
    * @ORM\Column(name="nb_jour", type="float", nullable=true)
    *
-   * @Serializer\Groups({"mission"})
+   * @Serializer\Groups({"mission", "projet"})
    */
   private $nbJour;
 
@@ -70,7 +71,7 @@ class Mission
   private $etat;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Projet")
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Projet", inversedBy="missions")
    * @ORM\JoinColumn(name="projet_id", referencedColumnName="id_projet", nullable=true)
    * @Assert\NotNull(message="La mission doit être associé à un projet.")
    *
@@ -111,6 +112,13 @@ class Mission
    * @Serializer\Groups({"mission"})
    */
   private $travailleurs;
+
+  /**
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Travail", mappedBy="mission", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   *
+   * @Serializer\Groups({"travail", "projet"})
+   */
+  private $travails;
 
 
 
@@ -381,6 +389,66 @@ class Mission
   public function getTravailleurs() {
     return $this->travailleurs;
   }
+
+  /**
+  * Mission
+  */
+  public function addTravail(Travail $travail)
+  {
+      // Ici, on utilise l'ArrayCollection vraiment comme un tableau
+      $this->travails[] = $travail;
+      
+      // On lie le observation au obseur orga
+      $travail->setMission($this);
+
+      return $this;
+  }
+
+  public function removeTravail(Travail $travail)
+  {
+      // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
+      $this->travails->removeElement($travail);
+      $travail->setMission(null);
+  }
+
+  // Notez le pluriel, on récupère une liste de catégories ici !
+  public function getTravails()
+  {
+      return $this->travails;
+  }
+
+
+  /**
+   * @Serializer\VirtualProperty
+   * @Serializer\SerializedName("usage_jour")
+   * @Serializer\Groups({"mission", "projet"})
+   */
+  public function getUsageJours() {
+    $temps_utilise = new \DateTime('00:00');
+    foreach ($this->travails as $travail) {
+      list($hours, $minutes, $seconds) = sscanf($travail->getDuree(), '%d:%d:%d');
+      $interval = new \DateInterval(sprintf('PT%dH%dM%dS', $hours, $minutes, $seconds));
+      $temps_utilise->add($interval);
+    }
+    $mois = $temps_utilise->format("m");
+    $jours = $temps_utilise->format("d");
+    $heures = $temps_utilise->format("H");
+    $minutes = $temps_utilise->format("I");
+
+    $jours = $jours + ($heures/7) + ($minutes/3660);
+    return round($jours, 2);
+  }
+
+  /**
+   * @Serializer\VirtualProperty
+   * @Serializer\SerializedName("usage_pc")
+   * @Serializer\Groups({"mission", "projet"})
+   */
+  public function getUsagePC() {
+    return $this->nbJour ? round($this->getUsageJours() / $this->nbJour * 100) : null;
+  }
+
+
 
   /**
   * @ORM\PrePersist()

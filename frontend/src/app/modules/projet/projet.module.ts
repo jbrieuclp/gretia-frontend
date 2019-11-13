@@ -88,6 +88,7 @@ import { SuiveuseRepository } from './repository/suiveuse.repository';
 import { ProjetFormService } from './services/projet-form.service';
 import { SuiveuseService } from './components/suiveuse/suiveuse.service';
 import { DayDetailComponent } from './components/suiveuse/day-detail/day-detail.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 
 @NgModule({
@@ -160,7 +161,8 @@ import { DayDetailComponent } from './components/suiveuse/day-detail/day-detail.
     MySListComponent,
     TravailFormComponent,
     AddTravailComponent,
-    DayDetailComponent
+    DayDetailComponent,
+    DashboardComponent
   ],
   entryComponents: [
     MissionTravailleurFormComponent,

@@ -15,6 +15,7 @@ import { MissionFormComponent } from './components/mission/form/mission-form.com
 import { SListUserComponent } from './components/suiveuse/list-user/list-user.component';
 import { MySListComponent } from './components/suiveuse/my-s-list/my-s-list.component';
 import { AddTravailComponent } from './components/suiveuse/add-travail/add-travail.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 // routes definition
 const routes: Routes = [
@@ -24,6 +25,7 @@ const routes: Routes = [
 		canActivate: [AuthGuard],
 		children: [
 			{ path: '', redirectTo: 'projets', pathMatch: 'full' },
+			{ path: 'dashboard', component: DashboardComponent, pathMatch: 'full'},
 			{ path: 'projets', component: PListComponent, pathMatch: 'full'},
 			{ path: 'projet', children: [
 				{ path: '', component: ProjetFormComponent, pathMatch: 'full' },
