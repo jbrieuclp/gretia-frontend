@@ -37,13 +37,5 @@ api_projet:
     type: rest
     prefix:   /etude/
 
-visu_consultation:
-    prefix:   /visualisation
-    resource: "@VisuConsultationBundle/Resources/config/routing.yml"
-
-api_test:
-    path:     /test
-    defaults: { _controller: APIBiblioBundle:Test:index }
-
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

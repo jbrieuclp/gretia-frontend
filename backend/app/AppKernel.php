@@ -37,7 +37,6 @@ class AppKernel extends Kernel
             new API\CoreBundle\APICoreBundle(),
             new API\CartoBundle\APICartoBundle(),
             new API\SerenaBundle\APISerenaBundle(),
-            new Visu\ConsultationBundle\VisuConsultationBundle(),
             new API\MetadataBundle\APIMetadataBundle(),
             new API\ProjetBundle\APIProjetBundle(),
         ];
