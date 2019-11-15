@@ -1,0 +1,113 @@
+<div class="row" *ngIf="fichier">
+		<div class="col-lg-12">
+			<h1><small>#{{ fichier.id }} - </small>{{ fichier.table }}</h1>
+			<hr />
+
+			<div class="row">
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a routerLink="./mapper" title="Mapper le fichier" class="text-center">
+							<mat-icon>build</mat-icon>
+							<div class="caption">
+								Configurer
+							</div>
+						</a>
+					</mat-card>
+				</div>
+			</div>
+
+			<hr />
+
+			<div class="row">
+				<ng-container *ngIf="fichier.champs.length">
+  				<div class="col-sm-4 col-md-3">
+  					<mat-card>
+							<a routerLink="./champs" title="Vérifier le fichier" class="thumbnail text-center">
+								<mat-icon>search</mat-icon>
+								<div class="caption">
+									Vérifier les champs du fichier
+								</div>
+							</a>
+						</mat-card>
+					</div>
+				</ng-container>
+
+				<!-- {% for champ in fichier.champs if (champ.fieldFSD.champ is defined and champ.fieldFSD.champ == '__OBSERVERS__') %}
+				<div class="col-sm-4 col-md-3">
+					<a [routerLink]="[]" title="Gérer les observateur du fichier" class="thumbnail text-center">
+						<mat-icon>face</mat-icon>
+						<div class="caption">
+							<h4>Gérer les observateurs</h4>
+						</div>
+					</a>
+				</div>
+				{% endfor %} -->
+
+				<ng-container *ngIf="fichier.is_localisable">
+					<div class="col-sm-4 col-md-3">
+						<mat-card>
+							<a [routerLink]="[]" title="Gérer les localisation du fichier" class="thumbnail text-center">
+								<mat-icon>explore</mat-icon>
+								<div class="caption">
+									Visualiser localisations
+								</div>
+							</a>
+						</mat-card>
+					</div>
+				</ng-container>
+
+			</div>
+
+			<hr />
+
+			<div class="row" *ngIf="fichier.champs.length">
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a [routerLink]="[]" title="Vérifier les doublons au sein du fichier" class="thumbnail text-center">
+							<mat-icon>folder</mat-icon>
+							<div class="caption">
+								Recherche de doublons dans le fichier
+							</div>
+						</a>
+					</mat-card>
+				</div>
+
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a [routerLink]="[]" title="Vérifier les doublons" class="thumbnail text-center">
+							<mat-icon>cloud</mat-icon>
+							<div class="caption">
+								Recherche de doublons avec la BD
+							</div>
+						</a>
+					</mat-card>
+				</div>
+			</div>
+
+
+			<div class="row" *ngIf="fichier.champs.length && fichier.nb_field_ok == fichier.champs.length">
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a [routerLink]="[]" title="Vérifier les doublons au sein du fichier" class="thumbnail text-center">
+							<i class="fa fa-download fa-4"></i>
+							<div class="caption">
+								Exporter pour importer dans Serena
+							</div>
+						</a>
+					</mat-card>
+				</div>
+
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a [routerLink]="[]" title="Traiter les MAJ et doublons avec Serena" class="thumbnail text-center">
+							<i class="fa fa-download fa-4"></i>
+							<div class="caption">
+								Traiter les MAJ et doublons avec Serena
+							</div>
+						</a>
+					</mat-card>
+				</div>
+			</div>
+			
+		</div>
+	</div>

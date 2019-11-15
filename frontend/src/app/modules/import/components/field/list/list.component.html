@@ -1,0 +1,43 @@
+<div class="row">
+	<div class="col-sm-5">
+		<mat-card>
+			<mat-card-header>
+				<mat-card-title>Liste des champs</mat-card-title>
+			</mat-card-header>
+			<mat-card-content>
+				
+			</mat-card-content>
+				<div class="list-group list-group-flush">
+				  <div class="list-group-item" *ngFor="let field of fields">
+				  	<div class="d-flex w-100 justify-content-between">
+				      <h5 class="mb-1">{{ field.champ }}</h5>
+				      <small class="text-muted" style="cursor: pointer;" (click)="console.log('coucou')"><mat-icon>visibility</mat-icon></small>
+				    </div>
+				    <div class="form-check">
+							<mat-checkbox>Check me!</mat-checkbox>
+						</div>
+				  </div>
+				</div>
+
+		<!-- {% for champ in fichier.champs %}
+			<div class="list-group-item list-group-item-action flex-column align-items-start">
+				<div class="d-flex w-100 justify-content-between">
+					<strong {% if (champ.check) %}style="color:green;"{% endif %}>{{ champ.champ }}</strong><a class="pull-right" href="{{ path('serena_champ_analyse', {'champ': champ.id}) }}" target="_blank"><span class="fa fa-eye fa-lg" title="Vérifier ce champ"></span></a>
+				</div>
+				<div><form action="{{ path('serena_champ_update_check', {'champ': champ.id})}}" method="post">
+					<div class="form-check">
+						<label class="form-check-label">
+						<input type="checkbox" id="champ_check" name="champ_check" class="form-check-input traitement-col" value="1" {% if (champ.check) %}checked{% endif %}>
+						Champ traité et ok
+						</label>
+					</div>
+				</form></div>
+			</div>
+		{% endfor %} -->
+
+	</mat-card>
+	</div>
+	<div class="col-sm-7" id="resultat-content">
+		<mat-card></mat-card>
+	</div>
+</div>

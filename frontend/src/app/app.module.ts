@@ -19,6 +19,7 @@ import { LoginModule } from './modules/login/login.module';
 import { AccueilModule } from './modules/accueil/accueil.module';
 import { MagicTaxrefModule } from './modules/magic-taxref/magic-taxref.module';
 import { CartoModule } from './modules/carto/carto.module';
+import { ImportModule } from './modules/import/import.module';
 
 //services
 import { AuthService } from './shared';
@@ -54,6 +55,7 @@ export function tokenGetter() {
     AccueilModule,
     MagicTaxrefModule,
     CartoModule,
+    ImportModule,
     AppRoutingModule
   ],
   providers: [
