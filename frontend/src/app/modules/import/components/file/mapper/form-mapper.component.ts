@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith, filter} from 'rxjs/operators';
 
-import { FichierService } from '../../../services/fichier.service';
+import { ImportService } from '../../../services/import.service';
 import { FormMapperService } from './form-mapper.service';
 
 @Component({
@@ -28,12 +28,12 @@ export class FormMapperComponent implements OnInit {
     })||[];
   }
 
-  set options(options: any[]): void { this._options = options; }
+  set options(options: any[]) { this._options = options; }
 
 	filteredOptions: Observable<string[]>;
 
   constructor(
-  	private fichierS: FichierService,
+  	private importS: ImportService,
   	private formMapperS: FormMapperService
   ) { }
 
@@ -70,13 +70,13 @@ export class FormMapperComponent implements OnInit {
   	if (this.field.fichier !== null && event.option.value !== undefined) {
   		if ( this.field.id === null) {
 	  		let values = {champ: this.field.champ, fieldFSD: event.option.value.id}
-	  		this.fichierS.postField(this.field.fichier.id, values)
+	  		this.importS.postField(this.field.fichier.id, values)
 	  									.subscribe(field => {
 	  										this.field = field;
 	  										this.fieldChange.emit(this.field);
 	  									});
 	  	} else {
-	  		this.fichierS.patchFieldFSD(this.field.id, event.option.value.id)
+	  		this.importS.patchFieldFSD(this.field.id, event.option.value.id)
 	  									.subscribe(field => {
 	  										this.field = field;
 	  										this.fieldChange.emit(this.field);
@@ -91,7 +91,7 @@ export class FormMapperComponent implements OnInit {
       let bestOption;
       for (let i=0; i<this.options.length; i++) {
           let tempResult = 0;
-          let optionTxt = this.options[i].description.sansAccent();
+          let optionTxt = this.sansAccent(this.options[i].description);
 
           //on parse le tableau de notre id de row
           for (let j=0; j<this.field.champ.length; j++) {
@@ -113,25 +113,23 @@ export class FormMapperComponent implements OnInit {
     }
   }
 
-}
-
-
-String.prototype.sansAccent = function(){
-  const accent = [
-    /[\300-\306]/g, /[\340-\346]/g, // A, a
-    /[\310-\313]/g, /[\350-\353]/g, // E, e
-    /[\314-\317]/g, /[\354-\357]/g, // I, i
-    /[\322-\330]/g, /[\362-\370]/g, // O, o
-    /[\331-\334]/g, /[\371-\374]/g, // U, u
-    /[\321]/g, /[\361]/g, // N, n
-    /[\307]/g, /[\347]/g, // C, c
-  ];
-  const noaccent = ['A','a','E','e','I','i','O','o','U','u','N','n','C','c'];
-   
-  let str = this;
-  for(let i = 0; i < accent.length; i++){
-    str = str.replace(accent[i], noaccent[i]);
+  sansAccent(str) {
+    const accent = [
+      /[\300-\306]/g, /[\340-\346]/g, // A, a
+      /[\310-\313]/g, /[\350-\353]/g, // E, e
+      /[\314-\317]/g, /[\354-\357]/g, // I, i
+      /[\322-\330]/g, /[\362-\370]/g, // O, o
+      /[\331-\334]/g, /[\371-\374]/g, // U, u
+      /[\321]/g, /[\361]/g, // N, n
+      /[\307]/g, /[\347]/g, // C, c
+    ];
+    const noaccent = ['A','a','E','e','I','i','O','o','U','u','N','n','C','c'];
+     
+    for(let i = 0; i < accent.length; i++){
+      str = str.replace(accent[i], noaccent[i]);
+    }
+     
+    return str;
   }
-   
-  return str;
-};
+
+}

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { FichierService } from '../../../services/fichier.service';
+import { ImportService } from '../../../services/import.service';
 
 @Component({
   selector: 'app-import-file-dashboard',
@@ -14,7 +14,7 @@ export class FileDashboardComponent implements OnInit {
 
   constructor(
   	private route: ActivatedRoute,
-  	private fichierS: FichierService
+  	private importS: ImportService
   ) { }
 
   ngOnInit() {
@@ -26,11 +26,10 @@ export class FileDashboardComponent implements OnInit {
   }
 
   getFichier(id) {
-  	this.fichierS.getFichier(id)
+  	this.importS.getFichier(id)
           .subscribe(
             (fichier: any) => this.fichier = fichier,
             error => { /*this.errors = error.error;*/ }
           );
   }
-
 }

@@ -7,6 +7,7 @@ import { FilesListComponent } from './components/file/list/list.component';
 import { FileDashboardComponent } from './components/file/dashboard/dashboard.component';
 import { FileMapperComponent } from './components/file/mapper/mapper.component';
 import { FieldListComponent } from './components/field/list/list.component';
+import { FieldObserversComponent } from './components/field/observers/observers.component';
 
 // routes definition
 const routes: Routes = [
@@ -25,6 +26,7 @@ const routes: Routes = [
 					{ path: '', component: FileDashboardComponent, pathMatch: 'full' },
 					{ path: 'mapper', component: FileMapperComponent, pathMatch: 'full' },
 					{ path: 'champs', component: FieldListComponent, pathMatch: 'full' },
+					{ path: 'observateurs', component: FieldObserversComponent, pathMatch: 'full' },
 				//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
 				//	{ path: 'champs', component: MissionFormComponent, pathMatch: 'full' },
 				]},

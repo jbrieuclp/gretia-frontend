@@ -1,0 +1,14 @@
+api_import_fichier:
+    resource: "@APIImportBundle/Controller/FichierController.php"
+    type:     rest
+    prefix: /
+
+api_import_field:
+    resource: "@APIImportBundle/Controller/FieldController.php"
+    type:     rest
+    prefix: /
+
+api_import_fsd:
+    resource: "@APIImportBundle/Controller/FSDController.php"
+    type:     rest
+    prefix: /

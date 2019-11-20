@@ -1,0 +1,57 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<div 
+	*ngIf="error"
+	class="alert alert-danger" 
+	role="alert" 
+	style="margin-top: 10px;">
+  {{ error.error.message }}
+</div>
+
+<div 
+	*ngIf="field"
+	class="alert alert-secondary" 
+	role="alert" 
+	style="margin-top: 10px;">
+  Pour séparer les différents observateurs d'une ligne de donnée l'outil utilise le pipe ("|").<br>
+  Veuillez vous assurer de cette bonne séparation.
+</div>
+
+<mat-card>
+	<mat-horizontal-stepper>
+	  <mat-step label="Step 1" state="phone">
+
+	    <p>{{ (this.raw_data |async) | json}}</p>
+
+
+
+	    <div>
+	      <button mat-raised-button matStepperNext>Next</button>
+	    </div>
+	  </mat-step>
+	  <mat-step label="Step 2" state="chat">
+	    <p>Socialize with each other.</p>
+	    <div>
+	      <button mat-raised-button matStepperPrevious>Back</button>
+	      <button mat-raised-button matStepperNext>Next</button>
+	    </div>
+	  </mat-step>
+	  <mat-step label="Step 3">
+	    <p>You're welcome.</p>
+	  </mat-step>
+
+	  <!-- Icon overrides. -->
+	  <ng-template matStepperIcon="phone">
+	    <mat-icon>call_end</mat-icon>
+	  </ng-template>
+	  <ng-template matStepperIcon="chat">
+	    <mat-icon>forum</mat-icon>
+	  </ng-template>
+	</mat-horizontal-stepper>
+</mat-card>

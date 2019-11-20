@@ -1,43 +1,80 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
 <div class="row">
 	<div class="col-sm-5">
 		<mat-card>
 			<mat-card-header>
-				<mat-card-title>Liste des champs</mat-card-title>
+				<mat-card-title>Liste des champs ({{ fields.length }})</mat-card-title>
 			</mat-card-header>
 			<mat-card-content>
-				
-			</mat-card-content>
 				<div class="list-group list-group-flush">
-				  <div class="list-group-item" *ngFor="let field of fields">
+				  <div 
+					  *ngFor="let field of fields"
+					  class="list-group-item" 
+				  >
 				  	<div class="d-flex w-100 justify-content-between">
-				      <h5 class="mb-1">{{ field.champ }}</h5>
-				      <small class="text-muted" style="cursor: pointer;" (click)="console.log('coucou')"><mat-icon>visibility</mat-icon></small>
+				      <h6 class="mb-1">{{ field.champ }}</h6>
+				      <small 
+				      	class="text-muted" 
+				      	style="cursor: pointer;" 
+				      	matTooltip="Afficher les valeurs du champ {{ field.champ }}"
+				      	(click)="loadValues(field)"
+				      ><mat-icon>visibility</mat-icon></small>
 				    </div>
 				    <div class="form-check">
-							<mat-checkbox>Check me!</mat-checkbox>
+							<mat-checkbox>Vérifié et ok</mat-checkbox>
 						</div>
 				  </div>
 				</div>
-
-		<!-- {% for champ in fichier.champs %}
-			<div class="list-group-item list-group-item-action flex-column align-items-start">
-				<div class="d-flex w-100 justify-content-between">
-					<strong {% if (champ.check) %}style="color:green;"{% endif %}>{{ champ.champ }}</strong><a class="pull-right" href="{{ path('serena_champ_analyse', {'champ': champ.id}) }}" target="_blank"><span class="fa fa-eye fa-lg" title="Vérifier ce champ"></span></a>
-				</div>
-				<div><form action="{{ path('serena_champ_update_check', {'champ': champ.id})}}" method="post">
-					<div class="form-check">
-						<label class="form-check-label">
-						<input type="checkbox" id="champ_check" name="champ_check" class="form-check-input traitement-col" value="1" {% if (champ.check) %}checked{% endif %}>
-						Champ traité et ok
-						</label>
-					</div>
-				</form></div>
-			</div>
-		{% endfor %} -->
-
-	</mat-card>
+			</mat-card-content>
+		</mat-card>
 	</div>
-	<div class="col-sm-7" id="resultat-content">
-		<mat-card></mat-card>
+
+	<div 
+		*ngIf="$field"
+		class="col-sm-7"
+	>
+		<mat-card>
+			<mat-card-header>
+				<mat-card-title>Valeurs du champ "{{ $field.champ }}"</mat-card-title>
+			</mat-card-header>
+			<mat-card-content>
+
+				<div style="margin-bottom: 20px;">
+					<mat-button-toggle-group name="fontStyle" aria-label="Font Style" #group="matButtonToggleGroup">
+					  <mat-button-toggle value="all" [checked]="true">Tous ({{ $goodValues.length + $badValues.length }})</mat-button-toggle>
+					  <mat-button-toggle value="bon">Bon ({{ $goodValues.length }})</mat-button-toggle>
+					  <mat-button-toggle value="pas_bon">Mauvais ({{ $badValues.length }})</mat-button-toggle>
+					</mat-button-toggle-group>
+				</div>
+
+				<div class="list-group">
+
+					<ng-container *ngIf="group.value === 'all' || group.value === 'pas_bon'">
+					  <app-import-field-element 
+					  	*ngFor="let value of $badValues"
+					  	[(value)]="value"
+					  	state="danger"
+					  ></app-import-field-element>
+					</ng-container>
+
+					<ng-container *ngIf="group.value === 'all' || group.value === 'bon'">
+					  <app-import-field-element 
+					  	*ngFor="let value of $goodValues"
+					  	[(value)]="value"
+					  	state="success"
+					  ></app-import-field-element>
+					</ng-container>
+
+				</div>
+
+			</mat-card-content>
+		</mat-card>
 	</div>
 </div>

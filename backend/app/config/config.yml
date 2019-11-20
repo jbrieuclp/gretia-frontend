@@ -124,6 +124,7 @@ doctrine:
                 mappings:
                     APICoreBundle: ~
                     APIBiblioBundle: ~
+                    APIImportBundle: ~
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
@@ -135,6 +136,7 @@ doctrine:
                 mappings:
                     APICoreBundle: ~
                     APIBiblioBundle: ~
+                    APIImportBundle: ~
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
@@ -146,6 +148,7 @@ doctrine:
                 mappings:
                     APICoreBundle: ~
                     APIBiblioBundle: ~
+                    APIImportBundle: ~
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
@@ -157,6 +160,7 @@ doctrine:
                 mappings:
                     APICoreBundle: ~
                     APIBiblioBundle: ~
+                    APIImportBundle: ~
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
@@ -174,6 +178,7 @@ doctrine:
                 mappings:
                     APICoreBundle: ~
                     APICartoBundle: ~
+                    APIImportBundle: ~
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
@@ -216,7 +221,7 @@ nelmio_cors:
         '^/':
             allow_origin: ['*']
             allow_headers: ['origin', 'content-type', 'authorization', 'enctype']
-            allow_methods: ['POST', 'PUT', 'GET', 'DELETE']
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE', 'PATCH']
             max_age: 3600
 
 lexik_jwt_authentication:

@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { filter } from 'rxjs/operators'
 
-import { FichierService } from '../../../services/fichier.service';
+import { ImportService } from '../../../services/import.service';
+import { FieldService } from '../field.service';
 
 @Component({
   selector: 'app-import-field-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss']
 })
-export class FieldListComponent implements OnInit {
+export class FieldListComponent implements OnInit, OnDestroy {
 
 	_fields: any[] = [];
 
@@ -22,11 +24,24 @@ export class FieldListComponent implements OnInit {
     })||[];
   }
 
-  set fields(fields): void { this._fields = fields; }
+  set fields(fields) { this._fields = fields; }
+
+  get $badValues() {
+    return this.fieldS.values.getValue().filter(value => !value.ok);
+  }
+
+  get $goodValues() {
+    return this.fieldS.values.getValue().filter(value => value.ok);
+  }
+
+  get $field() {
+    return this.fieldS.field.getValue();
+  }
 
   constructor(
   	private route: ActivatedRoute,
-  	private fichierS: FichierService
+  	private importS: ImportService,
+    private fieldS: FieldService
   ) { }
 
   ngOnInit() {
@@ -37,12 +52,21 @@ export class FieldListComponent implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    this.fieldS.reset();
+  }
+
   getFields(id) {
-  	this.fichierS.getFields(id)
+  	this.importS.getFields(id)
           .subscribe(
             (fields: any) => this._fields = fields,
             error => { /*this.errors = error.error;*/ }
           );
   }
+
+  loadValues(field) {
+    this.fieldS.field = field;
+  }
+
 
 }

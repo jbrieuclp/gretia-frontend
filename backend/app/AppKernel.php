@@ -39,6 +39,7 @@ class AppKernel extends Kernel
             new API\SerenaBundle\APISerenaBundle(),
             new API\MetadataBundle\APIMetadataBundle(),
             new API\ProjetBundle\APIProjetBundle(),
+            new API\ImportBundle\APIImportBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

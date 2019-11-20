@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormMapperComponent } from './form-mapper.component';
 
-import { FichierService } from '../../../services/fichier.service';
+import { ImportService } from '../../../services/import.service';
 
 @Component({
   selector: 'app-import-mapper',
   templateUrl: './mapper.component.html',
   styleUrls: ['./mapper.component.scss']
 })
-export class FileMapperComponent implements OnInit, AfterViewInit {
+export class FileMapperComponent implements OnInit {
 
 	fichier: any;
 	_fields: any[] = [];
@@ -23,13 +23,13 @@ export class FileMapperComponent implements OnInit, AfterViewInit {
       return 0;
     })||[];
   }
+  set fields(fields) { this._fields = fields; }
 
-  set fields(fields): void { this._fields = fields; }
   @ViewChildren('formMapper') formMappers: QueryList<FormMapperComponent>;
 
   constructor(
   	private route: ActivatedRoute,
-  	private fichierS: FichierService
+  	private importS: ImportService
   ) { }
 
   ngOnInit() {
@@ -42,7 +42,7 @@ export class FileMapperComponent implements OnInit, AfterViewInit {
   }
 
   getFichier(id) {
-  	this.fichierS.getFichier(id)
+  	this.importS.getFichier(id)
           .subscribe(
             (fichier: any) => this.fichier = fichier,
             error => { /*this.errors = error.error;*/ }
@@ -50,7 +50,7 @@ export class FileMapperComponent implements OnInit, AfterViewInit {
   }
 
   getFields(id) {
-  	this.fichierS.getFields(id)
+  	this.importS.getFields(id)
           .subscribe(
             (fields: any) => this._fields = fields,
             error => { /*this.errors = error.error;*/ }
@@ -61,7 +61,7 @@ export class FileMapperComponent implements OnInit, AfterViewInit {
    * Action permettant de défaire le mappage d'un champ
    */
   removeMapping(id) {
-    this.fichierS.deleteField(id)
+    this.importS.deleteField(id)
           .subscribe(
             (fields: any) => this._fields = fields,
             error => { /*this.errors = error.error;*/ }

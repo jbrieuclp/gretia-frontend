@@ -15,7 +15,7 @@ const httpOptions = {
 };
 
 @Injectable()
-export class FichierService {
+export class ImportService {
 
   httpUrlBase: string;
 
@@ -54,6 +54,18 @@ export class FichierService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  patchFieldValue(id: number, params: any): Observable<any> {
+    const url = `${this.httpUrlBase}/field/${id}/value`;
+    const sources = params;
+    return this.http
+      .patch(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   getFields(id: number): Observable<any> {
     const url = `${this.httpUrlBase}/fichier/${id}/fields`;
     return this.http
@@ -73,6 +85,42 @@ export class FichierService {
         map(res => res), 
         retry(3)
       );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  getFieldByFSD(id: number, champ: string): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/field-by-fsd`;
+    const params = { params: new HttpParams().set('champ', champ) };
+    return this.http
+      .get(url, params)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  getFSDFieldValues(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fsd-field/${id}/values`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  searchFSDValues(id: number, term: string): Observable<any>  {
+    const taxonUrl = `${this.httpUrlBase}/fsd-field/${id}/recherche`;
+    const options = term ? 
+     { params: new HttpParams().set('term', term) } : {};
+
+    return this.http
+        .get(taxonUrl, options)
+        .pipe(
+          map(response => response),
+          retry(3)
+        );
   }
 
   /** Mappe un champ non mappé **/
@@ -108,6 +156,28 @@ export class FichierService {
         map(res => res), 
         retry(3)
       )
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  getFieldValues(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/field/${id}/values`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  getObservers(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/field/${id}/observers`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
   }
 
 //  /** GET taxon par ID (cd_nom) **/

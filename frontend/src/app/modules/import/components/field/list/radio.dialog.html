@@ -1,0 +1,14 @@
+<div class="dialog-content">
+	<div class="list-values">
+		<label id="liste-valeurs-disponibles"><h5>Liste des valeurs disponibles</h5></label>
+		<mat-radio-group
+		  aria-labelledby="liste-valeurs-disponibles"
+		  class="example-radio-group"
+		  [(ngModel)]="selectedValue">
+		  <mat-radio-button class="example-radio-button" *ngFor="let value of radioValues" [value]="value">
+		    {{value}}
+		  </mat-radio-button>
+		</mat-radio-group>
+	</div>
+	<button type="button" class="btn-validation" mat-raised-button color="primary" (click)="submit()">Valider</button>
+</div>

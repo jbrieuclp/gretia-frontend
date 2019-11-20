@@ -13,7 +13,11 @@ import {
   MatInputModule,
   MatFormFieldModule,
   MatAutocompleteModule,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatRadioModule,
+  MatDialogModule,
+  MatSnackBarModule,
+  MatStepperModule
  } from '@angular/material';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -27,10 +31,16 @@ import { FileDashboardComponent } from './components/file/dashboard/dashboard.co
 import { FileMapperComponent } from './components/file/mapper/mapper.component';
 import { FormMapperComponent } from './components/file/mapper/form-mapper.component';
 import { FieldListComponent } from './components/field/list/list.component';
+import { ElementComponent } from './components/field/list/element.component';
+import { EditInputDialog } from './components/field/list/element.component';
+import { EditAutocompleteDialog } from './components/field/list/element.component';
+import { EditRadioDialog } from './components/field/list/element.component';
+import { FieldObserversComponent } from './components/field/observers/observers.component';
 
 //services
-import { FichierService } from './services/fichier.service';
+import { ImportService } from './services/import.service';
 import { FormMapperService } from './components/file/mapper/form-mapper.service';
+import { FieldService } from './components/field/field.service';
 
 //directives
 
@@ -53,6 +63,10 @@ import { FormMapperService } from './components/file/mapper/form-mapper.service'
     MatFormFieldModule,
     MatAutocompleteModule,
     MatCheckboxModule,
+    MatRadioModule,
+    MatDialogModule,
+    MatSnackBarModule,
+    MatStepperModule,
     ImportRoutingModule,
     NgbModule
   ],
@@ -62,11 +76,22 @@ import { FormMapperService } from './components/file/mapper/form-mapper.service'
     FileDashboardComponent,
     FileMapperComponent,
     FormMapperComponent,
-    FieldListComponent
+    FieldListComponent,
+    ElementComponent,
+    EditInputDialog,
+    EditAutocompleteDialog,
+    EditRadioDialog,
+    FieldObserversComponent
+  ],
+  entryComponents: [ 
+    EditInputDialog,
+    EditAutocompleteDialog,
+    EditRadioDialog
   ],
   providers: [
-    FichierService,
-    FormMapperService
+    ImportService,
+    FormMapperService,
+    FieldService
   ],
   bootstrap: [FilesListComponent]
 })

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { FichierService } from '../../../services/fichier.service';
+import { ImportService } from '../../../services/import.service';
 
 @Component({
   selector: 'app-import-files-list',
@@ -13,10 +13,10 @@ export class FilesListComponent implements OnInit {
 	dataSource: Observable<any>;
   displayedColumns: string[] = ['id', 'table', 'description', 'avancement', 'dateImport', 'clos'];
   
-  constructor(private fichierS: FichierService) { }
+  constructor(private importS: ImportService) { }
 
   ngOnInit() {
-  	this.dataSource = this.fichierS.getFichiers();
+  	this.dataSource = this.importS.getFichiers();
   }
 
 }
