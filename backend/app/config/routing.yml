@@ -8,6 +8,10 @@ api_core:
 
 api_login_check:
     path: /login_check
+    
+api_carto:
+    resource: "@APICartoBundle/Resources/config/routing.yml"
+    prefix:   /carto
 
 api_metadata:
     resource: "@APIMetadataBundle/Resources/config/routing.yml"
@@ -32,14 +36,6 @@ api_projet:
     resource: "@APIProjetBundle/Resources/config/routing.yml"
     type: rest
     prefix:   /etude/
-
-visu_consultation:
-    prefix:   /visualisation
-    resource: "@VisuConsultationBundle/Resources/config/routing.yml"
-
-api_test:
-    path:     /test
-    defaults: { _controller: APIBiblioBundle:Test:index }
 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

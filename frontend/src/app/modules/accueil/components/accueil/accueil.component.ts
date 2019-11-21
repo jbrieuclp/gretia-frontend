@@ -17,15 +17,15 @@ export class AccueilComponent implements OnInit {
   	  	title: 'Visualisation'		,
   	  	text: '<p>Outil de consultation cartographique des données du GRETIA.</p>',
   	  	image: '/assets/images/carte.png',
-  	  	url: 'http://outils.gretia.org/carte/visualisation/',
-        target: "_blank"
+  	  	url: '/carto',
+        target: "_self"
   	  },
       {
         title: 'Saisie'    ,
         text: '<p>Outil de saisie et de consultation des données du GRETIA.</p>',
-        image: '/assets/images/app.png',
+        image: '/assets/images/geonature.png',
         url: 'http://outils.gretia.org/geonature/',
-        target: "_blank"
+        target: "_self"
       },
   	  {
   	  	title: 'Taxref'		,
@@ -36,8 +36,8 @@ export class AccueilComponent implements OnInit {
   	  },
   	  {
   	  	title: 'Metadonnées'		,
-  	  	text: '<p>Outil de consultation des études et des lots de données intégrées dans la BDD.</p><p>Outil de depot de jeux de données à intégrer.</p>',
-  	  	image: '/assets/images/app.png',
+  	  	text: '<p>Outil de consultation des études et des lots de données intégrées dans la BDD.</p>',
+  	  	image: '/assets/images/metadata.png',
   	  	url: 'http://outils.gretia.org/geonature/#/metadata',
         target: "_self"
   	  },

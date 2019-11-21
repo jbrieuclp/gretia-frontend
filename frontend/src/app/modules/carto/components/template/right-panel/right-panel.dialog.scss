@@ -1,0 +1,20 @@
+.close-dialog {
+	position: absolute;
+	top: 70px;
+	right: 500px;
+}
+
+.tabs-rigth-panel.mat-tab-group, .tabs-rigth-panel .mat-tab-body-wrapper {
+  height: 100%;
+}
+
+.mat-tab-body-content { display: block; }
+.tab-content {
+	padding: 15px 25px 15px 15px;
+}
+
+.category {
+	border-left: 4px solid red;
+	padding: 3px 0px 3px 5px;
+	margin-bottom: 10px;
+}

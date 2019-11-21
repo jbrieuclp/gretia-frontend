@@ -8,7 +8,7 @@ const layout = {title: 'Apps du Gretia',
 
 @Component({
   selector: 'app-accueil-init',
-  template: '<router-outlet></router-outlet>'
+  template: '<div class="container-fluid"><router-outlet></router-outlet></div>'
 })
 export class AccueilInitComponent {
 

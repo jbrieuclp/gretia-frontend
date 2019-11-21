@@ -24,7 +24,6 @@ export class LoginComponent {
     ) { }
 
     ngOnInit() {
-        console.log(this.error);
         this.loginForm = this.formBuilder.group({
             'username': ['', Validators.required],
             'password': ['', Validators.required]
@@ -42,12 +41,9 @@ export class LoginComponent {
                 this.router.navigateByUrl(this.returnUrl);
               },
               error => {
-                console.log(error);
-                console.log(error.error.message);
                 if ( error.status == 401 ) {
                   this.error = error.error.message;
                 }
-                console.log(this.error);
               }
           );
     }

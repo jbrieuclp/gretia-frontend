@@ -1,0 +1,24 @@
+<mat-progress-bar mode="query" *ngIf="communes === null"></mat-progress-bar>
+
+<ng-container *ngIf="communes !== null">
+
+  <mat-form-field class="form-element">
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput #searchZone
+      (keyup)="searchTerm$.next(searchZone.value)" 
+      placeholder="Filtrer dans la liste" 
+      autocomplete="off">
+  </mat-form-field>
+
+  <gr-panel *ngFor="let commune of communesFilter">
+    <div class="gr-panel-header">
+      <span>{{ commune.name }} ({{ commune.insee | slice:0:2 }})</span>
+    </div>
+    <div class="gr-panel-content">
+      <div class="bloc-ligne" *ngIf="commune.date_min != commune.date_max"><mat-icon>access_time</mat-icon> Observé du {{ commune.date_min | date:'dd/MM/yyyy' }} au {{ commune.date_max | date:'dd/MM/yyyy' }}</div>
+      <div class="bloc-ligne" *ngIf="commune.date_min == commune.date_max"><mat-icon>access_time</mat-icon> Observé le {{ commune.date_min | date:'dd/MM/yyyy' }}</div>
+      <div class="bloc-ligne"><mat-icon>visibility</mat-icon> {{ commune.nb_obs }} observations(s)</div>
+    </div>
+  </gr-panel>
+
+</ng-container>

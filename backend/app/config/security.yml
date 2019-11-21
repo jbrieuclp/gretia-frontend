@@ -57,22 +57,6 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        carte:
-            pattern:             /visualisation
-#            host:                %ofsa_host_name%
-            form_login:
-                provider:        geonature_userprovider
-#                csrf_provider:   form.csrf_provider
-                login_path:      visu_security_login
-                use_forward:     false  #protection quand precedent
-                check_path:      visu_security_login
-                failure_path:    null
-                default_target_path: visu_consultation_carte
-            logout:              
-                path:            visu_security_logout
-                target:          visu_security_login
-            anonymous:           true
-
 #        magic_taxref:
 #            pattern:   ^/magic-taxref
 #            provider: fos_userbundle

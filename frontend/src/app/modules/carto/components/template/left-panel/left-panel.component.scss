@@ -1,0 +1,168 @@
+/* Left Tab */
+
+.left-tab-content {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 4;
+	background: #345271 none repeat scroll 0 0;
+	width: 50px;
+	padding: 0px;
+	height: 100%;
+}
+.menu-item,
+.left-tab-content #resize-global {
+	position: initial;
+	width: 50px;
+	text-align: center;
+	margin: 15px 0px;
+	cursor: pointer;
+}
+
+.menu-item:hover span.glyphicon, 
+.menu-item:hover span.fa {
+	/*color: #487ACC;*/
+	color: #038c8c;
+}
+.menu-item span.glyphicon, 
+.menu-item span.fa {
+	font-size: 25px;
+	line-height: 50px;
+	color: #bbb;
+}
+
+.menu-item .left-tab-menu-ouvrant {
+	position: absolute;
+	left: 50px;
+	top: 0px;
+	padding: 20px 15px;
+  	width: 800%;
+  	min-width: 420px;
+  	text-align: left;
+  	display: inline-block;
+}
+
+.left-tab-content #echelle.menu-item .left-tab-menu-ouvrant {	width: 270px; }
+.left-tab-content #fond-plan.menu-item .left-tab-menu-ouvrant {	width: 300px; }
+.left-tab-content #contours.menu-item .left-tab-menu-ouvrant {	width: 300px; }
+.left-tab-content #date.menu-item .left-tab-menu-ouvrant {	width: 364px; }
+
+.left-tab-content #resize-global.menu-item {
+	margin-bottom: 0px;
+}
+
+.menu-separator {
+	margin: 0px auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.menu-separator:first-child {
+	padding-top: 0px;
+}
+
+.menu-item p.title {
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.left-tab-content #echelle ul, .left-tab-content #date ul, .left-tab-content #echelle ul, .left-tab-content #contours ul, .left-tab-content #fond-plan ul {
+	list-style: none;
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+.left-tab-content #echelle ul li {
+	display: inline-block;
+	margin: 0 0 10px 0;
+	cursor: pointer;
+	text-align: center;
+	padding-right: 25px;
+}
+.left-tab-content #echelle ul li:last-child {
+	padding-right: 0px;
+}
+
+.left-tab-content #contours img, .left-tab-content #fond-plan img {
+	width: 45px;
+	height: 45px;
+	margin: 0px 0px 2px 0px;
+	border: 1px solid #777;
+	background: #555 none repeat scroll 0 0;
+}
+
+.left-tab-content #date ul li {
+	display: inline-block;
+	margin: 0 10px;
+	cursor: pointer;
+}
+.left-tab-content #date ul li:hover, .left-tab-content #echelle ul li:hover {
+	text-decoration: underline;
+}
+.left-tab-content #date input {
+	width: 70px;
+	display: inline-block;
+	margin: 0 8px;
+}
+.left-tab-content #fond-plan input[type="checkbox"],
+.left-tab-content #contours input[type="checkbox"] {
+	margin-right: 10px;
+}
+
+.left-tab-content #fond-plan ul li {
+	display: block;
+	margin: 0px 0px 10px;
+	cursor: pointer;
+}
+.left-tab-content #contours ul li,
+.left-tab-content #fond-plan ul li {
+	margin: 0;
+	display: flex;
+}
+.left-tab-content #contours .left-tab-menu-ouvrant,
+.left-tab-content #fond-plan .left-tab-menu-ouvrant{
+	padding-bottom: 5px;
+}
+.left-tab-content #contours ul li:nth-child(n+2),
+.left-tab-content #fond-plan ul li:nth-child(n+2) {
+	margin-top: 0px;
+}
+.left-tab-content #contours input, .left-tab-content #contours label,
+.left-tab-content #fond-plan input, .left-tab-content #fond-plan label {
+	cursor: pointer;
+}
+.left-tab-content #contours label,
+.left-tab-content #fond-plan label {
+	width: 100px;
+}
+.left-tab-content #contours .contours-gestion, 
+.left-tab-content #fond-plan .layers-gestion {
+	display: inline-block;
+	height: 64px;
+	width: 162px;
+}
+.left-tab-content #contours .contours-opacity, 
+.left-tab-content #fond-plan .layers-opacity {
+	margin-top: 5px;
+}
+.left-tab-content #contours .ui-widget,
+.left-tab-content #fond-plan .ui-widget {
+	font-size: 0.8em;
+}
+
+.left-tab-content .sous-titre {
+	padding-left: 5px;
+	font-size: 15px;
+	border-left: 6px solid #9c1a1f;
+}
+
+.ss-titre {
+	  margin-top: 25px;
+    font-size: 1.2em;
+    color: #345271;
+    border-left: 5px solid #673ab7;
+    padding: 2px 5px;
+}

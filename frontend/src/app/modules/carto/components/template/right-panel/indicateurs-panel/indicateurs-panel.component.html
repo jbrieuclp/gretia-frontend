@@ -1,0 +1,40 @@
+<div>
+	<ng-container *ngIf="layerExist('PRESSION_LAYER') && getLayer('PRESSION_LAYER').state == 'load'; else PRESSION_SWITCHER">
+		<span class="float-left" style="margin-right: 10px;"><mat-spinner diameter="20" strokeWidth="2"></mat-spinner></span> Pression d'inventaires
+	</ng-container>
+	<ng-template #PRESSION_SWITCHER>
+		<mat-slide-toggle color="primary" [checked]="isInLegend('PRESSION_LAYER')" (change)="switchIndicateur($event.checked, 'PRESSION_LAYER')"> Pression d'inventaires </mat-slide-toggle>
+	</ng-template>
+</div>
+<div>
+	<ng-container *ngIf="layerExist('RICHESSE_LAYER') && getLayer('RICHESSE_LAYER').state == 'load'; else RICHESSE_SWITCHER">
+		<span class="float-left" style="margin-right: 10px;"><mat-spinner diameter="20" strokeWidth="2"></mat-spinner></span> Richesse taxonomique
+	</ng-container>
+	<ng-template #RICHESSE_SWITCHER>
+		<mat-slide-toggle color="primary" [checked]="isInLegend('RICHESSE_LAYER')" (change)="switchIndicateur($event.checked, 'RICHESSE_LAYER')"> Richesse taxonomique </mat-slide-toggle>
+	</ng-template>
+</div>
+
+
+<div>
+	<h5 class="ss-titre">Ajouter des critères de filtres</h5>
+
+	<mat-checkbox 
+    color="primary"
+    value="PROT"
+    [checked]="layerS.statuts.indexOf('PROT') !== -1"
+    (change)="setStatut($event)">Espèces protégées</mat-checkbox>
+
+  <mat-checkbox 
+    color="primary"
+    value="ZDET"
+    [checked]="layerS.statuts.indexOf('ZDET') !== -1"
+    (change)="setStatut($event)">Espèces déterminantes ZNIEFF</mat-checkbox>
+
+  <mat-checkbox 
+    color="primary"
+    value="N2000"
+    [checked]="layerS.statuts.indexOf('N2000') !== -1"
+    (change)="setStatut($event)">Espèces de la directive Natura 2000</mat-checkbox>
+
+</div>

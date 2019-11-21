@@ -1,0 +1,24 @@
+<mat-progress-bar mode="query" *ngIf="observateurs === null"></mat-progress-bar>
+
+<ng-container *ngIf="observateurs !== null">
+
+  <mat-form-field class="form-element">
+    <mat-icon matPrefix>search</mat-icon>
+    <input matInput #searchZone
+      (keyup)="searchTerm$.next(searchZone.value)" 
+      placeholder="Filtrer dans la liste" 
+      autocomplete="off">
+  </mat-form-field>
+
+  <gr-panel *ngFor="let observateur of observateursFilter">
+    <div class="gr-panel-header">
+      <span>{{ observateur.nom }} {{ observateur.prenom }}</span>
+    </div>
+    <div class="gr-panel-content">
+      <div class="bloc-ligne" *ngIf="observateur.date_min != observateur.date_max"><mat-icon>access_time</mat-icon> Observé du {{ observateur.date_min | date:'dd/MM/yyyy' }} au {{ observateur.date_max | date:'dd/MM/yyyy' }}</div>
+      <div class="bloc-ligne" *ngIf="observateur.date_min == observateur.date_max"><mat-icon>access_time</mat-icon> Observé le {{ observateur.date_min | date:'dd/MM/yyyy' }}</div>
+      <div class="bloc-ligne"><mat-icon>visibility</mat-icon> {{ observateur.nb_obs }} observations(s)</div>
+    </div>
+  </gr-panel>
+
+</ng-container>

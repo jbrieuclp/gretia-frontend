@@ -1,0 +1,27 @@
+<button 
+	class="close-dialog" 
+	mat-mini-fab 
+	matDialogClose 
+	color="primary">
+  <mat-icon>clear</mat-icon>
+</button>
+
+<mat-tab-group class="tabs-rigth-panel" color="primary" mat-stretch-tabs>
+  <mat-tab> 
+		<ng-template mat-tab-label>
+	    Taxons
+		</ng-template>
+		<div class="tab-content">
+	  	<app-carto-taxons-panel></app-carto-taxons-panel>
+		</div>
+	</mat-tab>
+  <mat-tab class="mat-tab-body"> 
+  	<ng-template mat-tab-label>
+      Indicateurs
+  	</ng-template> 
+		<div class="tab-content">
+  		<app-carto-indicateurs-panel></app-carto-indicateurs-panel>
+  	</div>
+  </mat-tab>
+</mat-tab-group>
+

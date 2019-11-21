@@ -128,7 +128,6 @@ doctrine:
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
                     APISerenaBundle: ~
-                    VisuConsultationBundle: ~
             bibliodb:
                 connection: bibliodb
                 naming_strategy: doctrine.orm.naming_strategy.underscore
@@ -140,7 +139,6 @@ doctrine:
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
                     APISerenaBundle: ~
-                    VisuConsultationBundle: ~
             mc_taxref_db:
                 connection: mc_taxref_db
                 naming_strategy: doctrine.orm.naming_strategy.underscore
@@ -152,7 +150,6 @@ doctrine:
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
                     APISerenaBundle: ~
-                    VisuConsultationBundle: ~
             serena_db:
                 connection: serena_db
                 naming_strategy: doctrine.orm.naming_strategy.underscore
@@ -164,7 +161,6 @@ doctrine:
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
                     APISerenaBundle: ~
-                    VisuConsultationBundle: ~
                 dql:
                     numeric_functions:
                         st_asgeojson:    Visu\ConsultationBundle\Query\Postgresql\STAsGeoJson
@@ -177,12 +173,11 @@ doctrine:
                 auto_mapping: false
                 mappings:
                     APICoreBundle: ~
-                    APIBiblioBundle: ~
+                    APICartoBundle: ~
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
                     APISerenaBundle: ~
-                    VisuConsultationBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -252,7 +247,7 @@ fos_user:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [ VisuConsultationBundle, APICoreBundle ]
+    bundles:        [ APICoreBundle ]
     #java: /usr/bin/java
     filters:
         cssrewrite: ~
