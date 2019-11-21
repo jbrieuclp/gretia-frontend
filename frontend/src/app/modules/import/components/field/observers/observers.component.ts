@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { ImportService } from '../../../services/import.service';
@@ -16,7 +17,7 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
 	error: any;
 	field: any;
 	raw_data: any;
-	observers: Observable<any[]>;
+	observers: any[];
 
   constructor(
   	private route: ActivatedRoute,
@@ -60,7 +61,6 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
   }
 
   getObservers(id_field) {
-  	console.log('plop');
   	this.importS.getObservers(id_field)
   									.subscribe(
   										observers => {

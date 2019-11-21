@@ -64,6 +64,9 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
         $data = json_decode($request->getContent(), true);
 
         if ($em->getRepository('APIImportBundle:FichierChamp')->replaceElement($item, $data['search'], $data['replace'])) {
+          if ( $request->query->get('values') === 'f' ) {
+            return $data['replace'];
+          }
           return $this->getFieldValuesAction($item->getId());
         }
         return new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -154,7 +157,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
     *
     * @Rest\Get("/field/{id}/observers")
     */
-    public function getFieldObserversAction($id)
+    public function getFieldObserversAction(Request $request, $id)
     {
       $em = $this->getDoctrine()->getManager('geonature_db');
       $item = $em->getRepository('APIImportBundle:FichierChamp')->find($id);
@@ -162,11 +165,13 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
           return new JsonResponse(['message' => 'Field not found'], Response::HTTP_NOT_FOUND);
       }
 
+      $present = is_bool($request->query->get('present', false)) ? $request->query->get('present', false) : false;
+
       //champs : value, ok, ban
-      $values = $em->getRepository('APIImportBundle:FichierChamp')->getListObservers($item);
+      $values = $em->getRepository('APIImportBundle:FichierChamp')->getListObservers($item, $present);
 
       foreach ($values as &$value) {
-        $value['proposition'] = json_decode($value['proposition']);
+        $value['propositions'] = array_values(array_unique(json_decode($value['propositions'])));
       }
 
       return $values;

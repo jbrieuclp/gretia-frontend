@@ -1,6 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators'
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+
+import { ToolsboxComponent } from '../toolsbox/toolsbox.component';
 
 import { ImportService } from '../../../services/import.service';
 import { FieldService } from '../field.service';
@@ -41,7 +44,8 @@ export class FieldListComponent implements OnInit, OnDestroy {
   constructor(
   	private route: ActivatedRoute,
   	private importS: ImportService,
-    private fieldS: FieldService
+    private fieldS: FieldService,
+    private _bottomSheet: MatBottomSheet
   ) { }
 
   ngOnInit() {
@@ -54,6 +58,10 @@ export class FieldListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.fieldS.reset();
+  }
+
+  openBottomSheet(): void {
+    this._bottomSheet.open(ToolsboxComponent);
   }
 
   getFields(id) {

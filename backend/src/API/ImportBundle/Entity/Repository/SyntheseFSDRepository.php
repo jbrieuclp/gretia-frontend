@@ -65,12 +65,12 @@ class SyntheseFSDRepository extends EntityRepository
 
         $sql = "SELECT ".$champ['comparator']." as value
             FROM ".$champ['from']."
-            WHERE ".$champ['comparator']." ILIKE :firstData ";
+            WHERE unaccent(".$champ['comparator'].") ILIKE unaccent(:firstData) ";
 
         if ( count($tab) ) {
             foreach ($tab as $value) {
                 if (strlen($value) > 2)
-                    $sql .= " AND ".$champ['comparator']." ILIKE '%".$value."%'";
+                    $sql .= " AND unaccent(".$champ['comparator'].") ILIKE unaccent('%".$value."%')";
             }
         }
 

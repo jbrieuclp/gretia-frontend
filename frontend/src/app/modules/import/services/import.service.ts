@@ -66,6 +66,18 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  replaceFieldElement(id: number, params: any, returnList: 't'|'f' = 't'): Observable<any> {
+    const url = `${this.httpUrlBase}/field/${id}/replace?values=${returnList}`;
+    let sources = params;
+    return this.http
+      .patch(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   getFields(id: number): Observable<any> {
     const url = `${this.httpUrlBase}/fichier/${id}/fields`;
     return this.http

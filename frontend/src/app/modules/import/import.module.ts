@@ -17,7 +17,11 @@ import {
   MatRadioModule,
   MatDialogModule,
   MatSnackBarModule,
-  MatStepperModule
+  MatStepperModule,
+  MatProgressSpinnerModule,
+  MatExpansionModule,
+  MatBadgeModule,
+  MatBottomSheetModule
  } from '@angular/material';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -36,6 +40,8 @@ import { EditInputDialog } from './components/field/list/element.component';
 import { EditAutocompleteDialog } from './components/field/list/element.component';
 import { EditRadioDialog } from './components/field/list/element.component';
 import { FieldObserversComponent } from './components/field/observers/observers.component';
+import { EditObserverComponent } from './components/field/observers/edit-observer.component';
+import { ToolsboxComponent } from './components/field/toolsbox/toolsbox.component';
 
 //services
 import { ImportService } from './services/import.service';
@@ -43,6 +49,7 @@ import { FormMapperService } from './components/file/mapper/form-mapper.service'
 import { FieldService } from './components/field/field.service';
 
 //directives
+import { AutofocusDirective } from './directives/autofocus.directive';
 
 @NgModule({
   exports: [
@@ -67,6 +74,10 @@ import { FieldService } from './components/field/field.service';
     MatDialogModule,
     MatSnackBarModule,
     MatStepperModule,
+    MatProgressSpinnerModule,
+    MatExpansionModule,
+    MatBadgeModule,
+    MatBottomSheetModule,
     ImportRoutingModule,
     NgbModule
   ],
@@ -81,12 +92,16 @@ import { FieldService } from './components/field/field.service';
     EditInputDialog,
     EditAutocompleteDialog,
     EditRadioDialog,
-    FieldObserversComponent
+    FieldObserversComponent,
+    EditObserverComponent,
+    ToolsboxComponent,
+    AutofocusDirective
   ],
   entryComponents: [ 
     EditInputDialog,
     EditAutocompleteDialog,
-    EditRadioDialog
+    EditRadioDialog,
+    ToolsboxComponent
   ],
   providers: [
     ImportService,

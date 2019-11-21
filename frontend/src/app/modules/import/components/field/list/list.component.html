@@ -54,6 +54,8 @@
 					</mat-button-toggle-group>
 				</div>
 
+				<button mat-raised-button (click)="openBottomSheet()">Open file</button>
+
 				<div class="list-group">
 
 					<ng-container *ngIf="group.value === 'all' || group.value === 'pas_bon'">
