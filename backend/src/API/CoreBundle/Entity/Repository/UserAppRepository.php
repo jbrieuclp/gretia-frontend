@@ -39,7 +39,7 @@ class UserAppRepository extends EntityRepository implements UserLoaderInterface
     }
 
 
-    public function find($id)
+    public function find($id, $lockMode = NULL, $lockVersion = NULL)
     {
 
     	$rsm = new ResultSetMapping;
