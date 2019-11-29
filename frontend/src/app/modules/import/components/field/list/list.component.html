@@ -28,7 +28,13 @@
 				      ><mat-icon>visibility</mat-icon></small>
 				    </div>
 				    <div class="form-check">
-							<mat-checkbox [checked]="field.check" [(ngModel)]="field.check" (ngModelChange)="switchStatut($event, field)">Vérifié et ok</mat-checkbox>
+							<mat-checkbox 
+								color="primary"
+								[checked]="field.check" 
+								[(ngModel)]="field.check" 
+								(ngModelChange)="switchStatut($event, field)">
+								Vérifié et ok
+							</mat-checkbox>
 						</div>
 				  </div>
 				</div>

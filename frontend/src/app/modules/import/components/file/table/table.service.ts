@@ -43,7 +43,6 @@ export class TableService {
           return data.items;
         }),
         catchError(() => {
-          console.log("error");
           this.isLoadingResults = false;
           // Catch if the GitHub API has reached its rate limit. Return empty data.
           return observableOf([]);

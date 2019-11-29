@@ -125,6 +125,28 @@ class FichierController extends FOSRestController implements ClassResourceInterf
                'items' => $data ];
     }
 
+    /**
+    * @Rest\View()
+    * @Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/fichier/{id}/add-field")
+    */
+    public function addFieldAction(Request $request, $id)
+    {
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $fichier = $em->getRepository('APIImportBundle:Fichier')->find($id);
+      if (empty($fichier)) {
+          return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      $data = json_decode($request->getContent(), true);
+
+      if ( !preg_match('/^[a-z][a-z_]*$/', $data['field']) ) {
+        return new JsonResponse(['message' => 'Erreur de nom de champ'], Response::HTTP_INTERNAL_SERVER_ERROR);
+      }
+      return $em->getRepository('APIImportBundle:Fichier')->addField($fichier, $data['field']);
+    }
+
 
     /**
     * @Rest\View()

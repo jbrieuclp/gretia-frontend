@@ -164,7 +164,15 @@ class FichierRepository extends EntityRepository
       return $qb->execute();//->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-
+    /**
+    *   Ajoute un champ à la table
+    **/
+    public function addField($fichier, $champ)
+    {
+        $sql = 'ALTER TABLE '.$fichier->getTable().' ADD COLUMN "'.$champ.'" character varying';
+        $this->_em->getConnection()->query($sql);
+        return true;
+    }
 
 
     //----------------
@@ -441,14 +449,6 @@ class FichierRepository extends EntityRepository
 
     }
 
-    /**
-    *   Charge fichier, champs et champs du FSD liés
-    **/
-    public function addField($table, $champ)
-    {
-        $sql = 'ALTER TABLE '.$table->getTable().' ADD COLUMN "'.$champ.'" character varying';
-        return $this->_em->getConnection()->query($sql);
-    }
 
     /**
     *   Charge fichier, champs et champs du FSD liés

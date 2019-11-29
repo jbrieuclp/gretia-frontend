@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {Observable} from 'rxjs';
+import {Observable, of as observableOf} from 'rxjs';
 import {map, startWith, filter} from 'rxjs/operators';
 
 import { ImportService } from '../../../services/import.service';

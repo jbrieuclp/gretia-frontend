@@ -52,7 +52,7 @@ class FichierChampRepository extends EntityRepository
     public function replaceElement($champ, $search, $replace)
     {
         
-        $sql = "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = regexp_replace(".$champ->getChamp().", :search, :replace)";
+        $sql = "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = regexp_replace(".$champ->getChamp().", :search, :replace, 'g')";
 
         $requete = $this->_em->getConnection()->prepare($sql);
 

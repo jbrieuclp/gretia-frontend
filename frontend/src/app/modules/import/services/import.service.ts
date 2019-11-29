@@ -65,6 +65,18 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  addField(id: number, params: any): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/add-field`;
+    const sources = params;
+    return this.http
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   patchField(id: number, params: any): Observable<any> {
     const url = `${this.httpUrlBase}/field/${id}`;
     const sources = params;

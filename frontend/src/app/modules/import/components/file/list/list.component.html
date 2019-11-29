@@ -31,7 +31,7 @@
     <th mat-header-cell *matHeaderCellDef> Avancement </th>
     <td mat-cell *matCellDef="let element">
     	<ng-container *ngIf="element.champs.length; else noFieldMappingBlock">
-    		{{ element.nb_field_ok }} / {{ element.champs.length }} ({{ element.nb_field_ok / element.champs.length}}%)
+    		{{ element.nb_field_ok }} / {{ element.champs.length }} ({{ ( (element.nb_field_ok / element.champs.length) * 100 ) | number:'1.0-0' }}%)
     	</ng-container>
     	<ng-template #noFieldMappingBlock> - </ng-template>
     </td>

@@ -60,10 +60,17 @@ export class FileMapperComponent implements OnInit {
   /**
    * Action permettant de défaire le mappage d'un champ
    */
-  removeMapping(id) {
-    this.importS.deleteField(id)
+  removeMapping(field) {
+    this.importS.deleteField(field.id)
           .subscribe(
-            (result: boolean) => /*this._fields = fields*/result,
+            (result: boolean) => {
+              if (result)  {
+                field.id = null;
+                field.description = null;
+                field.fieldFSD = null;
+                field.check = null;
+              }
+            },
             error => { /*this.errors = error.error;*/ }
           );
   }

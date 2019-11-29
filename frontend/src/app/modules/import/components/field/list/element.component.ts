@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angu
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { Observable, Subject, of } from 'rxjs';
-import { debounceTime, map, startWith, distinctUntilChanged, switchMap, catchError, retry } from 'rxjs/operators';
+import { debounceTime, map, startWith, distinctUntilChanged, switchMap, catchError, retry, filter } from 'rxjs/operators';
 
 import { FieldService } from '../field.service';
 import { ImportService } from '../../../services/import.service';
@@ -14,17 +14,32 @@ import { ViewTableDialog } from './view-table.dialog';
   templateUrl: './element.component.html',
   styleUrls: ['./element.component.scss']
 })
-export class ElementComponent {
+export class ElementComponent implements OnInit {
 
 	@Input() value: any;
 	@Output() valueChange = new EventEmitter<any>();
 	field: any;
+  syncIcon: boolean = true;
 
   constructor(
   	public dialog: MatDialog,
   	private fieldS: FieldService
   ) {
   	this.field = this.fieldS.field.getValue();
+  }
+
+  ngOnInit() {
+    this.syncIcon = this.value.ban === "true";
+  }
+
+  get syncTooltip() {
+    return this.syncIcon ? 
+            'Mettre de côté les données liées à cette valeur' :
+            'Réintégrer les données liées à cette valeur';
+  }
+
+  switchSynchonisation() {
+
   }
 
   editDialog(): void {
@@ -83,14 +98,7 @@ export class ElementComponent {
     dialogConfig.position = {left: '5%', top: '30px'};
 
     const dialogRef = this.dialog
-                            .open(ViewTableDialog, dialogConfig)
-                            .afterClosed()
-                              .subscribe(response => {
-                                console.log(response);
-                                if (response) {
-                                  
-                                }
-                              });
+                            .open(ViewTableDialog, dialogConfig);
 
   }
 
@@ -178,39 +186,23 @@ export class EditAutocompleteDialog implements OnInit {
   	this.field = this.fieldS.field.getValue();
   	this.text_autocomplete = this.data.initial_value;
 
-  	//callback d'attente
     this.searchTerm$
-      .subscribe(res => {
-        this.autocomplete = []; 
-        this.isWaiting = true; 
-      });
-
-    //callback de resultat
-    this.searchTaxons(this.searchTerm$)
+      .pipe(
+        startWith(this.text_autocomplete),
+        debounceTime(300), 
+        distinctUntilChanged(),
+        switchMap(term => {
+          this.isWaiting = true; 
+          this.autocomplete = []; 
+          return term.length > 3 ?
+            this.importS.searchFSDValues(this.field.fieldFSD.id, term) : of([]);
+        })
+      )
       .subscribe((results: any[]) => {
         this.isWaiting = false;
         this.autocomplete = results;
       });
-
   }
-
-  // ngOnDestroy() {
-  // 	this.searchTerm$.unsubscribe();
-  // 	this.searchTaxons.unsubscribe();
-  // }
-
-  /* GET taxon whose name contains search term */
-	searchTaxons(terms: Observable<string>): Observable<any[]> {
-	  return terms
-      .pipe(
-        debounceTime(300), 
-        distinctUntilChanged(),
-        switchMap(term => {
-        	return term.length > 3 ?
-         		this.importS.searchFSDValues(this.field.fieldFSD.id, term) : of([]);
-        })
-      );
-	}
 
   onNoClick(): void {
     this.dialogRef.close(false);
@@ -244,9 +236,11 @@ export class EditRadioDialog implements OnInit {
 
 	field: any;
 	radioValues: string[];
+  filterRadioValues: Observable<string[]>;
 	selectedValue: string;
 	new_value: string;
   waiting: boolean = false;
+  filterControl = new FormControl();
 
   constructor (
     public dialogRef: MatDialogRef<EditRadioDialog>,
@@ -259,7 +253,25 @@ export class EditRadioDialog implements OnInit {
   }
 
   ngOnInit() {
-  	this.importS.getFSDFieldValues(this.field.fieldFSD.id).subscribe(values => this.radioValues = values)
+  	this.importS.getFSDFieldValues(this.field.fieldFSD.id)
+                  .subscribe(values => {
+                    this.radioValues = values;
+                    this.initFilter();
+                  });
+  }
+
+  initFilter() {
+    this.filterRadioValues = this.filterControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.radioValues.filter(option => option.toLowerCase().includes(filterValue));
   }
 
   onNoClick(): void {

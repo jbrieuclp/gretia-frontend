@@ -3,6 +3,9 @@
 <span class="pull-right">
   <mat-icon style="margin-right:20px;" (click)="tableDialog()">table_chart</mat-icon>
 </span>
-<span class="pull-right">
-  <mat-icon>sync</mat-icon>
+<span class="pull-right" (mouseover)='syncIcon = !syncIcon' (mouseout)='syncIcon = !syncIcon'>
+  <mat-icon 
+  	[matTooltip]="syncTooltip"
+  	matTooltipPosition="before"
+  	(click)="switchSynchonisation()">{{ syncIcon ? 'sync_disabled' : 'sync' }}</mat-icon>
 </span>
