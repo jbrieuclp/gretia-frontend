@@ -45,16 +45,23 @@ class Fichier
 	private $table;
 
 	/**
-	* @ORM\Column(name="description", type="text", nullable=true)
-    *
-    * @Serializer\Groups({"fichier"})
+	* @ORM\Column(name="file_name", type="text", nullable=true)
+  *
+  * @Serializer\Groups({"fichier"})
 	*/
-	private $description;
+	private $fileName;
+
+  /**
+  * @ORM\Column(name="extension", type="text", nullable=true)
+  *
+  * @Serializer\Groups({"fichier"})
+  */
+  private $extension;
 
 	/**
 	* @ORM\Column(name="date_import", type="datetime", nullable=true)
-    *
-    * @Serializer\Groups({"fichier"})
+   *
+  * @Serializer\Groups({"fichier"})
 	*/
 	private $dateImport;
 
@@ -72,11 +79,8 @@ class Fichier
    */
   private $champs;
 
-
-
 	private $file;
-    private $tempFilename;
-    private $extension;
+  private $tempFilename;
 
 
 
@@ -115,27 +119,50 @@ class Fichier
 	}
 
 	/**
-	* Set description
+	* Set fileName
 	*
-	* @param text $description
+	* @param text $fileName
 	* @return Organismes
 	*/
-	public function setDescription($description)
+	public function setFileName($fileName)
 	{
-		$this->description = $description;
+		$this->fileName = $fileName;
 
 		return $this;
 	}
 
 	/**
-	* Get description
+	* Get fileName
 	*
 	* @return text
 	*/
-	public function getDescription()
+	public function getFileName()
 	{
-		return $this->description;
+		return $this->fileName;
 	}
+
+  /**
+  * Set extension
+  *
+  * @param text $extension
+  * @return Organismes
+  */
+  public function setExtension($extension)
+  {
+    $this->extension = $extension;
+
+    return $this;
+  }
+
+  /**
+  * Get extension
+  *
+  * @return text
+  */
+  public function getExtension()
+  {
+    return $this->extension;
+  }
 
 	/**
 	* Set dateImport
@@ -224,13 +251,13 @@ class Fichier
 
             // On réinitialise les valeurs des attributs extension et alt
             $this->extension = null;
-            $this->alt = null;
+            $this->fileName = null;
         } else {
             // Le nom du fichier est son id, on doit juste stocker également son extension
-            $this->extension = $this->file->guessExtension();
+            $this->extension = $this->file->getClientOriginalExtension();
 
             // Et on génère l'attribut alt de la balise <img>, à la valeur du nom du fichier sur le PC de l'internaute
-            $this->alt = $this->file->getClientOriginalName();
+            $this->fileName = $this->file->getClientOriginalName();
         }
         return $this;
     }
@@ -258,10 +285,10 @@ class Fichier
         }
 
         // Le nom du fichier est son id, on doit juste stocker également son extension
-        $this->extension = $this->file->guessExtension();
+        $this->extension = $this->file->getClientOriginalExtension();
 
         // Et on génère l'attribut alt de la balise <img>, à la valeur du nom du fichier sur le PC de l'internaute
-        $this->alt = $this->file->getClientOriginalName();
+        $this->fileName = $this->file->getClientOriginalName();
     }
 
     /**
@@ -323,7 +350,6 @@ class Fichier
     protected function getUploadRootDir()
     {
         // On retourne le chemin relatif vers le fichier pour notre code PHP
-        print_r(__DIR__);
         return __DIR__.'/../../../../web/'.$this->getUploadDir();
     }
 
@@ -364,7 +390,7 @@ class Fichier
             if ( !is_null($champ->getFieldFSD()) and $champ->getFieldFSD()->getChamp() == '__LIB_AREA__' ) 
                 $comm = true;
 
-            if ( $lat AND $lon AND $comm) 
+            if ( ($lat AND $lon) OR $comm) 
                 return true;
         }
 
@@ -382,6 +408,23 @@ class Fichier
         $lat = false; $lon = false; $comm = false;
         foreach ($this->champs as $champ) {
             if ( !is_null($champ->getFieldFSD()) and $champ->getFieldFSD()->getChamp() == '__OBSERVERS__' ) 
+                return true;
+        }
+
+        //si aucun champ du fichier n'a été mappé avec le champs Serena Observateur on est ici et on retourn false
+        return false;
+    }
+
+    /**
+    * @Serializer\VirtualProperty
+    * @Serializer\SerializedName("has_dataset")
+    * @Serializer\Groups({"fichier"})
+    */
+    public function hasDataset()
+    {
+        $lat = false; $lon = false; $comm = false;
+        foreach ($this->champs as $champ) {
+            if ( !is_null($champ->getFieldFSD()) and $champ->getFieldFSD()->getChamp() == '__DATASET__' ) 
                 return true;
         }
 
@@ -418,5 +461,15 @@ class Fichier
         }
 
         return $i;
+    }
+
+
+    /**
+     * @Serializer\VirtualProperty
+     * @Serializer\SerializedName("file_path")
+     * @Serializer\Groups({"fichier"})
+     */
+    public function getFilePath() {
+        return "coucou";
     }
 } 

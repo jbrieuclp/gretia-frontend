@@ -45,13 +45,13 @@
 					</div>
 				</ng-container>
 
-				<ng-container *ngIf="fichier.is_localisable">
+				<ng-container *ngIf="fichier.has_localisation">
 					<div class="col-sm-4 col-md-3">
 						<mat-card>
-							<a [routerLink]="[]" matTooltip="Gérer les localisation du fichier" class="thumbnail text-center">
+							<a routerLink="./localisations" matTooltip="Gérer les localisation du fichier" class="thumbnail text-center">
 								<mat-icon>explore</mat-icon>
 								<div class="caption">
-									Visualiser localisations
+									Gérer les localisations
 								</div>
 							</a>
 						</mat-card>
@@ -66,7 +66,7 @@
 				<div class="col-sm-4 col-md-3">
 					<mat-card>
 						<a [routerLink]="[]" matTooltip="Vérifier les doublons au sein du fichier" class="thumbnail text-center">
-							<mat-icon>folder</mat-icon>
+							<mat-icon>compare_arrows</mat-icon>
 							<div class="caption">
 								Recherche de doublons dans le fichier
 							</div>

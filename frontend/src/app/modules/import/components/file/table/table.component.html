@@ -1,0 +1,35 @@
+<div class="example-container">
+  <div class="example-loading-shade"
+       *ngIf="tableS.isLoadingResults">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div class="example-table-container">
+    <table 
+    	class="example-table"
+    	mat-table 
+    	[dataSource]="tableS.dataSource"
+    	matSort 
+      matSortActive="adm_id_import"
+      matSortDirection="asc"
+    	matSortDisableClear>
+
+      <!-- Created Column -->
+      <ng-container [matColumnDef]="header" *ngFor="let header of tableS.headers">
+        <!-- <th mat-header-cell *matHeaderCellDef disableClear> -->
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+          {{header}}
+        </th>
+        <td mat-cell #td app-cell *matCellDef="let row" [(row)]="row" [key]="header" (click)="td.switchDisplay()"></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="tableS.headers; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: tableS.headers;"></tr>
+    </table>
+  </div>
+
+  <mat-paginator 
+    [length]="tableS.resultsLength" 
+    [pageSize]="100"
+    [pageSizeOptions]="[10, 20, 50, 100, 500]"
+  ></mat-paginator>
+</div>

@@ -9,7 +9,7 @@ import { AppConfig } from '../../../shared/app.config';
 
 const httpOptions = {
   headers: new HttpHeaders({
-    'Content-Type':  'application/json',
+  //  'Content-Type':  'application/json',
     'Authorization': 'my-auth-token'
   })
 };
@@ -32,6 +32,17 @@ export class ImportService {
   ***************/
 
   /** GET taxon par ID (cd_nom) **/
+  updloadFile(data): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/upload`;
+    return this.http
+      .post(url, data, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   getFichiers(): Observable<any> {
     const url = `${this.httpUrlBase}/fichiers`;
     return this.http
@@ -47,6 +58,18 @@ export class ImportService {
     const url = `${this.httpUrlBase}/fichier/${id}`;
     return this.http
       .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  patchField(id: number, params: any): Observable<any> {
+    const url = `${this.httpUrlBase}/field/${id}`;
+    const sources = params;
+    return this.http
+      .patch(url, sources, httpOptions)
       .pipe(
         map(res => res), 
         retry(3)
@@ -78,8 +101,11 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
-  getFields(id: number): Observable<any> {
-    const url = `${this.httpUrlBase}/fichier/${id}/fields`;
+  getFields(id: number, mapped: boolean = false): Observable<any> {
+    let url = `${this.httpUrlBase}/fichier/${id}/fields`;
+    if (mapped) {
+      url = url+'?only-mapped=true';
+    }
     return this.http
       .get(url, httpOptions)
       .pipe(
@@ -190,6 +216,54 @@ export class ImportService {
         map(res => res), 
         retry(3)
       );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  createObserver(params: any): Observable<any> {
+    const url = `${this.httpUrlBase}/observer`;
+    const sources = params;
+    return this.http
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+
+  /** GET taxon par ID (cd_nom) **/
+  getLocalisationValues(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/localisations`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** Mappe un champ non mappé **/
+  tableView(fichier_id: number, params, sort, direction, index, limit): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${fichier_id}/view?sort=${sort}&direction=${direction}&index=${index}&limit=${limit}`;
+    const sources = params;
+    return this.http
+     .post(url, sources, httpOptions)
+     .pipe(
+       map(res => res), 
+       retry(3)
+     );
+  }
+
+  /** Mappe un champ non mappé **/
+  patchTableCell(fichier_id: number, row_id: number, params: any = {}): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${fichier_id}/row/${row_id}`;
+    const sources = params;
+    return this.http
+     .patch(url, sources, httpOptions)
+     .pipe(
+       map(res => res), 
+       retry(3)
+     );
   }
 
 //  /** GET taxon par ID (cd_nom) **/

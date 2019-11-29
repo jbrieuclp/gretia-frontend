@@ -7,9 +7,10 @@ import { debounceTime, map, startWith, distinctUntilChanged, switchMap, catchErr
 
 import { FieldService } from '../field.service';
 import { ImportService } from '../../../services/import.service';
+import { ViewTableDialog } from './view-table.dialog';
 
 @Component({
-  selector: 'app-import-field-element',
+  selector: '[app-import-field-element]',
   templateUrl: './element.component.html',
   styleUrls: ['./element.component.scss']
 })
@@ -17,7 +18,6 @@ export class ElementComponent {
 
 	@Input() value: any;
 	@Output() valueChange = new EventEmitter<any>();
-	@Input() state: 'danger'|'success';
 	field: any;
 
   constructor(
@@ -38,7 +38,7 @@ export class ElementComponent {
   	dialogConfig.position = {left: '5%', top: '30px'};
 
   	if (this.field.fieldFSD.type === 'radio') {
-    /*	const dialogRef = this.dialog
+    	const dialogRef = this.dialog
     													.open(EditRadioDialog, dialogConfig)
     													.afterClosed()
 															  .subscribe(response => {
@@ -47,7 +47,7 @@ export class ElementComponent {
 																  	this.value.ok = true;
 																  	this.valueChange.emit(this.value);
 															  	}
-															  });*/
+															  });
   	} else if (this.field.fieldFSD.type === 'autocomplete') {
   		const dialogRef = this.dialog
     													.open(EditAutocompleteDialog, dialogConfig)
@@ -71,6 +71,27 @@ export class ElementComponent {
 															  	}
 															  });
   	}
+  }
+
+  tableDialog() {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.data = {search: this.value.value};
+    dialogConfig.maxWidth = '100%';
+    dialogConfig.width = '90%';
+    dialogConfig.height = '90%';
+    dialogConfig.position = {left: '5%', top: '30px'};
+
+    const dialogRef = this.dialog
+                            .open(ViewTableDialog, dialogConfig)
+                            .afterClosed()
+                              .subscribe(response => {
+                                console.log(response);
+                                if (response) {
+                                  
+                                }
+                              });
+
   }
 
 }
@@ -225,6 +246,7 @@ export class EditRadioDialog implements OnInit {
 	radioValues: string[];
 	selectedValue: string;
 	new_value: string;
+  waiting: boolean = false;
 
   constructor (
     public dialogRef: MatDialogRef<EditRadioDialog>,
@@ -245,6 +267,7 @@ export class EditRadioDialog implements OnInit {
   }
 
   submit() {
+    this.waiting = true;
   	let request = {old: this.data.initial_value, new: this.selectedValue};
   	this.importS.patchFieldValue(this.field.id, request)
   									.subscribe(
@@ -256,7 +279,13 @@ export class EditRadioDialog implements OnInit {
 										      duration: 4000,
 										      verticalPosition: 'top'
 										    }); 
-	  									})
+	  									},
+                      () => this.waiting = false
+                    );
   }
 
 }
+
+
+
+

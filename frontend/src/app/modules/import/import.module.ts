@@ -21,7 +21,9 @@ import {
   MatProgressSpinnerModule,
   MatExpansionModule,
   MatBadgeModule,
-  MatBottomSheetModule
+  MatBottomSheetModule,
+  MatPaginatorModule,
+  MatSortModule
  } from '@angular/material';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -39,17 +41,25 @@ import { ElementComponent } from './components/field/list/element.component';
 import { EditInputDialog } from './components/field/list/element.component';
 import { EditAutocompleteDialog } from './components/field/list/element.component';
 import { EditRadioDialog } from './components/field/list/element.component';
+import { ViewTableDialog } from './components/field/list/view-table.dialog';
 import { FieldObserversComponent } from './components/field/observers/observers.component';
 import { EditObserverComponent } from './components/field/observers/edit-observer.component';
 import { ToolsboxComponent } from './components/field/toolsbox/toolsbox.component';
+import { FileImportComponent } from './components/file/import/import.component';
+import { TableComponent } from './components/file/table/table.component';
 
 //services
 import { ImportService } from './services/import.service';
 import { FormMapperService } from './components/file/mapper/form-mapper.service';
 import { FieldService } from './components/field/field.service';
+import { LocalisationService } from './components/field/localisations/localisation.service';
 
 //directives
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { AddObserverComponent } from './components/field/observers/add-observer.component';
+import { FieldLocalisationsComponent } from './components/field/localisations/localisations.component';
+import { CellComponent } from './components/file/table/cell.component';
+import { FileAddFieldComponent } from './components/file/add-field/add-field.component';
 
 @NgModule({
   exports: [
@@ -78,6 +88,8 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     MatExpansionModule,
     MatBadgeModule,
     MatBottomSheetModule,
+    MatPaginatorModule,
+    MatSortModule,
     ImportRoutingModule,
     NgbModule
   ],
@@ -95,18 +107,27 @@ import { AutofocusDirective } from './directives/autofocus.directive';
     FieldObserversComponent,
     EditObserverComponent,
     ToolsboxComponent,
-    AutofocusDirective
+    AutofocusDirective,
+    AddObserverComponent,
+    FileImportComponent,
+    FieldLocalisationsComponent,
+    ViewTableDialog,
+    TableComponent,
+    CellComponent,
+    FileAddFieldComponent
   ],
   entryComponents: [ 
     EditInputDialog,
     EditAutocompleteDialog,
     EditRadioDialog,
+    ViewTableDialog,
     ToolsboxComponent
   ],
   providers: [
     ImportService,
     FormMapperService,
-    FieldService
+    FieldService,
+    LocalisationService
   ],
   bootstrap: [FilesListComponent]
 })

@@ -10,6 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use API\ImportBundle\Entity\FichierChamp;
+use API\ImportBundle\Entity\Fichier;
 use API\ImportBundle\Entity\SyntheseFSD;
 
 class FichierChampType extends AbstractType
@@ -22,6 +23,13 @@ class FichierChampType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('champ')
+                ->add('description')
+                ->add('check')
+                ->add('fichier', EntityType::class, array(
+                                    'class' => Fichier::class,
+                                    'em' => 'geonature_db',
+                                    'multiple' => false
+                                ))
                 ->add('fieldFSD', EntityType::class, array(
                                     'class' => SyntheseFSD::class,
                                     'em' => 'geonature_db',

@@ -52,12 +52,12 @@ class FichierChampRepository extends EntityRepository
     public function replaceElement($champ, $search, $replace)
     {
         
-        $sql = "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = replace(".$champ->getChamp().", :search, :replace)";
+        $sql = "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = regexp_replace(".$champ->getChamp().", :search, :replace)";
 
         $requete = $this->_em->getConnection()->prepare($sql);
 
         $requete->bindValue(':search', $search);
-        $requete->bindValue(':replace', $replace);
+        $requete->bindValue(':replace', is_null($replace) ? '' : $replace);
         
         $requete->execute();
         
@@ -90,11 +90,10 @@ class FichierChampRepository extends EntityRepository
     /**
     *   Retourne la liste distinct des valeur du champ
     **/
-    public function getListObservers($field, $present=false)
+    public function getListObservers($field)
     {
         $champ = $field->getChamp();
         $table = $field->getFichier()->getTable();
-        $presence = $present ? 'NOT' : '';
 
         $sql = "
             WITH observer (observer) as (
@@ -105,13 +104,13 @@ class FichierChampRepository extends EntityRepository
             SELECT 
                 observer, 
                 presence.id_role IS NOT NULL as ok, 
+                jsonb_agg(DISTINCT jsonb_build_object('id', presence.id_role, 'nom', presence.nom_role, 'prenom', presence.prenom_role)) as observers_bd,
                 COALESCE(jsonb_agg(DISTINCT CONCAT_WS(' ', NULLIF(leven.nom_role, ''), NULLIF(leven.prenom_role, ''))) FILTER ( WHERE CONCAT_WS(' ', NULLIF(leven.nom_role, ''), NULLIF(leven.prenom_role, '')) <> ''), '[]'::jsonb) ||
                 COALESCE(jsonb_agg(DISTINCT CONCAT_WS(' ', NULLIF(nom.nom_role, ''), NULLIF(nom.prenom_role, ''))) FILTER ( WHERE CONCAT_WS(' ', NULLIF(nom.nom_role, ''), NULLIF(nom.prenom_role, '')) <> ''), '[]'::jsonb) as propositions
             FROM observer
             LEFT JOIN utilisateurs.t_roles presence ON CONCAT_WS(' ', NULLIF(presence.nom_role, ''), NULLIF(presence.prenom_role, '')) = observer AND presence.active
             LEFT JOIN utilisateurs.t_roles leven ON levenshtein(lower(unaccent(observer)), lower(unaccent(CONCAT_WS(' ', NULLIF(leven.nom_role, ''), NULLIF(leven.prenom_role, ''))))) < 3 AND leven.active
             LEFT JOIN utilisateurs.t_roles nom ON lower(unaccent(substring(observer from '^(.+?)\s'))) = lower(unaccent(nom.nom_role)) AND nom.active
-            WHERE presence.id_role IS {$presence} NULL
             GROUP BY observer, presence.id_role
             ORDER BY observer
         ";

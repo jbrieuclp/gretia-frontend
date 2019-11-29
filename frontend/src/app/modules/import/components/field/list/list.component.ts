@@ -1,7 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators'
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ToolsboxComponent } from '../toolsbox/toolsbox.component';
 
@@ -15,7 +16,9 @@ import { FieldService } from '../field.service';
 })
 export class FieldListComponent implements OnInit, OnDestroy {
 
-	_fields: any[] = [];
+	cardHeight: any;
+  cardContentHeight: any;
+  _fields: any[] = [];
 
   get fields(): any[] {
     return this._fields.sort((t1, t2) => {
@@ -45,7 +48,8 @@ export class FieldListComponent implements OnInit, OnDestroy {
   	private route: ActivatedRoute,
   	private importS: ImportService,
     private fieldS: FieldService,
-    private _bottomSheet: MatBottomSheet
+    private _bottomSheet: MatBottomSheet,
+    private _snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -54,10 +58,19 @@ export class FieldListComponent implements OnInit, OnDestroy {
     if ( id_fichier !== null && Number.isInteger(Number(id_fichier)) ) {
     	this.getFields(Number(id_fichier));
     }
+
+    this.cardHeight = window.innerHeight-130;
+    this.cardContentHeight = this.cardHeight-70;
   }
 
   ngOnDestroy() {
     this.fieldS.reset();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.cardHeight = window.innerHeight-130;
+    this.cardContentHeight = this.cardHeight-70;
   }
 
   openBottomSheet(): void {
@@ -65,7 +78,7 @@ export class FieldListComponent implements OnInit, OnDestroy {
   }
 
   getFields(id) {
-  	this.importS.getFields(id)
+  	this.importS.getFields(id, true) //only-mapped = true
           .subscribe(
             (fields: any) => this._fields = fields,
             error => { /*this.errors = error.error;*/ }
@@ -76,5 +89,17 @@ export class FieldListComponent implements OnInit, OnDestroy {
     this.fieldS.field = field;
   }
 
+  switchStatut(event, field) {
+    let request = {check: event};
+    this.importS.patchField(field.id, request)
+                    .subscribe(
+                      result => field.check = result.check,
+                      error => { 
+                        this._snackBar.open(error.error.message, 'Fermer', {
+                          duration: 4000,
+                          verticalPosition: 'top'
+                        }); 
+                      });
+  }
 
 }

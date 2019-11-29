@@ -1,0 +1,15 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<div 
+	*ngIf="error | async"
+	class="alert alert-danger" 
+	role="alert" 
+	style="margin-top: 10px;">
+  {{ error | async }}
+</div>

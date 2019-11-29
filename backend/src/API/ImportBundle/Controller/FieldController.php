@@ -12,18 +12,48 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use \Symfony\Component\Yaml\Parser;
-
+use Symfony\Component\Yaml\Parser;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use API\ImportBundle\Entity\FichierChamp;
 use API\ImportBundle\Entity\Fichier;
 use API\ImportBundle\Form\FichierChampType;
 
+use API\CoreBundle\Entity\UserGeoNature;
+use API\CoreBundle\Entity\UserList;
 
 class FieldController extends FOSRestController implements ClassResourceInterface
 {
     
+    /**
+    * @Rest\View(serializerGroups = {"champ"})
+    * @Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Patch("/field/{id}")
+    */
+    public function patchFieldAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager('geonature_db');
+        $item = $em->getRepository('APIImportBundle:FichierChamp')->find($id);
+        if (empty($item)) {
+          return new JsonResponse(['message' => 'Field not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        $form = $this->createForm(FichierChampType::class, $item);
+
+        $form->submit(json_decode($request->getContent(), true), false); // Validation des données
+
+        if ($form->isValid()) {
+            $em->persist($item);
+            $em->flush();
+            return $item;
+        } else {
+            return $form;
+        }
+    }
+
     /**
     * @Rest\View(serializerGroups = {"champ"})
     * @Security("has_role('CARTO_SYNTHESE')")
@@ -100,7 +130,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
     }
 
     /**
-    * @Rest\View(serializerGroups = {"champ"})
+    * @Rest\View()
     * @Security("has_role('CARTO_SYNTHESE')")
     *
     * @Rest\Delete("/field/{id}")
@@ -116,7 +146,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
       $em->remove($item);
       $em->flush();
 
-      return $this->getFieldsAction($fichier_id);
+      return true;
     }
 
 
@@ -139,8 +169,8 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
       if ( !empty($item->getFieldFSD()->getRegexp()) ) {
         //Comparaison par REGEXP
-        foreach ($values as $key => $value) {
-          $value['ok'] =  preg_match($item->getFieldFSD()->getRegexp(), $value['value']);
+        foreach ($values as $key => &$value) {
+          $value['ok'] = (bool) preg_match($item->getFieldFSD()->getRegexp(), $value['value']);
         }
       } elseif ( !empty($item->getFieldFSD()->getSql()) ) {
         //requete SQL pour comparer les valeurs
@@ -156,6 +186,8 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
     * @Security("has_role('CARTO_SYNTHESE')")
     *
     * @Rest\Get("/field/{id}/observers")
+    *
+    * Retourne un tableau de valeurs correspondant aux observateurs uniques
     */
     public function getFieldObserversAction(Request $request, $id)
     {
@@ -165,10 +197,8 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
           return new JsonResponse(['message' => 'Field not found'], Response::HTTP_NOT_FOUND);
       }
 
-      $present = is_bool($request->query->get('present', false)) ? $request->query->get('present', false) : false;
-
       //champs : value, ok, ban
-      $values = $em->getRepository('APIImportBundle:FichierChamp')->getListObservers($item, $present);
+      $values = $em->getRepository('APIImportBundle:FichierChamp')->getListObservers($item);
 
       foreach ($values as &$value) {
         $value['propositions'] = array_values(array_unique(json_decode($value['propositions'])));
@@ -176,5 +206,48 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
       return $values;
     }
+
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('CARTO_SYNTHESE')")
+    *
+    * @Rest\Post("/observer")
+    */
+    public function createObserverAction(Request $request)
+    {
+      $data = json_decode($request->getContent(), true);
+      if (empty($data['nom'])) {
+        return new JsonResponse(['message' => 'Un nom doit être renseigné'], Response::HTTP_INTERNAL_SERVER_ERROR);
+      }
+
+      $nom = ucwords(mb_strtolower($data['nom']));
+      $prenom = ucwords(mb_strtolower($data['prenom']));
+
+      $em = $this->getDoctrine()->getManager('geonature_db');
+
+      $user = $em->getRepository('APICoreBundle:UserGeoNature')->findOneBy(array('nom' => $nom, 'prenom' => $prenom));
+
+      if ($user !== null) {
+        return new JsonResponse(['message' => 'Un observateur avec ce nom et prénom existe déjà'], Response::HTTP_INTERNAL_SERVER_ERROR);
+      }
+
+      $user = new UserGeoNature();
+
+      $user->setGroupe(false);
+      $user->setNom($nom);
+      $user->setPrenom($prenom);
+
+      $liste = new UserList();
+      $liste->setListe(2); //id liste serena
+
+      $user->addListe($liste);
+
+      $em->persist($user);
+      $em->flush();
+
+      return trim($user->getNom().' '.$user->getPrenom());
+    }
+
 
 }

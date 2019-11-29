@@ -7,7 +7,7 @@ import { FieldService } from '../field.service';
 import { ImportService } from '../../../services/import.service';
 
 @Component({
-  selector: 'app-import-edit-observer',
+  selector: '[app-import-edit-observer]',
   templateUrl: './edit-observer.component.html',
   styleUrls: ['./edit-observer.component.scss']
 })

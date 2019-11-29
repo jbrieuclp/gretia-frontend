@@ -42,7 +42,7 @@ class FSDController extends FOSRestController implements ClassResourceInterface
     * @Security("has_role('CARTO_SYNTHESE')")
     *
     * @Rest\Get("/fichier/{id}/field-by-fsd")
-    * Retourne un champ
+    * Retourne un champ FSD à partir d'un nom fournit en paramètre GET
     */
     public function getFSDFieldAction(Request $request, $id)
     {
@@ -56,7 +56,7 @@ class FSDController extends FOSRestController implements ClassResourceInterface
       if (empty($fsd)) 
         return new JsonResponse(['message' => 'Champ FSD non trouvé'], Response::HTTP_NOT_FOUND);
 
-      $field = $em->getRepository('APIImportBundle:FichierChamp')->findByFieldFSD($fsd);
+      $field = $em->getRepository('APIImportBundle:FichierChamp')->findBy(array('fieldFSD' => $fsd, 'fichier' => $fichier));
 
       if (empty($field)) {
         return new JsonResponse(['message' => 'Le champ Observateur n\'a pas été mappé'], Response::HTTP_NOT_FOUND);

@@ -7,7 +7,8 @@ const layout = {title: 'Import',
                 navbarColor: {background: '#378AB1', text: "#fff"},
                 sidenav: [
                 	{title: 'Accueil', url: '/', img: 'home', tooltip: 'Accueil'},
-                	{title: 'Liste des fichiers', url: '/import', img: 'assignment', tooltip: 'Liste des fichiers'}
+                	{title: 'Importer', url: '/import/import', img: 'save_alt', tooltip: 'Importer un fichier'},
+                  {title: 'Liste des fichiers', url: '/import', img: 'assignment', tooltip: 'Liste des fichiers'}
                 ]};
 
 @Component({

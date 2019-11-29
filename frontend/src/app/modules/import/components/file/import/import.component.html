@@ -1,0 +1,51 @@
+<mat-card>
+  <mat-card-header>
+    <h2>Import de fichier</h2>
+  </mat-card-header>
+  <mat-card-content>
+
+	  <div class="alert alert-danger" role="alert" *ngIf="error && error != ''">
+		  {{ error }}
+		</div>
+
+		<form enctype="multipart/form-data" [formGroup]="uploadForm">
+			<div class="row">
+				<mat-form-field 
+					class="col-md-5"
+					appearance="fill">
+			    <mat-label>Table</mat-label>
+			    <input 
+				    matInput 
+				    placeholder="Nom de la table"
+				    formControlName="table">
+			    <mat-hint>En minuscule, sans espace, obligatoirement une première lettre. Ensuite lettre, nombre et underscore (_) autorisés.</mat-hint>
+			  </mat-form-field>
+			</div>
+
+			<input #fileInput 
+				id="userFile" 
+				type="file" 
+				style="display: none"
+				(change)="onSelectFile($event)">
+
+			<div style="margin-top:20px;">
+				<button 
+					mat-raised-button 
+					(click)="selectFile()"
+					color="primary">Selectionner un fichier</button>
+
+				<span class="filename">{{ fileName }}</span>
+			</div>
+
+			<div class="text-center">
+				<button 
+					mat-raised-button
+					[disabled]="uploadForm.invalid"
+					(click)="sendFile()">
+					Envoyer
+				</button>
+			</div>
+		</form>
+
+	</mat-card-content>
+</mat-card>

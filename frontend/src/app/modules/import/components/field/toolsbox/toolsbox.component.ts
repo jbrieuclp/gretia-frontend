@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,7 +11,7 @@ import { FieldService } from '../field.service';
   templateUrl: './toolsbox.component.html',
   styleUrls: ['./toolsbox.component.scss']
 })
-export class ToolsboxComponent implements OnInit {
+export class ToolsboxComponent implements OnInit, OnDestroy {
 
 	searchReplaceForm: FormGroup;
 	field: any;
@@ -28,8 +28,12 @@ export class ToolsboxComponent implements OnInit {
   	this.field = this.fieldS.field.getValue();
   	this.searchReplaceForm = this.fb.group({
         'search': ['', [Validators.required]],
-        'replace': ['', [Validators.required]]
+        'replace': ['', []]
     });
+  }
+
+  ngOnDestroy() {
+    this.searchReplaceForm.reset();
   }
 
   searchReplace() {
@@ -42,7 +46,6 @@ export class ToolsboxComponent implements OnInit {
 									      duration: 4000,
 									      verticalPosition: 'top'
 									    });
-									    this.searchReplaceForm.reset();
   									},
 										error => { 
 											this._snackBar.open('Une erreur est survenue', 'Fermer', {

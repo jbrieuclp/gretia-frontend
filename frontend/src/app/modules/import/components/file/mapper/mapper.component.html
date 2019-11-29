@@ -11,11 +11,23 @@
 	<ng-container *ngIf="fields.length; else nomapped">
 
 		<div style="margin-bottom: 20px;">
-			<mat-button-toggle-group name="fontStyle" aria-label="Font Style" #group="matButtonToggleGroup">
+			<mat-button-toggle-group 
+				appearance="legacy"
+				name="fontStyle" 
+				aria-label="Font Style" 
+				#group="matButtonToggleGroup">
 			  <mat-button-toggle value="all" [checked]="true">Tous</mat-button-toggle>
 			  <mat-button-toggle value="mapped">Mappés</mat-button-toggle>
 			  <mat-button-toggle value="unmapped">Non mappés</mat-button-toggle>
 			</mat-button-toggle-group>
+
+			<a 
+				mat-raised-button 
+				routerLink="../add-field"
+				style="margin-left: 40px;"
+				color="primary">
+				<mat-icon>add</mat-icon> Ajouter un champ au fichier
+			</a>
 
 			<!-- <button mat-raised-button 
 				type="button"

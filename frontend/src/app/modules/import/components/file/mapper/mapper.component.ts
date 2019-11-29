@@ -63,7 +63,7 @@ export class FileMapperComponent implements OnInit {
   removeMapping(id) {
     this.importS.deleteField(id)
           .subscribe(
-            (fields: any) => this._fields = fields,
+            (result: boolean) => /*this._fields = fields*/result,
             error => { /*this.errors = error.error;*/ }
           );
   }
@@ -72,6 +72,10 @@ export class FileMapperComponent implements OnInit {
     this.formMappers.forEach((item: FormMapperComponent) => {
       item.autoMap();
     });
+  }
+
+  openFieldForm() {
+    
   }
 
 }

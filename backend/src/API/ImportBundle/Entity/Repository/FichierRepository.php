@@ -37,7 +37,7 @@ class FichierRepository extends EntityRepository
         if (($handle = fopen($file, "r")) !== FALSE) {
             $content = stream_get_contents($handle);
             //test de l'encodage si = UTF-8
-            if ( mb_detect_encoding($content, 'UTF-8, ISO-8859-1') === 'ISO-8859-1' ) {
+            if ( !mb_check_encoding($content, 'UTF-8') ) {
                 return array('error' => true, 'message' => 'Le fichier n\'est pas encodé en UTF-8.');
             }
             rewind ($handle); //retour au debut du fichier
@@ -68,7 +68,7 @@ class FichierRepository extends EntityRepository
 
         try{
             //creation de la table
-            $sql = "CREATE TABLE ".$fichier->getTable()." (adm_id_import serial PRIMARY KEY, adm_uuid_auto uuid DEFAULT uuid_generate_v4(), adm_doublon_fichier boolean DEFAULT FALSE, adm_doublon_serena boolean DEFAULT FALSE, adm_doublon_serena_id character varying DEFAULT '[]', adm_import_exclude boolean DEFAULT FALSE, adm_geom geometry(Geometry,2154), adm_observers jsonb, adm_counting jsonb, ".implode(', ',$colonne_a_modifier).", ".implode(', ',$colonne_d_archive).")";
+            $sql = "CREATE TABLE ".$fichier->getTable()." (adm_id_import serial PRIMARY KEY, adm_uuid_auto uuid DEFAULT uuid_generate_v4(), adm_doublon_fichier boolean DEFAULT FALSE, adm_doublon_bd boolean DEFAULT FALSE, adm_doublon_bd_id character varying DEFAULT '[]', adm_import_exclude boolean DEFAULT FALSE, adm_geom geometry(Geometry,2154), adm_observers jsonb, adm_counting jsonb, ".implode(', ',$colonne_a_modifier).", ".implode(', ',$colonne_d_archive).")";
             $this->_em->getConnection()->query($sql);
         }
         catch(\Exception $e){
@@ -95,6 +95,82 @@ class FichierRepository extends EntityRepository
         return array('error' => false);
     }
 
+
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    **/
+    public function getListLocalisations($fichier, $fields)
+    {
+
+      $select = [];
+      if ( !is_null($fields['latitude']) and !is_null($fields['longitude'])) {
+        $select[] = "f.".$fields['latitude']." AS latitude";
+        $select[] = "f.".$fields['longitude']." AS longitude";
+        $select[] = "ST_AsGeoJSON(ST_Transform(ST_SetSRID(st_MakePoint(NULLIF(f.".$fields['longitude'].", '')::double precision, NULLIF(f.".$fields['latitude'].", '')::double precision), 4326), 2154)) as the_geom";
+      }
+
+      if ( !is_null($fields['area']) ) {
+        $select[] = "f.".$fields['area']." AS area";
+      }
+
+      $sql = "SELECT DISTINCT ".implode(', ', $select)." FROM ".$fichier->getTable()." f";
+
+      $requete = $this->_em->getConnection()->prepare($sql);
+      $requete->execute();
+      return $requete->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+    *   Retourne une vue du tableau filtré
+    **/
+    public function getTableView($fichier, $request, $order)
+    {
+      $qb = $this->_em->getConnection()->createQueryBuilder();
+
+      $qb->select('count(*) OVER() AS items_count, adm_id_import, "'.implode('","', $this->getFields($fichier->getId())).'"')
+         ->from($fichier->getTable(), 'f')
+         ->orderBy('"'.$order['sort'].'"', $order['direction'])
+         ->setFirstResult($order['index'] * $order['limit'])
+         ->setMaxResults($order['limit']);
+
+      if ($order['sort'] !== 'adm_id_import') {
+        $qb->addOrderBy('adm_id_import', 'ASC');
+      }
+
+      foreach ($request as $champ => $valeur) {
+        $qb->andWhere("COALESCE(\"".$champ."\", '') = COALESCE(:valeur, '')")
+            ->setParameter('valeur', $valeur);
+      }
+
+      return $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    **/
+    public function updateTableCell($fichier, $id, $request)
+    {
+      $qb = $this->_em->getConnection()->createQueryBuilder();
+
+      $qb->update($fichier->getTable())
+         ->where('"adm_id_import" = :id')
+         ->setParameter('id', $id);
+
+      foreach ($request as $champ => $valeur) {
+        $qb->set('"'.$champ.'"', ':valeur')
+           ->setParameter('valeur', $valeur);
+      }
+
+      return $qb->execute();//->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
+
+
+    //----------------
+    //----------------
+    //----------------
+    //----------------
 
 
 
@@ -131,7 +207,7 @@ class FichierRepository extends EntityRepository
     *   Retourne les champs du fichier non encore mappés
     **/
     //public function getDatas($fichier, $champ, $valeur)
-    public function getDatas($fichier, $conditions)
+    public function _getDatas($fichier, $conditions)
     {
 
         $qb = $this->_em->getConnection()->createQueryBuilder();
