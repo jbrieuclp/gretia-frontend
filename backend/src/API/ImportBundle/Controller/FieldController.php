@@ -202,6 +202,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
       foreach ($values as &$value) {
         $value['propositions'] = array_values(array_unique(json_decode($value['propositions'])));
+        $value['observers_bd'] = array_values(array_unique(json_decode($value['observers_bd'])));
       }
 
       return $values;
@@ -248,6 +249,28 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
       return trim($user->getNom().' '.$user->getPrenom());
     }
+
+
+    /*
+
+WITH observer (init_value, observer) as (
+SELECT DISTINCT obse_obsv_id, trim(unnest(string_to_array(obse_obsv_id, '|')))
+FROM gn_imports.serena_20191126
+order by 1
+), 
+obsv_link (init_value, jsonb_result) as (
+SELECT 
+init_value, 
+jsonb_agg(DISTINCT jsonb_build_object('id', presence.id_role, 'nom', presence.nom_role, 'prenom', presence.prenom_role)) as observers_bd
+FROM observer
+LEFT JOIN utilisateurs.t_roles presence ON CONCAT_WS(' ', NULLIF(presence.nom_role, ''), NULLIF(presence.prenom_role, '')) = observer AND presence.active
+GROUP BY init_value
+ORDER BY init_value
+)
+
+
+UPDATE gn_imports.serena_20191126 d SET adm_observers = jsonb_result FROM obsv_link link WHERE d.obse_obsv_id = link.init_value
+*/
 
 
 }

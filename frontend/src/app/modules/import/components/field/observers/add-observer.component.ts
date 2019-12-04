@@ -29,11 +29,13 @@ export class AddObserverComponent implements OnInit {
   }
 
   getNom() {
-    return this.observer.observer.match(/(.*?)\s.*/)[1]||'';
+    let match = this.observer.observer.match(/([^\s]+)/);
+    return match !== null ? match[1] : '';
   }
 
   getPrenom() {
-    return this.observer.observer.match(/.*?\s(.*)/)[1]||'';
+    let match = this.observer.observer.match(/.*?\s(.*)/);
+    return match !== null ? match[1] : '';
   }
 
   submit() {

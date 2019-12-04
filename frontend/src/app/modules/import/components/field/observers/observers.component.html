@@ -78,8 +78,16 @@
 	      <button mat-raised-button matStepperNext>Next</button>
 	    </div>
 	  </mat-step>
-	  <mat-step label="Finalisation">
-	    <p>You're welcome.</p>
+	  <mat-step label="Vérification">
+	  	<ng-container *ngIf="good_observers_multi_bd.length; else verificationOk_Block">
+			  <h5>Noms correspondant à plusieurs observateurs en BD - A faire vérifier par l'administrateur</h5>
+		    <div *ngFor="let observer of good_observers_multi_bd">
+					{{ observer.observer }}
+				</div>
+			</ng-container>
+			<ng-template #verificationOk_Block>
+				Tout est bon !
+			</ng-template>
 	  </mat-step>
 
 	  <!-- Icon overrides. -->

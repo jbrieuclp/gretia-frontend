@@ -23,6 +23,11 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
     return this._observers.filter(observer=>observer.ok);
   }
 
+  get good_observers_multi_bd(): any[] {
+    if (!this._observers || this._observers === null) return null;
+    return this._observers.filter(observer=>observer.ok && observer.observers_bd.length > 1);
+  }
+
   get bad_observers(): any[] {
     if (!this._observers || this._observers === null) return null;
     return this._observers.filter(observer=>!observer.ok);
