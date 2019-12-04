@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,6 +14,8 @@ export class FileAddFieldComponent implements OnInit {
 
 	form: FormGroup;
   fichier_id: number;
+  @Input() name: string = null;
+  @Input() fichier: number = null;
 
 	get field() {
 		return this.form.get('field');
@@ -28,21 +30,24 @@ export class FileAddFieldComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    let id_fichier = this.route.snapshot.paramMap.get('fichier');
+    if ( this.fichier === null) {
+      let id_fichier = this.route.snapshot.paramMap.get('fichier');
 
-    if ( id_fichier !== null && Number.isInteger(Number(id_fichier)) ) {
-      this.fichier_id = Number(id_fichier);
-    } else { 
-      this.router.navigate(['/import']); 
+      if ( id_fichier !== null && Number.isInteger(Number(id_fichier)) ) {
+        this.fichier_id = Number(id_fichier);
+      } else { 
+        this.router.navigate(['/import']); 
+      }
+    } else {
+      this.fichier_id = this.fichier;
     }
 
   	this.form = this.fb.group({
-      'field': [null, [Validators.required, Validators.pattern('^[a-z][a-z_]*$')]],
+      'field': [this.name, [Validators.required, Validators.pattern('^[a-z][a-z_]*$')]],
     });
   }
 
   submit() {
-    console.log(this.form.value);
     if (this.form.valid) {
       this.importS.addField(this.fichier_id, this.form.value)
                     .subscribe(result => {
@@ -50,7 +55,9 @@ export class FileAddFieldComponent implements OnInit {
                         duration: 4000,
                         verticalPosition: 'top'
                       }); 
-                      this.router.navigate(['../mapper'], { relativeTo: this.route });
+                      if (this.fichier === null) {
+                        this.router.navigate(['../mapper'], { relativeTo: this.route });
+                      }
                     },
                     error => { 
                       this._snackBar.open('Une erreur est survenue', 'Fermer', {

@@ -11,6 +11,10 @@ import { FieldObserversComponent } from './components/field/observers/observers.
 import { FileImportComponent } from './components/file/import/import.component';
 import { FieldLocalisationsComponent } from './components/field/localisations/localisations.component';
 import { FileAddFieldComponent } from './components/file/add-field/add-field.component';
+import { FileRequiredFieldComponent } from './components/file/required-field/required-field.component';
+import { FileInsertComponent } from './components/file/insert/insert.component';
+
+
 // routes definition
 const routes: Routes = [
 	{ 
@@ -29,9 +33,11 @@ const routes: Routes = [
 					{ path: '', component: FileDashboardComponent, pathMatch: 'full' },
 					{ path: 'add-field', component: FileAddFieldComponent, pathMatch: 'full' },
 					{ path: 'mapper', component: FileMapperComponent, pathMatch: 'full' },
+					{ path: 'required-fields', component: FileRequiredFieldComponent, pathMatch: 'full' },
 					{ path: 'champs', component: FieldListComponent, pathMatch: 'full' },
 					{ path: 'observateurs', component: FieldObserversComponent, pathMatch: 'full' },
 					{ path: 'localisations', component: FieldLocalisationsComponent, pathMatch: 'full' },
+					{ path: 'insert', component: FileInsertComponent, pathMatch: 'full' },
 				//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
 				//	{ path: 'champs', component: MissionFormComponent, pathMatch: 'full' },
 				]},

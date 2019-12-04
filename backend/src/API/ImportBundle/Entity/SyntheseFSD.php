@@ -75,6 +75,20 @@ class SyntheseFSD
    * @Serializer\Groups({"fsd", "champ"})
 	 */
 	private $obligatoire;
+	
+	/**
+	 * @ORM\Column(name="export_name", type="text", nullable=true)
+	 *
+   * @Serializer\Groups({"fsd", "champ"})
+	 */
+	private $exportLib;
+
+	/**
+	 * @ORM\Column(name="type_field", type="text", nullable=true)
+	 *
+   * @Serializer\Groups({"fsd", "champ"})
+	 */
+	private $typeField;
 
 
 	/**
@@ -246,6 +260,52 @@ class SyntheseFSD
 	public function getObligatoire()
 	{
 		return $this->obligatoire;
+	}
+
+	/**
+	* Set exportLib
+	*
+	* @param text $exportLib
+	* @return Organismes
+	*/
+	public function setExportLib($exportLib)
+	{
+		$this->exportLib = $exportLib;
+
+		return $this;
+	}
+
+	/**
+	* Get exportLib
+	*
+	* @return text
+	*/
+	public function getExportLib()
+	{
+		return $this->exportLib;
+	}
+
+	/**
+	* Set typeField
+	*
+	* @param text $typeField
+	* @return Organismes
+	*/
+	public function setTypeField($typeField)
+	{
+		$this->typeField = $typeField;
+
+		return $this;
+	}
+
+	/**
+	* Get typeField
+	*
+	* @return text
+	*/
+	public function getTypeField()
+	{
+		return $this->typeField;
 	}
 
 

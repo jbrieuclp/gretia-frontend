@@ -1,31 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { 
-  MatButtonModule,
-  MatButtonToggleModule,
-  MatIconModule,
-  MatTooltipModule,
-  MatTableModule,
-  MatCardModule,
-  MatTabsModule,
-  MatListModule,
-  MatInputModule,
-  MatFormFieldModule,
-  MatAutocompleteModule,
-  MatCheckboxModule,
-  MatRadioModule,
-  MatDialogModule,
-  MatSnackBarModule,
-  MatStepperModule,
-  MatProgressSpinnerModule,
-  MatExpansionModule,
-  MatBadgeModule,
-  MatBottomSheetModule,
-  MatPaginatorModule,
-  MatSortModule
- } from '@angular/material';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '../../shared';
 
 //modules
 import { ImportRoutingModule } from './import-routing.module';
@@ -37,16 +14,26 @@ import { FileDashboardComponent } from './components/file/dashboard/dashboard.co
 import { FileMapperComponent } from './components/file/mapper/mapper.component';
 import { FormMapperComponent } from './components/file/mapper/form-mapper.component';
 import { FieldListComponent } from './components/field/list/list.component';
-import { ElementComponent } from './components/field/list/element.component';
-import { EditInputDialog } from './components/field/list/element.component';
-import { EditAutocompleteDialog } from './components/field/list/element.component';
-import { EditRadioDialog } from './components/field/list/element.component';
+import { 
+  ElementComponent, 
+  EditRadioDialog, 
+  EditInputDialog, 
+  EditAutocompleteDialog 
+} from './components/field/list/element.component';
 import { ViewTableDialog } from './components/field/list/view-table.dialog';
 import { FieldObserversComponent } from './components/field/observers/observers.component';
 import { EditObserverComponent } from './components/field/observers/edit-observer.component';
 import { ToolsboxComponent } from './components/field/toolsbox/toolsbox.component';
 import { FileImportComponent } from './components/file/import/import.component';
 import { TableComponent } from './components/file/table/table.component';
+import { 
+  FileRequiredFieldComponent, 
+  FileRequiredFieldDialog 
+} from './components/file/required-field/required-field.component';
+import { AddObserverComponent } from './components/field/observers/add-observer.component';
+import { FieldLocalisationsComponent } from './components/field/localisations/localisations.component';
+import { CellComponent } from './components/file/table/cell.component';
+import { FileAddFieldComponent } from './components/file/add-field/add-field.component';
 
 //services
 import { ImportService } from './services/import.service';
@@ -56,10 +43,7 @@ import { LocalisationService } from './components/field/localisations/localisati
 
 //directives
 import { AutofocusDirective } from './directives/autofocus.directive';
-import { AddObserverComponent } from './components/field/observers/add-observer.component';
-import { FieldLocalisationsComponent } from './components/field/localisations/localisations.component';
-import { CellComponent } from './components/file/table/cell.component';
-import { FileAddFieldComponent } from './components/file/add-field/add-field.component';
+import { FileInsertComponent } from './components/file/insert/insert.component';
 
 @NgModule({
   exports: [
@@ -68,30 +52,9 @@ import { FileAddFieldComponent } from './components/file/add-field/add-field.com
     CommonModule,
     FormsModule, 
     ReactiveFormsModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatIconModule,
-    MatTooltipModule,
-    MatTableModule,
-    MatCardModule,
-    MatTabsModule,
-    MatListModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatAutocompleteModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatDialogModule,
-    MatSnackBarModule,
-    MatStepperModule,
-    MatProgressSpinnerModule,
-    MatExpansionModule,
-    MatBadgeModule,
-    MatBottomSheetModule,
-    MatPaginatorModule,
-    MatSortModule,
     ImportRoutingModule,
-    NgbModule
+    NgbModule,
+    SharedModule
   ],
   declarations: [
     ImportInitComponent,
@@ -114,14 +77,18 @@ import { FileAddFieldComponent } from './components/file/add-field/add-field.com
     ViewTableDialog,
     TableComponent,
     CellComponent,
-    FileAddFieldComponent
+    FileAddFieldComponent,
+    FileRequiredFieldComponent,
+    FileRequiredFieldDialog,
+    FileInsertComponent
   ],
   entryComponents: [ 
     EditInputDialog,
     EditAutocompleteDialog,
     EditRadioDialog,
     ViewTableDialog,
-    ToolsboxComponent
+    ToolsboxComponent,
+    FileRequiredFieldDialog
   ],
   providers: [
     ImportService,

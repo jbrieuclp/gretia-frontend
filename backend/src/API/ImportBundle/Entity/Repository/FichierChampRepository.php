@@ -33,7 +33,7 @@ class FichierChampRepository extends EntityRepository
     public function updateValue($champ, $oldValue, $newValue)
     {
         
-        $sql = "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = :newValue WHERE COALESCE(".$champ->getChamp().", '') = :oldValue";
+        $sql = "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = :newValue WHERE COALESCE(".$champ->getChamp().", '') = COALESCE(:oldValue, '')";
 
         $requete = $this->_em->getConnection()->prepare($sql);
 
