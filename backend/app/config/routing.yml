@@ -22,6 +22,11 @@ api_biblio:
     type: rest
     prefix:   /biblio/
 
+api_import:
+    resource: "@APIImportBundle/Resources/config/routing.yml"
+    type: rest
+    prefix:   /import/
+
 api_magic_taxref:
     resource: "@APIMagicTaxrefBundle/Resources/config/routing.yml"
     type: rest

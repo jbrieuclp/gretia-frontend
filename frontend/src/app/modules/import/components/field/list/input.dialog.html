@@ -1,0 +1,15 @@
+<div class="dialog-content">
+	<h5>Modification de "{{ data.initial_value }}"</h5>
+	<div class="row">
+		<mat-form-field 
+			class="col-md-9"
+			 appearance="fill">
+			<mat-label>Renseigner la nouvelle valeur</mat-label>
+	    <input 
+		    matInput 
+		    placeholder="Valeur de remplacement..." 
+		    [(ngModel)]="input">
+	  </mat-form-field>
+	 </div>
+	<button type="button" class="btn-validation" mat-raised-button color="primary" (click)="submit()">Valider</button>
+</div>

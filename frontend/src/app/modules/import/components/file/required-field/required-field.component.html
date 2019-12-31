@@ -1,0 +1,42 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<mat-card>
+	<h4>Liste des champs non mappés qui sont obligatoires</h4>
+
+	<mat-list>
+		<ng-container *ngFor="let field of fieldsFSD | async">
+			<mat-list-item *ngIf="!isMapped(field) && field.obligatoire">
+		    <button 
+			    type="button" 
+			    mat-list-icon 
+			    mat-mini-fab 
+			    color="primary"
+			    (click)="addFieldDialog(field)">
+		    	<mat-icon >add</mat-icon>
+		    </button>
+		    <h4 mat-line>{{ field.champ }}</h4>
+		  </mat-list-item>
+		  <mat-divider *ngIf="!isMapped(field) && field.obligatoire"></mat-divider>
+		</ng-container>
+	</mat-list>
+
+</mat-card>
+
+<mat-card >
+	<h4>Liste des champs mappés plusieurs fois</h4>
+	<mat-list *ngIf="multiMapped.length">
+		<ng-container *ngFor="let fsd of multiMapped">
+			<h3 mat-subheader>{{ fsd.fsd }}</h3>
+			<mat-list-item *ngFor="let field of fsd.fields">
+		    <h4 mat-line>&nbsp;&nbsp;{{ field }}</h4>
+		  </mat-list-item>
+		</ng-container>
+	</mat-list>
+
+</mat-card>

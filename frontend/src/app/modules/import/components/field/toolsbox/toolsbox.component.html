@@ -1,0 +1,35 @@
+<mat-nav-list>
+	<mat-list-item>
+     <div mat-line class="title"><b>Chercher-Remplacer</b></div>
+     <div mat-line>
+     	<form [formGroup]="searchReplaceForm" (ngSubmit)="searchReplace()" class="row">
+			  <mat-form-field class="col-sm-5">
+			  	<mat-label>Chercher</mat-label>
+			    <input 
+				    matInput 
+				    autocomplete="off"
+				    placeholder="Texte cherché..." 
+				    formControlName="search">
+			  </mat-form-field>
+
+			  <mat-form-field class="col-sm-5">
+			  	<mat-label>Remplacer</mat-label>
+			    <input 
+				    matInput 
+				    autocomplete="off"
+				    placeholder="à remplacer par..." 
+				    formControlName="replace">
+			  </mat-form-field>
+				<div  class="col-sm-2">
+		     	<button 
+		     		mat-mini-fab
+		     		type="submit"
+		     		matTooltip="Envoyer"
+		     		[disabled]="searchReplaceForm.invalid">
+		        <mat-icon>send</mat-icon>
+		     	</button>
+		    </div>
+			</form>
+     </div>
+  </mat-list-item>
+</mat-nav-list>

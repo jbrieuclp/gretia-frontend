@@ -45,8 +45,8 @@ export class AccueilComponent implements OnInit {
   	  	title: 'Import'		,
   	  	text: '<p>Outil de correction de fichier de données en vue d\'être intégré en BDD.</p>',
   	  	image: '/assets/images/import.png',
-  	  	url: 'http://outils.gretia.org/import/',
-        target: "_blank"
+  	  	url: '/import',
+        target: "_self"
   	  },
   	  {
   	  	title: 'Bibliographie'		,

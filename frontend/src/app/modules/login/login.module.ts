@@ -10,7 +10,8 @@ import {
   MatIconModule,
   MatSelectModule,
   MatGridListModule,
-  MatExpansionModule
+  MatExpansionModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 
 //modules
@@ -34,6 +35,7 @@ import { LoginComponent } from './components/login/login.component';
     MatSelectModule,
     MatGridListModule,
     MatExpansionModule,
+    MatProgressSpinnerModule,
     LoginRoutingModule
   ],
   declarations: [

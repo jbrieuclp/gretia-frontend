@@ -1,0 +1,35 @@
+.dialog-content {
+	display: block;
+  height: 100%;
+  position: relative;
+}
+
+.example-radio-group {
+  display: block;
+  position: fixed;
+  margin: 15px 0;
+  height: 60%;
+  width: 85%;
+  overflow-y: auto;
+}
+
+.example-radio-button {
+  margin: 5px;
+  display: block;
+}
+
+.btn-validation {
+	position: absolute;
+  bottom: 0;
+  right: 70px;
+}
+
+
+::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+  stroke: #fff !important;
+}
+
+button .mat-progress-spinner, button .mat-spinner {
+  display: inline-block;
+  margin-right: 10px;
+}

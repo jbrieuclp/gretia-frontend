@@ -1,45 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import {
-  MatAutocompleteModule,
-  MatBadgeModule,
-  MatBottomSheetModule,
-  MatButtonModule,
-  MatButtonToggleModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatChipsModule,
-  MatDatepickerModule,
-  MatDialogModule,
-  MatDividerModule,
-  MatExpansionModule,
-  MatGridListModule,
-  MatIconModule,
-  MatInputModule,
-  MatListModule,
-  MatMenuModule,
-  MatNativeDateModule,
-  MatPaginatorModule,
-  MatProgressBarModule,
-  MatProgressSpinnerModule,
-  MatRadioModule,
-  MatRippleModule,
-  MatSelectModule,
-  MatSidenavModule,
-  MatSliderModule,
-  MatSlideToggleModule,
-  MatSnackBarModule,
-  MatSortModule,
-  MatStepperModule,
-  MatTableModule,
-  MatTabsModule,
-  MatToolbarModule,
-  MatTooltipModule,
-  MatTreeModule,
-} from '@angular/material';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularResizedEventModule } from 'angular-resize-event';
+import { SharedModule } from '../../shared';
 
 //modules
 import { MagicTaxrefRoutingModule } from './magic-taxref-routing.module';
@@ -47,7 +10,7 @@ import { MagicTaxrefRoutingModule } from './magic-taxref-routing.module';
 //components
 import { MagicTaxrefInitComponent } from './magic-taxref-init.component';
 import { DisplayComponent } from './components/display/display.component';
-import { KeysPipe } from '../../shared/pipes/keys.pipe';
+//import { KeysPipe } from '../../shared/pipes/keys.pipe';
 
 //service
 import { VersioningService } from '../magic-taxref/services/versioning.service';
@@ -63,49 +26,15 @@ import { RepartitionComponent } from './components/repartition/repartition.compo
 @NgModule({
   imports: [
     CommonModule,
-    MatAutocompleteModule,
-    MatBadgeModule,
-    MatBottomSheetModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatChipsModule,
-    MatDatepickerModule,
-    MatDialogModule,
-    MatDividerModule,
-    MatExpansionModule,
-    MatGridListModule,
-    MatIconModule,
-    MatInputModule,
-    MatListModule,
-    MatMenuModule,
-    MatNativeDateModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
-    MatRadioModule,
-    MatRippleModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatSliderModule,
-    MatSlideToggleModule,
-    MatSnackBarModule,
-    MatSortModule,
-    MatStepperModule,
-    MatTableModule,
-    MatTabsModule,
-    MatToolbarModule,
-    MatTooltipModule,
-    MatTreeModule,
     NgbModule,
     AngularResizedEventModule,
-    MagicTaxrefRoutingModule
+    MagicTaxrefRoutingModule,
+    SharedModule
   ],
   declarations: [
     MagicTaxrefInitComponent,
   	DisplayComponent,
-    KeysPipe,
+//    KeysPipe,
     SynonymeComponent,
     VDetailComponent,
     SearchingComponent,

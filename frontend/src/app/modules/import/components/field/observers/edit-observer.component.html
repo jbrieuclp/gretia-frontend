@@ -1,0 +1,69 @@
+
+	<ng-container *ngIf="!displayForm; else formObserver">
+		<span 
+			*ngIf="!observer.propositions.length"
+			class="name">{{ observer.observer }}</span>
+		<div 
+			*ngIf="observer.propositions.length"
+			matTooltip="{{ observer.propositions.length }} proposition(s) disponible(s)"
+			matTooltipPosition="left">
+			<span 
+				[matBadge]="observer.propositions.length" 
+				matBadgeOverlap="false">
+				{{ observer.observer }}
+			</span>
+		</div>
+	</ng-container>
+	<ng-template #formObserver>
+		<div class="row">
+			<mat-form-field class="col-md-6" id="search-observer-zone">
+			  <input matInput 
+				  #searchInput 
+			  	class="autocomplete" 
+			  	placeholder="Rechercher un observateur existant" 
+			  	autoFocus
+				  [matAutocomplete]="resultList" 
+			  	(keyup)="searchTerm$.next(searchInput.value)" 
+			  	[(ngModel)]="searchValue"
+			  	autocomplete="off">
+			  <mat-autocomplete #resultList="matAutocomplete">
+			    <ng-container *ngIf="(!isWaiting && results.length)">
+			      <mat-option 
+				      *ngFor="let val of results" 
+				      (click)="searchTerm = val" 
+				      [value]="val">
+			        <span class="right circle"><i class="mdi mdi-phone"></i></span>
+			        <span>{{ val }}</span>
+			      </mat-option>
+			    </ng-container>
+			    <ng-container *ngIf="isWaiting && searchInput.value.length">
+			      <mat-option disabled>
+			        <span class="left loader"></span>
+			        <span>Recherche en cours</span>
+			      </mat-option>
+			    </ng-container>
+			    <ng-container *ngIf="!isWaiting && !results.length && searchInput.value.length">
+			      <mat-option disabled>
+			        <mat-icon>error</mat-icon>
+			        <span>Aucun résultat ne correspond à la recherche</span>
+			      </mat-option>
+			    </ng-container>
+			  </mat-autocomplete>
+			</mat-form-field>
+			<div class="col-md-6">
+				<button 
+			  	mat-raised-button
+				  color="primary"
+			  	matTooltip="Enregistrer la modification"
+			  	(click)="submit()">
+			  	<mat-icon>save</mat-icon>
+			  </button>
+			  <button 
+				  mat-raised-button 
+				  matTooltip="Annuler la modification"
+				  (click)="closeForm()">
+				  <mat-icon>clear</mat-icon>
+				</button>
+			</div>
+		</div>
+	</ng-template>
