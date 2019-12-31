@@ -106,7 +106,7 @@ class FichierRepository extends EntityRepository
       if ( !is_null($fields['latitude']) and !is_null($fields['longitude'])) {
         $select[] = "f.".$fields['latitude']." AS latitude";
         $select[] = "f.".$fields['longitude']." AS longitude";
-        $select[] = "ST_AsGeoJSON(ST_Transform(ST_SetSRID(st_MakePoint(NULLIF(f.".$fields['longitude'].", '')::double precision, NULLIF(f.".$fields['latitude'].", '')::double precision), 4326), 2154)) as the_geom";
+        $select[] = "ST_AsGeoJSON(ST_Transform(ST_SetSRID(st_MakePoint(NULLIF(f.".$fields['longitude'].", '')::double precision, NULLIF(f.".$fields['latitude'].", '')::double precision), 4326), 3857)) as the_geom";
       }
 
       if ( !is_null($fields['area']) ) {
