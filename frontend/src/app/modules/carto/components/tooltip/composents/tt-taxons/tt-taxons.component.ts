@@ -8,7 +8,7 @@ import { GlobalsService } from '../../../../../../shared/services/globals.servic
 @Component({
   selector: 'app-carto-tooltip-content-taxons',
   templateUrl: './tt-taxons.component.html',
-  styleUrls: ['../tt-composent.component.scss'],
+  styleUrls: ['../tt-taxons.component.scss'],
   providers: [GlobalsService]
 })
 export class TooltipTaxonsComponent implements OnInit {
