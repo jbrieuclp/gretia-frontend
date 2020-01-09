@@ -27,7 +27,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
     
     /**
     * @Rest\View(serializerGroups = {"fichier"})
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Get("/fichiers")
     */
@@ -40,7 +40,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
 
     /**
     * @Rest\View(serializerGroups = {"fichier"})
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Get("/fichier/{id}")
     */
@@ -57,7 +57,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
 
     /**
     * @Rest\View(serializerGroups = {"champ"})
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Get("/fichier/{id}/fields")
     */
@@ -92,7 +92,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
 
     /**
     * @Rest\View()
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Post("/fichier/{id}/view")
     */
@@ -127,7 +127,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
 
     /**
     * @Rest\View()
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Post("/fichier/{id}/add-field")
     */
@@ -150,7 +150,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
 
     /**
     * @Rest\View()
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Patch("/fichier/{id}/row/{row}", requirements={"id"="\d+", "row"="\d+"})
     */
@@ -178,7 +178,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
 
     /**
     * @Rest\View(serializerGroups = {"fichier"})
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Post("/fichier/upload")
     */
@@ -238,7 +238,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
 
     /**
     * @Rest\View(serializerGroups = {"champ"})
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Post("/fichier/{id}/field")
     */
@@ -264,7 +264,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
 
     /**
     * @Rest\View()
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Get("/fichier/{id}/localisations")
     */
