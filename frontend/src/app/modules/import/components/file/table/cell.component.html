@@ -1,0 +1,30 @@
+<ng-container *ngIf="!displayForm; else formBlock">
+	<div class="cell-content">{{ row[key] }}</div>
+</ng-container>
+<ng-template #formBlock>
+	<div class="row cell-form">
+		<mat-form-field class="col-sm-8">
+		  <input matInput 
+		  	autoFocus
+		  	[(ngModel)]="formValue"
+		  	autocomplete="off">
+		</mat-form-field>
+		<div class="col-sm-4">
+			<button 
+				mat-mini-fab 
+				class="pull-right" 
+				color="primary"
+				style="margin-right: 5px;"
+				(click)="submit()">
+				<mat-icon>done</mat-icon>
+			</button>
+			<button 
+				mat-mini-fab 
+				class="pull-right" 
+				color="warn"
+				(click)="cancel()">
+				<mat-icon>clear</mat-icon>
+			</button>
+		</div>
+	</div>
+</ng-template>

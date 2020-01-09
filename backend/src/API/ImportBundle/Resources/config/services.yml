@@ -1,0 +1,3 @@
+services:
+    api_import_fichier_controller:
+        class: API\ImportBundle\Controller\FichierController

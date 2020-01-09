@@ -1,0 +1,39 @@
+<h1 mat-dialog-title class="ss-titre">Fonds de cartes</h1>
+<mat-accordion multi="true">
+    <mat-expansion-panel *ngFor="let group of layers;">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <b>{{ group.get('title') }}</b>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      
+      <ng-container *ngFor="let layer of group.getLayers().getArray(); let i = index">
+        <div *ngIf="layer.get('displayInLayerSwitcher')">
+          <mat-checkbox 
+            color="primary"
+            [checked]="layer.getVisible()" 
+            (change)="layer.setVisible(!layer.getVisible())">{{ layer.get('title') }}</mat-checkbox>
+          <button mat-icon-button 
+            color="primary" 
+            matTooltip="Changer l'opacité"
+            (click)="switchOpacity(layer)">
+            <mat-icon>brightness_medium</mat-icon>
+          </button>
+          <br>
+          <div *ngIf="displayOpacity(layer)">
+            Opacité : 
+            <mat-slider
+              color="primary"
+              [value]="layer.getOpacity()*100"
+              (change)="layer.setOpacity( $event.value / 100 )"
+              tickInterval="1"
+              min="0"
+              max="100" 
+              #slider></mat-slider> {{ slider.value }}% {{ value | json }}
+          </div>
+        </div>
+      </ng-container>
+
+    </mat-expansion-panel>
+  
+</mat-accordion>

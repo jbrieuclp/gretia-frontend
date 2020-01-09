@@ -35,9 +35,11 @@ class AppKernel extends Kernel
             new API\BiblioBundle\APIBiblioBundle(),
             new API\MagicTaxrefBundle\APIMagicTaxrefBundle(),
             new API\CoreBundle\APICoreBundle(),
+            new API\CartoBundle\APICartoBundle(),
             new API\SerenaBundle\APISerenaBundle(),
             new API\MetadataBundle\APIMetadataBundle(),
             new API\ProjetBundle\APIProjetBundle(),
+            new API\ImportBundle\APIImportBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

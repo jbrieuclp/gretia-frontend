@@ -1,0 +1,11 @@
+<span style="margin-right:10px;"><mat-icon (click)="editDialog()">edit</mat-icon></span>
+<span style="width: 100%;">{{ value.value }}</span>
+<span class="pull-right">
+  <mat-icon style="margin-right:20px;" (click)="tableDialog()">table_chart</mat-icon>
+</span>
+<span class="pull-right" (mouseover)='syncIcon = !syncIcon' (mouseout)='syncIcon = !syncIcon'>
+  <mat-icon 
+  	[matTooltip]="syncTooltip"
+  	matTooltipPosition="before"
+  	(click)="switchSynchonisation()">{{ syncIcon ? 'sync_disabled' : 'sync' }}</mat-icon>
+</span>

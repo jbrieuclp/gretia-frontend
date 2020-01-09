@@ -4,20 +4,24 @@
 namespace API\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection; 
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use API\CoreBundle\Entity\Droit;
+use API\CoreBundle\Entity\UserList;
 
 /**
  * @ORM\Table(name="utilisateurs.t_roles")
  * @ORM\Entity
- * @UniqueEntity(em="geonature_db", fields="username", message="Cet identifiant est déjà utilisé")
- * @UniqueEntity(em="geonature_db", fields="email", message="Cet email est déjà associé à un compte utilisateur")
  */
 class UserGeoNature
 {
+    public function __construct()
+    {
+        $this->listes = new ArrayCollection();
+    }
+
     /**
      * @var integer
      *
@@ -37,44 +41,6 @@ class UserGeoNature
      * @Serializer\Groups({"user_get", "droit_get"})
      */
     private $groupe;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="uuid_role", type="string")
-     *
-     * @Serializer\Groups({"user_get", "droit_get"})
-     */
-    private $uuid;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="identifiant", type="string", length=100)
-     * @Assert\NotBlank(message="Veuillez renseigner un identifiant")
-     * @Assert\Length(
-     *      max = 100,
-     *      maxMessage = "Attention, l'identifiant ne peut pas dépasser plus de {{ limit }} caractères"
-     * )
-     *
-     * @Serializer\Groups({"user_get", "droit_get"})
-     */
-    private $username;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="pass", type="string", length=100)
-     */
-    private $md5;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="pass_plus", type="string")
-     * @Assert\NotBlank(message="Veuillez renseigner un mot de passe")
-     */
-    private $password;
 
     /**
      * @var string
@@ -104,89 +70,12 @@ class UserGeoNature
      */
     private $prenom;
 
+
     /**
-     * @var string
-     *
-     * @ORM\Column(name="desc_role", type="string")
-     *
-     * @Serializer\Groups({"user_get", "droit_get"})
+     * @ORM\OneToMany(targetEntity="API\CoreBundle\Entity\UserList", mappedBy="user", cascade={"all"}, orphanRemoval=true)
      */
-    private $description;
+    private $listes;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="id_unite", type="integer")
-     */
-    private $unite;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="id_organisme", type="integer")
-     */
-    private $organisme;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="organisme", type="string", length=32)
-     */
-    private $organismeTxt;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=250, unique=true)
-     * @Assert\NotBlank(message="Veuillez renseigner une adresse email")
-     * @Assert\Length(
-     *      max = 250,
-     *      maxMessage = "Navré, votre email ne peut pas dépasser plus de {{ limit }} caractères"
-     * )
-     * @Assert\Email(
-     *     message = "Cet email '{{ value }}' ne semble pas être valide",
-     *     checkMX = true
-     * )
-     *
-     * @Serializer\Groups({"user_get", "droit_get"})
-     */
-    private $email;
-
-    /**
-     * @ORM\Column(name="date_insert", type="datetime")
-     *
-     * @Serializer\Groups({"user_get"})
-     * @Serializer\Type("DateTime<'Y-m-d\TH:i:s.u\Z'>")
-     */
-    private $dateCreation;
-
-    /**
-     * @ORM\Column(name="date_update", type="datetime")
-     *
-     * @Serializer\Groups({"user_get"})
-     * @Serializer\Type("DateTime<'Y-m-d\TH:i:s.u\Z'>")
-     */
-    private $dateUpdate;
-
-    /**
-     * @ORM\OneToMany(targetEntity="API\CoreBundle\Entity\Droit", mappedBy="user", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
-     * @Serializer\Groups({"droit_get"})
-     */
-    private $droits;
-
-
-    /**
-    * Set id
-    *
-    * @param string $id
-    * @return string
-    */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
 
     /**
     * Get id
@@ -224,107 +113,7 @@ class UserGeoNature
     }
 
 
-
-    /**
-    * Set uuid
-    *
-    * @param string $uuid
-    * @return string
-    */
-    public function setUuid($uuid)
-    {
-        $this->uuid = $uuid;
-
-        return $this;
-    }
-
-    /**
-    * Get uuid
-    *
-    * @return integer 
-    */
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
-
-
-    /**
-    * Set username
-    *
-    * @param string $username
-    * @return string
-    */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-    * Get username
-    *
-    * @return integer 
-    */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-
-    /**
-    * Set md5
-    *
-    * @param string $md5
-    * @return string
-    */
-    public function setMd5($md5)
-    {
-        $this->md5 = $md5;
-
-        return $this;
-    }
-
-    /**
-    * Get md5
-    *
-    * @return integer 
-    */
-    public function getMd5()
-    {
-        return $this->md5;
-    }
-
-
-
-    /**
-    * Set password
-    *
-    * @param string $password
-    * @return string
-    */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-    * Get password
-    *
-    * @return integer 
-    */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-
-
-
+    
     /**
     * Set nom
     *
@@ -374,173 +163,6 @@ class UserGeoNature
     }
 
 
-
-    /**
-    * Set description
-    *
-    * @param string $description
-    * @return string
-    */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-    * Get description
-    *
-    * @return integer 
-    */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-
-    /**
-    * Set unite
-    *
-    * @param string $unite
-    * @return string
-    */
-    public function setUnite($unite)
-    {
-        $this->unite = $unite;
-
-        return $this;
-    }
-
-    /**
-    * Get unite
-    *
-    * @return integer 
-    */
-    public function getUnite()
-    {
-        return $this->unite;
-    }
-
-
-    /**
-    * Set organisme
-    *
-    * @param string $organisme
-    * @return string
-    */
-    public function setOrganisme($organisme)
-    {
-        $this->organisme = $organisme;
-
-        return $this;
-    }
-
-    /**
-    * Get organisme
-    *
-    * @return integer 
-    */
-    public function getOrganisme()
-    {
-        return $this->organisme;
-    }
-
-
-    /**
-    * Set organismeTxt
-    *
-    * @param string $organismeTxt
-    * @return string
-    */
-    public function setOrganismeTxt($organismeTxt)
-    {
-        $this->organismeTxt = $organismeTxt;
-
-        return $this;
-    }
-
-    /**
-    * Get organismeTxt
-    *
-    * @return integer 
-    */
-    public function getOrganismeTxt()
-    {
-        return $this->organismeTxt;
-    }
-
-
-
-    /**
-    * Set email
-    *
-    * @param string $email
-    * @return string
-    */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-    * Get email
-    *
-    * @return integer 
-    */
-    public function getEmail()
-    {
-        return $this->email;
-    }
-
-    /**
-    * Set dateCreation
-    *
-    * @param string $dateCreation
-    * @return string
-    */
-    public function setDateCreation($dateCreation)
-    {
-        $this->dateCreation = $dateCreation;
-
-        return $this;
-    }
-
-    /**
-    * Get dateCreation
-    *
-    * @return integer 
-    */
-    public function getDateCreation()
-    {
-        return $this->dateCreation;
-    }
-
-    /**
-    * Set dateUpdate
-    *
-    * @param string $dateUpdate
-    * @return string
-    */
-    public function setDateUpdate($dateUpdate)
-    {
-        $this->dateUpdate = $dateUpdate;
-
-        return $this;
-    }
-
-    /**
-    * Get dateUpdate
-    *
-    * @return integer 
-    */
-    public function getDateUpdate()
-    {
-        return $this->dateUpdate;
-    }
-
     public function getNomPrenom()
     {
         // you *may* need a real salt depending on your encoder
@@ -548,10 +170,11 @@ class UserGeoNature
         return implode(' ', [$this->nom, $this->prenom]);
     }
 
-    public function addDroit(Droit $item)
+
+    public function addListe(UserList $item)
     {
         // Ici, on utilise l'ArrayCollection vraiment comme un tableau
-        $this->droits[] = $item;
+        $this->listes[] = $item;
         
         // On lie le releve au obseur orga
         $item->setUser($this);
@@ -559,16 +182,16 @@ class UserGeoNature
         return $this;
     }
 
-    public function removeDroit(Droit $item)
+    public function removeListe(UserList $item)
     {
         // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
-        $this->droits->removeElement($item);
+        $this->listes->removeElement($item);
         $item->setUser(null);
     }
 
     // Notez le pluriel, on récupère une liste de catégories ici !
-    public function getDroits()
+    public function getListes()
     {
-        return $this->droits;
+        return $this->listes;
     }
 }

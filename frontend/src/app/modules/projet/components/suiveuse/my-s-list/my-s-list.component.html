@@ -34,7 +34,7 @@
       <!-- Number Column -->
       <ng-container matColumnDef="duree">
         <th mat-header-cell *matHeaderCellDef>Temps de travail</th>
-        <td mat-cell *matCellDef="let element">{{ element.duree }}</td>
+        <td mat-cell *matCellDef="let element">{{ element.duree | timeFormat }}</td>
       </ng-container>
 
       <!-- State Column -->

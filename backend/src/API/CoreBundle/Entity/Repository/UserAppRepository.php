@@ -24,13 +24,14 @@ class UserAppRepository extends EntityRepository implements UserLoaderInterface
 			$rsm->addFieldResult('u', 'pass', 'md5');
 			$rsm->addFieldResult('u', 'pass_plus', 'password');
 			$rsm->addFieldResult('u', 'email', 'email');
+			$rsm->addFieldResult('u', 'id_organisme', 'organisme');
 			$rsm->addFieldResult('u', 'roles', 'roles');
 
-			$sql = "SELECT roles.id_role, roles.identifiant, roles.nom_role, roles.prenom_role, roles.desc_role, roles.pass, roles.pass_plus, roles.email, array_to_json(array_agg(DISTINCT app.code_application)::character varying[]) as roles
+			$sql = "SELECT roles.id_role, roles.identifiant, roles.nom_role, roles.prenom_role, roles.desc_role, roles.pass, roles.pass_plus, roles.email, roles.id_organisme, array_to_json(array_agg(DISTINCT app.code_application)::character varying[]) as roles
 				FROM utilisateurs.v_roleslist_forall_applications roles
 				INNER JOIN utilisateurs.t_applications app ON roles.id_application = app.id_application
 				WHERE roles.identifiant = ?
-				GROUP BY roles.id_role, roles.identifiant, roles.nom_role, roles.prenom_role, roles.desc_role, roles.pass, roles.pass_plus, roles.email";
+				GROUP BY roles.id_role, roles.identifiant, roles.nom_role, roles.prenom_role, roles.desc_role, roles.pass, roles.pass_plus, roles.email, roles.id_organisme";
 
 			$query = $this->_em->createNativeQuery($sql, $rsm);
 			$query->setParameter(1, $username);
@@ -39,7 +40,7 @@ class UserAppRepository extends EntityRepository implements UserLoaderInterface
     }
 
 
-    public function find($id)
+    public function find($id, $lockMode = NULL, $lockVersion = NULL)
     {
 
     	$rsm = new ResultSetMapping;
@@ -52,13 +53,14 @@ class UserAppRepository extends EntityRepository implements UserLoaderInterface
 			$rsm->addFieldResult('u', 'pass', 'md5');
 			$rsm->addFieldResult('u', 'pass_plus', 'password');
 			$rsm->addFieldResult('u', 'email', 'email');
+			$rsm->addFieldResult('u', 'id_organisme', 'organisme');
 			$rsm->addFieldResult('u', 'roles', 'roles');
 
-			$sql = "SELECT roles.id_role, roles.identifiant, roles.nom_role, roles.prenom_role, roles.desc_role, roles.pass, roles.pass_plus, roles.email, array_to_json(array_agg(DISTINCT app.code_application)::character varying[]) as roles
+			$sql = "SELECT roles.id_role, roles.identifiant, roles.nom_role, roles.prenom_role, roles.desc_role, roles.pass, roles.pass_plus, roles.email, roles.id_organisme, array_to_json(array_agg(DISTINCT app.code_application)::character varying[]) as roles
 				FROM utilisateurs.v_roleslist_forall_applications roles
 				INNER JOIN utilisateurs.t_applications app ON roles.id_application = app.id_application
 				WHERE roles.id_role = :id
-				GROUP BY roles.id_role, roles.identifiant, roles.nom_role, roles.prenom_role, roles.desc_role, roles.pass, roles.pass_plus, roles.email";
+				GROUP BY roles.id_role, roles.identifiant, roles.nom_role, roles.prenom_role, roles.desc_role, roles.pass, roles.pass_plus, roles.email, roles.id_organisme";
 
 			$query = $this->_em->createNativeQuery($sql, $rsm);
 			$query->setParameter('id', $id);

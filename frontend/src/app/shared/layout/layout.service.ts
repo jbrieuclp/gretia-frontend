@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+interface NB_COLOR {
+  background: string,
+  text: string
+}
+
 @Injectable()
 export class LayoutService {
 
 	protected title: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+  protected navbarColor: BehaviorSubject<NB_COLOR> = new BehaviorSubject<NB_COLOR>({background: '#673ab7', text: '#fff'});
 	protected sidenav: BehaviorSubject<Array<any>> = new BehaviorSubject<Array<any>>(null);
 
   constructor() { }
@@ -12,6 +18,10 @@ export class LayoutService {
   public setLayout(layout: any) {
     if ( layout.title != null ) {
       this.setTitle(layout.title);
+    }
+
+    if ( layout.navbarColor != null ) {
+      this.setNavbarColor(layout.navbarColor);
     }
 
     if ( layout.sidenav != null ) {
@@ -25,6 +35,14 @@ export class LayoutService {
 
   public getTitle() {
     return this.title.value;
+  }
+
+  public setNavbarColor(color: NB_COLOR) {
+    this.navbarColor.next(color);
+  }
+
+  public getNavbarColor(): NB_COLOR {
+    return this.navbarColor.value;
   }
 
   public setSidenav(sidenav: Array<any>) {

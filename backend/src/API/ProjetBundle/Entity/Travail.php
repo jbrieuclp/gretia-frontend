@@ -53,7 +53,7 @@ class Travail
   private $categorie;
 
   /**
-   * @ORM\Column(name="duree", type="string", nullable=true)
+   * @ORM\Column(name="duree", type="integer", nullable=true)
    *
    * @Serializer\Groups({"travail", "projet"})
    */

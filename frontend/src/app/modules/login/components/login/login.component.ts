@@ -2,6 +2,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
 
 import { AuthService } from '../../../../shared/auth/authentication.service';
 
@@ -15,6 +16,7 @@ export class LoginComponent {
     loginForm: FormGroup;
     error: any = '';
     returnUrl: string;
+    waiting: boolean = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -24,7 +26,6 @@ export class LoginComponent {
     ) { }
 
     ngOnInit() {
-        console.log(this.error);
         this.loginForm = this.formBuilder.group({
             'username': ['', Validators.required],
             'password': ['', Validators.required]
@@ -35,20 +36,25 @@ export class LoginComponent {
     }
 
     onSubmit() {
-        this.authenticationService
-          .login(this.loginForm.value)
-          .subscribe(
-              data => {
-                this.router.navigateByUrl(this.returnUrl);
-              },
-              error => {
-                console.log(error);
-                console.log(error.error.message);
-                if ( error.status == 401 ) {
-                  this.error = error.error.message;
-                }
-                console.log(this.error);
+      this.waiting = true  ;
+      this.authenticationService
+        .login(this.loginForm.value)
+        .pipe(
+          map(result => {
+            this.waiting = false;
+            return result;
+          })
+        ).subscribe(
+            data => {
+              this.router.navigateByUrl(this.returnUrl);
+            },
+            error => {
+              if ( error.status == 401 ) {
+                this.error = error.error.message.message;
+              } else {
+                this.error = "Erreur au niveau du serveur";
               }
-          );
+            }
+        );
     }
 }

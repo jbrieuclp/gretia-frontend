@@ -87,6 +87,13 @@ class UserApp implements UserInterface, \Serializable
     private $email;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_organisme", type="integer")
+     */
+    private $organisme;
+
+    /**
      * @ORM\Column(name="date_insert", type="date")
      */
     private $dateCreation;
@@ -348,6 +355,29 @@ class UserApp implements UserInterface, \Serializable
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+    * Set organisme
+    *
+    * @param string $organisme
+    * @return string
+    */
+    public function setOrganisme($organisme)
+    {
+        $this->organisme = $organisme;
+
+        return $this;
+    }
+
+    /**
+    * Get organisme
+    *
+    * @return integer 
+    */
+    public function getOrganisme()
+    {
+        return $this->organisme;
     }
 
     /**

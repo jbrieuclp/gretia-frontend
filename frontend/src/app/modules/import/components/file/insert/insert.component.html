@@ -1,0 +1,51 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<mat-card>
+	<div *ngIf="fields">
+		<div>
+			INSERT INTO ____ (
+				unique_id_sinp, the_geom_4326, the_geom_point, the_geom_local
+				<ng-container *ngFor="let field of fields">
+					, {{ field.fieldFSD.exportLib }}
+				</ng-container>
+			)
+		</div>
+		<br>
+		<div>SELECT</div>
+		<div>d.adm_uuid_auto AS unique_id_sinp</div>
+		<div>, ST_Transform(d.adm_geom, 4326) AS the_geom_4326</div>
+		<div>, ST_Transform(ST_PointOnSurface(d.adm_geom), 4326) AS the_geom_point</div>
+		<div>, d.adm_geom AS the_geom_local</div>
+		<ng-container *ngFor="let field of fields">
+			<ng-container *ngIf="field.fieldFSD.sql.id||null !== null; else normalBlock">
+				<div>, 
+				((
+					SELECT {{ field.fieldFSD.sql.id }} 
+					FROM {{ field.fieldFSD.sql.from }}
+					WHERE {{ field.fieldFSD.sql.comparator }} = d.{{ field.champ }}
+					<ng-container *ngIf="field.fieldFSD.sql.where">
+						AND {{ field.fieldFSD.sql.where }}
+					</ng-container>
+				))::{{ field.fieldFSD.typeField }} AS {{ field.fieldFSD.exportLib }}</div>
+			</ng-container>
+			<ng-template #normalBlock>
+				<div>, (d.{{ field.champ }})::{{ field.fieldFSD.typeField }} AS {{ field.fieldFSD.exportLib }}</div>
+			</ng-template>
+		</ng-container>
+	</div>
+	<div *ngIf="fichier">
+		FROM {{ fichier.table }} as d
+	</div>
+	<div>
+		WHERE 
+			NOT COALESCE(d.adm_import_exclude, false) 
+			AND NOT COALESCE(d.adm_doublon_bd, false) 
+			AND NOT COALESCE(d.adm_doublon_fichier, false);
+	</div>
+</mat-card>

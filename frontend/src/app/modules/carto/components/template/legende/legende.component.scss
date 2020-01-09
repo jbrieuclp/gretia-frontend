@@ -1,0 +1,56 @@
+.legend-panel {
+	z-index: 10;
+	position: absolute;
+	bottom: 10px;
+	left: 60px;
+	border-radius: 4px;
+	min-width: 100px;
+	background-color: #fff;
+	opacity: 0.8;
+  padding: 5px 10px;
+  -webkit-box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);
+  -moz-box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);
+  box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);
+  cursor: default;
+	width: auto;
+	display: block;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.legend-layer {
+	font-size: .9em;
+	margin-bottom: 3px;
+}
+
+.row-legende {
+  line-height: 1em;
+}
+
+.legend-layer .mat-icon {
+	margin-right: 5px;
+	font-size: 1.4em;
+  line-height: 20px;
+  width: 20px;
+}
+
+.legend-layer-color { margin: 7px 0px 0px 15px; }
+
+.legend-layer-color .color {
+  display: inline-block;
+  border: 1px solid #505050;
+  width: 15px;
+  height: 10px;
+  margin-right: 5px;
+}
+
+.legend-layer-color .libelle {
+  vertical-align: 1px;
+  font-size: 11px;
+}
+
+.remove-layer {
+	color: red;
+	margin-right: 0px!important;
+}

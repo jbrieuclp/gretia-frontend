@@ -15,7 +15,7 @@ const layout = {title: 'Suivis Études',
 
 @Component({
   selector: 'app-projet-init',
-  template: '<router-outlet></router-outlet>'
+  template: '<div class="container-fluid"><router-outlet></router-outlet></div>'
 })
 export class ProjetInitComponent {
 

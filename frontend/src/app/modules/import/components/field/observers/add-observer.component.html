@@ -1,0 +1,24 @@
+<ng-container [formGroup]="form">
+	<td>{{ observer.observer }}</td>
+	<td>
+		<mat-form-field appearance="fill">
+	    <input 
+	    matInput 
+	    placeholder="Nom" 
+	    formControlName="nom">
+	  </mat-form-field>
+	</td>
+	<td>
+		<mat-form-field appearance="fill">
+	    <input 
+	    matInput 
+	    placeholder="Prenom" 
+	    formControlName="prenom">
+	  </mat-form-field>
+	</td>
+	<td>
+		<button type="submit" (click)="submit()" mat-mini-fab color="primary">
+	    <mat-icon>send</mat-icon>
+	  </button>
+	</td>
+</ng-container>

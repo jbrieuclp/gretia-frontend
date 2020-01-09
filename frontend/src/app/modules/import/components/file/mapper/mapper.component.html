@@ -1,0 +1,79 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<mat-card>
+	<h4>Liste des champs du fichier à mapper</h4>
+	<ng-container *ngIf="fields.length; else nomapped">
+
+		<div style="margin-bottom: 20px;">
+			<mat-button-toggle-group 
+				appearance="legacy"
+				name="fontStyle" 
+				aria-label="Font Style" 
+				#group="matButtonToggleGroup">
+			  <mat-button-toggle value="all" [checked]="true">Tous</mat-button-toggle>
+			  <mat-button-toggle value="mapped">Mappés</mat-button-toggle>
+			  <mat-button-toggle value="unmapped">Non mappés</mat-button-toggle>
+			</mat-button-toggle-group>
+
+			<a 
+				mat-raised-button 
+				routerLink="../add-field"
+				style="margin-left: 40px;"
+				color="primary">
+				<mat-icon>add</mat-icon> Ajouter un champ au fichier
+			</a>
+
+			<!-- <button mat-raised-button 
+				type="button"
+				color="primary" 
+				(click)="autoMapping()"
+			>Mappage automatique</button> -->
+		</div>
+
+  	<table class="table table-bordered table-hover">
+		  <thead>
+		    <tr>
+		      <th></th>
+		      <th>Champ fichier</th>
+		      <th>FSD Synthèse</th>
+		      <th></th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  	<ng-container *ngFor="let field of fields">
+			    <tr *ngIf="group.value === 'all' 
+			    						|| (group.value === 'mapped' && field.id !== null)
+			    						|| (group.value === 'unmapped' && field.id === null)"
+			    	[ngClass]="{'table-success': field.id !== null}"
+			    >
+			      <th><mat-icon>{{ field.id === null ? 'remove' : 'done' }}</mat-icon></th>
+			      <th>{{ field.champ }}</th>
+			      <td>
+							<app-import-file-form-mapper #formMapper [(field)]="field"></app-import-file-form-mapper>
+						</td>
+			      <td class="text-center">
+			      	<button 
+			      		mat-raised-button 
+			      		color="warn" 
+			      		matTooltip="Supprimer le mappage de ce champ"
+			      		(click)="removeMapping(field)"
+			      	>
+			      		<mat-icon>clear</mat-icon>
+			      	</button>
+			      </td>
+			    </tr>
+			  </ng-container>
+		  </tbody>
+		</table>
+	</ng-container>
+	<ng-template #nomapped>
+		<br>
+		Il n'y a aucun champ à mapper pour ce fichier.
+	</ng-template>
+</mat-card>

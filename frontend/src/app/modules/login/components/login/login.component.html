@@ -7,7 +7,7 @@
 				  <mat-card-content>
 				  	<div class="alert alert-danger" role="alert" [hidden]="!error">
 				  		<mat-icon>error</mat-icon>
-				  		<span>{{ error?.message }}</span>
+				  		<span>{{ error }}</span>
 						</div>
 
 				  	<div>
@@ -33,14 +33,20 @@
 
 
 				    <div>
-			      	<a routerLink="/inscription">Créer un compte</a>
+			      	<a href="//outils.gretia.org/geonature/#/inscription">Créer un compte</a>
 		      	</div>
 		        <div style="margin-left: auto; width: auto;">
 		      		<button mat-button
 		      			class="form-element waves-effect waves-light btn"
 		      			type="submit"
 		      			color="primary" 
-		      			mat-raised-button>Suivant</button>
+		      			mat-raised-button>
+		      			<mat-spinner 
+		      				*ngIf="waiting"
+									diameter="25"
+									strokeWidth="2">
+								</mat-spinner> Suivant
+							</button>
 		      	</div>
 
 				  </mat-card-content>

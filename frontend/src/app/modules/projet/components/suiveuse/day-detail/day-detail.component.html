@@ -13,7 +13,7 @@
 				    <mat-icon aria-label="crayon d'édition">edit</mat-icon>
 				  </button>
 		  	</span>
-		  	<span class="duree">{{ travail.duree }}</span>
+		  	<span class="duree">{{ travail.duree | timeFormat }}</span>
 		  	<span class="libelle">{{ travail.mission.libelle }}</span>
 		  	<span class="detail" *ngIf="travail.detail !== null && travail.detail !==''">
 		  		{{ travail.detail }}

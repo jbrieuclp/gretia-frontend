@@ -1,0 +1,22 @@
+<app-carto-search-taxon></app-carto-search-taxon>
+
+<h5 class="ss-titre">Liste des repartitions chargées</h5>
+
+<div class="no-taxon" *ngIf="layerS.layers.length == 0">Pas de taxon chargé pour le moment</div>
+
+<div *ngFor="let layer of layerS.layers">
+	<ng-container *ngIf="layer.type == 'repartition'">
+		<ng-container *ngIf="layer.state == 'load'">
+			<span class="float-left" style="margin-right: 10px;"><mat-spinner diameter="20" strokeWidth="2"></mat-spinner></span> {{layer.properties.taxon.nom_valide}}
+		</ng-container>
+
+		<ng-container *ngIf="layer.state == 'done'">
+			<mat-slide-toggle 
+				color="primary"
+				[checked]="layer.olLayer.get('displayInLegend')"
+				(change)="sliderChange($event.checked, layer)"> {{layer.properties.taxon.nom_valide}} </mat-slide-toggle>
+		</ng-container>
+	</ng-container>
+</div>
+
+<app-carto-images></app-carto-images>

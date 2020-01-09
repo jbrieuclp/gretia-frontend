@@ -1,0 +1,12 @@
+<mat-tab-group>
+	<mat-tab *ngFor="let layer of data"> 
+		<ng-template mat-tab-label>
+	    {{ layer.title }}
+		</ng-template>
+		<div class="tab-content">
+			<ng-container *ngFor="let feature of layer.features">
+	  		<app-carto-tooltip-content [layer_id]="layer.ID" [feature]="feature"></app-carto-tooltip-content>
+	  	</ng-container>
+		</div>
+	</mat-tab>
+</mat-tab-group>

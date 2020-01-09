@@ -1,0 +1,100 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<div class="row">
+	<div class="col-sm-5">
+		<mat-card [ngStyle]="{'height.px': cardHeight}">
+			<mat-card-header>
+				<mat-card-title>Liste des champs ({{ fields.length }})</mat-card-title>
+			</mat-card-header>
+			<mat-card-content [ngStyle]="{'height.px': cardContentHeight}">
+				<div class="list-group list-group-flush">
+				  <div 
+					  *ngFor="let field of fields"
+					  class="list-group-item" 
+				  >
+				  	<div class="d-flex w-100 justify-content-between">
+				      <h6 class="mb-1">{{ field.champ }}</h6>
+				      <small 
+				      	class="text-muted" 
+				      	style="cursor: pointer;" 
+				      	matTooltip="Afficher les valeurs du champ {{ field.champ }}"
+				      	(click)="loadValues(field)"
+				      ><mat-icon>visibility</mat-icon></small>
+				    </div>
+				    <div class="form-check">
+							<mat-checkbox 
+								color="primary"
+								[checked]="field.check" 
+								[(ngModel)]="field.check" 
+								(ngModelChange)="switchStatut($event, field)">
+								Vérifié et ok
+							</mat-checkbox>
+						</div>
+				  </div>
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</div>
+
+	<div 
+		*ngIf="$field"
+		class="col-sm-7"
+	>
+		<mat-card [ngStyle]="{'height.px': cardHeight}">
+			<mat-card-header>
+				<mat-card-title>Valeurs du champ "{{ $field.champ }}" > "{{ $field?.fieldFSD.champ }}"</mat-card-title>
+			</mat-card-header>
+			<mat-card-content [ngStyle]="{'height.px': cardContentHeight}">
+
+				<div style="margin-bottom: 20px;">
+					<mat-button-toggle-group 
+						appearance="legacy"
+						name="fontStyle" 
+						aria-label="Font Style" 
+						#group="matButtonToggleGroup">
+					  <mat-button-toggle value="all" [checked]="true">Tous ({{ $goodValues.length + $badValues.length }})</mat-button-toggle>
+					  <mat-button-toggle value="bon">Bon ({{ $goodValues.length }})</mat-button-toggle>
+					  <mat-button-toggle value="pas_bon">Mauvais ({{ $badValues.length }})</mat-button-toggle>
+					</mat-button-toggle-group>
+					<button 
+						mat-raised-button 
+						style="margin-left: 20px;"
+						color="primary"
+						(click)="openBottomSheet()">
+						<mat-icon>build</mat-icon> Boîte à outils
+					</button>
+				</div>
+
+
+				<div class="list-group">
+
+					<ng-container *ngIf="group.value === 'all' || group.value === 'pas_bon'">
+						<div 
+							*ngFor="let value of $badValues"
+							app-import-field-element
+							class="list-group-item d-flex align-items-center list-group-item-danger"
+					  	[(value)]="value">
+					  </div>
+					</ng-container>
+
+					<ng-container *ngIf="group.value === 'all' || group.value === 'bon'">
+						<div 
+							*ngFor="let value of $goodValues"
+							app-import-field-element
+							class="list-group-item d-flex align-items-center list-group-item-success"
+					  	[(value)]="value">
+					  </div>
+					</ng-container>
+
+				</div>
+
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>

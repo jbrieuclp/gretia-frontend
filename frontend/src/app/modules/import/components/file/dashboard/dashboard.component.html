@@ -1,0 +1,127 @@
+<div class="row" *ngIf="fichier">
+		<div class="col-lg-12">
+			<h1><small>#{{ fichier.id }} - </small>{{ fichier.table }}</h1>
+			<hr />
+
+			<div class="row">
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a routerLink="./mapper" matTooltip="Mapper le fichier" class="text-center">
+							<mat-icon>build</mat-icon>
+							<div class="caption">
+								Configurer
+							</div>
+						</a>
+					</mat-card>
+				</div>
+
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a routerLink="./required-fields" matTooltip="Vérifier si des champs sont manquant" class="text-center">
+							<mat-icon>help_outline</mat-icon>
+							<div class="caption">
+								Champs obligatoire manquant ?
+							</div>
+						</a>
+					</mat-card>
+				</div>
+			</div>
+
+			<hr />
+
+			<div class="row">
+				<ng-container *ngIf="fichier.champs.length">
+  				<div class="col-sm-4 col-md-3">
+  					<mat-card>
+							<a routerLink="./champs" matTooltip="Vérifier les valeurs des champs du fichier" class="thumbnail text-center">
+								<mat-icon>search</mat-icon>
+								<div class="caption">
+									Vérifier les champs
+								</div>
+							</a>
+						</mat-card>
+					</div>
+				</ng-container>
+
+				<ng-container *ngIf="fichier.has_observers">
+					<div class="col-sm-4 col-md-3">
+						<mat-card>
+							<a routerLink="./observateurs" matTooltip="Gérer les observateur du fichier" class="thumbnail text-center">
+								<mat-icon>face</mat-icon>
+								<div class="caption">
+									Gérer les observateurs
+								</div>
+							</a>
+						</mat-card>
+					</div>
+				</ng-container>
+
+				<ng-container *ngIf="fichier.has_localisation">
+					<div class="col-sm-4 col-md-3">
+						<mat-card>
+							<a routerLink="./localisations" matTooltip="Gérer les localisation du fichier" class="thumbnail text-center">
+								<mat-icon>explore</mat-icon>
+								<div class="caption">
+									Gérer les localisations
+								</div>
+							</a>
+						</mat-card>
+					</div>
+				</ng-container>
+
+			</div>
+
+			<hr />
+
+			<div class="row" *ngIf="fichier.champs.length">
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a [routerLink]="[]" matTooltip="Vérifier les doublons au sein du fichier" class="thumbnail text-center">
+							<mat-icon>compare_arrows</mat-icon>
+							<div class="caption">
+								Recherche de doublons dans le fichier
+							</div>
+						</a>
+					</mat-card>
+				</div>
+
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a [routerLink]="[]" matTooltip="Vérifier les doublons" class="thumbnail text-center">
+							<mat-icon>cloud</mat-icon>
+							<div class="caption">
+								Recherche de doublons avec la BD
+							</div>
+						</a>
+					</mat-card>
+				</div>
+			</div>
+
+			<hr />
+
+			<div class="row" *ngIf="fichier.champs.length && fichier.nb_field_ok == fichier.champs.length">
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a routerLink="./insert" matTooltip="Creation de la requete d'import" class="thumbnail text-center">
+							<mat-icon>double_arrow</mat-icon>
+							<div class="caption">
+								Générateur de requête d'import
+							</div>
+						</a>
+					</mat-card>
+				</div>
+
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a [routerLink]="[]" matTooltip="Traiter les MAJ et doublons avec Serena" class="thumbnail text-center">
+							<i class="fa fa-download fa-4"></i>
+							<div class="caption">
+								Traiter les MAJ et doublons avec Serena
+							</div>
+						</a>
+					</mat-card>
+				</div>
+			</div>
+			
+		</div>
+	</div>
