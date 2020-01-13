@@ -27,7 +27,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
     
     /**
     * @Rest\View(serializerGroups = {"champ"})
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Patch("/field/{id}")
     */
@@ -56,7 +56,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
     /**
     * @Rest\View(serializerGroups = {"champ"})
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Patch("/field/{id}/value")
     */
@@ -79,7 +79,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
     /**
     * @Rest\View(serializerGroups = {"champ"})
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Patch("/field/{id}/replace")
     */
@@ -105,7 +105,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
     /**
     * @Rest\View(serializerGroups = {"champ"})
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Patch("/field/{id}/fsd/{fsd_id}")
     */
@@ -131,7 +131,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
     /**
     * @Rest\View()
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Delete("/field/{id}")
     */
@@ -152,7 +152,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
     /**
     * @Rest\View()
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Get("/field/{id}/values")
     */
@@ -183,7 +183,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
     /**
     * @Rest\View()
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Get("/field/{id}/observers")
     *
@@ -211,7 +211,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
     /**
     * @Rest\View()
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Post("/observer")
     */
