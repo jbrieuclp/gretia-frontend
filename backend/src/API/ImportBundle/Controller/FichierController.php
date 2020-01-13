@@ -196,7 +196,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
       if ( empty($name = $request->request->get('table')) ) {
         return new JsonResponse(['message' => 'Le nom de la table ne peut être vide'], Response::HTTP_INTERNAL_SERVER_ERROR);
       }
-      if ( !preg_match('/^[a-z][a-z1-9_]*$/', $name) ) {
+      if ( !preg_match('/^[a-z][a-z0-9_]*$/', $name) ) {
         return new JsonResponse(['message' => 'Le nom de la table est incorrecte'], Response::HTTP_INTERNAL_SERVER_ERROR);
       }
       $name = "gn_imports.$name";
