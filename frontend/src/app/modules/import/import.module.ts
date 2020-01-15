@@ -37,6 +37,7 @@ import { FileAddFieldComponent } from './components/file/add-field/add-field.com
 
 //services
 import { ImportService } from './services/import.service';
+import { FileDataService } from './services/file.service';
 import { FormMapperService } from './components/file/mapper/form-mapper.service';
 import { FieldService } from './components/field/field.service';
 import { LocalisationService } from './components/field/localisations/localisation.service';
@@ -44,6 +45,7 @@ import { LocalisationService } from './components/field/localisations/localisati
 //directives
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { FileInsertComponent } from './components/file/insert/insert.component';
+import { DuplicateLinesComponent } from './components/file/duplicate-lines/duplicate-lines.component';
 
 @NgModule({
   exports: [
@@ -80,7 +82,8 @@ import { FileInsertComponent } from './components/file/insert/insert.component';
     FileAddFieldComponent,
     FileRequiredFieldComponent,
     FileRequiredFieldDialog,
-    FileInsertComponent
+    FileInsertComponent,
+    DuplicateLinesComponent
   ],
   entryComponents: [ 
     EditInputDialog,
@@ -92,6 +95,7 @@ import { FileInsertComponent } from './components/file/insert/insert.component';
   ],
   providers: [
     ImportService,
+    FileDataService,
     FormMapperService,
     FieldService,
     LocalisationService

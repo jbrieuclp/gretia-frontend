@@ -311,4 +311,23 @@ class FichierController extends FOSRestController implements ClassResourceInterf
       return $em->getRepository('APIImportBundle:Fichier')->getListLocalisations($fichier, $fields_localisation);
     }
 
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Get("/fichier/{id}/duplicate-lines")
+    */
+    public function getDuplicateLinesAction(Request $request, $id)
+    {
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $fichier = $em->getRepository('APIImportBundle:Fichier')->find($id);
+      if (empty($fichier)) {
+          return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+
+    }
+
 }
+
+

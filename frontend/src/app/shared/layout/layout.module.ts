@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { 
    MatToolbarModule,
@@ -8,13 +9,19 @@ import {
    MatListModule,
    MatIconModule,
    MatMenuModule,
-   MatTooltipModule
+   MatTooltipModule,
+   MatCardModule,
+   MatFormFieldModule,
+   MatProgressSpinnerModule,
+   MatInputModule,
+   MatSnackBarModule
  } from '@angular/material';
 
 import { AuthService } from '../auth/authentication.service';
 import { LayoutService } from './layout.service';
 
 import { HeaderComponent } from './header/header.component';
+import { SignInDialog } from './header/sign-in.dialog';
 import { FooterComponent } from './footer/footer.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
@@ -27,17 +34,29 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     MatListModule,
     MatMenuModule,
     MatTooltipModule,
-    RouterModule
+    MatCardModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    MatInputModule,
+    MatSnackBarModule,
+    RouterModule,
+    FormsModule, 
+    ReactiveFormsModule
   ],
   declarations: [
   	HeaderComponent, 
   	FooterComponent, 
-  	SidebarComponent
+  	SidebarComponent,
+    SignInDialog
   ],
   exports: [
   	HeaderComponent, 
   	FooterComponent, 
-  	SidebarComponent
+  	SidebarComponent,
+    SignInDialog
+  ],
+  entryComponents: [ 
+    SignInDialog
   ],
   providers: [
     AuthService,
