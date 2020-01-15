@@ -34,6 +34,8 @@ import { AddObserverComponent } from './components/field/observers/add-observer.
 import { FieldLocalisationsComponent } from './components/field/localisations/localisations.component';
 import { CellComponent } from './components/file/table/cell.component';
 import { FileAddFieldComponent } from './components/file/add-field/add-field.component';
+import { RegexpReplaceComponent } from './components/field/toolsbox/tools/regexp-replace.component';
+import { SearchReplaceComponent } from './components/field/toolsbox/tools/search-replace.component';
 
 //services
 import { ImportService } from './services/import.service';
@@ -83,7 +85,9 @@ import { DuplicateLinesComponent } from './components/file/duplicate-lines/dupli
     FileRequiredFieldComponent,
     FileRequiredFieldDialog,
     FileInsertComponent,
-    DuplicateLinesComponent
+    DuplicateLinesComponent,
+    RegexpReplaceComponent,
+    SearchReplaceComponent
   ],
   entryComponents: [ 
     EditInputDialog,

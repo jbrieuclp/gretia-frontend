@@ -49,14 +49,15 @@ export class FieldListComponent implements OnInit, OnDestroy {
   constructor(
   	private route: ActivatedRoute,
   	private importS: ImportService,
-    private fileS: FileService,
+    public fileS: FileService,
     private fieldS: FieldService,
     private _bottomSheet: MatBottomSheet,
     private _snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
-  	this.fileS.fields.subscribe(fields=>this._fields = fields);
+    //refreshFields(true) = champs mappé uniquement
+  	this.fileS.mappedFields.subscribe(fields=>this._fields = fields);
 
     this.cardHeight = window.innerHeight-130;
     this.cardContentHeight = this.cardHeight-70;

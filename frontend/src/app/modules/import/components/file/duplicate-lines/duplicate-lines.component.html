@@ -1,3 +1,48 @@
-<p>
-  duplicate-lines works!
-</p>
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+<span style="margin-left: 15px; font-size: 16px; font-weight: 700; color: #4e1da5;">{{ fileS.tableName }}</span>
+
+
+<div class="row">
+	<div class="col-sm-5">
+		<mat-card [ngStyle]="{'height.px': cardHeight}">
+			<mat-card-header>
+				<mat-card-title>Selectionner les champs où rechercher des doublons</mat-card-title>
+			</mat-card-header>
+			<mat-card-content [ngStyle]="{'height.px': cardContentHeight}">
+
+				<mat-checkbox color="primary" (click)="checkAll = !checkAll">Tous cocher</mat-checkbox>
+				
+				<form [formGroup]="form" (ngSubmit)="submit()">
+
+				  <div formArrayName="fields" *ngFor="let field of form.get('fields').controls; let i = index">
+						<mat-checkbox color="primary" [formControlName]="i">{{ fields[i].champ }}</mat-checkbox>
+					</div>
+
+				  <button>submit</button>
+				</form>
+
+			</mat-card-content>
+		</mat-card>
+	</div>
+
+	<div class="col-sm-5" *ngIf="nbDoublon !== null">
+		<mat-card>
+			<mat-card-header>
+				<mat-card-title>Résultat</mat-card-title>
+			</mat-card-header>
+			<mat-card-content>
+				Nombre de doublons : {{ nbDoublon }}
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>
+
+
+
+

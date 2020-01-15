@@ -113,6 +113,18 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  regexpReplaceFieldElement(id: number, params: any, returnList: 't'|'f' = 't'): Observable<any> {
+    const url = `${this.httpUrlBase}/field/${id}/regexp-replace?values=${returnList}`;
+    let sources = params;
+    return this.http
+      .patch(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   getFields(id: number, mapped: boolean = false): Observable<any> {
     let url = `${this.httpUrlBase}/fichier/${id}/fields`;
     if (mapped) {
@@ -272,6 +284,18 @@ export class ImportService {
     const sources = params;
     return this.http
      .patch(url, sources, httpOptions)
+     .pipe(
+       map(res => res), 
+       retry(3)
+     );
+  }
+
+  /** Recherche les lignes en doublons dans le fichier **/
+  checkDuplicateLines(fichier_id: number, fields): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${fichier_id}/duplicate-lines`;
+    const sources = fields;
+    return this.http
+     .post(url, sources, httpOptions)
      .pipe(
        map(res => res), 
        retry(3)

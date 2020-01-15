@@ -90,8 +90,27 @@ export class FileService {
   get fields() {
     return this.fileDataS.fields;
   }
+  get mappedFields() {
+    // filtre les champs mappés
+    return this.fileDataS.fields
+        .pipe(
+          map(fields => fields.filter(field=>field.fieldFSD !== null))
+        );
+  }
+  get unmappedFields() {
+    // filtre les champs mappés
+    return this.fileDataS.fields
+        .pipe(
+          map(fields => fields.filter(field=>field.fieldFSD === null))
+        );
+  }
   get FSDFields() {
     return this.fileDataS.FSDFields;
+  }
+
+  //retourne le nom de la table en cours.
+  get tableName() {
+    return this.file.getValue() !== null ? (this.file.getValue()).table : null;
   }
 
   constructor( 
@@ -125,4 +144,6 @@ export class FileService {
   snackBar(msg:string, closeMsg:string='Fermer', duration:number=4000, position:'top' | 'bottom'='top'): void {
     this.fileDataS.snackBar(msg, closeMsg, duration, position);
   }
+
+  
 }

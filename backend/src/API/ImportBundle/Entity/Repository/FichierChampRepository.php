@@ -52,6 +52,25 @@ class FichierChampRepository extends EntityRepository
     public function replaceElement($champ, $search, $replace)
     {
         
+        $sql = "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = replace(".$champ->getChamp().", :search, :replace)";
+
+        $requete = $this->_em->getConnection()->prepare($sql);
+
+        $requete->bindValue(':search', $search);
+        $requete->bindValue(':replace', is_null($replace) ? '' : $replace);
+        
+        $requete->execute();
+        
+        return true;
+
+    }
+
+    /**
+    *   Remplace toutes les occurrences d'un champs par une autre chaine
+    **/
+    public function regexpReplaceElement($champ, $search, $replace)
+    {
+        
         $sql = "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = regexp_replace(".$champ->getChamp().", :search, :replace, 'g')";
 
         $requete = $this->_em->getConnection()->prepare($sql);

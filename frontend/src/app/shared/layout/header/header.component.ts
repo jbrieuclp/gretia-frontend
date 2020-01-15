@@ -45,13 +45,12 @@ export class HeaderComponent implements OnInit {
       .subscribe(
         user => {
           this.user = user;
-          console.log(this.route.parent)
-          console.log(this.router.config);
-          console.log(this.router.url.substr(1));
-          let currentRouteConfig = this.router.config.find(f=>f.path == this.router.url.substr(1));
-          console.log(currentRouteConfig);
-          if (user.id === null && currentRouteConfig.canActivate != null) {
-            this.openSignInDialog();
+
+          if (this.router.url.match(/^\/([^\/]+)?/)[1] !== undefined) {
+            let currentRouteConfig = this.router.config.find(f=>f.path == this.router.url.match(/^\/([^\/]+)?/)[1]); //recherche du nom du module
+            if (user.id === null && currentRouteConfig.canActivate != null) {
+              this.openSignInDialog();
+            }
           }
         }
       );

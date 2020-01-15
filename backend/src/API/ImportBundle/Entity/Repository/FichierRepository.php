@@ -174,6 +174,31 @@ class FichierRepository extends EntityRepository
         return true;
     }
 
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    *   $fields => champs du formulaire
+    **/
+    public function checkDuplicateLine($fichier, $fields) 
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->select('count(*) AS nb_doublon')
+           ->from($fichier->getTable(), 'f')
+           ->where('NOT "adm_doublon_fichier"');
+
+        foreach ($fichier->getChamps() as $champ) {
+            if ( array_key_exists($champ->getId(), $fields) and $fields[$champ->getId()] === true) {
+                $qb->addSelect('NULLIF("'.$champ->getChamp().'", \'\') AS "'.$champ->getChamp().'"')
+                   ->addGroupBy('NULLIF("'.$champ->getChamp().'", \'\')');
+            }
+        }
+
+        $qb->having('count(*) > 1');
+        $qb->orderBy('nb_doublon', 'DESC');
+
+        return $qb->execute()->fetch(\PDO::FETCH_ASSOC);
+    }
+
 
     //----------------
     //----------------
@@ -611,37 +636,7 @@ class FichierRepository extends EntityRepository
         return true;
     }
 
-    /**
-    *   Charge fichier, champs et champs du FSD liés
-    *   $fields => champs du formulaire
-    **/
-    public function testLesDoublonsInterne($fichier, $fields) 
-    {
-        $qb = $this->_em->getConnection()->createQueryBuilder();
-
-        $qb->select('count(*) AS nb_doublon')
-           ->from($fichier->getTable(), 'f')
-           ->where('NOT "doublon_fichier"');
-
-        foreach ($fichier->getChamps() as $champ) {
-            if ( array_key_exists($champ->getId(), $fields) and $fields[$champ->getId()] === true) {
-                $qb->addSelect('NULLIF("'.$champ->getChamp().'", \'\') AS "'.$champ->getChamp().'"')
-                   ->addGroupBy('NULLIF("'.$champ->getChamp().'", \'\')');
-            }
-        }
-
-        $qb->having('count(*) > 1');
-        $qb->orderBy('nb_doublon', 'DESC');
-
-        $retour['doublon'] = $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
-
-/*        $qb->resetQueryPart('having')
-           ->having('count(*) = 1');
-
-        $retour['pas_doublon'] = $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);*/
-
-        return $retour;
-    }
+    
 
 
     /**

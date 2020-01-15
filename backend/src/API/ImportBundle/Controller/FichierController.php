@@ -316,7 +316,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
     * @Rest\View()
     * @Security("has_role('IMPORT')")
     *
-    * @Rest\Get("/fichier/{id}/duplicate-lines")
+    * @Rest\Post("/fichier/{id}/duplicate-lines")
     */
     public function getDuplicateLinesAction(Request $request, $id)
     {
@@ -325,7 +325,9 @@ class FichierController extends FOSRestController implements ClassResourceInterf
       if (empty($fichier)) {
           return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
       }
+      $fields = json_decode($request->getContent(), true);
 
+      return $em->getRepository('APIImportBundle:Fichier')->checkDuplicateLine($fichier, $fields);
     }
 
 }
