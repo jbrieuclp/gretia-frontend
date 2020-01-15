@@ -1,14 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { Taxref12Repository } from '../../models/repositories';
-import { Taxref12 } from '../../models/taxref12.model';
+import { Taxref13Repository } from '../../models/repositories';
+import { Taxref13 } from '../../models/taxref13.model';
 
 @Component({
   selector: 'mtax-synonyme',
   templateUrl: './synonyme.component.html',
   styleUrls: ['./synonyme.component.css'],
   providers: [
-    Taxref12Repository
+    Taxref13Repository
   ]
 })
 export class SynonymeComponent implements OnInit {
@@ -23,9 +23,9 @@ export class SynonymeComponent implements OnInit {
     this.getSynonymes(this._cd_ref);
   }
 
-  synonymes: Array<Taxref12>;
+  synonymes: Array<Taxref13>;
   
-  constructor(private _tr12: Taxref12Repository) {
+  constructor(private _tr12: Taxref13Repository) {
     this.synonymes = [];
   }
 
@@ -36,7 +36,7 @@ export class SynonymeComponent implements OnInit {
       return;
 
     this._tr12.getSynonymes(cd_ref)
-      .subscribe( (synonymes: Taxref12[]) => {
+      .subscribe( (synonymes: Taxref13[]) => {
         this.synonymes = synonymes;
       });
   }

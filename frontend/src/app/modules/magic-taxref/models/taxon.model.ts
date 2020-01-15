@@ -11,6 +11,7 @@ import { Taxref9 } from './taxref9.model';
 import { Taxref10 } from './taxref10.model';
 import { Taxref11 } from './taxref11.model';
 import { Taxref12 } from './taxref12.model';
+import { Taxref13 } from './taxref13.model';
 
 
 export class Taxon {
@@ -28,6 +29,7 @@ export class Taxon {
 	taxref10: Taxref10;
 	taxref11: Taxref11;
 	taxref12: Taxref12;
+	taxref13: Taxref13;
 
 	deserialize(input: any) {
     Object.assign(this, input);
@@ -65,6 +67,9 @@ export class Taxon {
     if (input.taxref12 != null)
       this.taxref12 = new Taxref12().deserialize(input.taxref12);
 
+   	if (input.taxref13 != null)
+      this.taxref13 = new Taxref13().deserialize(input.taxref13);
+
     return this;
   }
 
@@ -79,7 +84,7 @@ export class Taxon {
 	}
 
 	get taxrefVersions() {
-		let versions = new Array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+		let versions = new Array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13);
 		return versions;
 	}
 
