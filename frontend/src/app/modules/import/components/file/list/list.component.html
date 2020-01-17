@@ -47,7 +47,11 @@
   <ng-container matColumnDef="clos">
     <th mat-header-cell *matHeaderCellDef> Cloturé </th>
     <td mat-cell *matCellDef="let element"> 
-    	<button mat-icon-button color="primary" aria-label="bouton icone avec une croix ou un V">
+    	<button 
+      mat-icon-button 
+      color="primary" 
+      aria-label="bouton icone avec une croix ou un V"
+      (click)="changeStatus(element)">
     		<span [ngClass]="element.clos ? 'done' : 'pending'">
     			<mat-icon>{{ element.clos ? 'done' : 'clear' }}</mat-icon>
     		</span>

@@ -226,8 +226,9 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
       $values = $em->getRepository('APIImportBundle:FichierChamp')->getListObservers($item);
 
       foreach ($values as &$value) {
-        $value['propositions'] = array_values(array_unique(json_decode($value['propositions'])));
-        $value['observers_bd'] = array_values(array_unique(json_decode($value['observers_bd'])));
+        $value['propositions'] = array_values(array_unique(json_decode($value['propositions'], true)));
+        $value['observers_bd'] = array_values(array_unique(json_decode($value['observers_bd'], true)));
+        unset($value['init_value']);
       }
 
       return $values;

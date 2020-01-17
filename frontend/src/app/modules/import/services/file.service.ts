@@ -108,7 +108,11 @@ export class FileService {
 
   private file_id: BehaviorSubject<number> = new BehaviorSubject(null);
   get file() {
-    return this.fileDataS.file;
+    //ne retourne rien si pas de fichier
+    return this.fileDataS.file
+          .pipe(
+            filter(file => file !== null )
+          );
   }
   get fields() {
     return this.fileDataS.fields;
@@ -133,7 +137,7 @@ export class FileService {
 
   //retourne le nom de la table en cours.
   get tableName() {
-    return this.file.getValue() !== null ? (this.file.getValue()).table : null;
+    return this.fileDataS.file.getValue() !== null ? (this.fileDataS.file.getValue()).table : null;
   }
 
   get countRow() {

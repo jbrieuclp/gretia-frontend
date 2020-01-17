@@ -50,7 +50,6 @@ import { FileInsertComponent } from './components/file/insert/insert.component';
 import { DuplicateLinesComponent } from './components/file/duplicate-lines/duplicate-lines.component';
 import { ExistsInDbComponent } from './components/file/exists-in-db/exists-in-db.component';
 import { RegroupingComponent } from './components/file/regrouping/regrouping.component';
-import { ObsToJsonComponent } from './components/field/observers/obs-to-json.component';
 
 @NgModule({
   exports: [
@@ -91,7 +90,6 @@ import { ObsToJsonComponent } from './components/field/observers/obs-to-json.com
     DuplicateLinesComponent,
     ExistsInDbComponent,
     RegroupingComponent,
-    ObsToJsonComponent,
     RegexpReplaceComponent,
     SearchReplaceComponent
   ],

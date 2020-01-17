@@ -439,6 +439,67 @@ class FichierController extends FOSRestController implements ClassResourceInterf
 
       return $em->getRepository('APIImportBundle:Fichier')->count($fichier);
     }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Post("/fichier/{id}/observers/set-id")
+    */
+    public function setObserversIDAction($id)
+    {
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $fichier = $em->getRepository('APIImportBundle:Fichier')->find($id);
+      if (empty($fichier)) {
+          return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+      //vérification qu'il y ait bien qu'un champ observateur mappé pour ce fichier.
+      if ( !$fichier->hasOnlyOneObserversField() ) {
+        return new JsonResponse(['message' => 'Champ observateurs non mappé ou mappé plusieurs fois'], Response::HTTP_INTERNAL_SERVER_ERROR);
+      }
+
+      $data = $em->getRepository('APIImportBundle:FichierChamp')->getListObservers($fichier->getChampObservateur());
+
+      $init_values = [];
+      foreach ($data as $value) {
+        $observers = array_values(array_unique(json_decode($value['observers_bd'], true)));
+        //gestion d'un potentiel erreur d'un observateur présent 2 fois en BD
+        if ( count($observers) !== 1 ) {
+          return new JsonResponse(
+            ['message' => 'Un nom "'.$observers[0].'" correspondant à plusieurs observateurs existe en BD - A faire vérifier par l\'administrateur'], 
+            Response::HTTP_INTERNAL_SERVER_ERROR
+          );
+        }
+        foreach (json_decode($value['init_value'], true) as $init_value) {
+          $init_values[$init_value][] = $observers[0];
+        }
+      }
+
+      return $em->getRepository('APIImportBundle:Fichier')->setObserversId($fichier, $init_values) ? 
+                      true : 
+                      new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Post("/fichier/{id}/switch-status")
+    */
+    public function switchStatusAction($id)
+    {
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $fichier = $em->getRepository('APIImportBundle:Fichier')->find($id);
+      if (empty($fichier)) {
+          return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      $fichier->setClos(!$fichier->getClos());
+
+      $em->persist($fichier);
+      $em->flush();
+      return true;
+    }
 }
 
 

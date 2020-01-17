@@ -18,17 +18,16 @@ export class ElementComponent implements OnInit {
 
 	@Input() value: any;
 	@Output() valueChange = new EventEmitter<any>();
-	field: any;
+	field: any = null;
   syncIcon: boolean = true;
 
   constructor(
   	public dialog: MatDialog,
   	private fieldS: FieldService
-  ) {
-  	this.field = this.fieldS.field.getValue();
-  }
+  ) { }
 
   ngOnInit() {
+    this.fieldS.field.subscribe(field=>this.field = field);
     this.syncIcon = this.value.ban === "true";
   }
 
@@ -131,7 +130,7 @@ export class EditInputDialog implements OnInit {
 
 
   ngOnInit() { 
-  	this.field = this.fieldS.field.getValue();
+  	this.fieldS.field.subscribe(field=>this.field = field);
   	this.input = this.data.initial_value;
   }
 
@@ -183,7 +182,7 @@ export class EditAutocompleteDialog implements OnInit {
 
 
   ngOnInit() { 
-  	this.field = this.fieldS.field.getValue();
+  	this.fieldS.field.subscribe(field=>this.field = field);
   	this.text_autocomplete = this.data.initial_value;
 
     this.searchTerm$
@@ -248,12 +247,18 @@ export class EditRadioDialog implements OnInit {
     private importS: ImportService,
     private _snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { 
-  	this.field = this.fieldS.field.getValue();
-  }
+  ) { }
 
   ngOnInit() {
-  	this.importS.getFSDFieldValues(this.field.fieldFSD.id)
+    this.fieldS.field.subscribe(field=>{
+      this.field = field;
+      this.getFSDFieldValues();
+    });
+  	
+  }
+
+  getFSDFieldValues() {
+    this.importS.getFSDFieldValues(this.field.fieldFSD.id)
                   .subscribe(values => {
                     this.radioValues = values;
                     this.initFilter();

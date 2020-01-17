@@ -21,6 +21,7 @@ export class FieldListComponent implements OnInit, OnDestroy {
 	cardHeight: any;
   cardContentHeight: any;
   _fields: any[] = [];
+  field: any = null;
 
   get fields(): any[] {
     return this._fields.sort((t1, t2) => {
@@ -42,10 +43,6 @@ export class FieldListComponent implements OnInit, OnDestroy {
     return this.fieldS.values.getValue().filter(value => value.ok);
   }
 
-  get $field() {
-    return this.fieldS.field.getValue();
-  }
-
   constructor(
   	private route: ActivatedRoute,
   	private importS: ImportService,
@@ -58,6 +55,8 @@ export class FieldListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     //refreshFields(true) = champs mappé uniquement
   	this.fileS.mappedFields.subscribe(fields=>this._fields = fields);
+
+    this.fieldS.field.subscribe(field=>this.field = field);
 
     this.cardHeight = window.innerHeight-130;
     this.cardContentHeight = this.cardHeight-70;

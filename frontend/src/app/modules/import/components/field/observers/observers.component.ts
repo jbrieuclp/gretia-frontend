@@ -1,14 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 import { ImportService } from '../../../services/import.service';
 import { FileService } from '../../../services/file.service';
 import { FieldService } from '../field.service';
 
 @Component({
-  selector: 'app-observers',
+  selector: 'app-import-field-observers',
   templateUrl: './observers.component.html',
   styleUrls: ['./observers.component.scss'],
   providers: [FileService]
@@ -19,6 +19,7 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
 	error: any;
 	raw_data: any;
 	_observers: any[];
+  field_observer: any;
 
   get good_observers(): any[] {
     if (!this._observers || this._observers === null) return [];
@@ -52,20 +53,21 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
     this.raw_data = this.fieldS.values;
 
     this.fileS.file
-          .pipe(
-            filter(fichier => fichier !== null )
-          )
           .subscribe(fichier=>{
             this.fichier = fichier;
             this.getObserversField()
           });
 
-  		//chargement des observateurs à la récuperation de l'info du fichier correspondant
+  	//(re)chargement des observateurs à la récuperation de l'info du fichier correspondant
 		this.fieldS.field
           .pipe(
-      			filter(field => field !== null )
-      		).subscribe(
-      			field => this.getObservers(field.id)
+            tap(()=>this.observers = null)
+          )
+          .subscribe(
+      			field => {
+              this.field_observer = field;
+              this.getObservers();
+            }
       		);
   }
 
@@ -90,8 +92,9 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
   *  Retourne les valeurs du champs osbervateur
   *  Retourne une liste des osbervateurs découpés par le pipe
   */
-  getObservers(id_field) {
-  	this.importS.getObservers(id_field)
+  getObservers() {
+    this.observers = null;
+  	this.importS.getObservers(this.field_observer.id)
   									.subscribe(
   										observers => {
   											this.observers = observers;
@@ -101,8 +104,16 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
   }
 
   selectionChange($event) {
-    let field = this.fieldS.field.getValue();
-    this.observers = null;
-    this.getObservers(field.id);
+    this.getObservers();
+  }
+
+  recuperationID() {
+    this.importS.setOberversIds(this.fichier.id)
+                    .subscribe(
+                      observers => {
+                        //this.observers = observers;
+                      }, 
+                      error => this.error = error
+                    );
   }
 }

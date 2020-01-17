@@ -44,12 +44,12 @@
 	</div>
 
 	<div 
-		*ngIf="$field"
+		*ngIf="field"
 		class="col-sm-7"
 	>
 		<mat-card [ngStyle]="{'height.px': cardHeight}">
 			<mat-card-header>
-				<mat-card-title>Valeurs du champ "{{ $field.champ }}" > "{{ $field?.fieldFSD.champ }}"</mat-card-title>
+				<mat-card-title>Valeurs du champ "{{ field.champ }}" > "{{ field?.fieldFSD.champ }}"</mat-card-title>
 			</mat-card-header>
 			<mat-card-content [ngStyle]="{'height.px': cardContentHeight}">
 

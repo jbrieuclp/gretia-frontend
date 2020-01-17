@@ -23,7 +23,7 @@ export class RegexpReplaceComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-  	this.field = this.fieldS.field.getValue();
+  	this.fieldS.field.subscribe(field=>this.field = field);
   	this.searchReplaceForm = this.fb.group({
         'search': ['', [Validators.required]],
         'replace': ['', []]

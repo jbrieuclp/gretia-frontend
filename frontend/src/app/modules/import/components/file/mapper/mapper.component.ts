@@ -35,7 +35,7 @@ export class FileMapperComponent implements OnInit {
 
   ngOnInit() {
     this.fileS.file.subscribe(fichier=>this.fichier = fichier);
-    this.fileS.fields.subscribe(fields=>{console.log(fields); this._fields = fields});
+    this.fileS.fields.subscribe(fields=>this._fields = fields);
   }
 
   /**

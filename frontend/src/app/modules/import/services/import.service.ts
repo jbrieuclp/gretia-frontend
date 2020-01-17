@@ -371,6 +371,28 @@ export class ImportService {
       );
   }
 
+  /** GET taxon par ID (cd_nom) **/
+  setOberversIds(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/observers/set-id`;
+    return this.http
+      .post(url, {}, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  switchStatus(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/switch-status`;
+    return this.http
+      .post(url, {}, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
 //  /** GET taxon par ID (cd_nom) **/
 //  public getFeatureInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
 //    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}`;

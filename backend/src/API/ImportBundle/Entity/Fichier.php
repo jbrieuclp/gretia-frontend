@@ -415,6 +415,18 @@ class Fichier
         return false;
     }
 
+    public function hasOnlyOneObserversField()
+    {
+        $fields = [];
+        foreach ($this->champs as $champ) {
+            if ( !is_null($champ->getFieldFSD()) and $champ->getFieldFSD()->getChamp() == '__OBSERVERS__' ) 
+                $fields[] = $champ;
+        }
+
+        //si aucun champ ou plusieur champs du fichier est mappé avec le champs Observateur on retourne false
+        return count($fields) === 1;
+    }
+
     /**
     * @Serializer\VirtualProperty
     * @Serializer\SerializedName("has_dataset")

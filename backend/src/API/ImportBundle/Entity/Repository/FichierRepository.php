@@ -356,6 +356,31 @@ class FichierRepository extends EntityRepository
         return true;
     }
 
+
+    /**
+    *   Effectue un regroupement sur les champs du relevé
+    *   Retourne les id adm_id_import
+    **/
+    public function setObserversID($fichier, $data) 
+    {
+        foreach ($data as $saisie => $obs_json) {
+            try {
+                $qb = $this->_em->getConnection()->createQueryBuilder();
+                $qb->update($fichier->getTable(), 'f')
+                    ->set('adm_observers', ':obs_json')
+                    ->where('"'.$fichier->getChampObservateur()->getChamp().'" = :val')
+                    ->setParameter('obs_json', json_encode($obs_json))
+                    ->setParameter('val', $saisie);
+            
+                $qb->execute();
+            } catch (Exception $e) {
+                return false;
+            }
+        }
+
+       return true;
+    }
+
     //----------------
     //----------------
     //----------------
