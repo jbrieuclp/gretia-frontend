@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { FileAddFieldComponent } from '../add-field/add-field.component';
   styleUrls: ['./required-field.component.scss'],
   providers: [FileService]
 })
-export class FileRequiredFieldComponent implements OnInit {
+export class FileRequiredFieldComponent implements OnInit, OnDestroy {
 
 	fichier: any;
 	fields: any[] = [];
@@ -46,8 +46,13 @@ export class FileRequiredFieldComponent implements OnInit {
 
   }
 
+  ngOnDestroy() {
+    this.fileS.refreshFields();
+  }
+
   getFields() {
-  	this.fileS.refreshFields(true) //only-mapped = true
+  	this.fileS.refreshFields(); //only-mapped = true
+    this.fileS.mappedFields
   				.pipe(
             tap(fields=>{this.fsdMapped = []}),
             map(fields => {

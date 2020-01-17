@@ -1,7 +1,7 @@
 import { Injectable, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { catchError, retry, map, filter } from 'rxjs/operators';
+import { catchError, retry, map, filter, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ImportService } from './import.service';
@@ -13,16 +13,17 @@ export class FileDataService {
   file: BehaviorSubject<any> = new BehaviorSubject(null);
   fields: BehaviorSubject<any[]> = new BehaviorSubject([]);
   FSDFields: BehaviorSubject<any[]> = new BehaviorSubject([]);
+  countRow: number = 0;
 
   constructor( 
     private router: Router,
     private _snackBar: MatSnackBar,
     private importS: ImportService,
   ) { 
-    this.loadData();
+    this.initData();
   }
 
-  private loadData(){
+  private initData(){
     this.file_id
         .pipe(filter(id => Number.isInteger(id) ))
         .subscribe(id => {
@@ -30,6 +31,12 @@ export class FileDataService {
           this.loadFields();
           this.loadFSDFields();
         });
+
+    this.file
+          .pipe(
+            filter(file=>file !== null)
+          )
+          .subscribe(()=>this.getCountRow());
   }
 
   private loadFile() {
@@ -64,6 +71,22 @@ export class FileDataService {
             error => { 
               if (this.file.getValue() !== null){ 
                 this.snackBar('Erreur lors de la récupération des champs FSD');
+                this.router.navigate(['/import', 'fichier', this.file_id])
+              }
+            }
+          );
+  }
+
+  getCountRow() {
+    this.importS.countRow(this.file.getValue().id)
+          .pipe(
+            tap(()=>this.countRow = 0), 
+          )
+          .subscribe(
+            (count: any) => this.countRow = count,
+            error => { 
+              if (this.file.getValue() !== null){ 
+                this.snackBar('Erreur lors du comptage des lignes du fichier');
                 this.router.navigate(['/import', 'fichier', this.file_id])
               }
             }
@@ -113,6 +136,10 @@ export class FileService {
     return this.file.getValue() !== null ? (this.file.getValue()).table : null;
   }
 
+  get countRow() {
+    return this.fileDataS.countRow;
+  }
+
   constructor( 
     private route: ActivatedRoute,
     private router: Router,
@@ -136,9 +163,12 @@ export class FileService {
     } 
   }
 
-  refreshFields(onlyMapped: boolean = false){
-    this.fileDataS.loadFields(onlyMapped);
-    return this.fields;
+  refreshFields(){
+    this.fileDataS.loadFields();
+  }
+
+  recount(): void {
+    this.fileDataS.getCountRow();
   }
 
   snackBar(msg:string, closeMsg:string='Fermer', duration:number=4000, position:'top' | 'bottom'='top'): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 
 @Component({
@@ -6,18 +6,10 @@ import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
   templateUrl: './toolsbox.component.html',
   styleUrls: ['./toolsbox.component.scss']
 })
-export class ToolsboxComponent implements OnInit, OnDestroy {
-
-	
+export class ToolsboxComponent {
 
   constructor(
   	private _bottomSheetRef: MatBottomSheetRef<ToolsboxComponent>,
   ) { }
-
-  ngOnInit() {
-  	
-  }
-
-
 
 }

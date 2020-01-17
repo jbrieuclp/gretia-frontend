@@ -6,12 +6,12 @@ import { ImportService } from '../../../services/import.service';
 import { FileService } from '../../../services/file.service';
 
 @Component({
-  selector: 'app-duplicate-lines',
-  templateUrl: './duplicate-lines.component.html',
-  styleUrls: ['./duplicate-lines.component.scss'],
+  selector: 'app-exists-in-db',
+  templateUrl: './exists-in-db.component.html',
+  styleUrls: ['./exists-in-db.component.scss'],
   providers: [FileService]
 })
-export class DuplicateLinesComponent implements OnInit {
+export class ExistsInDbComponent implements OnInit {
 
 	form: FormGroup;
 	fields: any[];
@@ -25,7 +25,7 @@ export class DuplicateLinesComponent implements OnInit {
   checkAllStatus: boolean = false
   done: boolean = false
 
-  constructor( 
+  constructor(
   	private importS: ImportService,
   	private fileS: FileService,
   	private fb: FormBuilder
@@ -72,7 +72,7 @@ export class DuplicateLinesComponent implements OnInit {
     });
   }
 
-  private getSelectedFields() {
+  private getSelectedFileds() {
     return this.form.value.fields
       .map((v, i) => v ? this.fields[i].id : null)
       .filter(v => v !== null);
@@ -81,7 +81,7 @@ export class DuplicateLinesComponent implements OnInit {
   submit() {
     this.nbDoublon = null;
     this.done = false;
-    this.importS.checkDuplicateLines(this.fichier.id, this.getSelectedFields())
+    this.importS.checkExistsInDB(this.fichier.id, this.getSelectedFileds())
 	  									.subscribe(data => {
 	  										this.nbDoublon = data.nb_doublon
 	  									});
@@ -94,9 +94,8 @@ export class DuplicateLinesComponent implements OnInit {
   }
 
   tagDuplicates() {
-    this.importS.tagDuplicateLines(this.fichier.id, this.getSelectedFields())
+    this.importS.tagExistsInDB(this.fichier.id, this.getSelectedFileds())
                       .subscribe(data => {
-                        this.fileS.recount();
                         this.done = data
                       });
   }

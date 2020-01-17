@@ -48,6 +48,9 @@ import { LocalisationService } from './components/field/localisations/localisati
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { FileInsertComponent } from './components/file/insert/insert.component';
 import { DuplicateLinesComponent } from './components/file/duplicate-lines/duplicate-lines.component';
+import { ExistsInDbComponent } from './components/file/exists-in-db/exists-in-db.component';
+import { RegroupingComponent } from './components/file/regrouping/regrouping.component';
+import { ObsToJsonComponent } from './components/field/observers/obs-to-json.component';
 
 @NgModule({
   exports: [
@@ -86,6 +89,9 @@ import { DuplicateLinesComponent } from './components/file/duplicate-lines/dupli
     FileRequiredFieldDialog,
     FileInsertComponent,
     DuplicateLinesComponent,
+    ExistsInDbComponent,
+    RegroupingComponent,
+    ObsToJsonComponent,
     RegexpReplaceComponent,
     SearchReplaceComponent
   ],

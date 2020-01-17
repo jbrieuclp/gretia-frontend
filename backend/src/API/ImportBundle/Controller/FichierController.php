@@ -316,7 +316,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
     * @Rest\View()
     * @Security("has_role('IMPORT')")
     *
-    * @Rest\Post("/fichier/{id}/duplicate-lines")
+    * @Rest\Post("/fichier/{id}/duplicate-lines/check")
     */
     public function getDuplicateLinesAction(Request $request, $id)
     {
@@ -327,9 +327,118 @@ class FichierController extends FOSRestController implements ClassResourceInterf
       }
       $fields = json_decode($request->getContent(), true);
 
-      return $em->getRepository('APIImportBundle:Fichier')->checkDuplicateLine($fichier, $fields);
+      return $em->getRepository('APIImportBundle:Fichier')->checkDuplicateLines($fichier, $fields);
     }
 
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Post("/fichier/{id}/duplicate-lines/tag")
+    */
+    public function tagDuplicateLinesAction(Request $request, $id)
+    {
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $fichier = $em->getRepository('APIImportBundle:Fichier')->find($id);
+      if (empty($fichier)) {
+          return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+      $fields = json_decode($request->getContent(), true);
+
+      return $em->getRepository('APIImportBundle:Fichier')->tagDuplicateLines($fichier, $fields);
+    }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @ Rest\Post("/fichier/{id}/exists-in-db/check")
+    */
+    public function getExistsInDBAction(Request $request, $id)
+    {
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $fichier = $em->getRepository('APIImportBundle:Fichier')->find($id);
+      if (empty($fichier)) {
+          return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+      $fields = json_decode($request->getContent(), true);
+
+      return $em->getRepository('APIImportBundle:Fichier')->checkExistsInDB($fichier, $fields);
+    }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @ Rest\Post("/fichier/{id}/exists-in-db/tag")
+    */
+    public function tagExistsInDBAction(Request $request, $id)
+    {
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $fichier = $em->getRepository('APIImportBundle:Fichier')->find($id);
+      if (empty($fichier)) {
+          return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+      $fields = json_decode($request->getContent(), true);
+
+      return $em->getRepository('APIImportBundle:Fichier')->tagDuplicateLines($fichier, $fields);
+    }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Get("/fichier/{id}/regrouping")
+    */
+    public function getRegroupingInfoAction($id)
+    {
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $fichier = $em->getRepository('APIImportBundle:Fichier')->find($id);
+      if (empty($fichier)) {
+          return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      $data = [
+        'already_exists' => $em->getRepository('APIImportBundle:Fichier')->getAlreadyGrouping($fichier),
+        'possible_groupings' => $em->getRepository('APIImportBundle:Fichier')->getPossibleGroupings($fichier)
+      ];
+      return $data;
+    }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Post("/fichier/{id}/regrouping")
+    */
+    public function setRegroupingAction($id)
+    {
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $fichier = $em->getRepository('APIImportBundle:Fichier')->find($id);
+      if (empty($fichier)) {
+          return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      return $em->getRepository('APIImportBundle:Fichier')->setRegrouping($fichier);
+    }
+
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Get("/fichier/{id}/count")
+    */
+    public function getCountDataAction($id)
+    {
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $fichier = $em->getRepository('APIImportBundle:Fichier')->find($id);
+      if (empty($fichier)) {
+          return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      return $em->getRepository('APIImportBundle:Fichier')->count($fichier);
+    }
 }
 
 

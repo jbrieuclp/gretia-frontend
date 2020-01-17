@@ -14,6 +14,7 @@ import { FileAddFieldComponent } from './components/file/add-field/add-field.com
 import { FileRequiredFieldComponent } from './components/file/required-field/required-field.component';
 import { FileInsertComponent } from './components/file/insert/insert.component';
 import { DuplicateLinesComponent } from './components/file/duplicate-lines/duplicate-lines.component';
+import { RegroupingComponent } from './components/file/regrouping/regrouping.component';
 
 
 // routes definition
@@ -40,8 +41,7 @@ const routes: Routes = [
 					{ path: 'localisations', component: FieldLocalisationsComponent, pathMatch: 'full' },
 					{ path: 'insert', component: FileInsertComponent, pathMatch: 'full' },
 					{ path: 'duplicate-lines', component: DuplicateLinesComponent, pathMatch: 'full' },
-				//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
-				//	{ path: 'champs', component: MissionFormComponent, pathMatch: 'full' },
+					{ path: 'regrouping', component: RegroupingComponent, pathMatch: 'full' }
 				]},
 			]},
     ]
