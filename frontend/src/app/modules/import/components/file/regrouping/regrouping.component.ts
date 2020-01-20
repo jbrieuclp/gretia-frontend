@@ -19,7 +19,7 @@ export class RegroupingComponent implements OnInit {
   constructor(
   	private router: Router,
   	private importS: ImportService,
-  	private fileS: FileService
+  	public fileS: FileService
   ) { }
 
   ngOnInit() {

@@ -27,7 +27,7 @@ export class ExistsInDbComponent implements OnInit {
 
   constructor(
   	private importS: ImportService,
-  	private fileS: FileService,
+  	public fileS: FileService,
   	private fb: FormBuilder
   ) { }
 

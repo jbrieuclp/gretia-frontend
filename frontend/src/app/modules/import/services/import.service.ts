@@ -351,7 +351,7 @@ export class ImportService {
 
   /** GET taxon par ID (cd_nom) **/
   getRegrouping(id: number): Observable<any> {
-    const url = `${this.httpUrlBase}/fichier/${id}/regrouping`;
+    const url = `${this.httpUrlBase}/fichier/${id}/releves/info`;
     return this.http
       .get(url, httpOptions)
       .pipe(
@@ -393,87 +393,26 @@ export class ImportService {
       );
   }
 
-//  /** GET taxon par ID (cd_nom) **/
-//  public getFeatureInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET taxon par ID (cd_nom) **/
-//  public getObservateursInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/observateurs`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET taxon par ID (cd_nom) **/
-//  public getJDDsInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/datasets`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET taxon par ID (cd_nom) **/
-//  public getCommunesInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/communes`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET taxon par ID (cd_nom) **/
-//  public getCountsInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/counts`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET taxon par ID (cd_nom) **/
-//  public getTaxonsInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/taxons`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET AvailablesScales **/
-//  public getAvailablesScales(): Observable<any> {
-//    const url = `${this.httpUrlBase}/scales`;
-//    return this.http
-//      .get(url, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
+  /** GET taxon par ID (cd_nom) **/
+  getLocalisationsInfo(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/localisations/info`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  getLocalisationsGeoms(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/localisations/geoms`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
 
 }

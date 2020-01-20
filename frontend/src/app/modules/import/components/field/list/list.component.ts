@@ -84,7 +84,10 @@ export class FieldListComponent implements OnInit, OnDestroy {
     let request = {check: event};
     this.importS.patchField(field.id, request)
                     .subscribe(
-                      result => field.check = result.check,
+                      result => {
+                        field.check = result.check;
+                        this.fileS.refreshFields(this._fields);
+                      },
                       error => { 
                         this._snackBar.open(error.error.message, 'Fermer', {
                           duration: 4000,

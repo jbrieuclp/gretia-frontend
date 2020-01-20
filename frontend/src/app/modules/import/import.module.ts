@@ -50,6 +50,7 @@ import { FileInsertComponent } from './components/file/insert/insert.component';
 import { DuplicateLinesComponent } from './components/file/duplicate-lines/duplicate-lines.component';
 import { ExistsInDbComponent } from './components/file/exists-in-db/exists-in-db.component';
 import { RegroupingComponent } from './components/file/regrouping/regrouping.component';
+import { RecapComponent } from './components/file/recap/recap.component';
 
 @NgModule({
   exports: [
@@ -91,7 +92,8 @@ import { RegroupingComponent } from './components/file/regrouping/regrouping.com
     ExistsInDbComponent,
     RegroupingComponent,
     RegexpReplaceComponent,
-    SearchReplaceComponent
+    SearchReplaceComponent,
+    RecapComponent
   ],
   entryComponents: [ 
     EditInputDialog,

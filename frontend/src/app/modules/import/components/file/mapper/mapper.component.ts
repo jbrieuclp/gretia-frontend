@@ -30,7 +30,7 @@ export class FileMapperComponent implements OnInit {
 
   constructor(
   	private importS: ImportService,
-    private fileS: FileService
+    public fileS: FileService
   ) { }
 
   ngOnInit() {

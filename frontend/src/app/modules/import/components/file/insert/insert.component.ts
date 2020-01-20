@@ -20,7 +20,7 @@ export class FileInsertComponent implements OnInit {
   	private importS: ImportService,
     private route: ActivatedRoute,
     private router: Router,
-    private fileS: FileService
+    public fileS: FileService
   ) { }
 
   ngOnInit() {

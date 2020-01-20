@@ -23,7 +23,7 @@ export class FileAddFieldComponent implements OnInit {
   constructor(
   	private fb: FormBuilder,
     private importS: ImportService,
-    private fileS: FileService,
+    public fileS: FileService,
     private route: ActivatedRoute,
     private router: Router
   ) { }

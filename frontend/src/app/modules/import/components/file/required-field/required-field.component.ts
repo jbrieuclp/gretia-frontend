@@ -36,7 +36,7 @@ export class FileRequiredFieldComponent implements OnInit, OnDestroy {
   	private route: ActivatedRoute,
   	public dialog: MatDialog,
   	private importS: ImportService,
-    private fileS: FileService
+    public fileS: FileService
   ) { }
 
   ngOnInit() {

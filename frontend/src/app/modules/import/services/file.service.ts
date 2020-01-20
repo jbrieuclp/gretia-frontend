@@ -39,7 +39,7 @@ export class FileDataService {
           .subscribe(()=>this.getCountRow());
   }
 
-  private loadFile() {
+  loadFile() {
     this.importS.getFichier(this.file_id.getValue())
           .subscribe(
             (file: any) => this.file.next(file),
@@ -167,8 +167,13 @@ export class FileService {
     } 
   }
 
-  refreshFields(){
-    this.fileDataS.loadFields();
+  refreshFields(fields: any[] = null){
+    if (fields === null) {
+      this.fileDataS.loadFields();
+    } else {
+      this.fileDataS.fields.next(fields);
+    }
+    this.fileDataS.loadFile();
   }
 
   recount(): void {

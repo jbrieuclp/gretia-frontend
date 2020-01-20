@@ -300,6 +300,37 @@ class FichierRepository extends EntityRepository
     *   Effectue un regroupement sur les champs du relevé
     *   Retourne les id adm_id_import
     **/
+    public function localizedCount($fichier) 
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->select('count(*)')
+           ->from($fichier->getTable(), 'f')
+           ->where('adm_geom IS NOT NULL');
+
+        return $qb->execute()->fetch(\PDO::FETCH_COLUMN, 0);
+    }
+
+    /**
+    *   Effectue un regroupement sur les champs du relevé
+    *   Retourne les id adm_id_import
+    **/
+    public function notLocalizedCount($fichier) 
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->select('count(*)')
+           ->from($fichier->getTable(), 'f')
+           ->where('adm_geom IS NULL');
+
+        return $qb->execute()->fetch(\PDO::FETCH_COLUMN, 0);
+    }
+
+
+    /**
+    *   Effectue un regroupement sur les champs du relevé
+    *   Retourne les id adm_id_import
+    **/
     public function getAlreadyGrouping($fichier) 
     {
         $qb = $this->_em->getConnection()->createQueryBuilder();
@@ -688,6 +719,20 @@ class FichierRepository extends EntityRepository
         $requete->closeCursor();
         
         return $data;
+    }
+
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    **/
+    public function getLocalisationsGeoms($fichier)
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->select('adm_geom, ST_AsGeoJSON(ST_Transform(adm_geom, 3857)) as geom')
+            ->from($fichier->getTable(), 'f')
+            ->where('adm_geom IS NOT NULL');
+
+        return $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     /**

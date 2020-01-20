@@ -25,6 +25,18 @@
 						</a>
 					</mat-card>
 				</div>
+
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a routerLink="./recap" matTooltip="Récapitulatif de l'état du travail sur le fichier" class="thumbnail text-center">
+							<mat-icon>info</mat-icon>
+							<div class="caption">
+								Récapitulatif
+							</div>
+						</a>
+					</mat-card>
+				</div>
+
 			</div>
 
 			<hr />
@@ -56,7 +68,7 @@
 					</div>
 				</ng-container>
 
-				<ng-container *ngIf="fichier.has_localisation">
+				<ng-container>
 					<div class="col-sm-4 col-md-3">
 						<mat-card>
 							<a routerLink="./localisations" matTooltip="Gérer les localisation du fichier" class="thumbnail text-center">
@@ -108,20 +120,23 @@
 				</div>
 			</div>
 
-			<hr />
+			<ng-container *ngIf="fichier.champs.length && fichier.nb_field_ok == fichier.champs.length">
+				<hr />
+				<div class="row" >
 
-			<div class="row" *ngIf="fichier.champs.length && fichier.nb_field_ok == fichier.champs.length">
-				<div class="col-sm-4 col-md-3">
-					<mat-card>
-						<a routerLink="./insert" matTooltip="Creation de la requete d'import" class="thumbnail text-center">
-							<mat-icon>double_arrow</mat-icon>
-							<div class="caption">
-								Générateur de requête d'import
-							</div>
-						</a>
-					</mat-card>
+					<div class="col-sm-4 col-md-3">
+						<mat-card>
+							<a routerLink="./insert" matTooltip="Creation de la requete d'import" class="thumbnail text-center">
+								<mat-icon>double_arrow</mat-icon>
+								<div class="caption">
+									Générateur de requête d'import
+								</div>
+							</a>
+						</mat-card>
+					</div>
+
 				</div>
-			</div>
+			</ng-container>
 			
 		</div>
 	</div>

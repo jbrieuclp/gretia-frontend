@@ -43,7 +43,7 @@ export class LocalisationService {
   loadLocalisationValues() {
     let id = this.fichierId.getValue();
     if (id !== null) {
-      this.importS.getLocalisationValues(id)
+      this.importS.getLocalisationsGeoms(id)
                     .subscribe(
                       values => this.setGeojsonSource(values),
                       error => this.error.next(error.error.message)
@@ -55,7 +55,7 @@ export class LocalisationService {
     let features = []
     values.forEach((el, idx) => {
       if (el.the_geom !== null) {
-        features.push(new Feature(this.geojsonFormat.readGeometry(el.the_geom)));
+        features.push(new Feature(this.geojsonFormat.readGeometry(el.geom)));
       } else {
         let point = new Point([el.longitude, el.latitude]);
         console.log(point);

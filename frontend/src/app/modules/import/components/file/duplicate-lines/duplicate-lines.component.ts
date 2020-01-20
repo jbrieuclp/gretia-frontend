@@ -27,7 +27,7 @@ export class DuplicateLinesComponent implements OnInit {
 
   constructor( 
   	private importS: ImportService,
-  	private fileS: FileService,
+  	public fileS: FileService,
   	private fb: FormBuilder
   ) { }
 
@@ -63,6 +63,7 @@ export class DuplicateLinesComponent implements OnInit {
                 });
 
     });
+    console.log(this.form)
   }
 
   changeCheckAll(event) {
