@@ -90,6 +90,13 @@ class SyntheseFSD
 	 */
 	private $typeField;
 
+	/**
+	 * @ORM\Column(name="occtax", type="text", nullable=true)
+	 *
+   * @Serializer\Groups({"fsd", "champ"})
+	 */
+	private $occtax;
+
 
 	/**
 	* Get id
@@ -306,6 +313,29 @@ class SyntheseFSD
 	public function getTypeField()
 	{
 		return $this->typeField;
+	}
+
+	/**
+	* Set occtax
+	*
+	* @param text $occtax
+	* @return Organismes
+	*/
+	public function setOcctax($occtax)
+	{
+		$this->occtax = $occtax;
+
+		return $this;
+	}
+
+	/**
+	* Get occtax
+	*
+	* @return text
+	*/
+	public function getOcctax()
+	{
+		return $this->occtax;
 	}
 
 

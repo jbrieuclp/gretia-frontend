@@ -1,0 +1,54 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+<span style="margin-left: 15px; font-size: 16px; font-weight: 700; color: #4e1da5;">{{ fileS.tableName }}</span>
+
+<h5 style="margin-top: 10px;">Selectionner les champs où rechercher des lignes en doublons dans le fichier</h5>
+
+<div class="row">
+	<div class="col-sm-5">
+		<mat-card [ngStyle]="{'height.px': cardHeight}">
+			<mat-card-header>
+				<mat-card-title>
+					<div>
+						<mat-checkbox color="primary" (change)="changeCheckAll($event)" [checked]="checkAllStatus">Tout cocher</mat-checkbox>
+				  	<button color="primary" (click)="submit()" mat-raised-button style="margin-left: 20px;">Chercher</button>
+				  </div>
+				</mat-card-title>
+			</mat-card-header>
+			<mat-card-content [ngStyle]="{'height.px': cardContentHeight}">
+				
+				<form [formGroup]="form">
+
+				  <div formArrayName="fields" *ngFor="let field of form.get('fields')['controls']; let i = index">
+						<mat-checkbox color="primary" [formControlName]="i">{{ fields[i].champ }}</mat-checkbox>
+					</div>
+
+
+				</form>
+
+			</mat-card-content>
+		</mat-card>
+	</div>
+
+	<div class="col-sm-5" *ngIf="nbDoublon !== null">
+		<mat-card>
+			<mat-card-header>
+				<mat-card-title>Résultat</mat-card-title>
+			</mat-card-header>
+			<mat-card-content>
+				<ng-container *ngIf="nbDoublon; else noDuplicates">
+					Nombre de doublons détectés : {{ nbDoublon }}
+					<div>
+						<button color="primary" (click)="tagDuplicates()" mat-raised-button [disabled]="done">{{ done ? 'Terminé' : 'Marquer ces doublons' }}</button>
+					</div>
+				</ng-container>
+				<ng-template #noDuplicates>Aucun doulon dans ce fichier</ng-template>
+			</mat-card-content>
+		</mat-card>
+	</div>
+</div>

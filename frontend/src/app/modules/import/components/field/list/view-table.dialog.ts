@@ -19,12 +19,14 @@ export class ViewTableDialog implements OnInit {
     private fieldS: FieldService,
     private _snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { 
-    this.field = this.fieldS.field.getValue();
-  }
+  ) { }
 
   ngOnInit() {
-    this.filter[this.field.champ] = this.data.search;
+    this.fieldS.field
+                  .subscribe(field=>{
+                    this.field = field;
+                    this.filter[this.field.champ] = this.data.search;
+                  });
   }
 
   onNoClick(): void {

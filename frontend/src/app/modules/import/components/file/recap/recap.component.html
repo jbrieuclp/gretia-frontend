@@ -1,0 +1,28 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+<span style="margin-left: 15px; font-size: 16px; font-weight: 700; color: #4e1da5;">{{ fileS.tableName }}</span>
+
+
+<mat-card>
+	<mat-card-header>
+		<mat-card-title>Recapitulatif du travail sur le fichier</mat-card-title>
+	</mat-card-header>
+	<mat-card-content>
+		<h6>Fichier</h6>
+		<div>Nombre de lignes du fichier : {{ fileS.countRow }}</div>
+		
+		<h6>Relevés</h6>
+		<div>Nombre de relevés : {{ releves?.already_exists || 0 }}</div>
+		<div *ngIf="(releves?.possible_groupings.length || 0) > 0">- Regroupement (relevés) possibles : {{ releves?.possible_groupings.length || 0 }}</div>
+
+		<h6>Localisation</h6>
+		<div>Données localisées : {{ localisations?.localized || 0 }}</div>
+		<div>Données non localisées : {{ localisations?.not_localized || 0 }}</div>
+		
+	</mat-card-content>
+</mat-card>

@@ -1,0 +1,26 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+<span style="margin-left: 15px; font-size: 16px; font-weight: 700; color: #4e1da5;">{{ fileS.tableName }}</span>
+
+
+<mat-card>
+	<mat-card-header>
+		<mat-card-title>Regroupement par relevés</mat-card-title>
+	</mat-card-header>
+	<mat-card-content>
+		
+		<div>Nombre de lignes du fichier : {{ fileS.countRow }}</div>
+		<div>Relevés déjà indiqués : {{ releves?.already_exists || 0 }}</div>
+		<div>Regroupement possible des données restantes en {{ releves?.possible_groupings.length || 0 }} relevés.</div>
+		<br>
+		<div *ngIf="(releves?.possible_groupings.length || 0) > 0">
+			<button type="button" (click)="regrouper()" mat-raised-button color="primary">Regrouper</button>
+		</div>
+
+	</mat-card-content>
+</mat-card>

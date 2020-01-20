@@ -76,7 +76,6 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
         return new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-
     /**
     * @Rest\View(serializerGroups = {"champ"})
     * @Security("has_role('IMPORT')")
@@ -94,6 +93,32 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
         $data = json_decode($request->getContent(), true);
 
         if ($em->getRepository('APIImportBundle:FichierChamp')->replaceElement($item, $data['search'], $data['replace'])) {
+          if ( $request->query->get('values') === 'f' ) {
+            return $data['replace'];
+          }
+          return $this->getFieldValuesAction($item->getId());
+        }
+        return new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+
+    /**
+    * @Rest\View(serializerGroups = {"champ"})
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Patch("/field/{id}/regexp-replace")
+    */
+    public function regexpReplaceFieldElementAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager('geonature_db');
+        $item = $em->getRepository('APIImportBundle:FichierChamp')->find($id);
+        if (empty($item)) {
+          return new JsonResponse(['message' => 'Field not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if ($em->getRepository('APIImportBundle:FichierChamp')->regexpReplaceElement($item, $data['search'], $data['replace'])) {
           if ( $request->query->get('values') === 'f' ) {
             return $data['replace'];
           }
@@ -201,8 +226,9 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
       $values = $em->getRepository('APIImportBundle:FichierChamp')->getListObservers($item);
 
       foreach ($values as &$value) {
-        $value['propositions'] = array_values(array_unique(json_decode($value['propositions'])));
-        $value['observers_bd'] = array_values(array_unique(json_decode($value['observers_bd'])));
+        $value['propositions'] = array_values(array_unique(json_decode($value['propositions'], true)));
+        $value['observers_bd'] = array_values(array_unique(json_decode($value['observers_bd'], true)));
+        unset($value['init_value']);
       }
 
       return $values;
