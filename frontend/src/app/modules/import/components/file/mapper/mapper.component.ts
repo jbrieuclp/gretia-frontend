@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { FormMapperComponent } from './form-mapper.component';
 
 import { ImportService } from '../../../services/import.service';
@@ -10,7 +10,7 @@ import { FileService } from '../../../services/file.service';
   styleUrls: ['./mapper.component.scss'],
   providers: [FileService]
 })
-export class FileMapperComponent implements OnInit {
+export class FileMapperComponent implements OnInit, OnDestroy {
 
 	fichier: any;
 	_fields: any[] = [];
@@ -36,6 +36,10 @@ export class FileMapperComponent implements OnInit {
   ngOnInit() {
     this.fileS.file.subscribe(fichier=>this.fichier = fichier);
     this.fileS.fields.subscribe(fields=>this._fields = fields);
+  }
+
+  ngOnDestroy() {
+    this.fileS.refreshFields();
   }
 
   /**

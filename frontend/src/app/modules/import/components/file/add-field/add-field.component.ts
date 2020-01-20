@@ -41,6 +41,7 @@ export class FileAddFieldComponent implements OnInit {
       this.importS.addField(this.fichier.id, this.form.value)
                     .subscribe(result => {
                       this.fileS.snackBar('Champ ajouté'); 
+                      this.fileS.refreshFields();
                       this.router.navigate(['../mapper'], { relativeTo: this.route });
                     },
                     error => { 

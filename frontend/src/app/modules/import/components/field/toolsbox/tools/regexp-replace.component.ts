@@ -36,7 +36,7 @@ export class RegexpReplaceComponent implements OnInit, OnDestroy {
 
   searchReplace() {
   	if (this.searchReplaceForm.valid) {
-  		this.importS.replaceFieldElement(this.field.id, this.searchReplaceForm.value)
+  		this.importS.regexpReplaceFieldElement(this.field.id, this.searchReplaceForm.value)
   									.subscribe(result => {
   										//retour de la liste des valeurs mise à jour
   										this.fieldS.values.next(result);
