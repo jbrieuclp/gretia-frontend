@@ -39,24 +39,23 @@
 
 			</div>
 
-			<hr />
+			<ng-container *ngIf="fichier.champs.length">
+				<hr />
+				<div class="row">
+					<ng-container >
+	  				<div class="col-sm-4 col-md-3">
+	  					<mat-card>
+								<a routerLink="./champs" matTooltip="Vérifier les valeurs des champs du fichier" class="thumbnail text-center">
+									<mat-icon>search</mat-icon>
+									<div class="caption">
+										Vérifier les champs
+									</div>
+								</a>
+							</mat-card>
+						</div>
+					</ng-container>
 
-			<div class="row">
-				<ng-container *ngIf="fichier.champs.length">
-  				<div class="col-sm-4 col-md-3">
-  					<mat-card>
-							<a routerLink="./champs" matTooltip="Vérifier les valeurs des champs du fichier" class="thumbnail text-center">
-								<mat-icon>search</mat-icon>
-								<div class="caption">
-									Vérifier les champs
-								</div>
-							</a>
-						</mat-card>
-					</div>
-				</ng-container>
-
-				<ng-container *ngIf="fichier.has_observers">
-					<div class="col-sm-4 col-md-3">
+					<div class="col-sm-4 col-md-3" *ngIf="fichier.has_observers">
 						<mat-card>
 							<a routerLink="./observateurs" matTooltip="Gérer les observateur du fichier" class="thumbnail text-center">
 								<mat-icon>face</mat-icon>
@@ -66,9 +65,7 @@
 							</a>
 						</mat-card>
 					</div>
-				</ng-container>
 
-				<ng-container>
 					<div class="col-sm-4 col-md-3">
 						<mat-card>
 							<a routerLink="./localisations" matTooltip="Gérer les localisation du fichier" class="thumbnail text-center">
@@ -79,9 +76,21 @@
 							</a>
 						</mat-card>
 					</div>
-				</ng-container>
 
-			</div>
+					<div class="col-sm-4 col-md-3" *ngIf="fichier.has_taxonomy">
+						<mat-card>
+							<a routerLink="./taxonomie" matTooltip="Gérer le rattachement taxonomique Taxref" class="thumbnail text-center">
+								<mat-icon>emoji_nature</mat-icon>
+								<div class="caption">
+									Gérer la taxonomie
+								</div>
+							</a>
+						</mat-card>
+					</div>
+
+				</div>
+
+			</ng-container>
 
 			<hr />
 

@@ -51,6 +51,7 @@ import { DuplicateLinesComponent } from './components/file/duplicate-lines/dupli
 import { ExistsInDbComponent } from './components/file/exists-in-db/exists-in-db.component';
 import { RegroupingComponent } from './components/file/regrouping/regrouping.component';
 import { RecapComponent } from './components/file/recap/recap.component';
+import { TaxonomieComponent } from './components/field/taxonomie/taxonomie.component';
 
 @NgModule({
   exports: [
@@ -93,7 +94,8 @@ import { RecapComponent } from './components/file/recap/recap.component';
     RegroupingComponent,
     RegexpReplaceComponent,
     SearchReplaceComponent,
-    RecapComponent
+    RecapComponent,
+    TaxonomieComponent
   ],
   entryComponents: [ 
     EditInputDialog,

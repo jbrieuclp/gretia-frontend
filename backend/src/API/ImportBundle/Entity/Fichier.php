@@ -444,6 +444,22 @@ class Fichier
         return false;
     }
 
+    /**
+    * @Serializer\VirtualProperty
+    * @Serializer\SerializedName("has_taxonomy")
+    * @Serializer\Groups({"fichier"})
+    */
+    public function hasTaxonomy()
+    {
+        foreach ($this->champs as $champ) {
+            if ( !is_null($champ->getFieldFSD()) and $champ->getFieldFSD()->getChamp() == 'nom_complet' ) 
+                return true;
+        }
+
+        //si aucun champ du fichier n'a été mappé avec le champs Serena Observateur on est ici et on retourn false
+        return false;
+    }
+
     private function toUTF8($url) {
         if (!file_exists($url))
             return; // Exit la fonction si le fichier n'existe pas

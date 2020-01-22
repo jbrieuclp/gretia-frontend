@@ -80,6 +80,29 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
     * @Rest\View(serializerGroups = {"champ"})
     * @Security("has_role('IMPORT')")
     *
+    * @Rest\Post("/field/{id}/values")
+    * Realise plusieurs changement d'un coup
+    */
+    public function postFieldValuesAction(Request $request, $id)
+    {
+        $em = $this->getDoctrine()->getManager('geonature_db');
+        $item = $em->getRepository('APIImportBundle:FichierChamp')->find($id);
+        if (empty($item)) {
+          return new JsonResponse(['message' => 'Field not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if ($em->getRepository('APIImportBundle:FichierChamp')->updateValues($item, $data)) {
+          return new JsonResponse(['message' => 'Modification effectuée']);
+        }
+        return new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"champ"})
+    * @Security("has_role('IMPORT')")
+    *
     * @Rest\Patch("/field/{id}/replace")
     */
     public function replaceFieldElementAction(Request $request, $id)

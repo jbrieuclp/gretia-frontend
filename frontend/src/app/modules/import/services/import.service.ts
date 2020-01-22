@@ -112,6 +112,18 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  updateFieldValues(id: number, params: any[]): Observable<any> {
+    const url = `${this.httpUrlBase}/field/${id}/values`;
+    const sources = params;
+    return this.http
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   replaceFieldElement(id: number, params: any, returnList: 't'|'f' = 't'): Observable<any> {
     const url = `${this.httpUrlBase}/field/${id}/replace?values=${returnList}`;
     let sources = params;
@@ -409,6 +421,18 @@ export class ImportService {
     const url = `${this.httpUrlBase}/fichier/${id}/localisations/geoms`;
     return this.http
       .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  postTaxrefMatch(taxons: any): Observable<any> {
+    const url = `${AppConfig.URL_API_MT}/name-checker`;
+    const sources = taxons;
+    return this.http
+      .post(url, sources, httpOptions)
       .pipe(
         map(res => res), 
        // retry(3)

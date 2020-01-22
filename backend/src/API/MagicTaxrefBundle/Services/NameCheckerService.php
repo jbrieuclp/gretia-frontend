@@ -1,6 +1,6 @@
 <?php
 // OPNA\PortailBundle\Services\IndicateurService.php
-namespace Taxref\TaxrefMatchBundle\Services;
+namespace API\MagicTaxrefBundle\Services;
 
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-use Taxref\TaxrefMatchBundle\Entity\TaxrefMatch;
+use API\MagicTaxrefBundle\Entity\TaxrefMatch;
 
 
 class NameCheckerService
@@ -24,7 +24,7 @@ class NameCheckerService
     protected $session;
     private $taxrefMatch;
 
-    private $taxref = 'taxref.taxref_11';
+    private $taxref = 'taxonomie.taxref';
 
     public function __construct(Connection $dbalConnection, RequestStack $request, Session $session)
     {
@@ -35,9 +35,14 @@ class NameCheckerService
         $this->taxrefMatch = $this->getTaxrefMatch();
     }
 
-    public function check() 
+    public function setSource($data) {
+        $data = is_array($data) ? $data : [$data];
+        $this->taxrefMatch->setSource($data);
+    }
+
+    public function check($data = []) 
     {
-        $this->taxrefMatch->setSource($this->request->request->get('taxons'));
+        $this->setSource($data);
         
         $this->rechercheExacte();
         $this->rechercheLbNom();
@@ -46,8 +51,7 @@ class NameCheckerService
         $this->rechercheLevenshtein();
         $this->rechercheLevenshtein('genre_espece');
 
-        $this->saveTaxrefMatch();
-        return $this->taxrefMatch;
+        return $this->taxrefMatch->getMatchs();
     }
 
     public function attribution() 

@@ -16,6 +16,8 @@ import { FileInsertComponent } from './components/file/insert/insert.component';
 import { DuplicateLinesComponent } from './components/file/duplicate-lines/duplicate-lines.component';
 import { RegroupingComponent } from './components/file/regrouping/regrouping.component';
 import { RecapComponent } from './components/file/recap/recap.component';
+import { TaxonomieComponent } from './components/field/taxonomie/taxonomie.component';
+
 
 
 // routes definition
@@ -44,6 +46,7 @@ const routes: Routes = [
 					{ path: 'duplicate-lines', component: DuplicateLinesComponent, pathMatch: 'full' },
 					{ path: 'regrouping', component: RegroupingComponent, pathMatch: 'full' },
 					{ path: 'recap', component: RecapComponent, pathMatch: 'full' },
+					{ path: 'taxonomie', component: TaxonomieComponent, pathMatch: 'full' },
 				]},
 			]},
     ]

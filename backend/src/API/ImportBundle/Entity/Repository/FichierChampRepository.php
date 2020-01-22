@@ -47,6 +47,36 @@ class FichierChampRepository extends EntityRepository
     }
 
     /**
+    *   Mise à jour d'une valeur d'un champ dans un tableau importé
+    **/
+    public function updateValues($champ, $data)
+    {
+        $sql = "WITH data (old, new) as (VALUES";
+
+        $i = 0;
+        foreach ($data as $key => $value) {
+            if (array_key_exists('old', $value) and array_key_exists('new', $value)) {
+                if ($i) 
+                    $sql .= ",";
+                $sql .= "('".str_replace("'", "''", $value['old'])."', '".str_replace("'", "''", $value['new'])."')";
+                $i++;
+            }
+        }
+
+        $sql .= ") ";
+        try {
+            $sql .= "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = data.new FROM data WHERE ".$champ->getChamp()." = data.old";
+            $requete = $this->_em->getConnection()->prepare($sql);
+            $requete->execute();
+        } catch (Exception $e) {
+            return false;
+        }
+        
+        return true;
+
+    }
+
+    /**
     *   Remplace toutes les occurrences d'un champs par une autre chaine
     **/
     public function replaceElement($champ, $search, $replace)
