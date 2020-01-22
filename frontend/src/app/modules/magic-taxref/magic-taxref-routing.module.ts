@@ -4,6 +4,7 @@ import { AuthGuard } from '../../shared/guard/index';
 
 import { MagicTaxrefInitComponent } from './magic-taxref-init.component';
 import { DisplayComponent } from './components/display/display.component';
+import { MatchComponent } from './components/match/match.component';
 
 // routes definition
 const routes: Routes = [
@@ -14,7 +15,8 @@ const routes: Routes = [
 		children: [
 			{ path: '', component: DisplayComponent, canActivate: [AuthGuard] },
 			{ path: 'recherche', component: DisplayComponent, canActivate: [AuthGuard] },
-			{ path: 'taxon/:cd_nom', component: DisplayComponent, canActivate: [AuthGuard] }
+			{ path: 'taxon/:cd_nom', component: DisplayComponent, canActivate: [AuthGuard] },
+			{ path: 'match', component: MatchComponent, canActivate: [AuthGuard] },
 		]
 	}
 ];

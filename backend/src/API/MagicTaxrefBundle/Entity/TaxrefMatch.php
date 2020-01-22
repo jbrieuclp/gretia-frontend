@@ -72,9 +72,9 @@ class TaxrefMatch
     public function addTaxrefToValue($value, array $taxref)
     {
         //on verifie si la valeur est dans notre tableau
+        array_push($this->clean_to_taxrefProp[$value], $taxref);
         if ( array_key_exists($value, $this->clean_to_taxrefProp) )
         {
-            array_push($this->clean_to_taxrefProp[$value], $taxref);
         }
     }
 

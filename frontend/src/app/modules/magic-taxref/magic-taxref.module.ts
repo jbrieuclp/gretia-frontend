@@ -10,7 +10,6 @@ import { MagicTaxrefRoutingModule } from './magic-taxref-routing.module';
 //components
 import { MagicTaxrefInitComponent } from './magic-taxref-init.component';
 import { DisplayComponent } from './components/display/display.component';
-//import { KeysPipe } from '../../shared/pipes/keys.pipe';
 
 //service
 import { VersioningService } from '../magic-taxref/services/versioning.service';
@@ -22,6 +21,7 @@ import { TreeComponent } from './components/tree/tree.component';
 import { TreeChildrenComponent } from './components/tree/children.component';
 import { ImageComponent } from './components/image/image.component';
 import { RepartitionComponent } from './components/repartition/repartition.component';
+import { MatchComponent } from './components/match/match.component';
 
 @NgModule({
   imports: [
@@ -34,7 +34,6 @@ import { RepartitionComponent } from './components/repartition/repartition.compo
   declarations: [
     MagicTaxrefInitComponent,
   	DisplayComponent,
-//    KeysPipe,
     SynonymeComponent,
     VDetailComponent,
     SearchingComponent,
@@ -42,7 +41,8 @@ import { RepartitionComponent } from './components/repartition/repartition.compo
     TreeChildrenComponent,
     ImageComponent,
     ChangementInfoComponent,
-    RepartitionComponent
+    RepartitionComponent,
+    MatchComponent
   ],
   providers: [
   	VersioningService

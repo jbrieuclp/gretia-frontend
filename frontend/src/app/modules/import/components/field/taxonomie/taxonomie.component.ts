@@ -72,8 +72,6 @@ export class TaxonomieComponent implements OnInit, OnDestroy {
   }
 
   checkboxMatchChange(event, taxon): void {
-    console.log(typeof event)
-    console.log(taxon)
     taxon.match = event.checked ? event.source.value : null;
   }
 

@@ -114,7 +114,7 @@ class NameCheckerService
         foreach ($this->taxrefMatch->getCleanValues() as $value => $taxref) 
         {
             //si c'est un tableau, la valeur est déjà rattachée à taxrerf
-            if ( !is_array($taxref) ) 
+            if ( !count($taxref) ) 
             {
                 $elements[] = $value;
             }
@@ -156,7 +156,7 @@ class NameCheckerService
         foreach ($this->taxrefMatch->getCleanValues() as $value => $taxref) 
         {
             //si c'est un tableau, la valeur est déjà rattachée à taxrerf
-            if ( !is_array($taxref) ) 
+            if ( !count($taxref) ) 
             {
                 if ( $case === 'genre_espece')
                 {
@@ -219,7 +219,7 @@ class NameCheckerService
         foreach ($this->taxrefMatch->getCleanValues() as $value => $taxref) 
         {
             //si c'est un tableau, la valeur est déjà rattachée à taxrerf
-            if ( !is_array($taxref) ) 
+            if ( !count($taxref) ) 
             {
                 if ( $case === 'genre_espece')
                 {

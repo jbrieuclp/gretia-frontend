@@ -1,0 +1,126 @@
+<h5>Effecter un rattachement Taxref à partir d'un nom approximatif</h5>
+<mat-accordion>
+  <mat-expansion-panel [expanded]="accordOpen === 0">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Liste de noms à rechercher
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <button 
+			type="button" 
+			mat-raised-button 
+			color="primary"
+			(click)="loadPropositions()"
+			[disabled]="saisie == null || saisie == ''">
+			Rechercher des propositions
+		</button>
+
+		<br>
+
+    <mat-form-field class="example-full-width" appearance="fill">
+	    <textarea 
+		    matInput 
+		    placeholder="Liste des noms à rechercher"
+		    [(ngModel)]="saisie">
+		  </textarea>
+	  </mat-form-field>
+    
+  </mat-expansion-panel>
+
+  <mat-expansion-panel [expanded]="accordOpen === 1">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Résultats
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <button 
+			type="button" 
+			mat-raised-button 
+			color="primary"
+			(click)="toExport=!toExport">
+			Exporter le rattachement (Format CSV)
+		</button>
+		<br>
+
+		<ng-container *ngIf="!toExport;else exportBlock">
+
+	  	<ng-container *ngIf="taxons.length; else loadingBlock">
+				
+				<br>
+				<table class="table table-striped table-bordered table-hover table-condensed">
+					<thead>
+						<tr>
+							<th>Nom cité</th>
+							<th>Proposition(s)</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let taxon of taxons">
+							<td>
+								<div>{{ taxon.taxon }}</div>
+								<div *ngIf="taxon.match != null"><b>{{ taxon.match }}</b></div>
+							</td>
+							<td>
+								<ng-container  [ngSwitch]="taxon.matchs.length">
+									<ng-container *ngSwitchCase="0">
+										Pas de proposition...
+									</ng-container>
+									<ng-container *ngSwitchCase="1">
+										<mat-checkbox 
+											color="primary" 
+											[value]="taxon.matchs[0]" 
+											(change)="checkboxMatchChange($event, taxon)" 
+											[checked]="taxon.taxon === taxon.match">
+											<div><b>{{ taxon.matchs[0].cd_nom }} - {{ taxon.matchs[0].nom_complet }}</b></div>
+											<div>{{ taxon.matchs[0].cd_ref }} - {{ taxon.matchs[0].nom_valide }}</div>
+										</mat-checkbox>
+									</ng-container>
+									<ng-container *ngSwitchDefault>
+										<mat-radio-group 
+											aria-label="Select an option"
+											class="radio-group"
+											(change)="taxon.match = $event.source.value">
+											<mat-radio-button 
+												color="primary"
+										  	class="radio-button" 
+										  	[value]="null"
+										  	[checked]="taxon.taxon === taxon.match">
+										  	<div>Aucune de ces propositions</div>
+										  </mat-radio-button>
+										  <mat-radio-button 
+										  	*ngFor="let match of taxon.matchs"
+												color="primary"
+										  	class="radio-button" 
+										  	[value]="match"
+										  	[checked]="taxon.taxon === taxon.match">
+										  	<div><b>{{ match.cd_nom }} - {{ match.nom_complet }}</b></div>
+												<div>{{ match.cd_ref }} - {{ match.nom_valide }}</div>
+										  </mat-radio-button>
+										</mat-radio-group>
+									</ng-container>
+								</ng-container>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</ng-container>
+			<ng-template #loadingBlock>
+				Chargement en cours...
+			</ng-template>
+		</ng-container>
+		<ng-template #exportBlock>
+			<mat-form-field class="example-full-width" appearance="fill">
+				<textarea 
+			    matInput 
+			    placeholder="Copier/coller ce CSV dans Excel"
+			    [(ngModel)]="csv">
+			  </textarea>
+			</mat-form-field>
+		</ng-template>
+
+  </mat-expansion-panel>
+</mat-accordion>
+
+
+
