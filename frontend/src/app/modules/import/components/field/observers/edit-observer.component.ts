@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Subject, Observable, of } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { debounceTime, map, startWith, distinctUntilChanged, switchMap, catchError, retry } from 'rxjs/operators';
+import { debounceTime, map, startWith, distinctUntilChanged, switchMap, catchError, retry, tap } from 'rxjs/operators';
 
 import { FieldService } from '../field.service';
 import { ImportService } from '../../../services/import.service';
@@ -32,7 +32,11 @@ export class EditObserverComponent implements OnInit {
 
   ngOnInit() {
   	this.displayForm = false;
-  	this.field = this.fieldS.field.getValue();
+    //(re)chargement des observateurs à la récuperation de l'info du fichier correspondant
+    this.fieldS.field
+          .subscribe(
+            field => this.field = field);
+
   	this.initForm();
 
   //callback d'attente

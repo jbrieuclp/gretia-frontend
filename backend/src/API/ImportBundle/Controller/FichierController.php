@@ -76,6 +76,11 @@ class FichierController extends FOSRestController implements ClassResourceInterf
     {
       list($fichier, $em) = $this->getFichier($id);
 
+      //on vérifie si un champ uuid relevé est mappé avec ce fichier
+      if (count($fichier->getFieldByFSD('unique_id_sinp_grp')) > 1) {
+        return new JsonResponse(['message' => 'Plusieurs champs sont indiqués comme UUID de relevé'], Response::HTTP_INTERNAL_SERVER_ERROR);
+      }
+
       $data = [
         'already_exists' => $em->getRepository('APIImportBundle:Fichier')->getAlreadyGrouping($fichier),
         'possible_groupings' => $em->getRepository('APIImportBundle:Fichier')->getPossibleGroupings($fichier)
