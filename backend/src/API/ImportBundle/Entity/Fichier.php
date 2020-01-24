@@ -500,4 +500,14 @@ class Fichier
     public function getFilePath() {
         return "coucou";
     }
+
+    public function getFieldByFSD($name) {
+      $field = [];
+      foreach ($this->champs as $champ) {
+        if ( !is_null($champ->getFieldFSD()) and $champ->getFieldFSD()->getChamp() == $name ) {
+          $field[] = $champ->getChamp();
+        }
+      }
+      return $field;
+    }
 } 

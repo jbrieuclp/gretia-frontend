@@ -35,7 +35,7 @@ export class RegroupingComponent implements OnInit {
   }
 
   regrouper() {
-  	this.importS.setRegrouping(this.fichier.id).subscribe(releve=>this.router.navigate(['.']));
+  	this.importS.setRegrouping(this.fichier.id).subscribe(releve=>window.location.reload());
   }
 
 }
