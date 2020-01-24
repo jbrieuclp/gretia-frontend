@@ -73,9 +73,6 @@ class TaxrefMatch
     {
         //on verifie si la valeur est dans notre tableau
         array_push($this->clean_to_taxrefProp[$value], $taxref);
-        if ( array_key_exists($value, $this->clean_to_taxrefProp) )
-        {
-        }
     }
 
     public function addCdNomValue($value, $cd_nom)
