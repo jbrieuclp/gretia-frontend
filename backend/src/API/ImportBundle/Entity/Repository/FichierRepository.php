@@ -212,7 +212,7 @@ class FichierRepository extends EntityRepository
         $qb->having('count(*) > 1');
         $qb->orderBy('nb_doublon', 'DESC');
 
-        return $qb->execute()->fetch(\PDO::FETCH_ASSOC);
+        return $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
     }
 
 

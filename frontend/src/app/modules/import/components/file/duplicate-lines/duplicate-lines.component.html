@@ -10,7 +10,7 @@
 <h5 style="margin-top: 10px;">Selectionner les champs où rechercher des lignes en doublons dans le fichier</h5>
 
 <div class="row">
-	<div class="col-sm-5">
+	<div class="col-sm-4">
 		<mat-card [ngStyle]="{'height.px': cardHeight}">
 			<mat-card-header>
 				<mat-card-title>
@@ -35,16 +35,31 @@
 		</mat-card>
 	</div>
 
-	<div class="col-sm-5" *ngIf="nbDoublon !== null">
+	<div class="col-sm-8" *ngIf="doublons !== null">
 		<mat-card>
 			<mat-card-header>
 				<mat-card-title>Résultat</mat-card-title>
 			</mat-card-header>
 			<mat-card-content>
-				<ng-container *ngIf="nbDoublon; else noDuplicates">
-					Nombre de doublons détectés : {{ nbDoublon }}
+				<ng-container *ngIf="doublons.length; else noDuplicates">
 					<div>
+						Nombre de doublons détectés : {{ doublons.length }}
 						<button color="primary" (click)="tagDuplicates()" mat-raised-button [disabled]="done">{{ done ? 'Terminé' : 'Marquer ces doublons' }}</button>
+					</div>
+					<br>
+					<div class="table-responsive">
+						<table class="table table-striped table-bordered table-sm">
+							<thead>
+								<tr>
+									<th *ngFor="let key of doublonKeys">{{ key }}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let doublon of doublons">
+									<td *ngFor="let key of doublonKeys">{{ doublon[key] }}</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</ng-container>
 				<ng-template #noDuplicates>Aucun doulon dans ce fichier</ng-template>
