@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
@@ -28,7 +28,8 @@ export class TaxonomieComponent implements OnInit, OnDestroy {
   constructor(
   	private importS: ImportService,
   	private fieldS: FieldService,
-    public fileS: FileService
+    public fileS: FileService,
+    private renderer: Renderer2
   ) { }
 
   ngOnInit() {
@@ -68,6 +69,17 @@ export class TaxonomieComponent implements OnInit, OnDestroy {
   loadPropositions() {
     let data = {"taxons": this.taxons.map(taxon=>taxon.taxon)};
     this.importS.postTaxrefMatch(data)
+                  .pipe(
+                    map(taxons=>
+                      //si une seul proposition on la coche directement
+                      taxons.map(taxon=>{
+                        if (taxon.matchs.length === 1) {
+                          taxon.match = taxon.matchs[0].nom_complet;
+                        }
+                        return taxon;
+                      })
+                    )
+                  )
                   .subscribe((result:TaxrefMatch[])=>this.taxons = result);
   }
 
@@ -91,5 +103,30 @@ export class TaxonomieComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.fieldS.reset();
+  }
+
+  getDifference(ref, term) {
+    const element = this.renderer.createElement("div");
+    const greenSpan = this.renderer.createElement("span");
+    const redSpan = this.renderer.createElement("span");
+    greenSpan.style.color = "green";
+    redSpan.style.color = "red";
+
+    let same = true;
+    for (var i = 0; i < ref.length; i++) {
+      if (ref[i] !== term[i] && same) {
+        same = false;
+      }
+
+      if (same) {
+        greenSpan.innerHTML += term[i];
+      } else {
+        redSpan.innerHTML += term[i];
+      }
+    }
+
+    this.renderer.appendChild(element, greenSpan);
+    this.renderer.appendChild(element, redSpan);
+    return element.innerHTML;
   }
 }

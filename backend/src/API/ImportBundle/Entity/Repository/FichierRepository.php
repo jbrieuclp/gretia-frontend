@@ -350,7 +350,10 @@ class FichierRepository extends EntityRepository
     {
         $qb = $this->_em->getConnection()->createQueryBuilder();
 
-        $qb->select('json_agg(adm_id_import) as ids, COALESCE(NULLIF(unique_id_sinp_grp, \'\')::uuid, uuid_generate_v4()) as uuid')
+        //si un champs unique_id_sinp_grp est mappé ou non pour le fichier
+        $uuid_grp = count($fichier->getFieldByFSD('unique_id_sinp_grp')) ? 'NULLIF(unique_id_sinp_grp, \'\')::uuid  as uuid' : 'uuid_generate_v4()  as uuid';
+
+        $qb->select('json_agg(adm_id_import) as ids, '.$uuid_grp)
            ->from($fichier->getTable(), 'f')
            ->addGroupBy('adm_geom')
            ->addGroupBy('adm_observers')
