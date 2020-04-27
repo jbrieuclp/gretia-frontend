@@ -225,8 +225,7 @@ class FichierRepository extends EntityRepository
         $qb = $this->_em->getConnection()->createQueryBuilder();
 
         $qb->select('array_remove(array_agg(adm_id_import), min(adm_id_import)) as doublon')
-           ->from($fichier->getTable(), 'f')
-           ->where('NOT "adm_doublon_fichier"');
+           ->from($fichier->getTable(), 'f');
 
         foreach ($fichier->getChamps() as $champ) {
             if ( in_array($champ->getId(), $fields) ) {
