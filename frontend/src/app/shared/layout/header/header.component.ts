@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Inject, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { filter } from 'rxjs/operators';
@@ -72,7 +72,7 @@ export class HeaderComponent implements OnInit {
     dialogConfig.maxWidth = '500px';
     dialogConfig.width = '90%';
     dialogConfig.height = '280px';
-    dialogConfig.position = {right: 'auto', left: 'auto', top: '100px'};
+    dialogConfig.position = {top: '100px'};
 
     const dialogRef = this.dialog
                             .open(SignInDialog, dialogConfig)
