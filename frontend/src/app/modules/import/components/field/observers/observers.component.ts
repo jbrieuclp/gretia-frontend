@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ImportService } from '../../../services/import.service';
@@ -20,6 +20,7 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
 	raw_data: any;
 	_observers: any[];
   field_observer: any;
+  private subscription: Subscription
 
   get good_observers(): any[] {
     if (!this._observers || this._observers === null) return [];
@@ -52,11 +53,11 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
     this.error = null;
     this.raw_data = this.fieldS.values;
 
-    this.fileS.file
-          .subscribe(fichier=>{
-            this.fichier = fichier;
-            this.getObserversField()
-          });
+    this.subscription = this.fileS.file
+                                  .subscribe(fichier=>{
+                                    this.fichier = fichier;
+                                    this.getObserversField()
+                                  });
 
   	//(re)chargement des observateurs à la récuperation de l'info du fichier correspondant
 		this.fieldS.field
@@ -73,6 +74,7 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
   	this.fieldS.reset();
+    this.subscription.unsubscribe()
   }
 
   /**

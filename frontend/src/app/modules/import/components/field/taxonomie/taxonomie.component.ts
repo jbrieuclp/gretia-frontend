@@ -24,6 +24,7 @@ export class TaxonomieComponent implements OnInit, OnDestroy {
   field: any;
   error: any;
   taxons: TaxrefMatch[] = [];
+  waiting: boolean = false;
 
   constructor(
   	private importS: ImportService,
@@ -49,7 +50,10 @@ export class TaxonomieComponent implements OnInit, OnDestroy {
                             .map(taxon=>{return {taxon:taxon.value, matchs:[]} });
                   })
                 )
-                .subscribe((taxons:TaxrefMatch[])=>this.taxons = taxons);
+                .subscribe(
+                  (taxons:TaxrefMatch[])=>this.taxons = taxons,
+                  error=>this.waiting = false
+                );
 
     this.fieldS.field.subscribe(field=>this.field = field);
   }
@@ -67,9 +71,11 @@ export class TaxonomieComponent implements OnInit, OnDestroy {
   }
 
   loadPropositions() {
+    this.waiting = true;
     let data = {"taxons": this.taxons.map(taxon=>taxon.taxon)};
     this.importS.postTaxrefMatch(data)
                   .pipe(
+                    tap(()=>this.waiting = false),
                     map(taxons=>
                       //si une seul proposition on la coche directement
                       taxons.map(taxon=>{

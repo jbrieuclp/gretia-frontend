@@ -17,33 +17,31 @@ export class ColorDifferenceDirective implements AfterContentInit {
 
   public ngAfterContentInit() {
 
-    console.log(this.reference)
-    console.log(this.compare)
-    const greenSpan = this._renderer.createElement("span");
-    const redSpan = this._renderer.createElement("span");
-    greenSpan.style.color = "green";
-    redSpan.style.color = "red";
-
-    let same = true;
+    let span = this._renderer.createElement("span");
+    span.style.color = "green";
     for (var i = 0; i < this.reference.length; i++) {
-      if (this.reference[i] !== this.compare[i] && same) {
-        same = false;
+      //Si le comparatif de la lettre en cours est différent du comparatif de la lettre precedente
+      if ( (this.reference[i-1] === this.compare[i-1]) !== (this.reference[i] === this.compare[i]) ) {
+        this._renderer.appendChild(this._el.nativeElement, span);
+        span = this._renderer.createElement("span");
       }
 
-      if (same) {
-        greenSpan.innerHTML += this.compare[i] != null ? this.compare[i] : '';
-      } else {
-        redSpan.innerHTML += this.compare[i] != null ? this.compare[i] : '';
-      }
+      //on compare la lettre en cours
+      span.style.color = (this.reference[i] === this.compare[i]) ? 'green' : 'red';
+
+      span.innerHTML += this.compare[i] != null ? this.compare[i] : '';
+
     }
+
+    this._renderer.appendChild(this._el.nativeElement, span);
 
     //si le mot comparé est plus long que la référence
     if (this.reference.length < this.compare.length) {
-      redSpan.innerHTML += this.compare.substring(this.reference.length);
+      span = this._renderer.createElement("span");
+      span.style.color = "red";
+      span.innerHTML = this.compare.substring(this.reference.length);
+      this._renderer.appendChild(this._el.nativeElement, span);
     }
-
-    this._renderer.appendChild(this._el.nativeElement, greenSpan);
-    this._renderer.appendChild(this._el.nativeElement, redSpan);
   }
 
 

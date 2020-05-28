@@ -1,4 +1,0 @@
-api_serena_annuaire:
-    resource: "@APISerenaBundle/Controller/AnnuaireController.php"
-    type:     rest
-    prefix: /annuaire

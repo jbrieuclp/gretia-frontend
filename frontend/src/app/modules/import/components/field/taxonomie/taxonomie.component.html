@@ -18,7 +18,14 @@
 					type="button" 
 					mat-raised-button 
 					color="primary"
-					(click)="loadPropositions()">Rechercher des propositions</button>
+					(click)="loadPropositions()">
+					<mat-spinner 
+	  				*ngIf="waiting"
+						diameter="25"
+						strokeWidth="2">
+					</mat-spinner>
+					Rechercher des propositions
+				</button>
 
 				<button 
 					type="button" 

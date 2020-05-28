@@ -1,4 +1,0 @@
-services:
-#    api_serena.example:
-#        class: API\SerenaBundle\Example
-#        arguments: ["@service_id", "plain_value", "%parameter%"]

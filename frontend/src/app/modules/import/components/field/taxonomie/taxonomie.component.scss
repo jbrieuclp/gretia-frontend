@@ -7,3 +7,12 @@
 .radio-button {
   margin: 5px;
 }
+
+::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+  stroke: #fff !important;
+}
+
+button .mat-progress-spinner, button .mat-spinner {
+  display: inline-block;
+  margin-right: 10px;
+}
