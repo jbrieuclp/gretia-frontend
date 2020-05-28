@@ -18,7 +18,14 @@
 					type="button" 
 					mat-raised-button 
 					color="primary"
-					(click)="loadPropositions()">Rechercher des propositions</button>
+					(click)="loadPropositions()">
+					<mat-spinner 
+	  				*ngIf="waiting"
+						diameter="25"
+						strokeWidth="2">
+					</mat-spinner>
+					Rechercher des propositions
+				</button>
 
 				<button 
 					type="button" 
@@ -38,7 +45,13 @@
 					<tr *ngFor="let taxon of taxons">
 						<td>
 							<div>{{ taxon.taxon }}</div>
-							<div *ngIf="taxon.match != null"> >> <b>{{ taxon.match }}</b></div>
+							<div *ngIf="taxon.match != null">
+								<b 
+									colorDifference 
+									[reference]="taxon.taxon" 
+									[compare]="taxon.match">
+								</b>
+							</div>
 						</td>
 						<td>
 							<ng-container  [ngSwitch]="taxon.matchs.length">
@@ -50,7 +63,7 @@
 										color="primary" 
 										[value]="taxon.matchs[0].nom_complet" 
 										(change)="checkboxMatchChange($event, taxon)" 
-										[checked]="taxon.taxon === taxon.match">
+										[checked]="taxon.matchs[0].nom_complet === taxon.match">
 										<div><b>{{ taxon.matchs[0].cd_nom }} - {{ taxon.matchs[0].nom_complet }}</b></div>
 										<div>{{ taxon.matchs[0].cd_ref }} - {{ taxon.matchs[0].nom_valide }}</div>
 									</mat-checkbox>
@@ -72,7 +85,7 @@
 											color="primary"
 									  	class="radio-button" 
 									  	[value]="match.nom_complet"
-									  	[checked]="taxon.taxon === taxon.match">
+									  	[checked]="match.nom_complet === taxon.match">
 									  	<div><b>{{ match.cd_nom }} - {{ match.nom_complet }}</b></div>
 											<div>{{ match.cd_ref }} - {{ match.nom_valide }}</div>
 									  </mat-radio-button>

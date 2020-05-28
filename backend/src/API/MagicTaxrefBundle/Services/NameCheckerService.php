@@ -91,7 +91,7 @@ class NameCheckerService
 
         $sql .= ") ";
 
-        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide
+        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide, taxref.id_rang as rang
                  FROM elements e
                  INNER JOIN ".$this->taxref." taxref ON e.cd_nom = taxref.cd_nom";
 
@@ -129,7 +129,7 @@ class NameCheckerService
                     ('".implode('\'), (\'', str_replace("'", "''", $elements))."')
                 ) ";
 
-        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide
+        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide, taxref.id_rang as rang
                  FROM elements e
                  INNER JOIN ".$this->taxref." taxref ON lower(e.nom) = lower(taxref.nom_complet)";
 
@@ -145,6 +145,7 @@ class NameCheckerService
                                           'nom_complet' => $data['nom_complet'],
                                           'cd_ref' => $data['cd_ref'],
                                           'nom_valide' => $data['nom_valide'],
+                                          'rang' => $data['rang'],
                                     ));
         }
 
@@ -192,7 +193,7 @@ class NameCheckerService
                     ('".implode('\'), (\'', $elements)."')
                 ) ";
 
-        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide
+        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide, taxref.id_rang as rang
                  FROM elements e
                  INNER JOIN ".$this->taxref." taxref ON lower(e.recherche) = lower(taxref.lb_nom)";
 
@@ -208,6 +209,7 @@ class NameCheckerService
                                           'nom_complet' => $data['nom_complet'],
                                           'cd_ref' => $data['cd_ref'],
                                           'nom_valide' => $data['nom_valide'],
+                                          'rang' => $data['rang'],
                                     ));
         }
 
@@ -240,7 +242,7 @@ class NameCheckerService
 
 
 
-                $sql = "SELECT '".str_replace("'", "''", $recherche['nom'])."'::text as nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide
+                $sql = "SELECT '".str_replace("'", "''", $recherche['nom'])."'::text as nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide, taxref.id_rang as rang
                         FROM ".$this->taxref." taxref
                         WHERE levenshtein(lb_nom, '".str_replace("'", "''", $recherche['recherche'])."') < 3";
 
@@ -256,6 +258,7 @@ class NameCheckerService
                                                   'nom_complet' => $data['nom_complet'],
                                                   'cd_ref' => $data['cd_ref'],
                                                   'nom_valide' => $data['nom_valide'],
+                                                  'rang' => $data['rang'],
                                             ));
                 }
 

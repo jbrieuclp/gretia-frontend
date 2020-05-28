@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { User } from '../../../../shared/models/user.model';
+import { AuthService } from '../../../../shared/auth/authentication.service';
 
 @Component({
   selector: 'app-accueil',
@@ -8,8 +11,11 @@ import { Component, OnInit } from '@angular/core';
 export class AccueilComponent implements OnInit {
 
 	outils : any;
+  user: Observable<User>;
 
-  constructor() { }
+  constructor(private authService: AuthService) { 
+    this.user = this.authService.getUser().asObservable();
+  }
 
   ngOnInit() {
   	this.outils = [
@@ -18,6 +24,7 @@ export class AccueilComponent implements OnInit {
   	  	text: '<p>Outil de consultation cartographique des données du GRETIA.</p>',
   	  	image: '/assets/images/carte.png',
   	  	url: '/carto',
+        role: 'CARTO_SYNTHESE',
         target: "_self"
   	  },
       {
@@ -25,6 +32,7 @@ export class AccueilComponent implements OnInit {
         text: '<p>Outil de saisie et de consultation des données du GRETIA.</p>',
         image: '/assets/images/geonature.png',
         url: 'http://outils.gretia.org/geonature/',
+        role: 'GN',
         target: "_self"
       },
   	  {
@@ -32,6 +40,7 @@ export class AccueilComponent implements OnInit {
   	  	text: '<p>Outil de consultation et de comparaison des données Taxref.</p>',
   	  	image: '/assets/images/taxref.png',
   	  	url: '/taxref',
+        role: 'MAGIC_TAXREF',
         target: "_self"
   	  },
   	  {
@@ -39,6 +48,7 @@ export class AccueilComponent implements OnInit {
   	  	text: '<p>Outil de consultation des études et des lots de données intégrées dans la BDD.</p>',
   	  	image: '/assets/images/metadata.png',
   	  	url: 'http://outils.gretia.org/geonature/#/metadata',
+        role: 'GN',
         target: "_self"
   	  },
   	  {
@@ -46,6 +56,7 @@ export class AccueilComponent implements OnInit {
   	  	text: '<p>Outil de correction de fichier de données en vue d\'être intégré en BDD.</p>',
   	  	image: '/assets/images/import.png',
   	  	url: '/import',
+        role: 'IMPORT',
         target: "_self"
   	  },
   	  {

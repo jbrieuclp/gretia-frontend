@@ -2,10 +2,6 @@ app_index:
     path: /
     defaults: { _controller: APICoreBundle:Core:index }
 
-api_core:
-    resource: "@APICoreBundle/Resources/config/routing.yml"
-    prefix:   /
-
 api_login_check:
     path: /login_check
     
@@ -32,15 +28,7 @@ api_magic_taxref:
     type: rest
     prefix:   /magic-taxref/
 
-api_serena:
-    resource: "@APISerenaBundle/Resources/config/routing.yml"
-    type: rest
-    prefix:   /
-
 api_projet:
     resource: "@APIProjetBundle/Resources/config/routing.yml"
     type: rest
     prefix:   /etude/
-
-fos_js_routing:
-    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

@@ -17,7 +17,8 @@ export class DuplicateLinesComponent implements OnInit {
 	fields: any[];
 	fichier: any;
 
-	nbDoublon: number = null;
+	doublons: any[] = null;
+  doublonKeys: string[] = [];
 
 	cardHeight: any;
   cardContentHeight: any;
@@ -63,7 +64,6 @@ export class DuplicateLinesComponent implements OnInit {
                 });
 
     });
-    console.log(this.form)
   }
 
   changeCheckAll(event) {
@@ -80,11 +80,13 @@ export class DuplicateLinesComponent implements OnInit {
   }
 
   submit() {
-    this.nbDoublon = null;
+    this.doublons = null;
+    this.doublonKeys = [];
     this.done = false;
     this.importS.checkDuplicateLines(this.fichier.id, this.getSelectedFields())
 	  									.subscribe(data => {
-	  										this.nbDoublon = data.nb_doublon
+	  										this.doublons = data;
+                        this.getKeys();
 	  									});
   }
 
@@ -100,6 +102,10 @@ export class DuplicateLinesComponent implements OnInit {
                         this.fileS.recount();
                         this.done = data
                       });
+  }
+
+  private getKeys(): void {
+    this.doublonKeys = this.doublons.length ? Object.keys(this.doublons[0]) : [];
   }
 
 }
