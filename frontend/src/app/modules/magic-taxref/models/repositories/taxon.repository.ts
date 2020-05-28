@@ -79,6 +79,18 @@ export class TaxonRepository {
       );
   }
 
+  /** GET taxon par ID (cd_nom) **/
+  postTaxrefMatch(taxons: any): Observable<any> {
+    const url = `${this.httpUrlBase}/name-checker`;
+    const sources = taxons;
+    return this.http
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
 /*  getTaxonFromTaxrefV(version:number, cd_nom:number) {
     const taxonUrl = this.httpUrlBase + '/taxref' + version + '/' + cd_nom;
     let params: HttpParams = new HttpParams();

@@ -107,9 +107,6 @@ export class FormMapperComponent implements OnInit {
               bestResult = tempResult;
           }
       }
-
-      console.log(this.field.champ);
-      console.log(bestOption);
     }
   }
 

@@ -25,26 +25,37 @@
 						</a>
 					</mat-card>
 				</div>
+
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a routerLink="./recap" matTooltip="Récapitulatif de l'état du travail sur le fichier" class="thumbnail text-center">
+							<mat-icon>info</mat-icon>
+							<div class="caption">
+								Récapitulatif
+							</div>
+						</a>
+					</mat-card>
+				</div>
+
 			</div>
 
-			<hr />
+			<ng-container *ngIf="fichier.champs.length">
+				<hr />
+				<div class="row">
+					<ng-container >
+	  				<div class="col-sm-4 col-md-3">
+	  					<mat-card>
+								<a routerLink="./champs" matTooltip="Vérifier les valeurs des champs du fichier" class="thumbnail text-center">
+									<mat-icon>search</mat-icon>
+									<div class="caption">
+										Vérifier les champs
+									</div>
+								</a>
+							</mat-card>
+						</div>
+					</ng-container>
 
-			<div class="row">
-				<ng-container *ngIf="fichier.champs.length">
-  				<div class="col-sm-4 col-md-3">
-  					<mat-card>
-							<a routerLink="./champs" matTooltip="Vérifier les valeurs des champs du fichier" class="thumbnail text-center">
-								<mat-icon>search</mat-icon>
-								<div class="caption">
-									Vérifier les champs
-								</div>
-							</a>
-						</mat-card>
-					</div>
-				</ng-container>
-
-				<ng-container *ngIf="fichier.has_observers">
-					<div class="col-sm-4 col-md-3">
+					<div class="col-sm-4 col-md-3" *ngIf="fichier.has_observers">
 						<mat-card>
 							<a routerLink="./observateurs" matTooltip="Gérer les observateur du fichier" class="thumbnail text-center">
 								<mat-icon>face</mat-icon>
@@ -54,9 +65,7 @@
 							</a>
 						</mat-card>
 					</div>
-				</ng-container>
 
-				<ng-container *ngIf="fichier.has_localisation">
 					<div class="col-sm-4 col-md-3">
 						<mat-card>
 							<a routerLink="./localisations" matTooltip="Gérer les localisation du fichier" class="thumbnail text-center">
@@ -67,16 +76,28 @@
 							</a>
 						</mat-card>
 					</div>
-				</ng-container>
 
-			</div>
+					<div class="col-sm-4 col-md-3" *ngIf="fichier.has_taxonomy">
+						<mat-card>
+							<a routerLink="./taxonomie" matTooltip="Gérer le rattachement taxonomique Taxref" class="thumbnail text-center">
+								<mat-icon>emoji_nature</mat-icon>
+								<div class="caption">
+									Gérer la taxonomie
+								</div>
+							</a>
+						</mat-card>
+					</div>
+
+				</div>
+
+			</ng-container>
 
 			<hr />
 
 			<div class="row" *ngIf="fichier.champs.length">
 				<div class="col-sm-4 col-md-3">
 					<mat-card>
-						<a [routerLink]="[]" matTooltip="Vérifier les doublons au sein du fichier" class="thumbnail text-center">
+						<a routerLink="./duplicate-lines" matTooltip="Rechercher des doublons au sein du fichier" class="thumbnail text-center">
 							<mat-icon>compare_arrows</mat-icon>
 							<div class="caption">
 								Recherche de doublons dans le fichier
@@ -85,43 +106,46 @@
 					</mat-card>
 				</div>
 
-				<div class="col-sm-4 col-md-3">
+				<!-- <div class="col-sm-4 col-md-3">
 					<mat-card>
-						<a [routerLink]="[]" matTooltip="Vérifier les doublons" class="thumbnail text-center">
+						<a routerLink="./exists-in-db" matTooltip="Rechercher des données déjà présentes dans GeoNature" class="thumbnail text-center">
 							<mat-icon>cloud</mat-icon>
 							<div class="caption">
-								Recherche de doublons avec la BD
+								Recherche de doublons avec GeoNature
+							</div>
+						</a>
+					</mat-card>
+				</div> -->
+
+				<div class="col-sm-4 col-md-3">
+					<mat-card>
+						<a routerLink="./regrouping" matTooltip="Regrouper les données en relevés" class="thumbnail text-center">
+							<mat-icon>photo_library</mat-icon>
+							<div class="caption">
+								Regrouper en relevés
 							</div>
 						</a>
 					</mat-card>
 				</div>
 			</div>
 
-			<hr />
+			<ng-container *ngIf="fichier.champs.length && fichier.nb_field_ok == fichier.champs.length">
+				<hr />
+				<div class="row" >
 
-			<div class="row" *ngIf="fichier.champs.length && fichier.nb_field_ok == fichier.champs.length">
-				<div class="col-sm-4 col-md-3">
-					<mat-card>
-						<a routerLink="./insert" matTooltip="Creation de la requete d'import" class="thumbnail text-center">
-							<mat-icon>double_arrow</mat-icon>
-							<div class="caption">
-								Générateur de requête d'import
-							</div>
-						</a>
-					</mat-card>
-				</div>
+					<div class="col-sm-4 col-md-3">
+						<mat-card>
+							<a routerLink="./insert" matTooltip="Creation de la requete d'import" class="thumbnail text-center">
+								<mat-icon>double_arrow</mat-icon>
+								<div class="caption">
+									Générateur de requête d'import
+								</div>
+							</a>
+						</mat-card>
+					</div>
 
-				<div class="col-sm-4 col-md-3">
-					<mat-card>
-						<a [routerLink]="[]" matTooltip="Traiter les MAJ et doublons avec Serena" class="thumbnail text-center">
-							<i class="fa fa-download fa-4"></i>
-							<div class="caption">
-								Traiter les MAJ et doublons avec Serena
-							</div>
-						</a>
-					</mat-card>
 				</div>
-			</div>
+			</ng-container>
 			
 		</div>
 	</div>

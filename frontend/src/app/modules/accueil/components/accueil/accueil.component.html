@@ -1,19 +1,21 @@
 <div class="container">
 	<div class="row">
-		<div class="col-lg-4" *ngFor="let outil of outils">
-
-			<mat-card>
-			  <img mat-card-image src="{{ outil.image }}">
-			  <mat-card-content>
-			    <span class="card-title" innerHTML="{{ outil.title }}"></span>
-          <div innerHTML="{{ outil.text }}"></div>
-			  </mat-card-content>
-			  <mat-card-actions>
-			  	<a mat-flat-button color="primary" href="{{ outil.url }}" target="{{ outil.target }}">Accéder</a>
-			  </mat-card-actions>
-			</mat-card>
-
-		</div>
+		<ng-container *ngFor="let outil of outils">
+			<div 
+				*ngIf="(user|async).hasRole(outil.role) || outil.role === undefined"
+				class="col-lg-4">
+				<mat-card>
+				  <img mat-card-image src="{{ outil.image }}">
+				  <mat-card-content>
+				    <span class="card-title" innerHTML="{{ outil.title }}"></span>
+	          <div innerHTML="{{ outil.text }}"></div>
+				  </mat-card-content>
+				  <mat-card-actions>
+				  	<a mat-flat-button color="primary" href="{{ outil.url }}" target="{{ outil.target }}">Accéder</a>
+				  </mat-card-actions>
+				</mat-card>
+			</div>
+		</ng-container>
 
 	</div>
 </div>

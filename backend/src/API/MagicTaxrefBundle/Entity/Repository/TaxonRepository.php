@@ -11,7 +11,7 @@ class TaxonRepository extends EntityRepository
     {
         
         $qb = $this->_em->createQueryBuilder();
-        $qb->select('t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12')
+        $qb->select('t, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13')
             ->from($this->_entityName, 't')
             ->leftJoin('t.taxref2', 't2')
             ->leftJoin('t.taxref3', 't3')
@@ -24,6 +24,7 @@ class TaxonRepository extends EntityRepository
             ->leftJoin('t.taxref10', 't10')
             ->leftJoin('t.taxref11', 't11')
             ->leftJoin('t.taxref12', 't12')
+            ->leftJoin('t.taxref13', 't13')
             ->where('t.cdNom = :cd_nom')
             ->setParameter('cd_nom', $cd_nom);
 

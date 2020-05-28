@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 
 import { ImportService } from '../../services/import.service';
 
@@ -10,7 +11,10 @@ export class FieldService {
   values: BehaviorSubject<any[]> = new BehaviorSubject([]);
 
   get field(): any {
-    return this._field;
+    return this._field
+                  .pipe(
+                    filter(field => field !== null && field.id !== null )
+                  );
   }
 
   set field(field: any) {
@@ -23,16 +27,14 @@ export class FieldService {
 
   loadSubscribe() {
     this.field.subscribe(field=> {
-      this.loadFieldValues();
+      this.values.next([]);
+      this.loadFieldValues(field.id);
     })
   }
 
-  loadFieldValues() {
-    let field = this.field.getValue();
-    if (field !== null && field.id !== null) {
-      this.importS.getFieldValues(field.id)
-                    .subscribe(values => this.values.next(values))
-    }
+  loadFieldValues(field_id) {
+    this.importS.getFieldValues(field_id)
+                  .subscribe(values => this.values.next(values))
   }
 
   reset() {

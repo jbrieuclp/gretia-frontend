@@ -6,34 +6,22 @@ namespace API\MagicTaxrefBundle\Entity;
 
 class TaxrefMatch
 {
-
-	private $source;
-    private $sourceArray = [];
+    private $source = [];
     private $source_to_clean = [];
     private $clean_to_taxrefProp = [];
     private $clean_to_cdNom = [];
 
-    public function __construct()
-    {
+    public function __construct() {}
 
-    }
-
-    public function getSource()
+    public function getsource()
     {
         return $this->source;
     }
 
-    public function getSourceArray()
-    {
-        return $this->sourceArray;
-    }
-
     public function setSource($source)
     {
-        //source brute
-        $this->source = $source; 
-        //source brute transformé en tableau
-        $this->sourceArray = preg_split('/\n|\r\n?/', $source);
+        //source en tableau
+        $this->source = $source;
         //lance le nettoyage des données
         $this->cleanArray();
         return $this;
@@ -44,13 +32,13 @@ class TaxrefMatch
     private function cleanArray()
     {
         //supprime les doublons et nettoie le texte
-        foreach (array_unique($this->sourceArray) as $value) {
+        foreach (array_unique($this->source) as $value) {
             //on nettoie le texte
             if ( !empty($this->textClean($value)) )
                 $this->source_to_clean[$value] = $this->textClean($value);
         }
-
-        $this->clean_to_taxrefProp = array_flip(array_unique(array_values($this->source_to_clean)));
+        //on retourne le tableau pour que les valeurs nettoyées soit les clées, on initialise avec un tableau vide les valeurs
+        $this->clean_to_taxrefProp = array_fill_keys(array_unique(array_values($this->source_to_clean)), []);
     }
 
     public function getSourceJoinClean()
@@ -84,24 +72,7 @@ class TaxrefMatch
     public function addTaxrefToValue($value, array $taxref)
     {
         //on verifie si la valeur est dans notre tableau
-        if ( array_key_exists($value, $this->clean_to_taxrefProp) )
-        {
-            //on teste si un rattachement taxref à déjà eu lieu, sinon on créée un tableau de possibilité
-            if ( !is_array($this->clean_to_taxrefProp[$value]) ) 
-            {
-                $this->clean_to_taxrefProp[$value] = $taxref;
-            } else 
-            {
-                //si un seul taxon on créer le tableau de possibilité
-                if ( array_key_exists('cd_nom', $this->clean_to_taxrefProp[$value]) ) 
-                {
-                    $temp = array($this->clean_to_taxrefProp[$value]);
-                    $this->clean_to_taxrefProp[$value] = $temp;
-                } 
-                //on ajoute la nouvelle valeur taxref a la liste de possibilité
-                array_push($this->clean_to_taxrefProp[$value], $taxref);
-            }
-        }
+        array_push($this->clean_to_taxrefProp[$value], $taxref);
     }
 
     public function addCdNomValue($value, $cd_nom)
@@ -113,29 +84,13 @@ class TaxrefMatch
         }
     }
 
-    /** @see \Serializable::serialize() */
-    public function serialize()
+    public function getMatchs() 
     {
-        return serialize(array(
-            $this->source,
-            $this->sourceArray,
-            $this->source_to_clean,
-            $this->clean_to_taxrefProp,
-            $this->clean_to_cdNom,
-        ));
-    }
-
-    /** @see \Serializable::unserialize() */
-    public function unserialize($serialized)
-    {
-        list (
-            $this->source,
-            $this->sourceArray,
-            $this->source_to_clean,
-            $this->clean_to_taxrefProp,
-            $this->clean_to_cdNom,
-        ) = unserialize($serialized);
-
-        return $this;
+        //$matchs = [taxon: string, matchs: any[]];
+        $matchs = [];
+        foreach ($this->source as $key => $value) {
+            $matchs[] = ['taxon'=>$value, 'matchs'=>$this->clean_to_taxrefProp[$this->source_to_clean[$value]]];
+        }
+        return $matchs;
     }
 } 

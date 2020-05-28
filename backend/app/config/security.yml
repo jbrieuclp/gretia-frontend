@@ -37,12 +37,6 @@ security:
                 username_parameter: username
                 password_parameter: password
 
-        register:
-            pattern: ^/inscription
-            anonymous: true
-            stateless: true
-
-
         annuaire:
             pattern: ^/biblio
             anonymous: true
@@ -79,6 +73,5 @@ security:
 
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/inscription, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/test, role: IS_AUTHENTICATED_ANONYMOUSLY }

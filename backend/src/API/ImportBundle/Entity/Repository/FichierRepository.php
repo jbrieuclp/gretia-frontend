@@ -25,6 +25,22 @@ class FichierRepository extends EntityRepository
 
     }
 
+    /**
+     *   Import un fichier présent sur le serveur dans Postgres en commande SQL COPY
+     **/
+    public function count($fichier)
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+        $qb->select("count(*)")
+           ->from($fichier->getTable(), 'f')
+           ->where('NOT adm_doublon_fichier')
+           ->andWhere('NOT adm_doublon_bd')
+           ->andWhere('NOT adm_import_exclude');
+
+        return $qb->execute()->fetch(\PDO::FETCH_COLUMN, 0);
+
+    }
+
 
     /**
     *   Import un fichier présent sur le serveur dans Postgres en commande SQL COPY
@@ -68,7 +84,7 @@ class FichierRepository extends EntityRepository
 
         try{
             //creation de la table
-            $sql = "CREATE TABLE ".$fichier->getTable()." (adm_id_import serial PRIMARY KEY, adm_uuid_auto uuid DEFAULT uuid_generate_v4(), adm_doublon_fichier boolean DEFAULT FALSE, adm_doublon_bd boolean DEFAULT FALSE, adm_doublon_bd_id character varying DEFAULT '[]', adm_import_exclude boolean DEFAULT FALSE, adm_geom geometry(Geometry,2154), adm_observers jsonb, adm_counting jsonb, ".implode(', ',$colonne_a_modifier).", ".implode(', ',$colonne_d_archive).")";
+            $sql = "CREATE TABLE ".$fichier->getTable()." (adm_id_import serial PRIMARY KEY, adm_uuid_auto uuid DEFAULT uuid_generate_v4(), adm_doublon_fichier boolean DEFAULT FALSE, adm_doublon_bd boolean DEFAULT FALSE, adm_doublon_bd_id character varying DEFAULT '[]', adm_import_exclude boolean DEFAULT FALSE, adm_geom geometry(Geometry,2154), adm_observers jsonb, adm_counting jsonb, adm_uuid_grp uuid, ".implode(', ',$colonne_a_modifier).", ".implode(', ',$colonne_d_archive).")";
             $this->_em->getConnection()->query($sql);
         }
         catch(\Exception $e){
@@ -174,6 +190,229 @@ class FichierRepository extends EntityRepository
         return true;
     }
 
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    *   $fields => champs du formulaire
+    **/
+    public function checkDuplicateLines($fichier, $fields) 
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->select('count(*) AS nb_doublon')
+           ->from($fichier->getTable(), 'f')
+           ->where('NOT "adm_doublon_fichier"');
+
+        foreach ($fichier->getChamps() as $champ) {
+            if ( in_array($champ->getId(), $fields)) {
+                $qb->addSelect('NULLIF("'.$champ->getChamp().'", \'\') AS "'.$champ->getChamp().'"')
+                   ->addGroupBy('NULLIF("'.$champ->getChamp().'", \'\')');
+            }
+        }
+
+        $qb->having('count(*) > 1');
+        $qb->orderBy('nb_doublon', 'DESC');
+
+        return $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    *   $fields => champs du formulaire
+    **/
+    public function tagDuplicateLines($fichier, $fields) 
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->select('array_remove(array_agg(adm_id_import), min(adm_id_import)) as doublon')
+           ->from($fichier->getTable(), 'f');
+
+        foreach ($fichier->getChamps() as $champ) {
+            if ( in_array($champ->getId(), $fields) ) {
+                $qb->addGroupBy('NULLIF("'.$champ->getChamp().'", \'\')');
+            }
+        }
+
+        $qb->having('count(*) > 1');
+
+        $doublons = $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
+
+        $id_doublons = [];
+        foreach ($doublons as $row) {
+            $id_doublons = array_merge($id_doublons, json_decode(str_replace(array('{','}'), array('[',']'), $row['doublon'])));
+        }
+
+        $reinit_qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $reinit_qb->update($fichier->getTable(), 'f')
+                ->set('adm_doublon_fichier', ':doublon')
+                ->setParameter('doublon', 'false')
+                ->execute();
+
+        $update_qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $update_qb->update($fichier->getTable(), 'f')
+                ->set('adm_doublon_fichier', ':doublon')
+                ->where($update_qb->expr()->in( 'adm_id_import', $id_doublons ))
+                ->setParameter('doublon', true);
+        
+        $update_qb->execute();
+
+        return true;
+    }
+
+
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    **/
+    public function checkExistsInDB($fichier, $fields)
+    {
+        $subQueryBuilder = $this->_em->getConnection()->createQueryBuilder(); //sous requete qui pointe vers la BD
+        
+        $exists = $this->_em->getConnection()->createQueryBuilder();
+
+        $subQueryBuilder->select('null')
+                        ->from('gn_synthese.synthese', 's')
+                        ->andWhere('NOT "adm_doublon_bd"')
+                        ->andWhere('"adm_doublon_bd_id" IS NOT NULL');
+
+        $exists->from($fichier->getTable(), 'f');
+
+        foreach ($fichier->getChamps() as $champ) {
+            if ( in_array($champ->getId(), $fields) ) {
+                $subQueryBuilder->andWhere('f."'.$champ->getChamp().'" = s."'.$champ->getFieldFSD()->getChamp().'"');
+                $exists->addSelect('"'.$champ->getChamp().'"');
+            }
+        }
+
+        $exists->where('EXISTS('.$subQueryBuilder->getSQL().')');
+
+        return $exists->getSql();
+
+        $retour = array('doublon' => $exists->execute()->fetchAll(\PDO::FETCH_ASSOC));
+
+        return $retour;
+    }
+
+
+    /**
+    *   Effectue un regroupement sur les champs du relevé
+    *   Retourne les id adm_id_import
+    **/
+    public function localizedCount($fichier) 
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->select('count(*)')
+           ->from($fichier->getTable(), 'f')
+           ->where('adm_geom IS NOT NULL');
+
+        return $qb->execute()->fetch(\PDO::FETCH_COLUMN, 0);
+    }
+
+    /**
+    *   Effectue un regroupement sur les champs du relevé
+    *   Retourne les id adm_id_import
+    **/
+    public function notLocalizedCount($fichier) 
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->select('count(*)')
+           ->from($fichier->getTable(), 'f')
+           ->where('adm_geom IS NULL');
+
+        return $qb->execute()->fetch(\PDO::FETCH_COLUMN, 0);
+    }
+
+
+    /**
+    *   Effectue un regroupement sur les champs du relevé
+    *   Retourne les id adm_id_import
+    **/
+    public function getAlreadyGrouping($fichier) 
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->select('count(DISTINCT adm_uuid_grp) as count')
+           ->from($fichier->getTable(), 'f')
+           ->where('adm_uuid_grp IS NOT NULL');
+
+        return $qb->execute()->fetch(\PDO::FETCH_COLUMN, 0);
+    }
+
+    /**
+    *   Effectue un regroupement sur les champs du relevé
+    *   Retourne les id adm_id_import
+    **/
+    public function getPossibleGroupings($fichier) 
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        //si un champs unique_id_sinp_grp est mappé ou non pour le fichier
+        $uuid_grp = count($fichier->getFieldByFSD('unique_id_sinp_grp')) ? 'NULLIF(unique_id_sinp_grp, \'\')::uuid  as uuid' : 'uuid_generate_v4()  as uuid';
+
+        $qb->select('json_agg(adm_id_import) as ids, '.$uuid_grp)
+           ->from($fichier->getTable(), 'f')
+           ->addGroupBy('adm_geom')
+           ->addGroupBy('adm_observers')
+           ->where('adm_uuid_grp IS NULL');
+
+        foreach ($fichier->getChamps() as $champ) {
+            if ( $champ->getFieldFSD()->getOcctax() === 'releves') {
+                $qb->addGroupBy('NULLIF("'.$champ->getChamp().'", \'\')');
+            }
+        }
+
+        return $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+    *   Effectue un regroupement sur les champs du relevé
+    *   Retourne les id adm_id_import
+    **/
+    public function setRegrouping($fichier) 
+    {
+        $releves = $this->getPossibleGroupings($fichier);
+
+        foreach ($releves as $releve) {
+            $qb = $this->_em->getConnection()->createQueryBuilder();
+            $qb->update($fichier->getTable(), 'f')
+                ->set('adm_uuid_grp', ':uuid')
+                ->where($qb->expr()->in( 'adm_id_import', json_decode($releve['ids'], true) ))
+                ->andWhere('adm_uuid_grp IS NULL')
+                ->setParameter('uuid', $releve['uuid']);
+        
+            $qb->execute();
+        }
+
+        return true;
+    }
+
+
+    /**
+    *   Effectue un regroupement sur les champs du relevé
+    *   Retourne les id adm_id_import
+    **/
+    public function setObserversID($fichier, $data) 
+    {
+        foreach ($data as $saisie => $obs_json) {
+            try {
+                $qb = $this->_em->getConnection()->createQueryBuilder();
+                $qb->update($fichier->getTable(), 'f')
+                    ->set('adm_observers', ':obs_json')
+                    ->where('"'.$fichier->getChampObservateur()->getChamp().'" = :val')
+                    ->setParameter('obs_json', json_encode($obs_json))
+                    ->setParameter('val', $saisie);
+            
+                $qb->execute();
+            } catch (Exception $e) {
+                return false;
+            }
+        }
+
+       return true;
+    }
 
     //----------------
     //----------------
@@ -487,6 +726,20 @@ class FichierRepository extends EntityRepository
     /**
     *   Charge fichier, champs et champs du FSD liés
     **/
+    public function getLocalisationsGeoms($fichier)
+    {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->select('adm_geom, ST_AsGeoJSON(ST_Transform(adm_geom, 3857)) as geom')
+            ->from($fichier->getTable(), 'f')
+            ->where('adm_geom IS NOT NULL');
+
+        return $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    **/
     public function getLocalisationForVerification($fichier, $params)
     {
         $col_latitude = $this->getColumnBySpecificField($fichier, $params['latitude']); 
@@ -543,35 +796,7 @@ class FichierRepository extends EntityRepository
     }
 
 
-    /**
-    *   Charge fichier, champs et champs du FSD liés
-    **/
-    public function testLesDoublons($fichier, $fields)
-    {
-        $subQueryBuilder = $this->_em->getConnection()->createQueryBuilder(); //sous requete qui pointe vers la BD
-        
-        $exists = $this->_em->getConnection()->createQueryBuilder();
-
-        $subQueryBuilder->select('null')
-                        ->from('public.v_serena_data', 'd')
-                        ->andWhere('NOT "doublon_serena"')
-                        ->andWhere('"doublon_serena_id" IS NOT NULL');
-
-        $exists->from($fichier->getTable(), 'f');
-
-        foreach ($fichier->getChamps() as $champ) {
-            if ( array_key_exists($champ->getId(), $fields) and $fields[$champ->getId()] === true) {
-                $subQueryBuilder->andWhere('f."'.$champ->getChamp().'" = d."'.$champ->getFieldFSD()->getChamp().'"');
-                $exists->addSelect('"'.$champ->getChamp().'"');
-            }
-        }
-
-        $exists->where('EXISTS('.$subQueryBuilder->getSQL().')');
-
-        $retour = array('doublon' => $exists->execute()->fetchAll(\PDO::FETCH_ASSOC));
-
-        return $retour;
-    }
+    
 
         /**
     *   Charge fichier, champs et champs du FSD liés
@@ -611,83 +836,9 @@ class FichierRepository extends EntityRepository
         return true;
     }
 
-    /**
-    *   Charge fichier, champs et champs du FSD liés
-    *   $fields => champs du formulaire
-    **/
-    public function testLesDoublonsInterne($fichier, $fields) 
-    {
-        $qb = $this->_em->getConnection()->createQueryBuilder();
-
-        $qb->select('count(*) AS nb_doublon')
-           ->from($fichier->getTable(), 'f')
-           ->where('NOT "doublon_fichier"');
-
-        foreach ($fichier->getChamps() as $champ) {
-            if ( array_key_exists($champ->getId(), $fields) and $fields[$champ->getId()] === true) {
-                $qb->addSelect('NULLIF("'.$champ->getChamp().'", \'\') AS "'.$champ->getChamp().'"')
-                   ->addGroupBy('NULLIF("'.$champ->getChamp().'", \'\')');
-            }
-        }
-
-        $qb->having('count(*) > 1');
-        $qb->orderBy('nb_doublon', 'DESC');
-
-        $retour['doublon'] = $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
-
-/*        $qb->resetQueryPart('having')
-           ->having('count(*) = 1');
-
-        $retour['pas_doublon'] = $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);*/
-
-        return $retour;
-    }
+    
 
 
-    /**
-    *   Charge fichier, champs et champs du FSD liés
-    *   $fields => champs du formulaire
-    **/
-    public function marqueLesDoublonsInterne($fichier, $fields) 
-    {
-        $qb = $this->_em->getConnection()->createQueryBuilder();
-
-        $qb->select('array_remove(array_agg(id_import), min(id_import)) as doublon')
-           ->from($fichier->getTable(), 'f')
-           ->where('NOT "doublon_fichier"');
-
-        foreach ($fichier->getChamps() as $champ) {
-            if ( array_key_exists($champ->getId(), $fields) and $fields[$champ->getId()] === true) {
-                $qb->addGroupBy('NULLIF("'.$champ->getChamp().'", \'\')');
-            }
-        }
-
-        $qb->having('count(*) > 1');
-
-        $doublons = $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
-
-        $id_doublons = [];
-        foreach ($doublons as $row) {
-            $id_doublons = array_merge($id_doublons, json_decode(str_replace(array('{','}'), array('[',']'), $row['doublon'])));
-        }
-
-        $reinit_qb = $this->_em->getConnection()->createQueryBuilder();
-
-        $reinit_qb->update($fichier->getTable(), 'f')
-                ->set('doublon_fichier', ':doublon')
-                ->setParameter('doublon', 'false')
-                ->execute();
-
-        $update_qb = $this->_em->getConnection()->createQueryBuilder();
-
-        $update_qb->update($fichier->getTable(), 'f')
-                ->set('doublon_fichier', ':doublon')
-                ->where($update_qb->expr()->in( 'id_import', $id_doublons ))
-                ->setParameter('doublon', true);
-        
-        $update_qb->execute();
-
-        return true;
-    }
+    
 
 }

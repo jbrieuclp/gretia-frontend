@@ -47,9 +47,58 @@ class FichierChampRepository extends EntityRepository
     }
 
     /**
+    *   Mise à jour d'une valeur d'un champ dans un tableau importé
+    **/
+    public function updateValues($champ, $data)
+    {
+        $sql = "WITH data (old, new) as (VALUES";
+
+        $i = 0;
+        foreach ($data as $key => $value) {
+            if (array_key_exists('old', $value) and array_key_exists('new', $value)) {
+                if ($i) 
+                    $sql .= ",";
+                $sql .= "('".str_replace("'", "''", $value['old'])."', '".str_replace("'", "''", $value['new'])."')";
+                $i++;
+            }
+        }
+
+        $sql .= ") ";
+        try {
+            $sql .= "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = data.new FROM data WHERE ".$champ->getChamp()." = data.old";
+            $requete = $this->_em->getConnection()->prepare($sql);
+            $requete->execute();
+        } catch (Exception $e) {
+            return false;
+        }
+        
+        return true;
+
+    }
+
+    /**
     *   Remplace toutes les occurrences d'un champs par une autre chaine
     **/
     public function replaceElement($champ, $search, $replace)
+    {
+        
+        $sql = "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = replace(".$champ->getChamp().", :search, :replace)";
+
+        $requete = $this->_em->getConnection()->prepare($sql);
+
+        $requete->bindValue(':search', $search);
+        $requete->bindValue(':replace', is_null($replace) ? '' : $replace);
+        
+        $requete->execute();
+        
+        return true;
+
+    }
+
+    /**
+    *   Remplace toutes les occurrences d'un champs par une autre chaine
+    **/
+    public function regexpReplaceElement($champ, $search, $replace)
     {
         
         $sql = "UPDATE ".$champ->getFichier()->getTable()." SET ".$champ->getChamp()." = regexp_replace(".$champ->getChamp().", :search, :replace, 'g')";
@@ -96,13 +145,15 @@ class FichierChampRepository extends EntityRepository
         $table = $field->getFichier()->getTable();
 
         $sql = "
-            WITH observer (observer) as (
-                SELECT DISTINCT trim(unnest(string_to_array({$champ}, '|')))
+            WITH observer (observer, init_value) as (
+                SELECT trim(unnest(string_to_array({$champ}, '|'))), jsonb_agg(DISTINCT {$champ}) as init_value
                 FROM {$table}
+                GROUP BY 1
             )
 
             SELECT 
-                observer, 
+                observer,
+                init_value, 
                 presence.id_role IS NOT NULL as ok, 
                 jsonb_agg(DISTINCT jsonb_build_object('id', presence.id_role, 'nom', presence.nom_role, 'prenom', presence.prenom_role)) as observers_bd,
                 COALESCE(jsonb_agg(DISTINCT CONCAT_WS(' ', NULLIF(leven.nom_role, ''), NULLIF(leven.prenom_role, ''))) FILTER ( WHERE CONCAT_WS(' ', NULLIF(leven.nom_role, ''), NULLIF(leven.prenom_role, '')) <> ''), '[]'::jsonb) ||
@@ -111,7 +162,7 @@ class FichierChampRepository extends EntityRepository
             LEFT JOIN utilisateurs.t_roles presence ON CONCAT_WS(' ', NULLIF(presence.nom_role, ''), NULLIF(presence.prenom_role, '')) = observer AND presence.active
             LEFT JOIN utilisateurs.t_roles leven ON levenshtein(lower(unaccent(observer)), lower(unaccent(CONCAT_WS(' ', NULLIF(leven.nom_role, ''), NULLIF(leven.prenom_role, ''))))) < 3 AND leven.active
             LEFT JOIN utilisateurs.t_roles nom ON lower(unaccent(substring(observer from '^(.+?)\s'))) = lower(unaccent(nom.nom_role)) AND nom.active
-            GROUP BY observer, presence.id_role
+            GROUP BY observer, init_value, presence.id_role
             ORDER BY observer
         ";
 
@@ -119,7 +170,7 @@ class FichierChampRepository extends EntityRepository
         /*$sql = "SELECT ".$field->getChamp()." AS value, true as ok, string_agg(DISTINCT adm_import_exclude::text, '-') AS ban FROM ".$field->getFichier()->getTable()." GROUP BY ".$field->getChamp()." ORDER BY ".$field->getChamp();*/
 
         $requete = $this->_em->getConnection()->prepare($sql);
-        
+
         $requete->execute();
 
         $data = $requete->fetchAll(\PDO::FETCH_ASSOC);

@@ -415,6 +415,18 @@ class Fichier
         return false;
     }
 
+    public function hasOnlyOneObserversField()
+    {
+        $fields = [];
+        foreach ($this->champs as $champ) {
+            if ( !is_null($champ->getFieldFSD()) and $champ->getFieldFSD()->getChamp() == '__OBSERVERS__' ) 
+                $fields[] = $champ;
+        }
+
+        //si aucun champ ou plusieur champs du fichier est mappé avec le champs Observateur on retourne false
+        return count($fields) === 1;
+    }
+
     /**
     * @Serializer\VirtualProperty
     * @Serializer\SerializedName("has_dataset")
@@ -425,6 +437,22 @@ class Fichier
         $lat = false; $lon = false; $comm = false;
         foreach ($this->champs as $champ) {
             if ( !is_null($champ->getFieldFSD()) and $champ->getFieldFSD()->getChamp() == '__DATASET__' ) 
+                return true;
+        }
+
+        //si aucun champ du fichier n'a été mappé avec le champs Serena Observateur on est ici et on retourn false
+        return false;
+    }
+
+    /**
+    * @Serializer\VirtualProperty
+    * @Serializer\SerializedName("has_taxonomy")
+    * @Serializer\Groups({"fichier"})
+    */
+    public function hasTaxonomy()
+    {
+        foreach ($this->champs as $champ) {
+            if ( !is_null($champ->getFieldFSD()) and $champ->getFieldFSD()->getChamp() == 'nom_complet' ) 
                 return true;
         }
 
@@ -471,5 +499,15 @@ class Fichier
      */
     public function getFilePath() {
         return "coucou";
+    }
+
+    public function getFieldByFSD($name) {
+      $field = [];
+      foreach ($this->champs as $champ) {
+        if ( !is_null($champ->getFieldFSD()) and $champ->getFieldFSD()->getChamp() == $name ) {
+          $field[] = $champ->getChamp();
+        }
+      }
+      return $field;
     }
 } 

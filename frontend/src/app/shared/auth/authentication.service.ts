@@ -14,7 +14,8 @@ import {
   distinctUntilChanged, 
   switchMap, 
   catchError, 
-  retry
+  retry,
+  filter
 } from 'rxjs/operators'
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 //import { HttpClient, Response, Headers, RequestOptions, URLSearchParams } from '@angular/http';
@@ -29,6 +30,7 @@ const ANONYMOUS_USER: User = new User().deserialize({
                         username: null,
                         lastLogin: null,
                         token: null,
+                        roles: null,
                         expires_at: null
                        });
 
@@ -41,6 +43,15 @@ export class AuthService {
   constructor(private http: HttpClient, private jwtHelperService: JwtHelperService) {
     this.setSession(null);
     this.httpUrlBase = AppConfig.URL_API;
+    //deconnexion de l'utilisateur quand le token est expiré
+    this.authenticatedUser
+            .pipe(
+              filter(user => user.id !== null)
+            )
+            .subscribe(user => {
+              let expire_time = user.expires_at.getTime() - new Date().getTime();
+              setTimeout(() => this.logout(), expire_time);
+            });
   }
 
   login(user: any): Observable<any> {
@@ -55,7 +66,6 @@ export class AuthService {
         })
       );
   }
-
 
   signIn(val: any): Observable<any> {
     const url = this.httpUrlBase + '/inscription';
@@ -74,8 +84,9 @@ export class AuthService {
   private setSession(user: User) {
     if (user === null) {
 
-      if ( localStorage.getItem("user") !== "undefined" ) 
+      if ( localStorage.getItem("user") !== "undefined" ) {
         user = new User().deserialize(JSON.parse(localStorage.getItem("user")));
+      }
 
       if ( user instanceof User && !user.isExpired() ) {
         user = new User().deserialize(JSON.parse(localStorage.getItem("user")));
@@ -88,6 +99,7 @@ export class AuthService {
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem("expires_at", JSON.stringify(user.expires_at));
     }
+
     this.authenticatedUser.next(user);
   }          
 
@@ -96,7 +108,7 @@ export class AuthService {
     this.setSession(newUser);
   }
 
-  public getUser(): Observable<User> {
+  public getUser(): BehaviorSubject<User> {
     return this.authenticatedUser;
   }
 

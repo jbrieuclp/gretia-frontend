@@ -6,7 +6,8 @@ import { LayoutService } from '../../shared/layout/layout.service';
 const layout = {title: 'Magic Taxref',
                 sidenav: [
                   {title: 'Accueil', url: '/', img: 'home', tooltip: 'Accueil'},
-                  {title: 'Rechercher', url: '/taxref/recherche', img: 'search', tooltip: 'Rechercher un taxon'},
+                  {title: 'Fiche taxonomique', url: '/taxref/recherche', img: 'emoji_nature', tooltip: 'Consultation d\'une fiche taxonomique'},
+                  {title: 'Match', url: '/taxref/match', img: 'search', tooltip: 'Rechercher un taxon'},
                 ]};
 
 @Component({

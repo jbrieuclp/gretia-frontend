@@ -72,6 +72,20 @@ class NomComplet
     */
     private $taxref10;
 
+    /**
+    * @ORM\Column(name="t11", type="boolean", nullable=true)
+    */
+    private $taxref11;
+
+    /**
+    * @ORM\Column(name="t12", type="boolean", nullable=true)
+    */
+    private $taxref12;
+
+    /**
+    * @ORM\Column(name="t13", type="boolean", nullable=true)
+    */
+    private $taxref13;
 
 
 
@@ -291,5 +305,74 @@ class NomComplet
     public function getTaxref10()
     {
         return $this->taxref10;
+    }
+
+    /**
+     * Set taxref11
+     *
+     * @param integer $taxref11
+     * @return Taxref
+     */
+    public function setTaxref11($taxref11)
+    {
+        $this->taxref11 = $taxref11;
+
+        return $this;
+    }
+
+    /**
+     * Get taxref11
+     *
+     * @return integer 
+     */
+    public function getTaxref11()
+    {
+        return $this->taxref11;
+    }
+
+        /**
+     * Set taxref12
+     *
+     * @param integer $taxref12
+     * @return Taxref
+     */
+    public function setTaxref12($taxref12)
+    {
+        $this->taxref12 = $taxref12;
+
+        return $this;
+    }
+
+    /**
+     * Get taxref12
+     *
+     * @return integer 
+     */
+    public function getTaxref12()
+    {
+        return $this->taxref12;
+    }
+
+        /**
+     * Set taxref13
+     *
+     * @param integer $taxref13
+     * @return Taxref
+     */
+    public function setTaxref13($taxref13)
+    {
+        $this->taxref13 = $taxref13;
+
+        return $this;
+    }
+
+    /**
+     * Get taxref13
+     *
+     * @return integer 
+     */
+    public function getTaxref13()
+    {
+        return $this->taxref13;
     }
 } 

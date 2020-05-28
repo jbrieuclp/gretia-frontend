@@ -1,6 +1,6 @@
 <?php
 // OPNA\PortailBundle\Services\IndicateurService.php
-namespace Taxref\TaxrefMatchBundle\Services;
+namespace API\MagicTaxrefBundle\Services;
 
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-use Taxref\TaxrefMatchBundle\Entity\TaxrefMatch;
+use API\MagicTaxrefBundle\Entity\TaxrefMatch;
 
 
 class NameCheckerService
@@ -24,7 +24,7 @@ class NameCheckerService
     protected $session;
     private $taxrefMatch;
 
-    private $taxref = 'taxref.taxref_11';
+    private $taxref = 'taxonomie.taxref';
 
     public function __construct(Connection $dbalConnection, RequestStack $request, Session $session)
     {
@@ -35,9 +35,14 @@ class NameCheckerService
         $this->taxrefMatch = $this->getTaxrefMatch();
     }
 
-    public function check() 
+    public function setSource($data) {
+        $data = is_array($data) ? $data : [$data];
+        $this->taxrefMatch->setSource($data);
+    }
+
+    public function check($data = []) 
     {
-        $this->taxrefMatch->setSource($this->request->request->get('taxons'));
+        $this->setSource($data);
         
         $this->rechercheExacte();
         $this->rechercheLbNom();
@@ -46,8 +51,7 @@ class NameCheckerService
         $this->rechercheLevenshtein();
         $this->rechercheLevenshtein('genre_espece');
 
-        $this->saveTaxrefMatch();
-        return $this->taxrefMatch;
+        return $this->taxrefMatch->getMatchs();
     }
 
     public function attribution() 
@@ -87,7 +91,7 @@ class NameCheckerService
 
         $sql .= ") ";
 
-        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide
+        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide, taxref.id_rang as rang
                  FROM elements e
                  INNER JOIN ".$this->taxref." taxref ON e.cd_nom = taxref.cd_nom";
 
@@ -110,7 +114,7 @@ class NameCheckerService
         foreach ($this->taxrefMatch->getCleanValues() as $value => $taxref) 
         {
             //si c'est un tableau, la valeur est déjà rattachée à taxrerf
-            if ( !is_array($taxref) ) 
+            if ( !count($taxref) ) 
             {
                 $elements[] = $value;
             }
@@ -125,7 +129,7 @@ class NameCheckerService
                     ('".implode('\'), (\'', str_replace("'", "''", $elements))."')
                 ) ";
 
-        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide
+        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide, taxref.id_rang as rang
                  FROM elements e
                  INNER JOIN ".$this->taxref." taxref ON lower(e.nom) = lower(taxref.nom_complet)";
 
@@ -141,6 +145,7 @@ class NameCheckerService
                                           'nom_complet' => $data['nom_complet'],
                                           'cd_ref' => $data['cd_ref'],
                                           'nom_valide' => $data['nom_valide'],
+                                          'rang' => $data['rang'],
                                     ));
         }
 
@@ -152,7 +157,7 @@ class NameCheckerService
         foreach ($this->taxrefMatch->getCleanValues() as $value => $taxref) 
         {
             //si c'est un tableau, la valeur est déjà rattachée à taxrerf
-            if ( !is_array($taxref) ) 
+            if ( !count($taxref) ) 
             {
                 if ( $case === 'genre_espece')
                 {
@@ -188,7 +193,7 @@ class NameCheckerService
                     ('".implode('\'), (\'', $elements)."')
                 ) ";
 
-        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide
+        $sql .= "SELECT e.nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide, taxref.id_rang as rang
                  FROM elements e
                  INNER JOIN ".$this->taxref." taxref ON lower(e.recherche) = lower(taxref.lb_nom)";
 
@@ -204,6 +209,7 @@ class NameCheckerService
                                           'nom_complet' => $data['nom_complet'],
                                           'cd_ref' => $data['cd_ref'],
                                           'nom_valide' => $data['nom_valide'],
+                                          'rang' => $data['rang'],
                                     ));
         }
 
@@ -215,7 +221,7 @@ class NameCheckerService
         foreach ($this->taxrefMatch->getCleanValues() as $value => $taxref) 
         {
             //si c'est un tableau, la valeur est déjà rattachée à taxrerf
-            if ( !is_array($taxref) ) 
+            if ( !count($taxref) ) 
             {
                 if ( $case === 'genre_espece')
                 {
@@ -236,7 +242,7 @@ class NameCheckerService
 
 
 
-                $sql = "SELECT '".str_replace("'", "''", $recherche['nom'])."'::text as nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide
+                $sql = "SELECT '".str_replace("'", "''", $recherche['nom'])."'::text as nom, taxref.cd_nom, taxref.nom_complet, taxref.cd_ref, taxref.nom_valide, taxref.id_rang as rang
                         FROM ".$this->taxref." taxref
                         WHERE levenshtein(lb_nom, '".str_replace("'", "''", $recherche['recherche'])."') < 3";
 
@@ -252,6 +258,7 @@ class NameCheckerService
                                                   'nom_complet' => $data['nom_complet'],
                                                   'cd_ref' => $data['cd_ref'],
                                                   'nom_valide' => $data['nom_valide'],
+                                                  'rang' => $data['rang'],
                                             ));
                 }
 

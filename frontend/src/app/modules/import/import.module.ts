@@ -34,16 +34,25 @@ import { AddObserverComponent } from './components/field/observers/add-observer.
 import { FieldLocalisationsComponent } from './components/field/localisations/localisations.component';
 import { CellComponent } from './components/file/table/cell.component';
 import { FileAddFieldComponent } from './components/file/add-field/add-field.component';
+import { RegexpReplaceComponent } from './components/field/toolsbox/tools/regexp-replace.component';
+import { SearchReplaceComponent } from './components/field/toolsbox/tools/search-replace.component';
 
 //services
 import { ImportService } from './services/import.service';
+import { FileDataService } from './services/file.service';
 import { FormMapperService } from './components/file/mapper/form-mapper.service';
 import { FieldService } from './components/field/field.service';
 import { LocalisationService } from './components/field/localisations/localisation.service';
 
 //directives
 import { AutofocusDirective } from './directives/autofocus.directive';
+import { ColorDifferenceDirective } from './directives/color-difference.directive';
 import { FileInsertComponent } from './components/file/insert/insert.component';
+import { DuplicateLinesComponent } from './components/file/duplicate-lines/duplicate-lines.component';
+import { ExistsInDbComponent } from './components/file/exists-in-db/exists-in-db.component';
+import { RegroupingComponent } from './components/file/regrouping/regrouping.component';
+import { RecapComponent } from './components/file/recap/recap.component';
+import { TaxonomieComponent } from './components/field/taxonomie/taxonomie.component';
 
 @NgModule({
   exports: [
@@ -71,6 +80,7 @@ import { FileInsertComponent } from './components/file/insert/insert.component';
     EditObserverComponent,
     ToolsboxComponent,
     AutofocusDirective,
+    ColorDifferenceDirective,
     AddObserverComponent,
     FileImportComponent,
     FieldLocalisationsComponent,
@@ -80,7 +90,14 @@ import { FileInsertComponent } from './components/file/insert/insert.component';
     FileAddFieldComponent,
     FileRequiredFieldComponent,
     FileRequiredFieldDialog,
-    FileInsertComponent
+    FileInsertComponent,
+    DuplicateLinesComponent,
+    ExistsInDbComponent,
+    RegroupingComponent,
+    RegexpReplaceComponent,
+    SearchReplaceComponent,
+    RecapComponent,
+    TaxonomieComponent
   ],
   entryComponents: [ 
     EditInputDialog,
@@ -92,6 +109,7 @@ import { FileInsertComponent } from './components/file/insert/insert.component';
   ],
   providers: [
     ImportService,
+    FileDataService,
     FormMapperService,
     FieldService,
     LocalisationService

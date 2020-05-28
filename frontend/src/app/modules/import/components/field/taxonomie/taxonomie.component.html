@@ -1,0 +1,104 @@
+<a mat-raised-button 
+	routerLink=".."
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au dashboard"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+<span style="margin-left: 15px; font-size: 16px; font-weight: 700; color: #4e1da5;">{{ fileS.tableName }}</span>
+
+<mat-card >
+	<mat-card-header>
+		<mat-card-title>Taxons hors Taxref ({{ taxons.length }})</mat-card-title>
+	</mat-card-header>
+	<mat-card-content>
+		<ng-container *ngIf="taxons.length; else loadingBlock">
+			<div>
+				<button 
+					type="button" 
+					mat-raised-button 
+					color="primary"
+					(click)="loadPropositions()">
+					<mat-spinner 
+	  				*ngIf="waiting"
+						diameter="25"
+						strokeWidth="2">
+					</mat-spinner>
+					Rechercher des propositions
+				</button>
+
+				<button 
+					type="button" 
+					mat-raised-button 
+					color="primary"
+					(click)="saveMatchs()">Appliquer les choix</button>
+			</div>
+			<br>
+			<table class="table table-striped table-bordered table-hover table-condensed">
+				<thead>
+					<tr>
+						<th>Nom cité</th>
+						<th>Proposition(s)</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let taxon of taxons">
+						<td>
+							<div>{{ taxon.taxon }}</div>
+							<div *ngIf="taxon.match != null">
+								<b 
+									colorDifference 
+									[reference]="taxon.taxon" 
+									[compare]="taxon.match">
+								</b>
+							</div>
+						</td>
+						<td>
+							<ng-container  [ngSwitch]="taxon.matchs.length">
+								<ng-container *ngSwitchCase="0">
+									Pas de proposition...
+								</ng-container>
+								<ng-container *ngSwitchCase="1">
+									<mat-checkbox 
+										color="primary" 
+										[value]="taxon.matchs[0].nom_complet" 
+										(change)="checkboxMatchChange($event, taxon)" 
+										[checked]="taxon.matchs[0].nom_complet === taxon.match">
+										<div><b>{{ taxon.matchs[0].cd_nom }} - {{ taxon.matchs[0].nom_complet }}</b></div>
+										<div>{{ taxon.matchs[0].cd_ref }} - {{ taxon.matchs[0].nom_valide }}</div>
+									</mat-checkbox>
+								</ng-container>
+								<ng-container *ngSwitchDefault>
+									<mat-radio-group 
+										aria-label="Select an option"
+										class="radio-group"
+										(change)="taxon.match = $event.source.value">
+										<mat-radio-button 
+											color="primary"
+									  	class="radio-button" 
+									  	[value]="null"
+									  	[checked]="taxon.taxon === taxon.match">
+									  	<div>Aucune de ces propositions</div>
+									  </mat-radio-button>
+									  <mat-radio-button 
+									  	*ngFor="let match of taxon.matchs"
+											color="primary"
+									  	class="radio-button" 
+									  	[value]="match.nom_complet"
+									  	[checked]="match.nom_complet === taxon.match">
+									  	<div><b>{{ match.cd_nom }} - {{ match.nom_complet }}</b></div>
+											<div>{{ match.cd_ref }} - {{ match.nom_valide }}</div>
+									  </mat-radio-button>
+									</mat-radio-group>
+								</ng-container>
+							</ng-container>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</ng-container>
+		<ng-template #loadingBlock>
+			Chargement en cours...
+		</ng-template>
+	</mat-card-content>
+</mat-card>

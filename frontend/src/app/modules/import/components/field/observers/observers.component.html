@@ -15,11 +15,10 @@
 </div>
 
 <div 
-	*ngIf="field"
 	class="alert alert-secondary" 
 	role="alert" 
 	style="margin-top: 10px;">
-  Pour séparer les différents observateurs d'une ligne de donnée l'outil utilise le pipe ("|").<br>
+  Pour séparer les différents observateurs d'une ligne de donnée, l'outil utilise le pipe ("|").<br>
   Veuillez vous assurer de cette bonne séparation.
 </div>
 
@@ -42,7 +41,6 @@
 				</ul>
 
 				<p *ngIf="!bad_observers.length">Aucun observateur ne pose problème !</p>
-
 	  	</ng-container>
 	  	
 
@@ -78,7 +76,7 @@
 	      <button mat-raised-button matStepperNext>Next</button>
 	    </div>
 	  </mat-step>
-	  <mat-step label="Vérification">
+	  <mat-step label="Récupération des ID GeoNature">
 	  	<ng-container *ngIf="good_observers_multi_bd.length; else verificationOk_Block">
 			  <h5>Noms correspondant à plusieurs observateurs en BD - A faire vérifier par l'administrateur</h5>
 		    <div *ngFor="let observer of good_observers_multi_bd">
@@ -87,6 +85,13 @@
 			</ng-container>
 			<ng-template #verificationOk_Block>
 				Tout est bon !
+				<button 
+					matTooltip="Lancer la récupération des ID des observateur" 
+					mat-raised-button 
+					color="primary"
+					(click)="recuperationID()">
+					Récuperer
+				</button>
 			</ng-template>
 	  </mat-step>
 

@@ -150,6 +150,16 @@ class Taxon
      */
     private $taxref12;
 
+    /**
+     * @var \API\MagicTaxrefBundle\Entity\Taxref13
+     *
+     * @ORM\ManyToOne(targetEntity="API\MagicTaxrefBundle\Entity\Taxref13")
+     * @ORM\JoinColumn(name="t13", referencedColumnName="cd_nom", nullable=true)
+     *
+     * @Serializer\Groups({"taxon"})
+     */
+    private $taxref13;
+
 
 
 
@@ -437,5 +447,28 @@ class Taxon
     public function getTaxref12()
     {
         return $this->taxref12;
+    }
+
+    /**
+     * Set taxref13
+     *
+     * @param integer $taxref13
+     * @return Taxref
+     */
+    public function setTaxref13($taxref13)
+    {
+        $this->taxref13 = $taxref13;
+
+        return $this;
+    }
+
+    /**
+     * Get taxref13
+     *
+     * @return integer 
+     */
+    public function getTaxref13()
+    {
+        return $this->taxref13;
     }
 } 

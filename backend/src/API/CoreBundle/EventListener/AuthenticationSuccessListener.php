@@ -21,8 +21,8 @@ class AuthenticationSuccessListener
         'nom' => $event->getUser()->getNom(),
         'prenom' => $event->getUser()->getPrenom(),
         'token' => $event->getData()['token'],
-        'expires_at'  => date('c', time() + $this->time_to_expire),
-        'modules'  => $event->getUser()->getRoles(),
+        'roles' => $event->getUser()->getRoles(),
+        'expires_at'  => date('c', time() + $this->time_to_expire)
       ));
     }
 }

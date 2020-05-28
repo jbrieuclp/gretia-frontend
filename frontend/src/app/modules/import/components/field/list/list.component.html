@@ -4,7 +4,8 @@
 	matTooltip="Revenir au dashboard"
 >
   <mat-icon>arrow_back</mat-icon> Précédent
-</a>
+</a> 
+<span style="margin-left: 15px; font-size: 16px; font-weight: 700; color: #4e1da5;">{{ fileS.tableName }}</span>
 
 <div class="row">
 	<div class="col-sm-5">
@@ -43,12 +44,12 @@
 	</div>
 
 	<div 
-		*ngIf="$field"
+		*ngIf="field"
 		class="col-sm-7"
 	>
 		<mat-card [ngStyle]="{'height.px': cardHeight}">
 			<mat-card-header>
-				<mat-card-title>Valeurs du champ "{{ $field.champ }}" > "{{ $field?.fieldFSD.champ }}"</mat-card-title>
+				<mat-card-title>Valeurs du champ "{{ field.champ }}" > "{{ field?.fieldFSD.champ }}"</mat-card-title>
 			</mat-card-header>
 			<mat-card-content [ngStyle]="{'height.px': cardContentHeight}">
 

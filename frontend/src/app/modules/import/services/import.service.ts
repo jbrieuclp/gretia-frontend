@@ -65,6 +65,17 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  countRow(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/count`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   addField(id: number, params: any): Observable<any> {
     const url = `${this.httpUrlBase}/fichier/${id}/add-field`;
     const sources = params;
@@ -101,8 +112,32 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  updateFieldValues(id: number, params: any[]): Observable<any> {
+    const url = `${this.httpUrlBase}/field/${id}/values`;
+    const sources = params;
+    return this.http
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   replaceFieldElement(id: number, params: any, returnList: 't'|'f' = 't'): Observable<any> {
     const url = `${this.httpUrlBase}/field/${id}/replace?values=${returnList}`;
+    let sources = params;
+    return this.http
+      .patch(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  regexpReplaceFieldElement(id: number, params: any, returnList: 't'|'f' = 't'): Observable<any> {
+    const url = `${this.httpUrlBase}/field/${id}/regexp-replace?values=${returnList}`;
     let sources = params;
     return this.http
       .patch(url, sources, httpOptions)
@@ -278,87 +313,130 @@ export class ImportService {
      );
   }
 
-//  /** GET taxon par ID (cd_nom) **/
-//  public getFeatureInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET taxon par ID (cd_nom) **/
-//  public getObservateursInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/observateurs`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET taxon par ID (cd_nom) **/
-//  public getJDDsInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/datasets`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET taxon par ID (cd_nom) **/
-//  public getCommunesInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/communes`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET taxon par ID (cd_nom) **/
-//  public getCountsInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/counts`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET taxon par ID (cd_nom) **/
-//  public getTaxonsInfo(layer, feature_id: string, params: any = this.params): Observable<any> {
-//    const url = `${this.httpUrlBase}${layer.url_info}/${feature_id}/taxons`;
-//    const sources = params;
-//    return this.http
-//      .post(url, sources, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
-//
-//  /** GET AvailablesScales **/
-//  public getAvailablesScales(): Observable<any> {
-//    const url = `${this.httpUrlBase}/scales`;
-//    return this.http
-//      .get(url, httpOptions)
-//      .pipe(
-//        map(res => res), 
-//        retry(3)
-//      );
-//  }
+  /** Recherche les lignes en doublons dans le fichier **/
+  checkDuplicateLines(fichier_id: number, fields): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${fichier_id}/duplicate-lines/check`;
+    const sources = fields;
+    return this.http
+     .post(url, sources, httpOptions)
+     .pipe(
+       map(res => res), 
+       retry(3)
+     );
+  }
+
+  /** Marque les lignes en doublons dans le fichier **/
+  tagDuplicateLines(fichier_id: number, fields): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${fichier_id}/duplicate-lines/tag`;
+    const sources = fields;
+    return this.http
+     .post(url, sources, httpOptions)
+     .pipe(
+       map(res => res), 
+       retry(3)
+     );
+  }
+
+  /** Recherche les lignes en doublons avec GeoNature **/
+  checkExistsInDB(fichier_id: number, fields): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${fichier_id}/exists-in-db/check`;
+    const sources = fields;
+    return this.http
+     .post(url, sources, httpOptions)
+     .pipe(
+       map(res => res), 
+       retry(3)
+     );
+  }
+
+  /** Marque les lignes en doublons avec GeoNature **/
+  tagExistsInDB(fichier_id: number, fields): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${fichier_id}/exists-in-db/tag`;
+    const sources = fields;
+    return this.http
+     .post(url, sources, httpOptions)
+     .pipe(
+       map(res => res), 
+       retry(3)
+     );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  getRegrouping(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/releves/info`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  setRegrouping(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/regrouping`;
+    return this.http
+      .post(url, {}, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  setOberversIds(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/observers/set-id`;
+    return this.http
+      .post(url, {}, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  switchStatus(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/switch-status`;
+    return this.http
+      .post(url, {}, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  getLocalisationsInfo(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/localisations/info`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  getLocalisationsGeoms(id: number): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${id}/localisations/geoms`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  postTaxrefMatch(taxons: any): Observable<any> {
+    const url = `${AppConfig.URL_API_MT}/name-checker`;
+    const sources = taxons;
+    return this.http
+      .post(url, sources, httpOptions)
+      .pipe(
+        map(res => res), 
+       // retry(3)
+      );
+  }
 
 }

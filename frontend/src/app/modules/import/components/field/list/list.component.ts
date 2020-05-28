@@ -7,18 +7,21 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ToolsboxComponent } from '../toolsbox/toolsbox.component';
 
 import { ImportService } from '../../../services/import.service';
+import { FileService } from '../../../services/file.service';
 import { FieldService } from '../field.service';
 
 @Component({
   selector: 'app-import-field-list',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss']
+  styleUrls: ['./list.component.scss'],
+  providers: [FileService]
 })
 export class FieldListComponent implements OnInit, OnDestroy {
 
 	cardHeight: any;
   cardContentHeight: any;
   _fields: any[] = [];
+  field: any = null;
 
   get fields(): any[] {
     return this._fields.sort((t1, t2) => {
@@ -40,24 +43,20 @@ export class FieldListComponent implements OnInit, OnDestroy {
     return this.fieldS.values.getValue().filter(value => value.ok);
   }
 
-  get $field() {
-    return this.fieldS.field.getValue();
-  }
-
   constructor(
   	private route: ActivatedRoute,
   	private importS: ImportService,
+    public fileS: FileService,
     private fieldS: FieldService,
     private _bottomSheet: MatBottomSheet,
     private _snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
-  	let id_fichier = this.route.snapshot.paramMap.get('fichier');
+    //refreshFields(true) = champs mappé uniquement
+  	this.fileS.mappedFields.subscribe(fields=>this._fields = fields);
 
-    if ( id_fichier !== null && Number.isInteger(Number(id_fichier)) ) {
-    	this.getFields(Number(id_fichier));
-    }
+    this.fieldS.field.subscribe(field=>this.field = field);
 
     this.cardHeight = window.innerHeight-130;
     this.cardContentHeight = this.cardHeight-70;
@@ -77,14 +76,6 @@ export class FieldListComponent implements OnInit, OnDestroy {
     this._bottomSheet.open(ToolsboxComponent);
   }
 
-  getFields(id) {
-  	this.importS.getFields(id, true) //only-mapped = true
-          .subscribe(
-            (fields: any) => this._fields = fields,
-            error => { /*this.errors = error.error;*/ }
-          );
-  }
-
   loadValues(field) {
     this.fieldS.field = field;
   }
@@ -93,7 +84,10 @@ export class FieldListComponent implements OnInit, OnDestroy {
     let request = {check: event};
     this.importS.patchField(field.id, request)
                     .subscribe(
-                      result => field.check = result.check,
+                      result => {
+                        field.check = result.check;
+                        this.fileS.refreshFields(this._fields);
+                      },
                       error => { 
                         this._snackBar.open(error.error.message, 'Fermer', {
                           duration: 4000,

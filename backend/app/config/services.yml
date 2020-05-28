@@ -2,10 +2,10 @@ imports:
     - { resource: "@APIBiblioBundle/Resources/config/services.yml" }
     - { resource: "@APICoreBundle/Resources/config/services.yml" }
     - { resource: "@APICartoBundle/Resources/config/services.yml" }
-    - { resource: "@APISerenaBundle/Resources/config/services.yml" }
     - { resource: "@APIMetadataBundle/Resources/config/services.yml" }
     - { resource: "@APIProjetBundle/Resources/config/services.yml" }
     - { resource: "@APIImportBundle/Resources/config/services.yml" }
+    - { resource: "@APIMagicTaxrefBundle/Resources/config/services.yml" }
 
 # Learn more about services, parameters and containers at
 # https://symfony.com/doc/current/service_container.html

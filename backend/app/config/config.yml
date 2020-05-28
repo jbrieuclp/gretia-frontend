@@ -84,7 +84,6 @@ doctrine:
                 server_version: "%serena_database_server_version%"
                 charset: UTF8
                 mapping_types:
-                    _text: text_array
                     _int4: integer_array
             geonature_db:
                 driver: "%geonature_database_driver%"
@@ -128,7 +127,6 @@ doctrine:
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
-                    APISerenaBundle: ~
             bibliodb:
                 connection: bibliodb
                 naming_strategy: doctrine.orm.naming_strategy.underscore
@@ -140,7 +138,6 @@ doctrine:
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
-                    APISerenaBundle: ~
             mc_taxref_db:
                 connection: mc_taxref_db
                 naming_strategy: doctrine.orm.naming_strategy.underscore
@@ -152,7 +149,6 @@ doctrine:
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
-                    APISerenaBundle: ~
             serena_db:
                 connection: serena_db
                 naming_strategy: doctrine.orm.naming_strategy.underscore
@@ -164,7 +160,6 @@ doctrine:
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
-                    APISerenaBundle: ~
                 dql:
                     numeric_functions:
                         st_union:        CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STUnion
@@ -180,7 +175,6 @@ doctrine:
                     APIMagicTaxrefBundle: ~
                     APIMetadataBundle: ~
                     APIProjetBundle: ~
-                    APISerenaBundle: ~
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -235,23 +229,3 @@ lexik_jwt_authentication:
             name:    Authorization
         cookie: ~
         query_parameter: ~
-
-fos_user:
-    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
-    firewall_name: main
-    user_class: API\CoreBundle\Entity\User
-    from_email:
-        address: "%mailer_user%"
-        sender_name: "%mailer_user%"
-#    registration:
-#        form:
-#            type: API\CoreBundle\Form\RegistrationType
-
-# Assetic Configuration
-assetic:
-    debug:          "%kernel.debug%"
-    use_controller: false
-    bundles:        [ APICoreBundle ]
-    #java: /usr/bin/java
-    filters:
-        cssrewrite: ~

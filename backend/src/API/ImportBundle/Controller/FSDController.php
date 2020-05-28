@@ -26,7 +26,7 @@ class FSDController extends FOSRestController implements ClassResourceInterface
     
     /**
     * @Rest\View(serializerGroups = {"fsd"})
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Get("/fsd-fields")
     */
@@ -39,7 +39,7 @@ class FSDController extends FOSRestController implements ClassResourceInterface
 
     /**
     * @Rest\View(serializerGroups = {"champ"})
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Get("/fichier/{id}/field-by-fsd")
     * Retourne un champ FSD à partir d'un nom fournit en paramètre GET
@@ -69,7 +69,7 @@ class FSDController extends FOSRestController implements ClassResourceInterface
 
     /**
     * @Rest\View()
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Get("/fsd-field/{id}/values")
     */
@@ -91,7 +91,7 @@ class FSDController extends FOSRestController implements ClassResourceInterface
 
     /**
     * @Rest\View()
-    * @Security("has_role('CARTO_SYNTHESE')")
+    * @Security("has_role('IMPORT')")
     *
     * @Rest\Get("/fsd-field/{id}/recherche")
     */

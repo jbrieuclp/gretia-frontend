@@ -3,8 +3,8 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
 
-import { Taxref12Repository } from '../../models/repositories';
-import { Taxref12 } from '../../models/taxref12.model';
+import { Taxref13Repository } from '../../models/repositories';
+import { Taxref13 } from '../../models/taxref13.model';
 import { Taxon } from '../../models/taxon.model';
 
 @Component({
@@ -12,13 +12,13 @@ import { Taxon } from '../../models/taxon.model';
   templateUrl: './children.component.html',
   styleUrls: ['./children.component.css'],
   providers: [
-    Taxref12Repository
+    Taxref13Repository
   ]
 })
 export class TreeChildrenComponent implements OnInit {
 
 	@Input()
-	taxon: Taxref12;
+	taxon: Taxref13;
 
   @Input()
   indent: number;
@@ -28,7 +28,7 @@ export class TreeChildrenComponent implements OnInit {
 
   childrens: any;
 
-  constructor(private _tr12: Taxref12Repository) { }
+  constructor(private _tr13: Taxref13Repository) { }
 
   ngOnInit() {
     this.childrens = [];
@@ -38,7 +38,7 @@ export class TreeChildrenComponent implements OnInit {
     if ( typeof(cd_ref) === 'undefined' )
       return;
 
-    this._tr12.getChildrens(cd_ref)
+    this._tr13.getChildrens(cd_ref)
       .subscribe( (childrens: any) => {
         this.childrens = childrens;
       });

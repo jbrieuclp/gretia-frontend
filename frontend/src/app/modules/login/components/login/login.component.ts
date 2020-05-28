@@ -19,10 +19,10 @@ export class LoginComponent {
     waiting: boolean = false;
 
     constructor(
-        private formBuilder: FormBuilder,
-        private authenticationService: AuthService,
-        private router: Router,
-        private route: ActivatedRoute,
+      private formBuilder: FormBuilder,
+      private authenticationService: AuthService,
+      private router: Router,
+      private route: ActivatedRoute,
     ) { }
 
     ngOnInit() {

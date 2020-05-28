@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChildren, QueryList, OnDestroy } from '@angular/core';
 import { FormMapperComponent } from './form-mapper.component';
 
 import { ImportService } from '../../../services/import.service';
+import { FileService } from '../../../services/file.service';
 
 @Component({
   selector: 'app-import-mapper',
   templateUrl: './mapper.component.html',
-  styleUrls: ['./mapper.component.scss']
+  styleUrls: ['./mapper.component.scss'],
+  providers: [FileService]
 })
-export class FileMapperComponent implements OnInit {
+export class FileMapperComponent implements OnInit, OnDestroy {
 
 	fichier: any;
 	_fields: any[] = [];
@@ -28,33 +29,17 @@ export class FileMapperComponent implements OnInit {
   @ViewChildren('formMapper') formMappers: QueryList<FormMapperComponent>;
 
   constructor(
-  	private route: ActivatedRoute,
-  	private importS: ImportService
+  	private importS: ImportService,
+    public fileS: FileService
   ) { }
 
   ngOnInit() {
-  	let id_fichier = this.route.snapshot.paramMap.get('fichier');
-
-    if ( id_fichier !== null && Number.isInteger(Number(id_fichier)) ) {
-    	this.getFichier(Number(id_fichier));
-    	this.getFields(Number(id_fichier));
-    }
+    this.fileS.file.subscribe(fichier=>this.fichier = fichier);
+    this.fileS.fields.subscribe(fields=>this._fields = fields);
   }
 
-  getFichier(id) {
-  	this.importS.getFichier(id)
-          .subscribe(
-            (fichier: any) => this.fichier = fichier,
-            error => { /*this.errors = error.error;*/ }
-          );
-  }
-
-  getFields(id) {
-  	this.importS.getFields(id)
-          .subscribe(
-            (fields: any) => this._fields = fields,
-            error => { /*this.errors = error.error;*/ }
-          );
+  ngOnDestroy() {
+    this.fileS.refreshFields();
   }
 
   /**
@@ -65,6 +50,7 @@ export class FileMapperComponent implements OnInit {
           .subscribe(
             (result: boolean) => {
               if (result)  {
+                this.fileS.refreshFields();
                 field.id = null;
                 field.description = null;
                 field.fieldFSD = null;
