@@ -30,6 +30,7 @@ const ANONYMOUS_USER: User = new User().deserialize({
                         username: null,
                         lastLogin: null,
                         token: null,
+                        roles: null,
                         expires_at: null
                        });
 
