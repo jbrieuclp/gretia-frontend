@@ -24,6 +24,6 @@ export class User implements Deserializable {
   }
 
   public hasRole(role): boolean {
-    return this.roles.includes(role);
+    return this.roles != null && this.roles.indexOf(role) !== -1;
   }
 }
