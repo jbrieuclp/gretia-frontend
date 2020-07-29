@@ -32,7 +32,6 @@ export class AccueilComponent implements OnInit {
         text: '<p>Outil de saisie et de consultation des données du GRETIA.</p>',
         image: '/assets/images/geonature.png',
         url: 'http://outils.gretia.org/geonature/',
-        role: 'GN',
         target: "_self"
       },
   	  {
