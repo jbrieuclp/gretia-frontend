@@ -2,14 +2,16 @@
   <div>
     <mat-nav-list>
 
-      <mat-list-item *ngFor="let element of layout.getSidenav()">
-         <a matLine routerLink="{{ element.url }}" matTooltip="{{ element.tooltip }}">
-           {{ element.title }}
-         </a>
-         <a mat-icon-button routerLink="{{ element.url }}">
-            <mat-icon>{{ element.img }}</mat-icon>
-         </a>
-      </mat-list-item>
+      <ng-container *ngFor="let element of layout.getSidenav()">
+        <mat-list-item *ngIf="(user|async).hasRole(element.role) || element.role === undefined">
+           <a matLine routerLink="{{ element.url }}" matTooltip="{{ element.tooltip }}">
+             {{ element.title }}
+           </a>
+           <a mat-icon-button routerLink="{{ element.url }}">
+              <mat-icon>{{ element.img }}</mat-icon>
+           </a>
+        </mat-list-item>
+      </ng-container>
 
     </mat-nav-list>
   </div>

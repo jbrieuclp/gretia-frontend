@@ -7,10 +7,10 @@ const layout = {title: 'Suivis Études',
                 sidenav: [
                   {title: 'Accueil', url: '/', img: 'home', tooltip: 'Accueil'},
                   {title: 'Études', url: '/projet/projets', img: 'folder', tooltip: 'Liste des études'},
-                  {title: 'Nouvelle étude', url: '/projet/projet', img: 'folder', tooltip: 'Ajouter une étude'},
+                  {title: 'Nouvelle étude', url: '/projet/projet', img: 'folder', tooltip: 'Ajouter une étude', role: 'PROJET_ADMIN'},
                   {title: 'Suiveuse', url: '/projet/suiveuse', img: 'query_builder', tooltip: 'Remplir la suiveuse'},
                   {title: 'Dashboard', url: '/projet/dashboard', img: 'assessment', tooltip: 'Remplir la suiveuse'},
-                  {title: 'Administration', url: '/projet/admin', img: 'build', tooltip: 'Administration'}
+                  {title: 'Administration', url: '/projet/admin', img: 'build', tooltip: 'Administration', role: 'PROJET_ADMIN'}
                 ]};
 
 @Component({
