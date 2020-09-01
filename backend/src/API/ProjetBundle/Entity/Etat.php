@@ -24,7 +24,7 @@ class Etat
 	/**
 	 * @ORM\Column(name="libelle", type="string", nullable=false)
 	 *
-	 * @Serializer\Groups({"etat"})
+	 * @Serializer\Groups({"etat", "projet"})
 	 */
 	private $libelle;
 

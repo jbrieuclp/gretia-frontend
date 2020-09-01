@@ -28,14 +28,14 @@ class MissionPersonne
    * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Personne", inversedBy="missions", fetch="EAGER")
    * @ORM\JoinColumn(name="personne_id", referencedColumnName="id_personne", nullable=false)
    *
-   * @Serializer\Groups({"personne"})
+   * @Serializer\Groups({"personne", "projet"})
    */
   private $personne;
 
   /**
   * @ORM\Column(name="temps", type="float", nullable=true)
   *
-  * @Serializer\Groups({"mission", "personne"})
+  * @Serializer\Groups({"mission", "personne", "projet"})
   */
   private $temps;
 
@@ -108,5 +108,21 @@ class MissionPersonne
   public function getTemps()
   {
       return $this->temps;
+  }
+
+  /**
+   * @Serializer\VirtualProperty
+   * @Serializer\SerializedName("timeConsumed")
+   * @Serializer\Groups({"mission"})
+   */
+  public function getTimeConsumed() {
+    $timeConsumed = 0;
+    foreach ($this->mission->getTravails() as $travail) {
+      if ( $travail->getPersonne()->getId() == $this->personne->getId() ) {
+        $timeConsumed += $travail->getDuree();
+      }
+    }
+
+    return round($timeConsumed / 60 / 7, 2);
   }
 }

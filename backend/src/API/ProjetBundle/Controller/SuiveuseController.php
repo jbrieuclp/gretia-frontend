@@ -130,40 +130,9 @@ class SuiveuseController extends FOSRestController implements ClassResourceInter
     *
     * @Rest\Post("/travail")
     */
-    public function createUserTravailAction(Request $request)
+    public function createTravailAction(Request $request)
     {
-      $cpt_id = $this->get('security.token_storage')->getToken()->getUser()->getId();
-      $em = $this->getDoctrine()->getManager('gretiadb');
-      $user = $em->getRepository('APIProjetBundle:Personne')->findOneByCompte($cpt_id);
-
-      if (empty($user)) {
-        return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
-      }
-
-      return $this->createTravailAction($request, $user);
-    }
-
-    /**
-    * @Rest\View(serializerGroups = {"travail"})
-    * @Security("has_role('GESTION_PROJET')")
-    *
-    * @Rest\Post("/personne/{user}/travail")
-    * @ParamConverter("person", class="APIProjetBundle:Personne", options={"mapping": {"user": "id"}, "entity_manager" = "gretiadb"})
-    */
-    public function createPersonTravailAction(Request $request, Personne $person)
-    {
-      if (empty($person)) {
-        return new JsonResponse(['message' => 'Person not found'], Response::HTTP_NOT_FOUND);
-      }
-
-      return $this->createTravailAction($request, $person);
-    }
-
-    public function createTravailAction(Request $request, Personne $person)
-    {
-
       $item = new Travail();
-      $item->setPersonne($person);
       $form = $this->createForm(TravailType::class, $item);
 
       $form->submit(json_decode($request->getContent(), true)); // Validation des données
@@ -176,8 +145,49 @@ class SuiveuseController extends FOSRestController implements ClassResourceInter
       } else {
           return $form;
       }
-
     }
 
-    
+    /**
+    * @Rest\View(serializerGroups = {"travail"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Put("/travail/{id}")
+    */
+    public function updateTravailAction(Request $request, $id)
+    {
+      $em = $this->getDoctrine()->getManager('gretiadb');
+      $item = $em->getRepository('APIProjetBundle:Travail')->find($id);
+
+      if (empty($item)) {
+          return new JsonResponse(['message' => 'Travail not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      $form = $this->createForm(TravailType::class, $item);
+
+      $form->submit($request->request->all());
+
+      if ($form->isValid()) {
+          $em->merge($item);
+          $em->flush();
+          return $item;
+      } else {
+          return $form;
+      }
+    }
+
+    /**
+    * @Rest\View(serializerGroups = {"travail"})
+    * @Security("has_role('GESTION_PROJET')")
+    *
+    * @Rest\Get("/travail/{travail}")
+    * @ParamConverter("travail", class="APIProjetBundle:Travail", options={"mapping": {"travail": "id"}, "entity_manager" = "gretiadb"})
+    */
+    public function getTravailAction(Request $request, Travail $travail)
+    {
+      if (empty($travail)) {
+        return new JsonResponse(['message' => 'Travail not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      return $travail;
+    }    
 }

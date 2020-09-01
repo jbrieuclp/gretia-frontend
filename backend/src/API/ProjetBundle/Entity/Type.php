@@ -24,7 +24,7 @@ class Type
 	/**
 	 * @ORM\Column(name="libelle", type="string", nullable=false)
 	 *
-	 * @Serializer\Groups({"type"})
+	 * @Serializer\Groups({"type", "projet"})
 	 */
 	private $libelle;
 

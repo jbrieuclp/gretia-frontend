@@ -30,28 +30,28 @@ class Personne
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.personne_id_personne_seq", allocationSize=1, initialValue=1)
 	 *
-	 * @Serializer\Groups({"personne", "projet", "travail"})
+	 * @Serializer\Groups({"personne", "mission", "projet", "travail"})
 	 */
 	private $id;
 
 	/**
    * @ORM\Column(name="nom", type="string", nullable=false)
    *
-   * @Serializer\Groups({"personne"})
+   * @Serializer\Groups({"personne", "mission", "projet"})
    */
   private $nom;
 
   /**
    * @ORM\Column(name="prenom", type="string", nullable=false)
    *
-   * @Serializer\Groups({"personne"})
+   * @Serializer\Groups({"personne", "mission", "projet"})
    */
   private $prenom;
 
   /**
    * @ORM\Column(name="surnom", type="string", nullable=false, unique=true)
    *
-   * @Serializer\Groups({"personne"})
+   * @Serializer\Groups({"personne", "mission", "projet"})
    */
   private $surnom;
 

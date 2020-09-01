@@ -31,7 +31,7 @@ class Mission
 	 * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.mission_id_mission_seq", allocationSize=1, initialValue=1)
 	 *
-	 * @Serializer\Groups({"mission", "travail"})
+	 * @Serializer\Groups({"mission", "travail", "projet"})
 	 */
 	private $id;
 
@@ -43,7 +43,7 @@ class Mission
    *      maxMessage = "Le nom de la mission ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @Serializer\Groups({"mission", "travail"})
+   * @Serializer\Groups({"mission", "travail", "projet"})
    */
   private $libelle;
 
@@ -109,14 +109,14 @@ class Mission
 
   /**
    * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\MissionPersonne", mappedBy="mission", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
-   * @Serializer\Groups({"mission"})
+   * @Serializer\Groups({"mission", "projet"})
    */
   private $travailleurs;
 
   /**
    * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Travail", mappedBy="mission", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
    *
-   * @Serializer\Groups({"travail", "projet"})
+   * @Serializer\Groups({"mission", "projet"})
    */
   private $travails;
 
@@ -198,7 +198,7 @@ class Mission
    */
   public function getNbJour()
   {
-    return $this->nbJour;
+    return !isset($this->nbJour) ? $this->nbJour : 0;
   }
 
   /**
@@ -448,7 +448,42 @@ class Mission
     return $this->nbJour ? round($this->getUsageJours() / $this->nbJour * 100) : null;
   }
 
+  /**
+   * @Serializer\VirtualProperty
+   * @Serializer\SerializedName("synthTravailleurs")
+   * @Serializer\Groups({"mission", "projet"})
+   */
+  public function getSynthTravailleurs() {
+    $travailleurs = [];
+    foreach ($this->travailleurs as $travailleur) {
+      if ( !array_key_exists($travailleur->getPersonne()->getId(), $travailleurs) ) {
+        $travailleurs[$travailleur->getPersonne()->getId()] = [
+          'id' => $travailleur->getPersonne()->getId(), 
+          'nom' => $travailleur->getPersonne()->getNom(),
+          'prenom' => $travailleur->getPersonne()->getPrenom(),
+          'surnom' => $travailleur->getPersonne()->getSurnom(),
+          'tempsMission' => $travailleur->getTemps(),
+          'tempsPasseMission' => 0
+        ];
+      }
+    }
 
+    foreach ($this->travails as $travail) {
+      if ( !array_key_exists($travail->getPersonne()->getId(), $travailleurs) ) {
+        $travailleurs[$travailleur->getPersonne()->getId()] = [
+          'id' => $travailleur->getPersonne()->getId(), 
+          'nom' => $travailleur->getPersonne()->getNom(),
+          'prenom' => $travailleur->getPersonne()->getPrenom(),
+          'surnom' => $travailleur->getPersonne()->getSurnom(),
+          'tempsMission' => 0,
+          'tempsPasseMission' => 0
+        ];
+      }
+
+      $travailleurs[$travail->getPersonne()->getId()]['tempsPasseMission'] = $travailleurs[$travail->getPersonne()->getId()]['tempsPasseMission'] + ($travail->getDuree()/60/7);
+    }
+    return array_values($travailleurs);
+  }
 
   /**
   * @ORM\PrePersist()

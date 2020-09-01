@@ -18,7 +18,7 @@ class ProjetPersonne
    * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Projet", inversedBy="travailleurs")
    * @ORM\JoinColumn(name="projet_id", referencedColumnName="id_projet", nullable=false)
    *
-   * @Serializer\Groups({"projet"})
+   * @Serializer\Groups({"personne"})
    */
   private $projet;
 
@@ -27,7 +27,7 @@ class ProjetPersonne
    * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Personne", inversedBy="projets", fetch="EAGER")
    * @ORM\JoinColumn(name="personne_id", referencedColumnName="id_personne", nullable=false)
    *
-   * @Serializer\Groups({"personne"})
+   * @Serializer\Groups({"projet", "personne"})
    */
   private $personne;
 

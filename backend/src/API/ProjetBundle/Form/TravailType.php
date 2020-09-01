@@ -26,37 +26,23 @@ class TravailType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('mission', EntityType::class, array(
-                                            'class' => Mission::class,
-                                            'em' => 'gretiadb',
-                                            'multiple' => false
-                                        ))
+                        'class' => Mission::class,
+                        'em' => 'gretiadb',
+                        'multiple' => false
+                    ))
                 ->add('date')
                 ->add('categorie', EntityType::class, array(
-                                            'class' => Categorie::class,
-                                            'em' => 'gretiadb',
-                                            'multiple' => false
-                                        ))
-                /*->add('duree', DateIntervalType::class, [
-                        // ...
-                        'invalid_message' => 'You entered an invalid value, it should include %num% letters',
-                        'invalid_message_parameters' => ['%num%' => 6],
-                    ])*/
-                    ->add('duree')
-                    ->add('detail');
-
-        $builder->get('duree')
-                ->addModelTransformer(new CallbackTransformer(
-                    function ($dureeAsInterval) {
-                        return $dureeAsInterval;
-                        return is_null($dureeAsInterval) ? '0' : $dureeAsInterval->days*1440 + $dureeAsInterval->h.".".$dureeAsInterval->i;
-                    },
-                    function ($dureeAsFloat) {
-                        //transform float number to DateInterval
-                        $h = floor($dureeAsFloat);
-                        $m = ceil(($dureeAsFloat-$h) * 60);
-                        return $h." hours ".$m." minutes";
-                    }
-                ));
+                        'class' => Categorie::class,
+                        'em' => 'gretiadb',
+                        'multiple' => false
+                    ))
+                ->add('duree')
+                ->add('detail')
+                ->add('personne', EntityType::class, array(
+                        'class' => Personne::class,
+                        'em' => 'gretiadb',
+                        'multiple' => false
+                    ));
     }
     
     /**

@@ -32,14 +32,14 @@ class Organisme
 	/**
 	 * @ORM\Column(name="nom", type="string", nullable=false)
 	 *
-	 * @Serializer\Groups({"organisme"})
+	 * @Serializer\Groups({"organisme", "projet"})
 	 */
 	private $nom;
 
 	/**
 	 * @ORM\Column(name="sigle", type="string", nullable=true)
 	 *
-	 * @Serializer\Groups({"organisme"})
+	 * @Serializer\Groups({"organisme","projet"})
 	 */
 	private $sigle;
 

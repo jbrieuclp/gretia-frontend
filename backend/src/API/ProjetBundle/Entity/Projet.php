@@ -39,7 +39,7 @@ class Projet
 	/**
 	 * @ORM\Column(name="libelle", type="string", nullable=false)
 	 *
-	 * @Serializer\Groups({"projet"})
+	 * @Serializer\Groups({"projet", "mission"})
 	 */
 	private $libelle;
 
@@ -73,7 +73,7 @@ class Projet
   private $partenairesTechniques;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Type", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Type", cascade={"all"}, fetch="EAGER")
    * @ORM\JoinColumn(name="type_id", referencedColumnName="id_projet_type", nullable=true)
    *
    * @Serializer\Groups({"projet"})
@@ -123,7 +123,7 @@ class Projet
   private $coutTotal;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Personne", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Personne", cascade={"all"}, fetch="EAGER")
    * @ORM\JoinColumn(name="responsable_id", referencedColumnName="id_personne", nullable=true)
    *
    * @Serializer\Groups({"projet"})
@@ -152,7 +152,7 @@ class Projet
   private $dateRendu;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Etat", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Etat", cascade={"all"}, fetch="EAGER")
    * @ORM\JoinColumn(name="etat_id", referencedColumnName="id_etat", nullable=true)
    *
    * @Serializer\Groups({"projet"})
@@ -190,7 +190,7 @@ class Projet
   /**
    * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Mission", mappedBy="projet", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
    *
-   * @Serializer\Groups({"mission", "projet"})
+   * @Serializer\Groups({"projet"})
    */
   private $missions;
 

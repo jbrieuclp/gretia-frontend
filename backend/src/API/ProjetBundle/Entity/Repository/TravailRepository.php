@@ -5,6 +5,7 @@ namespace API\ProjetBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use API\ProjetBundle\Entity\Personne;
+use API\ProjetBundle\Entity\Projet;
 
 class TravailRepository extends EntityRepository
 {

@@ -24,7 +24,7 @@ class Categorie
 	/**
 	 * @ORM\Column(name="libelle", type="string", nullable=false)
 	 *
-	 * @Serializer\Groups({"categorie", "travail"})
+	 * @Serializer\Groups({"categorie", "travail", "projet"})
 	 */
 	private $libelle;
 
