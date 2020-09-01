@@ -31,9 +31,9 @@ import { MissionFormComponent } from './components/mission/form/mission-form.com
 import { MissionTravailleurFormComponent } from './components/mission/form/m-travailleur-form.component';
 import { TravailleurFormComponent } from './components/person/form/travailleur-form.component';
 import { SListUserComponent } from './components/suiveuse/list-user/list-user.component';
-import { MySListComponent } from './components/suiveuse/my-s-list/my-s-list.component';
-import { TravailFormComponent } from './components/suiveuse/travail-form/travail-form.component';
-import { AddTravailComponent } from './components/suiveuse/add-travail/add-travail.component';
+import { ProjetDisplayComponent } from './components/projet/display/display.component';
+import { DashboardComponent } from './components/suiveuse/dashboard/dashboard.component';
+import { CalendarComponent } from './components/suiveuse/calendar/calendar.component';
 
 //repository
 import { PersonRepository } from './repository/person.repository';
@@ -48,9 +48,10 @@ import { SuiveuseRepository } from './repository/suiveuse.repository';
 //services
 import { ProjetFormService } from './services/projet-form.service';
 import { SuiveuseService } from './components/suiveuse/suiveuse.service';
-import { DayDetailComponent } from './components/suiveuse/day-detail/day-detail.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { TravailFormService } from './services/travail-form.service';
 
+//dialog
+import { TravailFormDialog } from './components/suiveuse/calendar/travail-form.dialog';
 
 @NgModule({
   imports: [
@@ -82,16 +83,16 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     MissionTravailleurFormComponent,
     TravailleurFormComponent,
     SListUserComponent,
-    MySListComponent,
-    TravailFormComponent,
-    AddTravailComponent,
-    DayDetailComponent,
-    DashboardComponent
+    DashboardComponent,
+    ProjetDisplayComponent,
+    CalendarComponent,
+    TravailFormDialog
   ],
   entryComponents: [
     MissionTravailleurFormComponent,
     PartenaireFormComponent,
-    ProjetTravailleurFormComponent
+    ProjetTravailleurFormComponent,
+    TravailFormDialog
   ],
   providers: [
     PersonRepository,
@@ -103,7 +104,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     MissionRepository,
     SuiveuseRepository,
     ProjetFormService,
-    SuiveuseService
+    SuiveuseService,
+    TravailFormService
   ]
 })
 export class ProjetModule { }

@@ -3,30 +3,32 @@
     <div class="form-group col-sm-7">
       <mat-form-field>
         <input matInput 
+          [formControl]="filterControl"
           placeholder="Rechercher"  
-          (keyup)="updateSearchbar($event)">
+          autocomplete="off">
       </mat-form-field>
     </div>  
   </div>
   <h4>Liste des projets</h4>
   <mat-accordion [multi]="true">
-    <ng-container *ngFor="let projet of tempProjets; let idx = index">
+    <ng-container *ngFor="let projet of filterProjets|async; let idx = index">
       <mat-expansion-panel *ngIf="isDisplayed(idx)" [expanded]="expandAccordions">
         <mat-expansion-panel-header>
           <mat-panel-title>
             <div>
-              <a mat-icon-button [routerLink]="['..', 'projet', projet.id]" class="bt-edit">
-                <mat-icon>edit</mat-icon>
+              <a mat-icon-button [routerLink]="['..', 'projet', projet.id, 'view']" class="bt-edit">
+                <mat-icon>remove_red_eye</mat-icon>
               </a>
-              {{ projet.libelle | uppercase }}
+              #{{ projet.id }} {{ projet.libelle | uppercase }}
             </div>
           </mat-panel-title>
-          <mat-panel-description>
-            {{ projet.objet }}
-          </mat-panel-description>
         </mat-expansion-panel-header>
+        {{ projet.objet }} 
+        <a mat-icon-button [routerLink]="['..', 'projet', projet.id]" class="bt-edit">
+          <mat-icon>edit</mat-icon>
+        </a>
         <mat-list>
-          <ng-container *ngFor="let mission of projet.missionsTemp">
+          <ng-container *ngFor="let mission of projet.missions">
             <mat-list-item>
               <a class="bt-edit" 
                 title="Editer la mission"
@@ -47,10 +49,12 @@
       </mat-expansion-panel>
     </ng-container>
   </mat-accordion>
-  <mat-paginator #paginator
-                [length]="tempProjets.length"
-                [pageSize]="pageSize"
-                [pageSizeOptions]="pageSizeOptions"
-                (page)="changePaginator($event)">
-  </mat-paginator>
+  <ng-container *ngIf="(filterProjets|async)">
+    <mat-paginator #paginator
+                  [length]="(filterProjets|async).length"
+                  [pageSize]="pageSize"
+                  [pageSizeOptions]="pageSizeOptions"
+                  (page)="changePaginator($event)">
+    </mat-paginator>
+  </ng-container>
 </div>

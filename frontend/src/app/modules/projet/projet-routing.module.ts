@@ -13,9 +13,9 @@ import { PListComponent } from './components/projet/p-list/p-list.component';
 import { ProjetFormComponent } from './components/projet/form/projet-form.component';
 import { MissionFormComponent } from './components/mission/form/mission-form.component';
 import { SListUserComponent } from './components/suiveuse/list-user/list-user.component';
-import { MySListComponent } from './components/suiveuse/my-s-list/my-s-list.component';
-import { AddTravailComponent } from './components/suiveuse/add-travail/add-travail.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DashboardComponent } from './components/suiveuse/dashboard/dashboard.component';
+import { ProjetDisplayComponent } from './components/projet/display/display.component';
+import { CalendarComponent } from './components/suiveuse/calendar/calendar.component';
 
 // routes definition
 const routes: Routes = [
@@ -33,6 +33,7 @@ const routes: Routes = [
 					{ path: '', component: ProjetFormComponent, pathMatch: 'full' },
 				//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
 					{ path: 'mission', component: MissionFormComponent, pathMatch: 'full' },
+					{ path: 'view', component: ProjetDisplayComponent, pathMatch: 'full' },
 				]},
 			]},
 			{ path: 'mission', children: [
@@ -41,12 +42,10 @@ const routes: Routes = [
 			]},
 			{ path: 'suiveuses', component: SListUserComponent, pathMatch: 'full'},
 			{ path: 'suiveuse', children: [
-				{ path: '', component: MySListComponent, pathMatch: 'full' },
-				{ path: 'ajouter', component: AddTravailComponent, pathMatch: 'full' },
+				{ path: '', component: CalendarComponent, pathMatch: 'full' },
 				{ path: 'user/:person', children: [
-					{ path: '', component: MySListComponent, pathMatch: 'full' },
+					{ path: '', component: CalendarComponent, pathMatch: 'full' },
 				//	{ path: 'missions', children: [ //TODO : affiche toutes les mission en tableau
-					{ path: 'ajouter', component: AddTravailComponent, pathMatch: 'full' },
 				]}
 			]},
 			{ path: 'admin', children: [

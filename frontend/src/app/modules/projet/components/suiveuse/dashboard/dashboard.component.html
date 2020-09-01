@@ -1,0 +1,24 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Description</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-accordion [multi]="true">
+        <mat-expansion-panel *ngFor="let personMission of personMissions">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ personMission.mission.libelle }} 
+            </mat-panel-title>
+            <mat-panel-description>
+              Avancement : {{ personMission.timeConsumed / personMission.temps * 100 }}%
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <ng-container *ngFor="let travail of personMission.mission.travails | sortBy:'desc':'date'">
+            <div *ngIf="travail.personne.id === (user|async).id">
+              {{ travail.date | date:'dd/MM/y' }} - {{ displayTime(travail.duree) }}
+            </div>
+          </ng-container>
+        </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
+</mat-card>

@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { combineLatest , Observable } from 'rxjs';
+import { tap, startWith, map } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
 import { PageEvent, MatPaginator, MatPaginatorIntl } from '@angular/material';
 import { Projet, ProjetRepository } from '../../../repository/projet.repository';
 import { Mission, MissionRepository } from '../../../repository/mission.repository';
@@ -38,10 +40,11 @@ export class PListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
 	projets: Projet[] = [];
-  tempProjets: Projet[] = [];
+  filterProjets: Observable<Projet[]>;
   missions: Mission[] = [];
+  filterMissions: Mission[] = [];
   expandAccordions = false;
-  private researchTerm: string = '';
+  filterControl = new FormControl();
 
   pageSize: number = 10;
   activePage: number = 0;
@@ -57,75 +60,85 @@ export class PListComponent implements OnInit {
 
   //recuperation des projets
   getProjets() {
-    this.projetR.projets().subscribe(data => {
-      this.projets = data;
-      this.tempProjets = this.projets;
-      this.getMissions();
+    combineLatest(
+       this.projetR.projets(),
+       this.missionR.missions()
+    )
+    .pipe(
+      map(([projets, missions])=> {
+        return projets.map(projet=>{
+          projet.missions = missions.filter(mission => mission.projet.id == projet.id)
+          return projet;
+        });
+      })
+    )
+    .subscribe(projets => {
+      this.projets = projets;
+      this.initFilter();
     });
   }
 
-  //recuperation des missions
-  getMissions() {
-    this.missionR.missions().subscribe(results => {
-      //attribut les jdds au ca respectif
-      for (var i = 0; i < results.length; i++) {
-        let projet = this.findProjetById(results[i].projet.id);
-        if (typeof projet['missions'] === 'undefined') {
-          projet['missions'] = new Array();
-          projet['missionsTemp'] = new Array();
-        }
-        projet['missions'].push(results[i]);
-        projet['missionsTemp'].push(results[i]);
-      }
-      // cache our list
-      this.missions = results;
-    });
+
+  initFilter() {
+    this.filterProjets = this.filterControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
   }
 
-  /**
-   *  Retourne le cadre d'acquisition à partir de son ID
-   **/
-  private findProjetById(id: number) {
-    return this.projets.find(projet => projet.id == id);
+  private _filter(value: string): Projet[] {
+    const filterValue = value.toLowerCase();
+    return this.projets.filter(
+      projet => projet.libelle.toLowerCase().includes(filterValue) || 
+        projet.missions.filter(mission => mission.libelle.toLowerCase().includes(filterValue)).length
+    );
   }
 
-  /**
-   *  Filtre les éléments CA et JDD selon la valeur de la barre de recherche
-   **/
-  updateSearchbar(event) {
-    this.researchTerm = event.target.value.toLowerCase();
+  // /**
+  //  *  Retourne le cadre d'acquisition à partir de son ID
+  //  **/
+  // private findProjetById(id: number) {
+  //   return this.projets.find(projet => projet.id == id);
+  // }
 
-    //recherche des cadres d'acquisition qui matchent
-    this.tempProjets = this.projets.filter(projet => {
-      //si vide => affiche tout et ferme le panel
-      if (this.researchTerm === '') {
-        // 'dé-expand' les accodions pour prendre moins de place
-        this.expandAccordions = false;
-        projet['missionsTemp'] = projet['missions'];
-        return true;
-      } else {
-        // expand tout les accordion recherchés pour voir le JDD des CA
-        this.expandAccordions = true;
-        if (projet.libelle.toLowerCase().indexOf(this.researchTerm) !== -1) {
-          //si un cadre matche on affiche tout ses JDD
-          projet['missionsTemp'] = projet['missions'];
-          return true;
-        }
+  // /**
+  //  *  Filtre les éléments CA et JDD selon la valeur de la barre de recherche
+  //  **/
+  // updateSearchbar(event) {
+  //   this.researchTerm = event.target.value.toLowerCase();
 
-        //Sinon on on filtre les JDD qui matchent eventuellement.
-        if (projet['missions']) {
-          projet['missionsTemp'] = projet['missions'].filter(
-            mission => mission.libelle.toLowerCase().indexOf(this.researchTerm) !== -1
-          );
-          return projet['missionsTemp'].length;
-        }
-        return false;
-      }
-    });
-    //retour à la premiere page du tableau pour voir les résultats
-    this.paginator.pageIndex = 0;
-    this.activePage = 0;
-  }
+  //   //recherche des cadres d'acquisition qui matchent
+  //   this.tempProjets = this.projets.filter(projet => {
+  //     //si vide => affiche tout et ferme le panel
+  //     if (this.researchTerm === '') {
+  //       // 'dé-expand' les accodions pour prendre moins de place
+  //       this.expandAccordions = false;
+  //       projet['missionsTemp'] = projet['missions'];
+  //       return true;
+  //     } else {
+  //       // expand tout les accordion recherchés pour voir le JDD des CA
+  //       this.expandAccordions = true;
+  //       if (projet.libelle.toLowerCase().indexOf(this.researchTerm) !== -1) {
+  //         //si un cadre matche on affiche tout ses JDD
+  //         projet['missionsTemp'] = projet['missions'];
+  //         return true;
+  //       }
+
+  //       //Sinon on on filtre les JDD qui matchent eventuellement.
+  //       if (projet['missions']) {
+  //         projet['missionsTemp'] = projet['missions'].filter(
+  //           mission => mission.libelle.toLowerCase().indexOf(this.researchTerm) !== -1
+  //         );
+  //         return projet['missionsTemp'].length;
+  //       }
+  //       return false;
+  //     }
+  //   });
+  //   //retour à la premiere page du tableau pour voir les résultats
+  //   this.paginator.pageIndex = 0;
+  //   this.activePage = 0;
+  // }
 
   isDisplayed(idx: number) {
     //numero du CA à partir de 1

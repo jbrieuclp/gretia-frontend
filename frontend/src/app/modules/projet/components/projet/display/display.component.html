@@ -1,0 +1,210 @@
+<ng-container *ngIf="projet">
+	<h4>{{ projet?.libelle }}</h4>
+	<div class="row">
+		<div class="col-sm-8">
+			<div>
+				<mat-card>
+				  <mat-card-header>
+				    <mat-card-title>Description</mat-card-title>
+				  </mat-card-header>
+				  <mat-card-content>
+				  	<div class="row">
+						  <div class="col-3">
+						    <div class="field">
+						    	<div class="label">État</div>
+						    	<div class="value">{{ projet.etat?.libelle }}</div>
+						    </div>
+						  </div>
+						</div>
+
+						<div class="row">
+							<div class="col-sm-4">
+						    <div class="field">
+						    	<div class="label">Localisation</div>
+						    	<div class="value">{{ projet.localisation }}</div>
+						    </div>
+						  </div>
+						  <div class="col-sm-4">
+						    <div class="field">
+						    	<div class="label">Type de projet</div>
+						    	<div class="value">{{ projet.type?.libelle }}</div>
+						    </div>
+						  </div>
+						  <div class="col-sm-4">
+						    <div class="field">
+						    	<div class="label">Responsable</div>
+						    	<div class="value">{{ projet.responsable?.surnom }}</div>
+						    </div>
+						  </div>
+						</div>
+
+				  </mat-card-content>
+				</mat-card>
+			</div>
+			<div class="row">
+				<div class="col-sm-4">
+
+					<mat-card>
+				    <mat-card-header>
+				    	<mat-card-title>Détails</mat-card-title>
+				    </mat-card-header>
+				    <mat-card-content>
+					    <div class="field">
+					    	<div class="label">Objet de l'étude</div>
+					    	<div class="value">{{ projet.objet }}</div>
+					    </div>
+
+					    <div class="field">
+					    	<div class="label">Milieu(x) concerné(s)</div>
+					    	<div class="value">{{ projet.milieux }}</div>
+					    </div>
+
+					    <div class="field">
+					    	<div class="label">Groupe(s) étudié(s)</div>
+					    	<div class="value">{{ projet.groupes }}</div>
+					    </div>
+				    </mat-card-content>
+				  </mat-card>
+				</div>
+
+				<div class="col-sm-4">
+					<mat-card>
+				    <mat-card-header>
+				    	<mat-card-title>Coûts</mat-card-title>
+				    </mat-card-header>
+				    <mat-card-content>
+					    <div class="field">
+					    	<div class="label">Nombre de jour (hors ss-traitant)</div>
+					    	<div class="value">{{ projet.nbJour }}</div>
+					    </div>
+
+					    <div class="field">
+					    	<div class="label">Coût (sans autofin. et GRETIA seul)</div>
+					    	<div class="value">{{ projet.cout }}</div>
+					    </div>
+
+					    <div class="field">
+					    	<div class="label">Coût total du projet (si pluri, sans autofin.)</div>
+					    	<div class="value">{{ projet.coutTotal }}</div>
+					    </div>
+				    </mat-card-content>
+				  </mat-card>
+				</div>
+
+				<div class="col-sm-4">
+					<mat-card>
+				    <mat-card-header>
+				    	<mat-card-title>Dates</mat-card-title>
+				    </mat-card-header>
+				    <mat-card-content>
+						    <div class="field">
+						    	<div class="label">Date de début</div>
+						    	<div class="value">{{ projet.dateDebut }}</div>
+						    </div>
+						    <div class="field">
+						    	<div class="label">Date de fin</div>
+						    	<div class="value">{{ projet.dateFin }}</div>
+						    </div>
+						    <div class="field">
+						    	<div class="label">Date de rendu</div>
+						    	<div class="value">{{ projet.dateRendu }}</div>
+						    </div>
+				    </mat-card-content>
+				  </mat-card>
+				</div>
+			</div>
+
+			
+			<mat-card>
+				<mat-card-header>
+	    		<mat-card-title>Avancement</mat-card-title>
+		    </mat-card-header>
+		    <mat-card-content>
+
+					<mat-tab-group>
+					  <mat-tab label="Par personne">
+					    <h4>Assignation du temps - {{ projet?.travailleurs?.length || '0' }} personne(s)</h4>
+							<mat-accordion>
+								<mat-expansion-panel *ngFor="let travailleur of travailleurs; let idx = index">
+									<mat-expansion-panel-header>
+										{{travailleur.personne.surnom}} - {{ travailleur.tempsProjet }} jours assignés ({{ travailleur.tempsPasseProjet | number:'1.0-1'}} réalisés)
+								  </mat-expansion-panel-header>
+								  <div class="list-group list-group-flush">
+									  <div li class="list-group-item" *ngFor="let mission of travailleur.missions; let idx = index">
+									  	<div class="row">
+									  		<div class="col-sm-8">
+										  		{{ mission.mission.libelle }} - {{ mission.tempsMission }} jours assignés ({{ mission.tempsPasseMission }} réalisés)
+										  	</div>
+									  	</div>
+										</div>
+									</div>
+								</mat-expansion-panel>
+							</mat-accordion>
+					  </mat-tab>
+					  <mat-tab label="Par mission">
+					    <mat-accordion>
+								<mat-expansion-panel *ngFor="let mission of projet?.missions; let idx = index">
+									<mat-expansion-panel-header>
+										{{ mission.libelle }} - {{ mission.nbJour }} jours prévus <span [matTooltip]="mission.usage_pc+'%'">({{ mission.usage_jour | number:'1.0-1' }} réalisés)</span>
+								  </mat-expansion-panel-header>
+								  <div class="list-group list-group-flush">
+									  <div li class="list-group-item" *ngFor="let travailleur of mission.synthTravailleurs; let idx = index">
+									  	<div class="row">
+									  		<div class="col-sm-8">
+										  		{{ travailleur.surnom }} - {{ travailleur.tempsMission }} jours assignés ({{ travailleur.tempsPasseMission | number:'1.0-1' }} réalisés)
+										  	</div>
+									  	</div>
+										</div>
+									</div>
+								</mat-expansion-panel>
+							</mat-accordion>
+					  </mat-tab>
+					</mat-tab-group>
+
+				</mat-card-content>
+			</mat-card>
+
+
+			<ng-container *ngIf="(projet?.travailleurs?.length || 0) == 0">
+				<mat-card>
+					Aucune personne n'est assignée à ce projet.
+				</mat-card>
+			</ng-container>
+		</div>
+
+		<div class="col-sm-4">
+			<mat-card>
+		    <mat-card-header>
+		    	<mat-card-title>Partenaires financiers</mat-card-title>
+		    </mat-card-header>
+		    <mat-card-content>
+		    	<ng-container *ngIf="projet?.partenairesFinanciers?.length == 0">Aucun partenaire financier</ng-container>
+		    	<div class="list-group list-group-flush">
+					  <div li class="list-group-item" *ngFor="let organisme of projet?.partenairesFinanciers; let idx = index">
+					  	<div class="row">
+					  		<div class="col-sm-8" [matTooltip]="organisme.nom">{{ organisme.sigle }}</div>
+					  	</div>
+						</div>
+					</div>
+		    </mat-card-content>
+		  </mat-card>
+
+		  <mat-card>
+		    <mat-card-header>
+		    	<mat-card-title>Partenaires techniques</mat-card-title>
+		    </mat-card-header>
+		    <mat-card-content>
+		    	<ng-container *ngIf="projet?.partenairesTechniques?.length == 0">Aucun partenaire technique</ng-container>
+		    	<div class="list-group list-group-flush">
+					  <div li class="list-group-item" *ngFor="let organisme of projet?.partenairesTechniques; let idx = index">
+					  	<div class="row">
+					  		<div class="col-sm-8" [matTooltip]="organisme.nom">{{ organisme.sigle }}</div>
+					  	</div>
+						</div>
+					</div>
+		    </mat-card-content>
+		  </mat-card>
+		</div>
+	</div>
+</ng-container>
+

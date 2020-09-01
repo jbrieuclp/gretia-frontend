@@ -1,0 +1,62 @@
+<div class="row">
+	<div class="col-6">
+		<div *ngIf="monthValue">
+			<div class="calendar">
+				<div class="calendar-navbar">
+					<button mat-stroked-button (click)="setToday()">Aujourd'hui</button>
+					<button mat-icon-button (click)="previous()">
+				    <mat-icon aria-label="Example icon-button with a heart icon">keyboard_arrow_left</mat-icon>
+				  </button>
+				  <button mat-icon-button  (click)="next()">
+				    <mat-icon aria-label="Example icon-button with a heart icon">keyboard_arrow_right</mat-icon>
+				  </button>
+				  <span class="title">{{ months[monthValue.getMonth()] }} {{monthValue.getFullYear()}}</span>
+				</div>
+				<div class="days-name">
+					<span>Lundi</span>
+					<span>Mardi</span>
+					<span>Mercredi</span>
+					<span>Jeudi</span>
+					<span>Vendredi</span>
+					<span>Samedi</span>
+					<span>Dimanche</span>
+				</div>
+				<div class="week" *ngFor="let week of (dates|async)">
+					<div class="week-number">{{ week.weekNumber }}</div>
+					<ng-container *ngFor="let date of week.days; let idx = index">
+						<div class="day" 
+							[ngClass]="
+								{
+									'other-month': date.getMonth() !== monthValue.getMonth(), 
+									'weekend': (idx + 1) % 6 === 0 || (idx + 1) % 7 === 0,
+									'today': ((date|date:'y-MM-dd') === (today|date:'y-MM-dd')),
+									'selectedDate': ((date|date:'y-MM-dd') === ((selectedDate|async)|date:'y-MM-dd'))
+								}"
+							(click)="selectedDate.next(date)">
+							<span class="day-number">{{ date|date:'d' }}</span>
+							<span class="day-working-time">{{ getWorkingTimeByDate(date) }}</span>
+						</div>
+					</ng-container>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-6 work-of-the-day" *ngIf="worksOfTheDay">
+		<h4>{{ (selectedDate|async)|date:'dd/MM/y' }}</h4>
+		<div>
+			<button 
+				mat-raised-button 
+				color="primary"
+				(click)="openTravailDialog()">Ajouter un travail</button>
+		</div>
+		<h6>Durée de travail sur la journée : {{ displayTime(worksOfTheDay.totalTime) }}</h6>
+		<mat-list>
+			<mat-list-item *ngFor="let work of worksOfTheDay.works">
+				<button mat-icon-button (click)="openTravailDialog(work.id)">
+			    <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+			  </button>
+			  {{ work.mission.libelle }} - {{ displayTime(work.duree) }}
+			</mat-list-item>
+		</mat-list>
+	</div>
+</div>

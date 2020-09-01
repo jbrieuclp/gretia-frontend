@@ -34,9 +34,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { LayoutModule } from './layout/layout.module';
+
+//Dialog
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
+
+//Pipes
 import { KeysPipe } from './pipes/keys.pipe';
 import { TimeFormatPipe } from './pipes/time-format.pipe';
+import { SortByPipe } from './pipes/sort-by.pipe';
 
 @NgModule({
   imports: [
@@ -76,7 +81,8 @@ import { TimeFormatPipe } from './pipes/time-format.pipe';
   declarations: [
     ConfirmationDialogComponent,
     KeysPipe,
-    TimeFormatPipe
+    TimeFormatPipe,
+    SortByPipe
   ],
   entryComponents: [
     ConfirmationDialogComponent
@@ -116,7 +122,8 @@ import { TimeFormatPipe } from './pipes/time-format.pipe';
     LayoutModule,
     ConfirmationDialogComponent,
     KeysPipe,
-    TimeFormatPipe
+    TimeFormatPipe,
+    SortByPipe
   ]
 })
 export class SharedModule { }

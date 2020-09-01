@@ -25,7 +25,11 @@ export interface Mission {
   dateCreate?: any,
   compteCreate?: any,
   dateUpdate?: any,
-  compteUpdate?: any
+  compteUpdate?: any,
+  travails?: any,
+  usage_jour?: number,
+  usage_pc?: number,
+  synthTravailleurs?: any
 }
 
 export interface MissionTravailleur {
@@ -55,6 +59,20 @@ export class MissionRepository {
         })
         , retry(3)
 	   	);
+  }
+
+  /** GET all mission **/
+  getProjetMissions(projet_id: number): Observable<Mission[]> {
+    const url = `${this.httpUrlBase}/projet/${projet_id}/missions`;
+    const options = {};
+    return this.http
+      .get(url, options)
+      .pipe(
+        map((res: Mission[]) => { 
+          return res;
+        })
+        , retry(3)
+       );
   }
 
   /** GET mission par ID  **/
