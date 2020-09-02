@@ -233,13 +233,16 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
     * @Rest\View()
     * @Security("has_role('IMPORT')")
     *
-    * @Rest\Get("/fields/values")
+    * @Rest\Get("/localisation/values")
     */
-    public function getFieldsValuesAction(Request $request)
+    public function getLocalisationsValuesAction(Request $request)
     {
+      $return_data = ['messages'=>[], 'data'=>[]];
+
       $ids = $request->query->get('fields');
       if (empty($ids)) {
-          return [];
+          $return_data['messages'][] = ['type'=>'alert', 'message'=>'Aucun champ selectionné'];
+          return $return_data;
       }
 
       $em = $this->getDoctrine()->getManager('geonature_db');
@@ -247,7 +250,41 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
                   ->setParameter('ids', $ids)
                   ->getResult();
 
-      return $em->getRepository('APIImportBundle:FichierChamp')->getFieldsValues($items);
+      $fichier = $items[0]->getFichier();
+      if (empty($fichier)) {
+        return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      //recuperation des champs mappés vers Latitude/Longitude
+      $lat_lon = ['lat'=>[], 'lon'=>[]];
+      foreach ($fichier->getChamps() as $champ) {
+        switch ($champ->getFieldFSD()->getChamp()) {
+          case '__LATITUDE__':
+            if ( count($lat_lon['lat']) ) {
+              $return_data['messages'][] = ['type'=>'info', 'message'=>'Attention , plusieurs champs sont mappé vers "Latitude"'];
+            }
+            $lat_lon['lat'][] = $champ->getChamp();
+            break;
+
+          case '__LONGITUDE__':
+            if ( count($lat_lon['lon']) ) {
+              $return_data['messages'][] = ['type'=>'info', 'message'=>'Attention , plusieurs champs sont mappé vers "Longitude"'];
+            }
+            $lat_lon['lon'][] = $champ->getChamp();
+            break;
+        }
+      }
+      //si plusieurs champs mappé vers latitude/longitude on ne les récupère pas
+      if ( count($lat_lon['lat']) == 1 and count($lat_lon['lon']) == 1 ) {
+        $lat_lon['lat'] = $lat_lon['lat'][0];
+        $lat_lon['lon'] = $lat_lon['lon'][0];
+      } else {
+        $lat_lon['lat'] = null;
+        $lat_lon['lon'] = null;
+      }
+
+      $return_data['data'] = $em->getRepository('APIImportBundle:FichierChamp')->getFieldsValues($items, $lat_lon);
+      return $return_data;
     }
 
     /**

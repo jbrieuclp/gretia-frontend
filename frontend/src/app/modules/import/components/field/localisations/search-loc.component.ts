@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, filter } from 'rxjs/operators';
 
 import { ImportService } from '../../../services/import.service';
 import { FileService } from '../../../services/file.service';
@@ -22,6 +22,7 @@ export class SearchLocComponent implements OnInit {
   done: boolean = false
 
   localisations: any[] = [];
+  columns: string[];
 
   constructor( 
   	private importS: ImportService,
@@ -69,7 +70,24 @@ export class SearchLocComponent implements OnInit {
   submit() {
     this.importS.getFieldsValues(this.getSelectedFields())
       .pipe(
-        tap(()=>this.panelExpanded = false)
+        tap((data)=>{
+          this.panelExpanded = false;
+          if ( data.messages.length ) {
+
+          }
+        }),
+        map(data=>data.data),
+        filter(localisations=>localisations.length),
+        tap(localisation=>{
+          //reorganisation du résultat pour mettre lat lon à la fin du tableau
+          this.columns = Object.keys(localisation[0])
+          let idxLat = this.columns.indexOf('latitude');
+          this.columns.push(this.columns[idxLat]);
+          this.columns.splice(idxLat,1);
+          let idxLon = this.columns.indexOf('longitude');
+          this.columns.push(this.columns[idxLon]);
+          this.columns.splice(idxLon,1);
+        })
       )
       .subscribe(localisations=>this.localisations = localisations)
     

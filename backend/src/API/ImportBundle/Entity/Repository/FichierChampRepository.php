@@ -30,15 +30,15 @@ class FichierChampRepository extends EntityRepository
     /**
     *   Retourne la liste distinct des valeur du champ
     **/
-    public function getFieldsValues($fields)
+    public function getFieldsValues($fields, $latlon)
     {
         $select = [];
         foreach ($fields as $field) {
             $select[] = $field->getChamp();
         }
-        $sql = "SELECT ".implode(', ', $select);
+        $sql = "SELECT ".$latlon['lat']." AS latitude, ".implode(', ', $select).", ".$latlon['lon']." AS longitude";
         $sql .= " FROM ".$field->getFichier()->getTable();
-        $sql .= " GROUP BY ".implode(', ', $select);
+        $sql .= " GROUP BY ".implode(', ', $select).", ".$latlon['lat'].", ".$latlon['lon'];
         $sql .= " ORDER BY ".implode(', ', $select);
 
         $requete = $this->_em->getConnection()->prepare($sql);
