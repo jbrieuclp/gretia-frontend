@@ -1,0 +1,38 @@
+<mat-accordion>
+  <mat-expansion-panel [expanded]="panelExpanded" (opened)="panelExpanded=true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Afficher les champs du fichier
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div>
+    	Selectionner les champs relatif à la localisation
+    	<button color="primary" (click)="submit()" mat-raised-button style="margin-left: 20px;">Chercher</button>
+    </div>
+
+    <form [formGroup]="form">
+
+		  <div formArrayName="fields" *ngFor="let field of form.get('fields')['controls']; let i = index">
+				<mat-checkbox color="primary" [formControlName]="i">{{ fields[i].champ }}</mat-checkbox>
+			</div>
+
+
+		</form>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<table *ngIf="localisations.length" class="table">
+	<thead>
+		<tr>
+			<th *ngFor="let header of localisations[0] | keyvalue">{{ header.key }}</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr *ngFor="let localisation of localisations">
+			<td *ngFor="let column of localisation | keyvalue">
+				{{ column.value }}
+			</td>
+		</tr>
+	</tbody>
+</table>

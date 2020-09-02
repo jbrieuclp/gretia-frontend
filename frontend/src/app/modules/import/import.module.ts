@@ -36,6 +36,8 @@ import { CellComponent } from './components/file/table/cell.component';
 import { FileAddFieldComponent } from './components/file/add-field/add-field.component';
 import { RegexpReplaceComponent } from './components/field/toolsbox/tools/regexp-replace.component';
 import { SearchReplaceComponent } from './components/field/toolsbox/tools/search-replace.component';
+import { SearchLocComponent } from './components/field/localisations/search-loc.component';
+import { CoordinateComponent } from './components/field/localisations/coordinate.component';
 
 //services
 import { ImportService } from './services/import.service';
@@ -97,7 +99,9 @@ import { TaxonomieComponent } from './components/field/taxonomie/taxonomie.compo
     RegexpReplaceComponent,
     SearchReplaceComponent,
     RecapComponent,
-    TaxonomieComponent
+    TaxonomieComponent,
+    SearchLocComponent,
+    CoordinateComponent
   ],
   entryComponents: [ 
     EditInputDialog,

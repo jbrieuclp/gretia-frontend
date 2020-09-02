@@ -28,6 +28,32 @@ class FichierChampRepository extends EntityRepository
     }
 
     /**
+    *   Retourne la liste distinct des valeur du champ
+    **/
+    public function getFieldsValues($fields)
+    {
+        $select = [];
+        foreach ($fields as $field) {
+            $select[] = $field->getChamp();
+        }
+        $sql = "SELECT ".implode(', ', $select);
+        $sql .= " FROM ".$field->getFichier()->getTable();
+        $sql .= " GROUP BY ".implode(', ', $select);
+        $sql .= " ORDER BY ".implode(', ', $select);
+
+        $requete = $this->_em->getConnection()->prepare($sql);
+        
+        $requete->execute();
+
+        $data = $requete->fetchAll(\PDO::FETCH_ASSOC);
+        
+        $requete->closeCursor();
+        
+        return $data;
+
+    }
+
+    /**
     *   Mise à jour d'une valeur d'un champ dans un tableau importé
     **/
     public function updateValue($champ, $oldValue, $newValue)

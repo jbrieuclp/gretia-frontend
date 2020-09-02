@@ -255,6 +255,18 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  getFieldsValues(fields_id: number[]): Observable<any> {
+    const params = fields_id.map(field_id => 'fields[]=' + field_id).join('&');
+    const url = `${this.httpUrlBase}/fields/values?${params}`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   getObservers(id: number): Observable<any> {
     const url = `${this.httpUrlBase}/field/${id}/observers`;
     return this.http

@@ -233,6 +233,27 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
     * @Rest\View()
     * @Security("has_role('IMPORT')")
     *
+    * @Rest\Get("/fields/values")
+    */
+    public function getFieldsValuesAction(Request $request)
+    {
+      $ids = $request->query->get('fields');
+      if (empty($ids)) {
+          return [];
+      }
+
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $items = $em->createQuery('SELECT c FROM APIImportBundle:FichierChamp c WHERE c.id IN (:ids)')
+                  ->setParameter('ids', $ids)
+                  ->getResult();
+
+      return $em->getRepository('APIImportBundle:FichierChamp')->getFieldsValues($items);
+    }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
     * @Rest\Get("/field/{id}/observers")
     *
     * Retourne un tableau de valeurs correspondant aux observateurs uniques

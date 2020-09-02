@@ -347,7 +347,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
     {
       list($fichier, $em) = $this->getFichier($id);
 
-      $fields_localisation = ['latitude' => null, 'longitude' => null, 'area' => null];
+      $fields_localisation = ['latitude' => null, 'longitude' => null];
 
       foreach ($fichier->getChamps() as $champ) {
         switch ($champ->getFieldFSD()->getChamp()) {
@@ -364,17 +364,10 @@ class FichierController extends FOSRestController implements ClassResourceInterf
             }
             $fields_localisation['longitude'] = $champ->getChamp();
             break;
-
-          case '__LIB_AREA__':
-            if ( !is_null($fields_localisation['area']) ) {
-              return new JsonResponse(['message' => 'Champ area mappé plusieurs fois'], Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-            $fields_localisation['area'] = $champ->getChamp();
-            break;
         }
       }
 
-      if ( is_null($fields_localisation['latitude']) and is_null($fields_localisation['longitude']) and is_null($fields_localisation['area'])) {
+      if ( is_null($fields_localisation['latitude']) and is_null($fields_localisation['longitude']) ) {
         return new JsonResponse(['message' => 'Aucun champ de  localisation n\'est spécifié pour ce fichier'], Response::HTTP_NOT_FOUND);
       }
 
