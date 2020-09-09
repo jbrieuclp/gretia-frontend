@@ -410,6 +410,38 @@ class FichierRepository extends EntityRepository
        return true;
     }
 
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    **/
+    public function updateGeometry($fichier, $geom, $fields)
+    {
+      try {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->update($fichier->getTable())
+           ->set('"adm_geom"', 'ST_Transform(ST_SetSRID(ST_MakePoint(:longitude::double precision, :latitude::double precision), 4326), 2154)')
+           ->setParameter('longitude', $geom['lon'])
+           ->setParameter('latitude', $geom['lat']);
+
+        foreach ($fields as $champ => $valeur) {
+          if (is_null($valeur)) {
+            $qb->andWhere($qb->expr()->isNull('"'.$champ.'"'));
+          } else {
+            $qb->andWhere('"'.$champ.'" = :valeur')
+               ->setParameter('valeur', $valeur);
+          }
+        }
+
+        $qb->execute();
+      } catch (Exception $e) {
+        return false;
+      }
+
+      return true;
+
+      //return $qb->execute();//->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     //----------------
     //----------------
     //----------------

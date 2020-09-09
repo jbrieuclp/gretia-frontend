@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Feature from 'ol/Feature';
 import GeoJSON from 'ol/format/GeoJSON';
 import Point from 'ol/geom/Point';
 import * as proj from 'ol/proj';
+import * as format from 'ol/format';
 
 import { ImportService } from '../../../services/import.service';
 import { CartoService } from '../../../../carto/services/carto.service';
@@ -18,6 +20,9 @@ export class LocalisationService {
   features: BehaviorSubject<Feature[]> = new BehaviorSubject([]);
   error: BehaviorSubject<any> = new BehaviorSubject(null);
   geojsonFormat = new GeoJSON();
+  drawLayer = new VectorLayer({source: new VectorSource({format:new format.GeoJSON({projection: new proj.get('EPSG:3857')})})});
+  searchOSMGeoJSONSource: VectorSource = new VectorSource({format:new format.GeoJSON({projection: new proj.get('EPSG:3857')})});
+  OSMDataHover: BehaviorSubject<any> = new BehaviorSubject(null);
 
   get fichierId(): any {
     return this._fichierId;
@@ -58,8 +63,6 @@ export class LocalisationService {
         features.push(new Feature(this.geojsonFormat.readGeometry(el.geom)));
       } else {
         let point = new Point([el.longitude, el.latitude]);
-        console.log(point);
-        console.log(point.transform('EPSG:4326', 'EPSG:3857'));
         features.push(new Feature(point));
       }
     });
@@ -70,7 +73,22 @@ export class LocalisationService {
     this._fichierId.next(null);
   }
 
-  // getGeoJSONSource() {
-  //   this.geojson.next(values);
-  // }
+  setDataSearchOSMGeoJSON(data: any[]) {
+    this.searchOSMGeoJSONSource.clear();
+    if (data.length) {
+      data.forEach(e=>{
+        this.searchOSMGeoJSONSource.addFeature(new Feature({
+          geometry: new Point([Number(e.lon), Number(e.lat)]).transform('EPSG:4326', 'EPSG:3857'),
+          name: e.osm_id
+        }))
+      });
+
+      if ( this.searchOSMGeoJSONSource.getFeatures().length > 1) {
+        this.cartoS.map.getView().fit(this.searchOSMGeoJSONSource.getExtent());
+      } else {
+        this.cartoS.map.getView().setCenter((this.searchOSMGeoJSONSource.getFeatures()[0]).getGeometry().getCoordinates());
+        this.cartoS.map.getView().setZoom(15);
+      }
+    }
+  }
 }

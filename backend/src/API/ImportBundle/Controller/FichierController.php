@@ -389,6 +389,24 @@ class FichierController extends FOSRestController implements ClassResourceInterf
       return $em->getRepository('APIImportBundle:Fichier')->getLocalisationsGeoms($fichier);
     }
 
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Post("/fichier/{id}/localisation")
+    */
+    public function setGeomAction(Request $request, $id)
+    {
+      list($fichier, $em) = $this->getFichier($id);
+
+      $geom = $request->request->get('app_coordinates');
+      $fields = $request->request->all();
+      unset($fields['app_coordinates']);
+
+      //champs : value, ok, ban
+      return $em->getRepository('APIImportBundle:Fichier')->updateGeometry($fichier, $geom, $fields);
+    }
+
 
     /**
     * @Rest\View()

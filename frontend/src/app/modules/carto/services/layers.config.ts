@@ -26,10 +26,12 @@ const matrixIds = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21];
 export const layers = [
 	new LayerGroup({
 			title: 'Fonds de plan',
+            id: 'g_fdp',
 			displayInLayerSwitcher: true,
 			layers: [
                 new TileLayer({
                     title: 'OpenTopoMap - cartes',
+                    id: 'l_osm_carte',
                     visible: true,
                     'displayInLayerSwitcher' : true,
                     opacity: 0.4,
@@ -41,6 +43,7 @@ export const layers = [
                 new TileLayer({
                     opacity: 1,
                     title: 'IGN - vue aérienne',
+                    id: 'l_ign_ortho',
                     visible: false,
                     'displayInLayerSwitcher' : true,
                     extent: epsg3857.getExtent(),
@@ -66,6 +69,7 @@ export const layers = [
                 new TileLayer({
                     opacity: 0.3,
                     title: 'IGN - cartes',
+                    id: 'l_ign_carte',
                     visible: false,
                     'displayInLayerSwitcher' : true,
                     extent: epsg3857.getExtent(),
@@ -91,6 +95,7 @@ export const layers = [
                 new VectorLayer({
                     opacity: 0.9,
                     title: 'Limite Massif armoricain', 
+                    id: 'l_limite_ma',
                     visible: true,
                     'displayInLayerSwitcher' : true,
                     source:  new VectorSource({
@@ -111,6 +116,7 @@ export const layers = [
                 new TileLayer({
                     opacity: 0.8,
                     title: 'Géologie',
+                    id: 'l_geologie',
                     visible: false,
                     'displayInLayerSwitcher' : true,
                     source: new TileWMS({
@@ -133,6 +139,7 @@ export const layers = [
 	}),
     new LayerGroup({
         title: 'Zonages',
+        id: 'g_zonages',
         displayInLayerSwitcher: true,
         layers: [
             new TileLayer({

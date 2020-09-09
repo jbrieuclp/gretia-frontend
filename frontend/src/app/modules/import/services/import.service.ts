@@ -440,6 +440,12 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  postLocalisationGeom(fichier_id: number, location: any): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${fichier_id}/localisation`;
+    return this.http.post(url, location, httpOptions);
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   postTaxrefMatch(taxons: any): Observable<any> {
     const url = `${AppConfig.URL_API_MT}/name-checker`;
     const sources = taxons;
@@ -449,6 +455,13 @@ export class ImportService {
         map(res => res), 
        // retry(3)
       );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  searchCommune(term): Observable<any> {
+    const url = `${this.httpUrlBase}/communes?q=${term}`;
+    return this.http
+      .get(url);
   }
 
 }

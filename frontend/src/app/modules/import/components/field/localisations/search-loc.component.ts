@@ -1,15 +1,27 @@
 import { Component, OnInit, HostListener } from '@angular/core';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
-import { tap, map, filter } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { tap, map, filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 import { ImportService } from '../../../services/import.service';
+import { OSMService } from '../../../services/osm.service';
 import { FileService } from '../../../services/file.service';
+import { LocalisationService } from './localisation.service';
+import { CartoService } from '../../../../carto/services/carto.service';
 
 @Component({
   selector: 'app-import-search-loc',
   templateUrl: './search-loc.component.html',
   styleUrls: ['./search-loc.component.scss'],
-  providers: [FileService]
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
+  providers: [FileService, OSMService]
 })
 export class SearchLocComponent implements OnInit {
 
@@ -22,11 +34,15 @@ export class SearchLocComponent implements OnInit {
   done: boolean = false
 
   localisations: any[] = [];
-  columns: string[];
+  columns: string[] = [];
+  expandedDetail: any | null;
 
   constructor( 
   	private importS: ImportService,
   	public fileS: FileService,
+    private osmS: OSMService,
+    public localisationS: LocalisationService,
+    public cartoS: CartoService,
   	private fb: FormBuilder
   ) { }
 
@@ -87,10 +103,97 @@ export class SearchLocComponent implements OnInit {
           let idxLon = this.columns.indexOf('longitude');
           this.columns.push(this.columns[idxLon]);
           this.columns.splice(idxLon,1);
-        })
+        }),
+        map(localisation=>localisation.map(loc=>{
+          loc.app_geom = loc.adm_geom;
+          loc.app_searchValue = new BehaviorSubject<any>(this.setSearchValue(loc));
+          return loc;
+        }))
       )
       .subscribe(localisations=>this.localisations = localisations)
     
   }
 
+  setSearchValue(localisation) {
+    let input = [];
+    for (let i = 0; i < this.columns.length -2 ; i++) {
+      input.push(localisation[this.columns[i]]);
+    }
+    return input.join(' ');
+  }
+
+  searchOSM(event, localisation) {
+    localisation.app_searchValue.next(event.target.value);
+
+    localisation.app_searchValue
+      .pipe(
+        debounceTime(300), 
+        distinctUntilChanged(),
+        switchMap((term: string) => {
+          return term.length >= 3 ?
+            this.osmS.search(term) : [];
+        }),
+        tap((data: any[])=>{
+          this.localisationS.setDataSearchOSMGeoJSON(data);
+        })
+      )
+      .subscribe(results=>localisation.app_searchResults = results);
+  }
+
+  searchCommune(event, localisation) {
+    localisation.app_searchValue.next(event.target.value);
+
+    localisation.app_searchValue
+      .pipe(
+        debounceTime(300), 
+        distinctUntilChanged(),
+        switchMap((term: string) => {
+          return term.length >= 3 ?
+            this.importS.searchCommune(term) : [];
+        })
+      )
+      .subscribe(results=>localisation.app_searchResults = results);
+  }
+
+  setOSMLocation(location, OSM) {
+    location.app_geom = {
+          "type": "Point",
+          "coordinates": [OSM.lon, OSM.lat]
+          };
+  }
+
+  setCommuneLocation(location, commune) {
+    location.app_geom = commune.geometry;
+  }
+
+  getPointOnMap(location): void {
+    if (this.localisationS.drawLayer.getSource().getFeatures().length) {
+      let coordinates = ((this.localisationS.drawLayer.getSource().getFeatures()[0]).getGeometry().transform('EPSG:3857', 'EPSG:4326')).getCoordinates()
+      location.app_geom =  {
+          "type": "Point",
+          "coordinates": coordinates
+        };
+    }
+  }
+
+  displayFnOSM(osm): string {
+    return osm && osm.display_name ? osm.display_name : '';
+  }
+
+  displayFnCommune(commune): string {
+    return commune && commune.area_name ? commune.area_name+' ('+commune.area_code+')' : 'plop';
+  }
+
+  saveGeom(location) {
+    const exclude = ['app_searchResults', 'app_searchValue'];
+    location = Object.keys(location)
+      .filter(key => !(exclude.includes(key)))
+      .reduce((obj, key) => {
+        obj[key] = location[key];
+        return obj;
+      }, {});
+
+    this.importS.postLocalisationGeom(this.fichier.id, location)
+      .subscribe(res=>console.log(res));
+  }
 }

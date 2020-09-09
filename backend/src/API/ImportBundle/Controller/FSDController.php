@@ -6,6 +6,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Routing\ClassResourceInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -116,5 +117,23 @@ class FSDController extends FOSRestController implements ClassResourceInterface
       $values = $em->getRepository('APIImportBundle:SyntheseFSD')->search($item->getSQL(), $term);
 
       return $values;
+    }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Get("/communes")
+    * @QueryParam(
+    *     name="q",
+    *     requirements=".{3,}",
+    *     nullable=false,
+    *     description="Search value, min 3 char."
+    * )
+    */
+    public function searchCommuneAction($q)
+    {
+        $em = $this->getDoctrine()->getManager('geonature_db');
+        return $em->getRepository('APIImportBundle:SyntheseFSD')->searchCommune($q);
     }
 }
