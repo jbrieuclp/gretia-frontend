@@ -27,7 +27,8 @@ import {
   MatTreeModule,
   MatSelectModule,
   MatDatepickerModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatMenuModule
 } from '@angular/material';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -76,6 +77,7 @@ import { SortByPipe } from './pipes/sort-by.pipe';
     MatSelectModule,
     MatDatepickerModule,
     MatProgressBarModule,
+    MatMenuModule,
     LayoutModule
   ],
   declarations: [
@@ -119,6 +121,7 @@ import { SortByPipe } from './pipes/sort-by.pipe';
     MatSelectModule,
     MatDatepickerModule,
     MatProgressBarModule,
+    MatMenuModule,
     LayoutModule,
     ConfirmationDialogComponent,
     KeysPipe,

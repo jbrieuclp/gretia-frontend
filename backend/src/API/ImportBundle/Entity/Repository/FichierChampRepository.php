@@ -38,6 +38,7 @@ class FichierChampRepository extends EntityRepository
         }
         $sql = "SELECT ".$latlon['lat']." AS latitude, ".implode(', ', $select).", ".$latlon['lon']." AS longitude";
         $sql .= " FROM ".$field->getFichier()->getTable();
+        $sql .= " WHERE adm_geom IS NULL";
         $sql .= " GROUP BY ".implode(', ', $select).", ".$latlon['lat'].", ".$latlon['lon'];
         $sql .= " ORDER BY ".implode(', ', $select);
 
