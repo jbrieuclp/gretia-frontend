@@ -35,6 +35,7 @@ import { FieldLocalisationsComponent } from './components/field/localisations/lo
 import { CellComponent } from './components/file/table/cell.component';
 import { FileAddFieldComponent } from './components/file/add-field/add-field.component';
 import { RegexpReplaceComponent } from './components/field/toolsbox/tools/regexp-replace.component';
+import { ReplaceEmptyByFieldComponent } from './components/field/toolsbox/tools/replace-empty-by-field.component';
 import { SearchReplaceComponent } from './components/field/toolsbox/tools/search-replace.component';
 import { SearchLocComponent } from './components/field/localisations/search-loc.component';
 import { CoordinateComponent } from './components/field/localisations/coordinate.component';
@@ -98,6 +99,7 @@ import { TaxonomieComponent } from './components/field/taxonomie/taxonomie.compo
     RegroupingComponent,
     RegexpReplaceComponent,
     SearchReplaceComponent,
+    ReplaceEmptyByFieldComponent,
     RecapComponent,
     TaxonomieComponent,
     SearchLocComponent,

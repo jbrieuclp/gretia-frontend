@@ -28,7 +28,7 @@ export class CoordinateComponent implements OnInit {
 
       this.importS
         .getLocalisationValues(Number(id_fichier))
-        .subscribe(coordinates=>this.coordinates = coordinates)
+        .subscribe(coordinates=>this.coordinates = coordinates);
 
     } else { this.router.navigate(['/import']); }
   }

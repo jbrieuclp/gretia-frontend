@@ -101,7 +101,7 @@ class SyntheseFSDRepository extends EntityRepository
 
         $firstData = array_shift($tab);
 
-        $sql = "SELECT area_name, area_code, ST_AsGeoJSON(geom) as geometry
+        $sql = "SELECT area_name, area_code, ST_AsGeoJSON(ST_Transform(geom, 3857)) as geometry
             FROM ref_geo.l_areas
             WHERE id_type = 25 AND (unaccent(area_name) ILIKE unaccent(:firstData) OR area_code = :firstData) ";
 

@@ -1,8 +1,14 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { tap, map, filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import Feature from 'ol/Feature';
+import * as format from 'ol/format';
+import * as proj from 'ol/proj';
+import Point from 'ol/geom/Point';
 
 import { ImportService } from '../../../services/import.service';
 import { OSMService } from '../../../services/osm.service';
@@ -23,7 +29,7 @@ import { CartoService } from '../../../../carto/services/carto.service';
   ],
   providers: [FileService, OSMService]
 })
-export class SearchLocComponent implements OnInit {
+export class SearchLocComponent implements OnInit, OnDestroy {
 
 	form: FormGroup;
 	fields: any[];
@@ -36,6 +42,8 @@ export class SearchLocComponent implements OnInit {
   localisations: any[] = [];
   columns: string[] = [];
   expandedDetail: any | null;
+
+  displayTempGeom = new VectorLayer({source: new VectorSource({format:new format.GeoJSON({projection: new proj.get('EPSG:3857')})})});
 
   constructor( 
   	private importS: ImportService,
@@ -57,6 +65,8 @@ export class SearchLocComponent implements OnInit {
   		this.fields = fields;
     	this.addCheckboxes();
   	});
+
+    this.cartoS.map.addLayer(this.displayTempGeom);
   }
 
   private addCheckboxes() {
@@ -156,14 +166,23 @@ export class SearchLocComponent implements OnInit {
   }
 
   setOSMLocation(location, OSM) {
-    location.app_geom = {
-          "type": "Point",
-          "coordinates": [OSM.lon, OSM.lat]
-          };
+    const feature = new Feature({
+            geometry: new Point([Number(OSM.lon), Number(OSM.lat)]).transform('EPSG:4326', 'EPSG:3857'),
+          })
+    this.addGeomToTempLayer(feature);
+    location.app_geom = JSON.parse(this.localisationS.geojsonFormat.writeGeometry(feature.getGeometry()));
   }
 
   setCommuneLocation(location, commune) {
-    location.app_geom = commune.geometry;
+    const feature = new Feature(this.localisationS.geojsonFormat.readGeometry(commune.geometry));
+    this.addGeomToTempLayer(feature);
+    location.app_geom = JSON.parse(this.localisationS.geojsonFormat.writeGeometry(feature.getGeometry()));
+  }
+
+  private addGeomToTempLayer(geom) {
+    const source = this.displayTempGeom.getSource();
+    source.clear();
+    source.addFeature(geom);
   }
 
   getPointOnMap(location): void {
@@ -194,6 +213,32 @@ export class SearchLocComponent implements OnInit {
       }, {});
 
     this.importS.postLocalisationGeom(this.fichier.id, location)
-      .subscribe(res=>console.log(res));
+      .subscribe(res=>{
+        this.displayTempGeom.getSource().clear();
+        const features = this.localisationS.features.getValue();
+        features.push(new Feature(this.localisationS.geojsonFormat.readGeometry(location.adm_geom)))
+        this.localisationS.features.next(features);
+
+        //recherche de la valeur modifiée
+        this.localisations = this.localisations
+          .filter(localisation=>{ 
+            let result = 0;
+            let i = 0;
+            for (let key in location) {
+              if ( key !== 'app_geom') {
+                i++;   
+                if (location[key] == localisation[key]) {
+                  result++;
+                }    
+              }
+            }
+            return i !== result; //on supprime la ligne enregistrée
+          });
+      });
+  }
+
+  ngOnDestroy() {  
+    console.log("destroy");
+    this.cartoS.map.removeLayer(this.displayTempGeom);
   }
 }

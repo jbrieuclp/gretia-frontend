@@ -419,9 +419,8 @@ class FichierRepository extends EntityRepository
         $qb = $this->_em->getConnection()->createQueryBuilder();
 
         $qb->update($fichier->getTable())
-           ->set('"adm_geom"', 'ST_Transform(ST_SetSRID(ST_MakePoint(:longitude::double precision, :latitude::double precision), 4326), 2154)')
-           ->setParameter('longitude', $geom['lon'])
-           ->setParameter('latitude', $geom['lat']);
+           ->set('"adm_geom"', 'ST_Transform(ST_SetSRID(ST_GeomFromGeoJSON(:geom), 3857), 2154)')
+           ->setParameter('geom', $geom);
 
         foreach ($fields as $champ => $valeur) {
           if (is_null($valeur)) {

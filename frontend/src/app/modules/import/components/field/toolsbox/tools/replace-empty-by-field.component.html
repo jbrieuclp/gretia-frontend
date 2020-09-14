@@ -1,0 +1,36 @@
+<div mat-line class="title" matTooltip="Peupler les valeur vide par celle d'un autre champ"><b>Valeur vide par valeur d'un autre champ</b></div>
+<div mat-line>
+	<div class="row">
+		<!-- <mat-form-field class="col-sm-7">
+	    <input 
+	    type="text" 
+	    placeholder="Selectionner un champ" 
+	    matInput 
+	    [formControl]="replaceForm" 
+	    [matAutocomplete]="auto">
+	    <mat-autocomplete #auto="matAutocomplete">
+	      <mat-option *ngFor="let option of fieldList" [value]="option">
+	        {{ option }}
+	      </mat-option>
+	    </mat-autocomplete>
+	  </mat-form-field> -->
+	  <!-- <mat-form-field class="col-sm-5">
+	  	<mat-label>Chercher</mat-label>
+	    <input 
+		    matInput 
+		    autocomplete="off"
+		    placeholder="Texte cherché..." 
+		    [formControl]="replaceForm">
+	  </mat-form-field> -->
+
+		<div  class="col-sm-2">
+	   	<button 
+	   		mat-mini-fab
+	   		type="submit"
+	   		matTooltip="Envoyer"
+	   		[disabled]="replaceForm.invalid">
+	      <mat-icon>send</mat-icon>
+	   	</button>
+	  </div>
+	</div>
+</div>

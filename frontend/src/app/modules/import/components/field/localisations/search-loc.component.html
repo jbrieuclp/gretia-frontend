@@ -118,21 +118,22 @@
 							</div>
 							
 							<div class="col-sm-5">
-								<div>
-									<div style="display: inline-block;margin: 10px 20px;">
-										<mat-icon style="font-size: 40px;width: 40px;">place</mat-icon>
-									</div>
-									<div style="display: inline-block">
-										<div>lat: {{ localisation.app_geom | json }}</div>
-										<div>lon: {{ localisation?.app_coordinates?.lon || ' - ' }}</div>
-									</div>
+
+								<div style="margin: 10px 20px;">
+									<mat-icon style="font-size: 40px;width: 40px;">place</mat-icon>
+									<ng-container *ngIf="localisation?.app_geom?.type !== null; else noGeom">
+										{{ (localisation?.app_geom?.type == 'Point') ? 'Pointage' : 'Commune' }}
+									</ng-container>
+									<ng-template #noGeom>
+										Pas de géométrie rattachée
+									</ng-template>
 								</div>
 								<div>
 									<button 
 										mat-raised-button 
 										color="primary"
 										(click)="saveGeom(localisation)"
-										[disabled]="!(localisation?.app_coordinates?.lat && localisation?.app_coordinates?.lon)">
+										[disabled]="!(localisation.app_geom)">
 										<mat-icon>save</mat-icon> Enregistrer le point pour la donnée
 									</button>
 								</div>
