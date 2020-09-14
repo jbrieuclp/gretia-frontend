@@ -441,6 +441,30 @@ class FichierRepository extends EntityRepository
       //return $qb->execute();//->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    **/
+    public function coordsToPoint($fichier, $coords)
+    {
+      try {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->update($fichier->getTable())
+           ->set('"adm_geom"', 'ST_Transform(ST_SetSRID(ST_MakePoint(:longitude, :latitude), :epsg), 2154)')
+           ->where('"'.$fichier->getFieldByFSD('__LATITUDE__')[0].'" = :latitude')
+           ->andWhere('"'.$fichier->getFieldByFSD('__LONGITUDE__')[0].'" = :longitude')
+           ->setParameter('longitude', $coords['longitude'])
+           ->setParameter('latitude', $coords['latitude'])
+           ->setParameter('epsg', $coords['projection']["epsg"]);
+
+        return $qb->execute();
+      } catch (Exception $e) {
+        return false;
+      }
+
+      return true;
+    }
+
     //----------------
     //----------------
     //----------------

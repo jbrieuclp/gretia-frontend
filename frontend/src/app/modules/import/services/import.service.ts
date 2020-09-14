@@ -464,4 +464,11 @@ export class ImportService {
       .get(url);
   }
 
+  /** GET taxon par ID (cd_nom) **/
+  postCoordsToPoint(fichier_id, coords: any[]): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${fichier_id}/coords-to-point`;
+    const sources = {data: coords};
+    return this.http.post(url, sources, httpOptions);
+  }
+
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { ImportService } from '../../../services/import.service';
 
@@ -11,7 +12,7 @@ import { ImportService } from '../../../services/import.service';
 })
 export class CoordinateComponent implements OnInit {
 
-  fichier: Observable<any>;
+  fichier_id: number;
   error: Observable<any>;
   coordinates: any[] = [];
 
@@ -25,12 +26,57 @@ export class CoordinateComponent implements OnInit {
     let id_fichier = this.route.snapshot.paramMap.get('fichier');
 
     if ( id_fichier !== null && Number.isInteger(Number(id_fichier)) ) {
+      this.fichier_id = Number(id_fichier);
 
       this.importS
-        .getLocalisationValues(Number(id_fichier))
+        .getLocalisationValues(this.fichier_id)
+        .pipe(
+          tap(coordinates=>
+            coordinates.map(coord=>{
+              coord.projection = this.getProjection(coord);
+              return coord;
+            })
+          )
+        )
         .subscribe(coordinates=>this.coordinates = coordinates);
 
     } else { this.router.navigate(['/import']); }
+  }
+
+  getProjection(coord): {proj: string, epsg: number} {
+    let lat = coord.latitude;
+    let lon = coord.longitude;
+    if ( lat === undefined || lon === undefined ) {
+      return {proj: 'Erreur', epsg: null};
+    }
+
+    if ( !isNaN(Number(lat.replace(',', '.'))) && !isNaN(Number(lon.replace(',', '.')))) {
+      lat = Number(lat.replace(',', '.'));
+      lon = Number(lon.replace(',', '.'));
+      //si latitude et longitude sont des chiffres
+      if ( (lat >= -90 && lat <= 90) && (lon >= -180 && lon <= 180) ) {
+        return {proj: 'WGS84', epsg: 4326};
+      }
+    }
+  }
+
+  getProjSynthese() {
+    let synthese: {proj: string, count: number}[] = [];
+    let projRow = null;
+    this.coordinates.forEach(e=>{
+      projRow = synthese.find(projRow=>projRow.proj == e.projection.proj);
+      if ( projRow === undefined ) {
+        synthese.push({proj: e.projection.proj, count: 1});
+      } else {
+        projRow.count++;
+      }
+    });
+    return synthese;
+  }
+
+  coordsToPoint() {
+    this.importS.postCoordsToPoint(this.fichier_id, this.coordinates)
+      .subscribe(result=>console.log(result));
   }
 
 }

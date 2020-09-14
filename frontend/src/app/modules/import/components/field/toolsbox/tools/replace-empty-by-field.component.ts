@@ -3,14 +3,12 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ImportService } from '../../../../services/import.service';
-import { FieldService } from '../../field.service';
-import { FileService } from '../../../../services/file.service';
+import { FileDataService } from '../../../../services/file.service';
 
 @Component({
   selector: 'app-import-tools-replace-empty-by-field',
   templateUrl: './replace-empty-by-field.component.html',
-  styleUrls: ['./replace-empty-by-field.component.scss'],
-  providers: [FileService]
+  styleUrls: ['./replace-empty-by-field.component.scss']
 })
 export class ReplaceEmptyByFieldComponent implements OnInit, OnDestroy {
 
@@ -20,17 +18,12 @@ export class ReplaceEmptyByFieldComponent implements OnInit, OnDestroy {
 
   constructor(
   	private importS: ImportService,
-    private fieldS: FieldService,
-    private fileS: FileService,
-    private _snackBar: MatSnackBar
+    private fileDataS: FileDataService,
   ) { }
 
   ngOnInit() {
-  	this.fieldS.field.subscribe(field=>this.field = field);
-
-  	// this.fileS.mappedFields.subscribe(fields => {
-   //    this.fieldList = fields;
-   //  });
+  	
+    this.fieldList = this.fileDataS.fields.getValue();
 
     this.replaceForm = new FormControl('', {
       validators: Validators.required
@@ -42,22 +35,26 @@ export class ReplaceEmptyByFieldComponent implements OnInit, OnDestroy {
   }
 
   replace() {
-  	if (this.replaceForm.valid) {
-  		this.importS.regexpReplaceFieldElement(this.field.id, this.replaceForm.value)
-  									.subscribe(result => {
-  										//retour de la liste des valeurs mise à jour
-  										this.fieldS.values.next(result);
-  										this._snackBar.open('Liste des valeurs mise à jour', 'Fermer', {
-									      duration: 4000,
-									      verticalPosition: 'top'
-									    });
-  									},
-										error => { 
-											this._snackBar.open('Une erreur est survenue', 'Fermer', {
-									      duration: 4000,
-									      verticalPosition: 'top'
-									    }); 
-  									});
-  	}
+  	// if (this.replaceForm.valid) {
+  	// 	this.importS.regexpReplaceFieldElement(this.field.id, this.replaceForm.value)
+  	// 								.subscribe(result => {
+  	// 									//retour de la liste des valeurs mise à jour
+  	// 									this.fieldS.values.next(result);
+  	// 									this._snackBar.open('Liste des valeurs mise à jour', 'Fermer', {
+			// 						      duration: 4000,
+			// 						      verticalPosition: 'top'
+			// 						    });
+  	// 								},
+			// 							error => { 
+			// 								this._snackBar.open('Une erreur est survenue', 'Fermer', {
+			// 						      duration: 4000,
+			// 						      verticalPosition: 'top'
+			// 						    }); 
+  	// 								});
+  	// }
+  }
+
+  displayFn(option): string {
+    return option && option.champ ? option.champ : '';
   }
 }

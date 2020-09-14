@@ -1,5 +1,14 @@
 <h4>Liste des fichiers importés</h4>
-<table mat-table [dataSource]="dataSource | async" class="mat-elevation-z8">
+
+<div class="row">
+  <mat-form-field class="col-sm-6">
+    <input matInput 
+      placeholder="Rechercher..." 
+      [formControl]="filterInput">
+  </mat-form-field>
+</div>
+
+<table mat-table [dataSource]="filteredDataSource | async" class="mat-elevation-z8">
 
   <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->

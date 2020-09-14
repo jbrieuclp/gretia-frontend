@@ -397,7 +397,6 @@ class FichierController extends FOSRestController implements ClassResourceInterf
     */
     public function setGeomAction(Request $request, $id)
     {
-      return true;
       list($fichier, $em) = $this->getFichier($id);
 
       $geom = $request->request->get('app_geom');
@@ -407,6 +406,35 @@ class FichierController extends FOSRestController implements ClassResourceInterf
       $update_ok = $em->getRepository('APIImportBundle:Fichier')->updateGeometry($fichier, $geom, $fields);
       //champs : value, ok, ban
       return $update_ok ? $update_ok : new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Post("/fichier/{id}/coords-to-point")
+    */
+    public function setCoordsToPointAction(Request $request, $id)
+    {
+      list($fichier, $em) = $this->getFichier($id);
+
+      if ( count($fichier->getFieldByFSD('__LATITUDE__')) !== 1 or count($fichier->getFieldByFSD('__LONGITUDE__')) !== 1 ) {
+        new JsonResponse(['message' => 'Plusieurs champs mappés vers Latitude ou Longitude'], Response::HTTP_INTERNAL_SERVER_ERROR);
+      }
+
+      $data = $request->request->get('data');
+
+      $result = ['ok'=>0, 'bad'=>0];
+
+      foreach ($data as $coords) {
+        if ( $em->getRepository('APIImportBundle:Fichier')->coordsToPoint($fichier, $coords) ) {
+          $result['ok']++;
+        } else {
+          $result['bad']++;
+        }
+      }
+
+      return $result;
     }
 
 

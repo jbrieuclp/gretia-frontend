@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, combineLatest  } from 'rxjs';
+import { startWith, tap, map, switchMap } from 'rxjs/operators';
 
 import { ImportService } from '../../../services/import.service';
 
@@ -12,8 +13,9 @@ import { ImportService } from '../../../services/import.service';
 })
 export class FilesListComponent implements OnInit {
 
-	dataSource: Observable<any>;
+  filteredDataSource: Observable<any[]>;
   displayedColumns: string[] = ['id', 'table', 'fileName', 'avancement', 'dateImport', 'clos'];
+  filterInput: FormControl;
   
   constructor(
     private importS: ImportService,
@@ -21,11 +23,23 @@ export class FilesListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-  	this.dataSource = this.importS.getFichiers().pipe(
-		  tap(results => {
-		    results.sort((t1, t2) => t1.id >= t2.id ? 1 : -1)
-		  })
-		);
+    this.filterInput = new FormControl('', []);
+
+    this.filteredDataSource = combineLatest(
+      (this.importS.getFichiers()
+        .pipe(
+          tap(results => {
+            results.sort((t1, t2) => t1.id >= t2.id ? 1 : -1)
+          })
+        )), 
+      this.filterInput.valueChanges.pipe(startWith(''))
+    )
+      .pipe(
+        map(([dataSource, filteredValue]: [any[], string]): any[] => {
+          return dataSource.filter(file => file.table.toLowerCase().includes(filteredValue.toLowerCase()));
+        }),
+      );
+
   }
 
   changeStatus(file) {
@@ -35,5 +49,4 @@ export class FilesListComponent implements OnInit {
                         window.location.reload();
                     });
   }
-
 }

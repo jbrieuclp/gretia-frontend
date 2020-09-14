@@ -200,7 +200,7 @@ export class SearchLocComponent implements OnInit, OnDestroy {
   }
 
   displayFnCommune(commune): string {
-    return commune && commune.area_name ? commune.area_name+' ('+commune.area_code+')' : 'plop';
+    return commune && commune.area_name ? commune.area_name+' ('+commune.area_code+')' : '';
   }
 
   saveGeom(location) {
