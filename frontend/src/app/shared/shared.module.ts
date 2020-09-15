@@ -44,6 +44,9 @@ import { KeysPipe } from './pipes/keys.pipe';
 import { TimeFormatPipe } from './pipes/time-format.pipe';
 import { SortByPipe } from './pipes/sort-by.pipe';
 
+//Directives
+import { ColorDifferenceDirective } from './directives/color-difference.directive';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -78,13 +81,14 @@ import { SortByPipe } from './pipes/sort-by.pipe';
     MatDatepickerModule,
     MatProgressBarModule,
     MatMenuModule,
-    LayoutModule
+    LayoutModule,
   ],
   declarations: [
     ConfirmationDialogComponent,
     KeysPipe,
     TimeFormatPipe,
-    SortByPipe
+    SortByPipe,
+    ColorDifferenceDirective
   ],
   entryComponents: [
     ConfirmationDialogComponent
@@ -126,7 +130,8 @@ import { SortByPipe } from './pipes/sort-by.pipe';
     ConfirmationDialogComponent,
     KeysPipe,
     TimeFormatPipe,
-    SortByPipe
+    SortByPipe,
+    ColorDifferenceDirective
   ]
 })
 export class SharedModule { }

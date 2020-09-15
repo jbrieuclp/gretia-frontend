@@ -49,7 +49,6 @@ import { LocalisationService } from './components/field/localisations/localisati
 
 //directives
 import { AutofocusDirective } from './directives/autofocus.directive';
-import { ColorDifferenceDirective } from './directives/color-difference.directive';
 import { FileInsertComponent } from './components/file/insert/insert.component';
 import { DuplicateLinesComponent } from './components/file/duplicate-lines/duplicate-lines.component';
 import { ExistsInDbComponent } from './components/file/exists-in-db/exists-in-db.component';
@@ -83,7 +82,6 @@ import { TaxonomieComponent } from './components/field/taxonomie/taxonomie.compo
     EditObserverComponent,
     ToolsboxComponent,
     AutofocusDirective,
-    ColorDifferenceDirective,
     AddObserverComponent,
     FileImportComponent,
     FieldLocalisationsComponent,
