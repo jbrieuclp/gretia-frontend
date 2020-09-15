@@ -150,6 +150,32 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
         return new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
+    /**
+    * @Rest\View(serializerGroups = {"champ"})
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Patch("/field/{id_to_replace}/replace-empty-by/{replacement_id}")
+    */
+    public function replaceEmptyByFieldAction(Request $request, $id_to_replace, $replacement_id)
+    {
+        $em = $this->getDoctrine()->getManager('geonature_db');
+        $field_to_replace = $em->getRepository('APIImportBundle:FichierChamp')->find($id_to_replace);
+        $replacement_field = $em->getRepository('APIImportBundle:FichierChamp')->find($replacement_id);
+        if (empty($field_to_replace) or empty($replacement_field)) {
+          return new JsonResponse(['message' => 'Field not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if ($em->getRepository('APIImportBundle:FichierChamp')->replaceEmptyByField($field_to_replace, $replacement_field)) {
+          if ( $request->query->get('values') === 'f' ) {
+            return $data['replace'];
+          }
+          return $this->getFieldValuesAction($field_to_replace->getId());
+        }
+        return new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
 
     /**
     * @Rest\View(serializerGroups = {"champ"})

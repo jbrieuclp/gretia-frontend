@@ -142,6 +142,21 @@ class FichierChampRepository extends EntityRepository
     }
 
     /**
+    *   Remplace toutes les occurrences d'un champs par une autre chaine
+    **/
+    public function replaceEmptyByField($field_to_replace, $replacement_field)
+    {
+        
+        $sql = "UPDATE ".$field_to_replace->getFichier()->getTable()." SET ".$field_to_replace->getChamp()." = ".$replacement_field->getChamp()." WHERE NULLIF(".$field_to_replace->getChamp().", '') IS NULL";
+
+        $requete = $this->_em->getConnection()->prepare($sql);
+        
+        $requete->execute();
+        
+        return true;
+    }
+
+    /**
     *   retourne le champ d'un fichier depuis son association FSD
     **/
     public function getFieldFromFSD($fichier, $champFSD)

@@ -148,6 +148,17 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  replaceEmptyByField(id: number, replacement_id: number, returnList: 't'|'f' = 't'): Observable<any> {
+    const url = `${this.httpUrlBase}/field/${id}/replace-empty-by/${replacement_id}?values=${returnList}`;
+    return this.http
+      .patch(url, {}, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   getFields(id: number, mapped: boolean = false): Observable<any> {
     let url = `${this.httpUrlBase}/fichier/${id}/fields`;
     if (mapped) {
