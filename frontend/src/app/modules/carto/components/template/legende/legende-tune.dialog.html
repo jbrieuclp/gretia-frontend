@@ -1,0 +1,10 @@
+<h5>Choix du type de représentation</h5>
+<div>{{ layer.title }}</div>
+<mat-radio-group class="example-radio-group">
+  <mat-radio-button 
+  	*ngFor="let style of layer.styles | keyvalue" 
+  	class="example-radio-button" 
+  	[value]="style.key" 
+  	(change)="changeStyle(style.key)"
+  	[checked]="style.key == layer.displayStyle"> {{ style.value.title }} </mat-radio-button>
+</mat-radio-group>

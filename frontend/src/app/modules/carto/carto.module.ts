@@ -42,7 +42,7 @@ import { TimePanelComponent, TimePanelDialog } from './components/template/left-
 import { TerritoryPanelComponent, TerritoryPanelDialog } from './components/template/left-panel/territory-panel.component';
 import { SearchTaxonComponent } from './components/template/right-panel/search-taxon/search-taxon.component';
 import { TaxonsPanelComponent } from './components/template/right-panel/taxons-panel/taxons-panel.component';
-import { LegendeComponent } from './components/template/legende/legende.component';
+import { LegendeComponent, LegendTuneDialog } from './components/template/legende/legende.component';
 import { IndicateursPanelComponent } from './components/template/right-panel/indicateurs-panel/indicateurs-panel.component';
 import { TooltipDialog } from './components/tooltip/tooltip.dialog';
 import { TooltipContentComponent } from './components/tooltip/tooltip-content.component';
@@ -102,6 +102,7 @@ import { TaxrefApiService } from '../../shared/services/taxref-api.service';
     SearchTaxonComponent,
     TaxonsPanelComponent,
     LegendeComponent,
+    LegendTuneDialog,
     IndicateursPanelComponent,
     GridsPanelComponent,
     GridsPanelDialog,
@@ -124,7 +125,8 @@ import { TaxrefApiService } from '../../shared/services/taxref-api.service';
     TimePanelDialog,
     TerritoryPanelDialog,
     TooltipDialog,
-    ImageDialog
+    ImageDialog,
+    LegendTuneDialog
   ],
   providers: [
     CartoService,

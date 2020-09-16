@@ -53,6 +53,7 @@ export class LayerService {
     saisons: []
   };
   $this = this;
+  _scale: {id?: number, type: number, label?: string, priority?: number} = {type: 32, label: "Maille 5km"};
 
   constructor( 
   	private cartoS: CartoService,
@@ -69,9 +70,10 @@ export class LayerService {
   *  Accesseurs
   *
   ************************/
-  get scale() { return this.params.scale; }
-  set scale(scale: number) { 
-    this.params.scale = scale;
+  get scale() { return this._scale; }
+  set scale(scale: {id?: number, type: number, label?: string, priority?: number}) { 
+    this._scale = scale;
+    this.params.scale = scale.type;
     this.reloadLayers();
   }
 

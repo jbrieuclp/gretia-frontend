@@ -11,6 +11,8 @@ export interface LAYER_INTERFACE {
   visible: boolean, 
   displayInLegend: boolean
   style?: any,
+  displayStyle?: string,
+  styles?: any,
   state: 'init'|'load'|'done'|'error',
   olLayer?: VectorLayer,
   properties?: any,
@@ -27,6 +29,8 @@ export abstract class Layer {
   protected _visible: boolean;
   protected _displayInLegend: boolean;
   protected _style: any;
+  protected _styles: any;
+  protected _displayStyle: string;
   protected _state: 'init'|'load'|'done'|'error';
   protected _olLayer: VectorLayer;
   protected _properties: any;
@@ -47,8 +51,12 @@ export abstract class Layer {
   public set visible(visible) { this._visible = visible}
   public get displayInLegend(){ return this._displayInLegend; }
   public set displayInLegend(displayInLegend) { this._displayInLegend = displayInLegend}
-  public get style(){ return this._style; }
-  public set style(style) { this._style = style}
+  public get style(){ return this._styles[this._displayStyle].style_function; }
+  //public set style(style) { this._style = this.styles[style]}
+  public get displayStyle(){ return this._displayStyle; }
+  public set displayStyle(displayStyle) { this._displayStyle = displayStyle; }
+  public get styles(){ return this._styles; }
+  public set styles(styles) { this._styles = styles;}
   public get state(){ return this._state; }
   public set state(state) { this._state = state}
   public get olLayer(){ return this._olLayer; }
@@ -61,6 +69,10 @@ export abstract class Layer {
 	protected assign(event: LAYER_INTERFACE) {
 		Object.assign(this, event);
     return this;
+  }
+
+  getLegende() {
+    return this._styles[this._displayStyle].getLegende();
   }
 
 }

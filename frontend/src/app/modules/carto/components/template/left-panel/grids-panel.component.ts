@@ -69,7 +69,8 @@ export class GridsPanelDialog implements OnInit {
   }
 
   getScales() {
-    this.layerS.getAvailablesScales().subscribe(scales => this.scales = scales)
+    this.layerS.getAvailablesScales()
+      .subscribe(scales => this.scales = scales)
   }
 
   onNoClick(): void {

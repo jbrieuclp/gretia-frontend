@@ -226,10 +226,6 @@ export class TimePanelDialog implements OnInit {
 }
 
 export const periodeValidator = (start, end): ValidatorFn => (control: AbstractControl) => {
-  console.log(control.get(start).value === null);
-  console.log(control.get(start).value === undefined);
-  console.log(control.get(start).value === '');
-  console.log(control.get(end).value);
   if(control.get(start).value !== null || control.get(end).value !== null) {
       return null;
   }
