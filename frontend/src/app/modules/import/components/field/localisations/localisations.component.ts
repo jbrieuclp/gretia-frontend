@@ -48,7 +48,7 @@ export class FieldLocalisationsComponent implements OnInit, AfterViewInit {
   	private route: ActivatedRoute,
   	private router: Router,
   	private importS: ImportService,
-    private fileS: FileService,
+    public fileS: FileService,
   	private localisationS: LocalisationService,
     private cartoS: CartoService
   ) { }
