@@ -43,7 +43,7 @@ class PersonController extends FOSRestController implements ClassResourceInterfa
   * @Rest\Get("/user/{surnom}", requirements={"surnom" = ".+"}, defaults={"surnom" = null})
   * @ParamConverter("personne", class="APIProjetBundle:Personne", options={"mapping": {"surnom": "surnom"}, "entity_manager" = "gretiadb"})
   */
-  public function getUserAction(?Personne $personne = null)
+  public function getUserAction(Personne $personne = null)
   {
     if (!empty($personne)) 
         return $personne;
