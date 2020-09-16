@@ -125,7 +125,6 @@ doctrine:
                     APIBiblioBundle: ~
                     APIImportBundle: ~
                     APIMagicTaxrefBundle: ~
-                    APIMetadataBundle: ~
                     APIProjetBundle: ~
             bibliodb:
                 connection: bibliodb
@@ -136,7 +135,6 @@ doctrine:
                     APIBiblioBundle: ~
                     APIImportBundle: ~
                     APIMagicTaxrefBundle: ~
-                    APIMetadataBundle: ~
                     APIProjetBundle: ~
             mc_taxref_db:
                 connection: mc_taxref_db
@@ -147,7 +145,6 @@ doctrine:
                     APIBiblioBundle: ~
                     APIImportBundle: ~
                     APIMagicTaxrefBundle: ~
-                    APIMetadataBundle: ~
                     APIProjetBundle: ~
             serena_db:
                 connection: serena_db
@@ -158,7 +155,6 @@ doctrine:
                     APIBiblioBundle: ~
                     APIImportBundle: ~
                     APIMagicTaxrefBundle: ~
-                    APIMetadataBundle: ~
                     APIProjetBundle: ~
                 dql:
                     numeric_functions:
@@ -173,7 +169,6 @@ doctrine:
                     APICartoBundle: ~
                     APIImportBundle: ~
                     APIMagicTaxrefBundle: ~
-                    APIMetadataBundle: ~
                     APIProjetBundle: ~
 
 # Swiftmailer Configuration
