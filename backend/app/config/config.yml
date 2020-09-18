@@ -83,8 +83,6 @@ doctrine:
                 password: "%serena_database_password%"
                 server_version: "%serena_database_server_version%"
                 charset: UTF8
-                mapping_types:
-                    _int4: integer_array
             geonature_db:
                 driver: "%geonature_database_driver%"
                 host: "%geonature_database_host%"
@@ -95,16 +93,8 @@ doctrine:
                 server_version: "%geonature_database_server_version%"
                 charset: UTF8
         
-        types:
-            geometry:       CrEOF\Spatial\DBAL\Types\GeometryType
-#            point:          CrEOF\Spatial\DBAL\Types\Geometry\PointType
-#            multi_geom_2154: Core\ToolsBundle\Doctrine\DBAL\Types\MultiGeom\SRID2154
-#            simple_geom_2154: Core\ToolsBundle\Doctrine\DBAL\Types\SimpleGeom\SRID2154
-#            simple_geom_4326: Core\ToolsBundle\Doctrine\DBAL\Types\SimpleGeom\SRID4326
-#            linestring:     CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
-            integer_array:  Doctrine\DBAL\PostgresTypes\IntArrayType
-            text_array:     Doctrine\DBAL\PostgresTypes\TextArrayType
-#            float_array:     Core\ToolsBundle\Doctrine\DBAL\ArrayTypes\FloatArrayType
+        #types:
+        #    geometry:       CrEOF\Spatial\DBAL\Types\GeometryType
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
         #     e.g. database_path: '%kernel.project_dir%/var/data/data.sqlite'
@@ -156,10 +146,6 @@ doctrine:
                     APIImportBundle: ~
                     APIMagicTaxrefBundle: ~
                     APIProjetBundle: ~
-                dql:
-                    numeric_functions:
-                        st_union:        CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STUnion
-                        st_transform:    CrEOF\Spatial\ORM\Query\AST\Functions\PostgreSql\STTransform
             geonature_db:
                 connection: geonature_db
                 naming_strategy: doctrine.orm.naming_strategy.underscore
