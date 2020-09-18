@@ -20,7 +20,7 @@
         ]
     },
     "require": {
-        "php": "7.3.5",
+        "php": "^7.3.5",
         "creof/doctrine2-spatial": "^1.2",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
