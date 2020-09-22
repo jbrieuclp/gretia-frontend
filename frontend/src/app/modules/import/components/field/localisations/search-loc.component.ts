@@ -188,7 +188,7 @@ export class SearchLocComponent implements OnInit, OnDestroy {
 
   getPointOnMap(location): void {
     if (this.localisationS.drawLayer.getSource().getFeatures().length) {
-      let coordinates = ((this.localisationS.drawLayer.getSource().getFeatures()[0]).getGeometry().transform('EPSG:3857', 'EPSG:4326')).getCoordinates()
+      let coordinates = ((this.localisationS.drawLayer.getSource().getFeatures()[0]).getGeometry()).getCoordinates()
       location.app_geom =  {
           "type": "Point",
           "coordinates": coordinates
