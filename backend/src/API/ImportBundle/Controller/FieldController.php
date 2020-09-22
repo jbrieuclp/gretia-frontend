@@ -305,8 +305,7 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
         $lat_lon['lat'] = $lat_lon['lat'][0];
         $lat_lon['lon'] = $lat_lon['lon'][0];
       } else {
-        $lat_lon['lat'] = null;
-        $lat_lon['lon'] = null;
+        $lat_lon = null;
       }
 
       $return_data['data'] = $em->getRepository('APIImportBundle:FichierChamp')->getFieldsValues($items, $lat_lon);

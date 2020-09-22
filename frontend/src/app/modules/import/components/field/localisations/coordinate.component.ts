@@ -13,7 +13,7 @@ import { ImportService } from '../../../services/import.service';
 export class CoordinateComponent implements OnInit {
 
   fichier_id: number;
-  error: Observable<any>;
+  error: string = null;
   coordinates: any[] = [];
 
   constructor(
@@ -38,7 +38,10 @@ export class CoordinateComponent implements OnInit {
             })
           )
         )
-        .subscribe(coordinates=>this.coordinates = coordinates);
+        .subscribe(
+          coordinates=>this.coordinates = coordinates,
+          error=>this.error = error.error.message
+        );
 
     } else { this.router.navigate(['/import']); }
   }

@@ -39,6 +39,7 @@ import { ReplaceEmptyByFieldComponent } from './components/field/toolsbox/tools/
 import { SearchReplaceComponent } from './components/field/toolsbox/tools/search-replace.component';
 import { SearchLocComponent } from './components/field/localisations/search-loc.component';
 import { CoordinateComponent } from './components/field/localisations/coordinate.component';
+import { LocTableDialog } from './components/field/localisations/loc-table.dialog';
 
 //services
 import { ImportService } from './services/import.service';
@@ -101,7 +102,8 @@ import { TaxonomieComponent } from './components/field/taxonomie/taxonomie.compo
     RecapComponent,
     TaxonomieComponent,
     SearchLocComponent,
-    CoordinateComponent
+    CoordinateComponent,
+    LocTableDialog
   ],
   entryComponents: [ 
     EditInputDialog,
@@ -109,7 +111,8 @@ import { TaxonomieComponent } from './components/field/taxonomie/taxonomie.compo
     EditRadioDialog,
     ViewTableDialog,
     ToolsboxComponent,
-    FileRequiredFieldDialog
+    FileRequiredFieldDialog,
+    LocTableDialog
   ],
   providers: [
     ImportService,

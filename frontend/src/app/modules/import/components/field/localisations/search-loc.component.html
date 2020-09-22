@@ -8,7 +8,19 @@
 
     <div>
     	Selectionner les champs relatif à la localisation
-    	<button color="primary" (click)="submit()" mat-raised-button style="margin-left: 20px;">Chercher</button>
+    	<button 
+	    	mat-raised-button 
+	    	color="primary" 
+	    	style="margin-left: 20px;"
+	    	(click)="submit()" 
+	    	[disabled]="!fields.length || searching">
+	    	<mat-spinner 
+  				*ngIf="searching"
+					diameter="25"
+					strokeWidth="2">
+				</mat-spinner>
+    		Chercher
+    	</button>
     </div>
 
     <form [formGroup]="form">
@@ -27,9 +39,22 @@
 		mat-table
 	  [dataSource]="localisations" multiTemplateDataRows
 	  class="table">
+
 	  <ng-container matColumnDef="{{column}}" *ngFor="let column of columns">
 	    <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-	    <td mat-cell *matCellDef="let localisation"> {{localisation[column]}} </td>
+	    <td mat-cell *matCellDef="let localisation"> 
+	    	<ng-container *ngIf="column === 'Voir'; else dataValue">
+	    		<button 
+				  	mat-icon-button
+				  	color="primary"
+				  	(click)="displayTableData(localisation)">
+				    <mat-icon>table_chart</mat-icon>
+				  </button>
+	    	</ng-container>
+	    	<ng-template #dataValue>
+	    		{{ localisation[column] }} 
+	    	</ng-template>
+	    </td>
 	  </ng-container>
 
 	  <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
@@ -41,15 +66,15 @@
 
 	        	<div class="row">
 	        		<div class="col-sm-7">
-			        	<div>
+			        	<div class="searcher">
 				        	<mat-form-field appearance="outline">
+				        		<mat-label>Recherche dans OpenStreetMap</mat-label>
 								    <input 
+								    	#inputOSM
 								    	matInput 
 								    	[matAutocomplete]="autoOSM"
 								    	placeholder="Rechercher une localisation sur OSM" 
-								    	[value]="localisation.app_searchValue|async"
-								    	(keyup)="searchOSM($event, localisation)"
-								    	(click)="searchOSM($event, localisation)">
+								    	[value]="localisation.app_searchValue|async">
 								    <mat-autocomplete 
 								    	#autoOSM="matAutocomplete"
 								    	[displayWith]="displayFnOSM">
@@ -72,6 +97,12 @@
 										  </ng-container>
 								    </mat-autocomplete>
 								  </mat-form-field>
+								  <button 
+								  	mat-mini-fab 
+								  	color="primary"
+								  	(click)="searchOSM(inputOSM.value, localisation)">
+								    <mat-icon aria-label="Example icon-button with a heart icon">search</mat-icon>
+								  </button>
 								</div>
 								<div style="margin: 5px 00px;text-align: center;font-weight: 900;">OU</div>
 								<div>
@@ -83,15 +114,15 @@
 									</button>
 								</div>
 								<div style="margin: 5px 00px;text-align: center;font-weight: 900;">OU</div>
-								<div>
+								<div class="searcher">
 				        	<mat-form-field appearance="outline">
+				        		<mat-label>Recherche dans liste des communes</mat-label>
 								    <input 
+								    	#inputCommune
 								    	matInput 
 								    	[matAutocomplete]="autoCommune"
 								    	placeholder="Rattacher à une commune" 
-								    	[value]="localisation.app_searchValue|async"
-								    	(keyup)="searchCommune($event, localisation)"
-								    	(click)="searchCommune($event, localisation)">
+								    	[value]="localisation.app_searchValue|async">
 								    <mat-autocomplete 
 								    	#autoCommune="matAutocomplete"
 								    	[displayWith]="displayFnCommune">
@@ -114,6 +145,12 @@
 										  </ng-container>
 								    </mat-autocomplete>
 								  </mat-form-field>
+								  <button 
+								  	mat-mini-fab 
+								  	color="primary"
+								  	(click)="searchCommune(inputCommune.value, localisation)">
+								    <mat-icon aria-label="Example icon-button with a heart icon">search</mat-icon>
+								  </button>
 								</div>
 							</div>
 							
@@ -133,8 +170,13 @@
 										mat-raised-button 
 										color="primary"
 										(click)="saveGeom(localisation)"
-										[disabled]="!(localisation.app_geom)">
-										<mat-icon>save</mat-icon> Enregistrer le point pour la donnée
+										[disabled]="!(localisation.app_geom) || saving">
+										<mat-spinner 
+				      				*ngIf="saving"
+											diameter="25"
+											strokeWidth="2">
+										</mat-spinner>
+										<mat-icon *ngIf="!saving">save</mat-icon> Enregistrer la geom pour la donnée
 									</button>
 								</div>
 							</div>

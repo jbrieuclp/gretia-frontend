@@ -36,10 +36,23 @@ class FichierChampRepository extends EntityRepository
         foreach ($fields as $field) {
             $select[] = $field->getChamp();
         }
-        $sql = "SELECT ".$latlon['lat']." AS latitude, ".implode(', ', $select).", ".$latlon['lon']." AS longitude";
+
+        $sql = "SELECT ".implode(', ', $select);
+        if (!is_null($latlon)) {
+            $sql .= ", ".$latlon['lat']." AS latitude";
+            $sql .= ", ".$latlon['lon']." AS longitude";
+        }
         $sql .= " FROM ".$field->getFichier()->getTable();
         $sql .= " WHERE adm_geom IS NULL";
-        $sql .= " GROUP BY ".implode(', ', $select).", ".$latlon['lat'].", ".$latlon['lon'];
+        if (!is_null($latlon)) {
+            $sql .= " AND ".$latlon['lat']." IS NULL";
+            $sql .= " AND ".$latlon['lon']." IS NULL";
+        }   
+        $sql .= " GROUP BY ".implode(', ', $select);
+        if (!is_null($latlon)) {
+            $sql .= " ,".$latlon['lat'];
+            $sql .= " ,".$latlon['lon'];
+        } 
         $sql .= " ORDER BY ".implode(', ', $select);
 
         $requete = $this->_em->getConnection()->prepare($sql);

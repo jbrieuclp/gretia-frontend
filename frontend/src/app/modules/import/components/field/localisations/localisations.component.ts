@@ -30,7 +30,20 @@ export class FieldLocalisationsComponent implements OnInit, AfterViewInit {
 	error: Observable<any>;
 	raw_data: any;
 	_localisations: any[];
-  geojson = new VectorLayer({source: new VectorSource({format:new format.GeoJSON({projection: new proj.get('EPSG:3857')})})});
+  geojson = new VectorLayer({
+    source: new VectorSource({format:new format.GeoJSON({projection: new proj.get('EPSG:3857')})}),
+    style: [
+      new Style({
+        image: new Circle({
+          fill: new Fill({color: 'rgba(255,255,255,0)'}),
+          stroke: new Stroke({color: '#cd0000', width: 1.25}),
+          radius: 5
+        }),
+        fill: new Fill({color: 'rgba(255,255,255,0)'}),
+        stroke: new Stroke({color: '#cd0000', width: 1.25})
+      })
+    ]
+  });
   searchOSMGeoJSON: VectorLayer;
   drawInteraction: Draw;
 

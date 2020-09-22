@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
 import { tap, map, filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import VectorLayer from 'ol/layer/Vector';
@@ -15,6 +16,7 @@ import { OSMService } from '../../../services/osm.service';
 import { FileService } from '../../../services/file.service';
 import { LocalisationService } from './localisation.service';
 import { CartoService } from '../../../../carto/services/carto.service';
+import { LocTableDialog } from './loc-table.dialog';
 
 @Component({
   selector: 'app-import-search-loc',
@@ -35,6 +37,8 @@ export class SearchLocComponent implements OnInit, OnDestroy {
 	fields: any[];
 	fichier: any;
   panelExpanded: boolean = true;
+  saving: boolean = false;
+  searching: boolean = false;
 
   checkAllStatus: boolean = false
   done: boolean = false
@@ -51,7 +55,8 @@ export class SearchLocComponent implements OnInit, OnDestroy {
     private osmS: OSMService,
     public localisationS: LocalisationService,
     public cartoS: CartoService,
-  	private fb: FormBuilder
+  	private fb: FormBuilder,
+    public dialog: MatDialog,
   ) { }
 
   ngOnInit() {	
@@ -94,9 +99,11 @@ export class SearchLocComponent implements OnInit, OnDestroy {
   }
 
   submit() {
+    this.searching = true;
     this.importS.getFieldsValues(this.getSelectedFields())
       .pipe(
         tap((data)=>{
+          this.searching = false;
           this.panelExpanded = false;
           if ( data.messages.length ) {
 
@@ -105,14 +112,8 @@ export class SearchLocComponent implements OnInit, OnDestroy {
         map(data=>data.data),
         filter(localisations=>localisations.length),
         tap(localisation=>{
-          //reorganisation du résultat pour mettre lat lon à la fin du tableau
-          this.columns = Object.keys(localisation[0])
-          let idxLat = this.columns.indexOf('latitude');
-          this.columns.push(this.columns[idxLat]);
-          this.columns.splice(idxLat,1);
-          let idxLon = this.columns.indexOf('longitude');
-          this.columns.push(this.columns[idxLon]);
-          this.columns.splice(idxLon,1);
+          this.columns = Object.keys(localisation[0]);
+          this.columns.unshift('Voir');
         }),
         map(localisation=>localisation.map(loc=>{
           loc.app_geom = loc.adm_geom;
@@ -126,14 +127,14 @@ export class SearchLocComponent implements OnInit, OnDestroy {
 
   setSearchValue(localisation) {
     let input = [];
-    for (let i = 0; i < this.columns.length -2 ; i++) {
+    for (let i = 0; i < this.columns.length ; i++) {
       input.push(localisation[this.columns[i]]);
     }
-    return input.join(' ');
+    return input.join(' ').trim();
   }
 
-  searchOSM(event, localisation) {
-    localisation.app_searchValue.next(event.target.value);
+  searchOSM(osm, localisation) {
+    localisation.app_searchValue.next(osm);
 
     localisation.app_searchValue
       .pipe(
@@ -150,8 +151,8 @@ export class SearchLocComponent implements OnInit, OnDestroy {
       .subscribe(results=>localisation.app_searchResults = results);
   }
 
-  searchCommune(event, localisation) {
-    localisation.app_searchValue.next(event.target.value);
+  searchCommune(commune, localisation) {
+    localisation.app_searchValue.next(commune);
 
     localisation.app_searchValue
       .pipe(
@@ -204,6 +205,7 @@ export class SearchLocComponent implements OnInit, OnDestroy {
   }
 
   saveGeom(location) {
+    this.saving = true;
     const exclude = ['app_searchResults', 'app_searchValue'];
     location = Object.keys(location)
       .filter(key => !(exclude.includes(key)))
@@ -213,7 +215,12 @@ export class SearchLocComponent implements OnInit, OnDestroy {
       }, {});
 
     this.importS.postLocalisationGeom(this.fichier.id, location)
+      .pipe(
+        tap(()=>this.saving = false)
+      )
       .subscribe(res=>{
+        this.fileS.snackBar(res+' ligne(s) modifiée(s)'); 
+        this.localisationS.searchOSMGeoJSONSource.clear();
         this.displayTempGeom.getSource().clear();
         const features = this.localisationS.features.getValue();
         features.push(new Feature(this.localisationS.geojsonFormat.readGeometry(location.adm_geom)))
@@ -234,11 +241,35 @@ export class SearchLocComponent implements OnInit, OnDestroy {
             }
             return i !== result; //on supprime la ligne enregistrée
           });
-      });
+      },
+      error=>this.fileS.snackBar('Une erreur est survenue'));
+  }
+
+  displayTableData(location) {
+    const exclude = ['app_searchResults', 'app_searchValue', 'app_geom'];
+    location = Object.keys(location)
+      .filter(key => !(exclude.includes(key)))
+      .reduce((obj, key) => {
+        obj[key] = location[key];
+        return obj;
+      }, {});
+
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.data = {
+      fichier: this.fichier,
+      filter: location
+    };
+    dialogConfig.maxWidth = '100%';
+    dialogConfig.width = '90%';
+    dialogConfig.height = '90%';
+    dialogConfig.position = {left: '5%', top: '30px'};
+
+    const dialogRef = this.dialog
+                        .open(LocTableDialog, dialogConfig);
   }
 
   ngOnDestroy() {  
-    console.log("destroy");
     this.cartoS.map.removeLayer(this.displayTempGeom);
   }
 }

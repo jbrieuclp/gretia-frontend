@@ -42,3 +42,26 @@ tr.example-detail-row {
 ::ng-deep .mat-form-field-wrapper {
   padding-bottom: 0px!important; 
 }
+
+::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+  stroke: #fff !important;
+}
+
+button .mat-progress-spinner, button .mat-spinner {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.searcher {
+  position: inherit;
+}
+
+.searcher mat-form-field {
+  padding-right: 50px;
+}
+
+.searcher button {
+  position: absolute;
+  right: 0;
+  top: 8px;
+}

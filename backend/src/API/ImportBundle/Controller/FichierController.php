@@ -399,13 +399,11 @@ class FichierController extends FOSRestController implements ClassResourceInterf
     {
       list($fichier, $em) = $this->getFichier($id);
 
-      $geom = $request->request->get('app_geom');
+      $geom = json_encode($request->request->get('app_geom'));
       $fields = $request->request->all();
       unset($fields['app_geom']);
 
-      $update_ok = $em->getRepository('APIImportBundle:Fichier')->updateGeometry($fichier, $geom, $fields);
-      //champs : value, ok, ban
-      return $update_ok ? $update_ok : new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
+      return $em->getRepository('APIImportBundle:Fichier')->updateGeometry($fichier, $geom, $fields);
     }
 
     /**

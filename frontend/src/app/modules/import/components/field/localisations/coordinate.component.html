@@ -1,38 +1,43 @@
-<h6>Synthèse des différents type de projection présents dans le fichier</h6>
-<div class="row" style="margin-bottom: 10px;">
-	<div class="col-6">
-		<ul class="list-group">
-			<ng-container *ngFor="let proj of getProjSynthese()">
-			  <li class="list-group-item d-flex justify-content-between align-items-center">
-			    {{ proj.proj }}
-			    <span class="badge badge-primary badge-pill">{{ proj.count }}</span>
-			  </li>
-			</ng-container>
-		</ul>
+<h6 style="margin-top: 10px;">Synthèse des différents type de projection présents dans le fichier</h6>
+<ng-container *ngIf="!error; else errorMsg">
+	<div class="row" style="margin-bottom: 10px;">
+		<div class="col-6">
+			<ul class="list-group">
+				<ng-container *ngFor="let proj of getProjSynthese()">
+				  <li class="list-group-item d-flex justify-content-between align-items-center">
+				    {{ proj.proj }}
+				    <span class="badge badge-primary badge-pill">{{ proj.count }}</span>
+				  </li>
+				</ng-container>
+			</ul>
+		</div>
+		<div cass="col-6">
+			<button 
+				mat-raised-button 
+				color="primary"
+				(click)="coordsToPoint()">
+				Convertir coords en points
+			</button>
+		</div>
 	</div>
-	<div cass="col-6">
-		<button 
-			mat-raised-button 
-			color="primary"
-			(click)="coordsToPoint()">
-			Convertir coords en points
-		</button>
-	</div>
-</div>
 
-<table class="table">
-	<thead>
-		<tr>
-			<th>Projection</th>
-			<th>Longitude</th>
-			<th>Latitude</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr *ngFor="let coord of coordinates">
-			<td>{{ coord.projection.proj }}</td>
-			<td>{{ coord.longitude }}</td>
-			<td>{{ coord.latitude }}</td>
-		</tr>
-	</tbody>
-</table>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Projection</th>
+				<th>Longitude</th>
+				<th>Latitude</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let coord of coordinates">
+				<td>{{ coord.projection.proj }}</td>
+				<td>{{ coord.longitude }}</td>
+				<td>{{ coord.latitude }}</td>
+			</tr>
+		</tbody>
+	</table>
+</ng-container>
+<ng-template #errorMsg>
+	<div class="alert alert-warning" role="alert">{{ this.error }}</div>
+</ng-template>

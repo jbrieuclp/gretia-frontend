@@ -11,7 +11,7 @@ import { AuthService } from './authentication.service';
 import { Observable } from 'rxjs/Observable';
 import { catchError,tap} from 'rxjs/operators';
 
-const WHITE_LIST = ['query.wikidata.org', 'taxref.mnhn.fr'];
+const WHITE_LIST = ['query.wikidata.org', 'taxref.mnhn.fr', 'nominatim.openstreetmap.org'];
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
