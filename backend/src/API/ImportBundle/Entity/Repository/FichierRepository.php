@@ -305,7 +305,10 @@ class FichierRepository extends EntityRepository
 
         $qb->select('count(*)')
            ->from($fichier->getTable(), 'f')
-           ->where('adm_geom IS NOT NULL');
+           ->where('adm_geom IS NOT NULL')
+           ->andWhere('NOT adm_doublon_fichier')
+           ->andWhere('NOT adm_doublon_bd')
+           ->andWhere('NOT adm_import_exclude');
 
         return $qb->execute()->fetch(\PDO::FETCH_COLUMN, 0);
     }
@@ -320,7 +323,10 @@ class FichierRepository extends EntityRepository
 
         $qb->select('count(*)')
            ->from($fichier->getTable(), 'f')
-           ->where('adm_geom IS NULL');
+           ->where('adm_geom IS NULL')
+           ->andWhere('NOT adm_doublon_fichier')
+           ->andWhere('NOT adm_doublon_bd')
+           ->andWhere('NOT adm_import_exclude');
 
         return $qb->execute()->fetch(\PDO::FETCH_COLUMN, 0);
     }

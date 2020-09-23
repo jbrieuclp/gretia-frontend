@@ -66,7 +66,11 @@ export class SearchLocComponent implements OnInit, OnDestroy {
       fields: new FormArray([])
     });
 
-  	this.fileS.mappedFields.subscribe(fields => {
+  	this.fileS.mappedFields
+    .pipe(
+      tap(fields=>fields.sort((t1, t2) => t1.fieldFSD.description >= t2.fieldFSD.description ? 1 : -1))
+    )
+    .subscribe(fields => {
   		this.fields = fields;
     	this.addCheckboxes();
   	});

@@ -26,7 +26,11 @@
     <form [formGroup]="form">
 
 		  <div formArrayName="fields" *ngFor="let field of form.get('fields')['controls']; let i = index">
-				<mat-checkbox color="primary" [formControlName]="i">{{ fields[i].champ }}</mat-checkbox>
+				<mat-checkbox 
+					color="primary" 
+					[formControlName]="i">
+					{{ fields[i].fieldFSD.description }} ({{ fields[i].champ }})
+				</mat-checkbox>
 			</div>
 
 

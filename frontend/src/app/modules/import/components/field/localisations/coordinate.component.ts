@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ImportService } from '../../../services/import.service';
+import { FileService } from '../../../services/file.service';
 
 @Component({
   selector: 'app-import-coordinate',
@@ -19,7 +20,8 @@ export class CoordinateComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private importS: ImportService
+    private importS: ImportService,
+    public fileS: FileService
   ) { }
 
   ngOnInit() {
@@ -49,7 +51,7 @@ export class CoordinateComponent implements OnInit {
   getProjection(coord): {proj: string, epsg: number} {
     let lat = coord.latitude;
     let lon = coord.longitude;
-    if ( lat === undefined || lon === undefined ) {
+    if ( lat === undefined || lon === undefined || lat === null || lon === null ) {
       return {proj: 'Erreur', epsg: null};
     }
 
@@ -59,6 +61,8 @@ export class CoordinateComponent implements OnInit {
       //si latitude et longitude sont des chiffres
       if ( (lat >= -90 && lat <= 90) && (lon >= -180 && lon <= 180) ) {
         return {proj: 'WGS84', epsg: 4326};
+      } else if ( (lat >= 6000000) ) {
+        return {proj: 'L93F', epsg: 2154};
       }
     }
   }
@@ -79,7 +83,7 @@ export class CoordinateComponent implements OnInit {
 
   coordsToPoint() {
     this.importS.postCoordsToPoint(this.fichier_id, this.coordinates)
-      .subscribe(result=>console.log(result));
+      .subscribe(result=>this.fileS.snackBar(result.ok+' points ok ; '+result.bad+' pas ok'));
   }
 
 }
