@@ -38,10 +38,6 @@ class FichierChampRepository extends EntityRepository
         }
 
         $sql = "SELECT ".implode(', ', $select);
-        if (!is_null($latlon)) {
-            $sql .= ", ".$latlon['lat']." AS latitude";
-            $sql .= ", ".$latlon['lon']." AS longitude";
-        }
         $sql .= " FROM ".$field->getFichier()->getTable();
         $sql .= " WHERE adm_geom IS NULL";
         if (!is_null($latlon)) {
@@ -49,10 +45,6 @@ class FichierChampRepository extends EntityRepository
             $sql .= " AND ".$latlon['lon']." IS NULL";
         }   
         $sql .= " GROUP BY ".implode(', ', $select);
-        if (!is_null($latlon)) {
-            $sql .= " ,".$latlon['lat'];
-            $sql .= " ,".$latlon['lon'];
-        } 
         $sql .= " ORDER BY ".implode(', ', $select);
 
         $requete = $this->_em->getConnection()->prepare($sql);
