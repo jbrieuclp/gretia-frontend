@@ -68,7 +68,7 @@ export class SearchLocComponent implements OnInit, OnDestroy {
 
   	this.fileS.mappedFields
     .pipe(
-      tap(fields=>fields.sort((t1, t2) => t1.fieldFSD.description >= t2.fieldFSD.description ? 1 : -1))
+      tap(fields=>fields.sort((t1, t2) => t1.champ >= t2.champ ? 1 : -1))
     )
     .subscribe(fields => {
   		this.fields = fields;
