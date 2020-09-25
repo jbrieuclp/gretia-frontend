@@ -47,6 +47,7 @@ export class LegendTuneDialog implements OnInit {
 
   constructor (
     public dialogRef: MatDialogRef<LegendTuneDialog>,
+    public layerS: LayerService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
@@ -57,6 +58,14 @@ export class LegendTuneDialog implements OnInit {
   changeStyle(STYLE_KEY) {
   	this.layer.displayStyle = STYLE_KEY;
   	this.layer.olLayer.setStyle(this.layer.styles[STYLE_KEY].style_function);
+  }
+
+  get legendDetail() {
+    return this.layer.styles[this.layer.displayStyle].display;
+  }
+
+  isArray(e: any) {
+    return Array.isArray(e);
   }
 
   onNoClick(): void {

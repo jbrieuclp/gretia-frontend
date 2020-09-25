@@ -1,4 +1,5 @@
 import { Type } from '@angular/core';  
+import { BehaviorSubject } from 'rxjs';
 import VectorLayer from 'ol/layer/Vector';
 
 export interface LAYER_INTERFACE {
@@ -14,7 +15,7 @@ export interface LAYER_INTERFACE {
   displayStyle?: string,
   styles?: any,
   state: 'init'|'load'|'done'|'error',
-  olLayer?: VectorLayer,
+  olLayer?: BehaviorSubject<VectorLayer>,
   properties?: any,
 };
 
@@ -32,7 +33,7 @@ export abstract class Layer {
   protected _styles: any;
   protected _displayStyle: string;
   protected _state: 'init'|'load'|'done'|'error';
-  protected _olLayer: VectorLayer;
+  protected _olLayer: BehaviorSubject<VectorLayer> = new BehaviorSubject(null);
   protected _properties: any;
 
   public get ID(){ return this._ID; }
@@ -56,11 +57,16 @@ export abstract class Layer {
   public get displayStyle(){ return this._displayStyle; }
   public set displayStyle(displayStyle) { this._displayStyle = displayStyle; }
   public get styles(){ return this._styles; }
-  public set styles(styles) { this._styles = styles;}
+  public set styles(styles) { 
+    Object.keys(styles).forEach(key=> {
+      styles[key].layer.next(this);
+    });
+    this._styles = styles;}
   public get state(){ return this._state; }
   public set state(state) { this._state = state}
-  public get olLayer(){ return this._olLayer; }
-  public set olLayer(olLayer) { this._olLayer = olLayer}
+  public get olLayer(){ return this._olLayer.getValue(); }
+  public get olLayerAsOservable(){ return this._olLayer.asObservable(); }
+  public set olLayer(olLayer) { this._olLayer.next(olLayer) }
   public get properties(){ return this._properties; }
   public set properties(properties) { this._properties = properties}
 

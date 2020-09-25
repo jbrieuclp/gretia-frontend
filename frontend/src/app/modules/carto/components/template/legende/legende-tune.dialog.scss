@@ -7,3 +7,22 @@
 .example-radio-button {
   margin: 5px;
 }
+
+.legend-layer-color { margin: 7px 0px 0px 15px; }
+
+.legend-layer-color .color {
+  display: inline-block;
+  border: 1px solid #505050;
+  width: 15px;
+  height: 10px;
+  margin-right: 5px;
+}
+
+.legend-layer-color .libelle {
+  vertical-align: 1px;
+  font-size: 11px;
+}
+
+.row-legende {
+  line-height: 1em;
+}

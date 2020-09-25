@@ -1,7 +1,7 @@
 import { Injectable, ElementRef } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { catchError, retry, map } from 'rxjs/operators';
+import { catchError, retry, map, tap } from 'rxjs/operators';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
@@ -226,6 +226,7 @@ export class LayerService {
                         queryable: layer.queryable,
                         displayInLegend: layer.displayInLegend,
                         source: new VectorSource({format:this.cartoS.formatGeoJSON}), 
+                        opacity: 0.8,
                         style: layer.style,
                         visible: layer.visible
                   });
@@ -241,10 +242,10 @@ export class LayerService {
     let source = layer.olLayer.getSource();
     layer.state = "load";
     this.getGeoJSON(layer)
-          .subscribe((geosjon: Response) => {
+          .subscribe((geojson: Response) => {
             layer.state = "done";
             source.clear();
-            source.addFeatures(this.cartoS.formatGeoJSON.readFeatures(geosjon));
+            source.addFeatures(this.cartoS.formatGeoJSON.readFeatures(geojson));
           });
   }
 
@@ -322,7 +323,6 @@ export class LayerService {
     return this.http
       .post(url, sources, httpOptions)
       .pipe(
-        map(res => res), 
         retry(3)
       );
   }
@@ -334,7 +334,6 @@ export class LayerService {
     return this.http
       .post(url, sources, httpOptions)
       .pipe(
-        map(res => res), 
         retry(3)
       );
   }
@@ -346,7 +345,6 @@ export class LayerService {
     return this.http
       .post(url, sources, httpOptions)
       .pipe(
-        map(res => res), 
         retry(3)
       );
   }
@@ -358,7 +356,6 @@ export class LayerService {
     return this.http
       .post(url, sources, httpOptions)
       .pipe(
-        map(res => res), 
         retry(3)
       );
   }
@@ -370,7 +367,6 @@ export class LayerService {
     return this.http
       .post(url, sources, httpOptions)
       .pipe(
-        map(res => res), 
         retry(3)
       );
   }
@@ -382,7 +378,6 @@ export class LayerService {
     return this.http
       .post(url, sources, httpOptions)
       .pipe(
-        map(res => res), 
         retry(3)
       );
   }
@@ -394,7 +389,6 @@ export class LayerService {
     return this.http
       .post(url, sources, httpOptions)
       .pipe(
-        map(res => res), 
         retry(3)
       );
   }
@@ -405,7 +399,6 @@ export class LayerService {
     return this.http
       .get(url, httpOptions)
       .pipe(
-        map(res => res), 
         retry(3)
       );
   }

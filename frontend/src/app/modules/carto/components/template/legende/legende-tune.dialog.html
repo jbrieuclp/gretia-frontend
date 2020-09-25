@@ -1,10 +1,36 @@
-<h5>Choix du type de représentation</h5>
-<div>{{ layer.title }}</div>
-<mat-radio-group class="example-radio-group">
-  <mat-radio-button 
-  	*ngFor="let style of layer.styles | keyvalue" 
-  	class="example-radio-button" 
-  	[value]="style.key" 
-  	(change)="changeStyle(style.key)"
-  	[checked]="style.key == layer.displayStyle"> {{ style.value.title }} </mat-radio-button>
-</mat-radio-group>
+<h5>{{ layer.title }}</h5>
+
+<div>
+  <b>Opacité</b> : 
+  <mat-slider
+    color="primary"
+    [value]="layer.olLayer.getOpacity()*100"
+    (change)="layer.olLayer.setOpacity( $event.value / 100 )"
+    tickInterval="1"
+    min="0"
+    max="100" 
+    #slider></mat-slider> {{ slider.value }}% {{ value | json }}
+</div>
+
+<div><b>Type de restitution</b> : </div>
+
+<mat-accordion>
+  <mat-expansion-panel *ngFor="let style of layer.styles | keyvalue" [expanded]="style.key == layer.displayStyle">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-radio-button 
+			  	class="example-radio-button" 
+			  	[value]="style.key" 
+			  	(change)="changeStyle(style.key)"
+			  	[checked]="style.key == layer.displayStyle"> {{ style.value.title }} </mat-radio-button>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    
+    	<div class="legend-layer-color">
+				<div class="row-legende" *ngFor="let element of layerS.getLegende(layer)">
+					<span class="color" [ngStyle]="{'background-color': element.color}"></span><span class="libelle">{{element.label}}</span>
+				</div>
+			</div>
+
+  </mat-expansion-panel>
+</mat-accordion>
