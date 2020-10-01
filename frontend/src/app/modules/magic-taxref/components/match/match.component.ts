@@ -39,7 +39,7 @@ export class MatchComponent implements OnInit {
           //si une seul proposition on la coche directement
           taxons.map(taxon=>{
             if (taxon.matchs.length === 1) {
-              taxon.match = taxon.matchs[0].nom_complet;
+              taxon.match = taxon.matchs[0];
             }
             return taxon;
           })
