@@ -25,8 +25,8 @@
 		<mat-error *ngIf="form.get('temps').hasError('required')">
       Ce champ est obligatoire.
     </mat-error>
-    <mat-error *ngIf="form.get('temps').hasError('max')">
-      Trop de jours donnés ({{ form.get('temps').errors.max.actual }} jours - {{ form.get('temps').errors.max.max }} sont encore disponibles.
+    <mat-error *ngIf="form.get('temps').hasError('max')" style="margin-top: 0px">
+      Trop de jours donnés ({{ form.get('temps').errors.max.max }} jours sont encore disponibles)
     </mat-error>
 	</mat-form-field>
 

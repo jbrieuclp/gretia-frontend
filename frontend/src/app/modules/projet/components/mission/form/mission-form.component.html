@@ -1,4 +1,4 @@
-<div class="row justify-content-center">
+<div class="row justify-content-center" *ngIf="form">
 	<div class="col-sm-8">
 	  <h4>{{ projet?.libelle }}</h4>
 
@@ -39,9 +39,13 @@
 				    	placeholder="Nombre de jour"  
 			  			formControlName="nbJour"
 			  			id="nbJour">
+		  			<mat-error *ngIf="form.get('nbJour').hasError('max')" style="margin-top: 0px">
+							Trop de jours donnés : {{ form.get('nbJour').errors.max.max }} jours sont encore disponibles
+						</mat-error>
 				  </mat-form-field>
 				  <div class="col-sm-4">
-				  	{{ jourInUse }} jours affecté(s)<br><i>({{ mission.nbJour - jourInUse }} jours restant)</i>
+				  	{{ jourInUse }} jours affecté(s)<br>
+				  	<i *ngIf="mission.nbJour">({{ mission.nbJour - jourInUse }} jours restant)</i>
 				  </div>
 				</div>
 				<mat-form-field>
