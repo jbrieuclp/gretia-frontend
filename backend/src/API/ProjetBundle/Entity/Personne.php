@@ -3,81 +3,88 @@
 namespace API\ProjetBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use JMS\Serializer\Annotation as Serializer;
-
-use API\ProjetBundle\Entity\ProjetPersonne;
-use API\ProjetBundle\Entity\MissionPersonne;
 
 /**
 * @ORM\Entity
 * @ORM\Table(name="projet.personne")
-* @UniqueEntity(fields="surnom", message="Une personne au même surnom existe déjà.")
+* @UniqueEntity(fields="alias", message="Cet alias est déjà utilisé")
+* @UniqueEntity(fields="compte_id", message="Ce compte est déjà utilisé")
 */
 class Personne
 {
-	
-  public function __construct() {
-    $this->projets = new ArrayCollection();
-    $this->missions = new ArrayCollection();
+	public function __construct() {
+    $this->salaries = new ArrayCollection();
   }
 
   /**
-	 * @ORM\Id
-	 * @ORM\Column(name="id_personne", type="integer")
-	 * @ORM\GeneratedValue(strategy="SEQUENCE")
+   * @ORM\Id
+   * @ORM\Column(name="id_personne", type="integer")
+   * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.personne_id_personne_seq", allocationSize=1, initialValue=1)
-	 *
-	 * @Serializer\Groups({"personne", "mission", "projet", "travail"})
-	 */
-	private $id;
-
-	/**
-   * @ORM\Column(name="nom", type="string", nullable=false)
    *
-   * @Serializer\Groups({"personne", "mission", "projet"})
+   * @Serializer\Groups({"personne", "salarie", "projet", "recup", "conge", "fonction_salarie", "antenne"})
+   */
+  private $id;
+  
+  /**
+   * @ORMColumn(name="nom", type="string", length=255, nullable=false)
+   * @Assert\NotNull(message="Nom non renseignée")
+   * @Assert\Length(
+   *      max = 255,
+   *      maxMessage = "Le nom ne doit pas faire plus de {{ limit }} caractères"
+   * )
+   *
+   * @SerializerGroups({"personne", "salarie", "projet", "recup", "conge", "fonction_salarie", "antenne"})
    */
   private $nom;
 
   /**
-   * @ORM\Column(name="prenom", type="string", nullable=false)
+   * @ORMColumn(name="prenom", type="string", length=255, nullable=false)
+   * @Assert\NotNull(message="Prenom non renseignée")
+   * @Assert\Length(
+   *      max = 255,
+   *      maxMessage = "Le prenom ne doit pas faire plus de {{ limit }} caractères"
+   * )
    *
-   * @Serializer\Groups({"personne", "mission", "projet"})
+   * @SerializerGroups({"personne", "salarie", "projet", "recup", "conge", "fonction_salarie", "antenne"})
    */
   private $prenom;
 
   /**
-   * @ORM\Column(name="surnom", type="string", nullable=false, unique=true)
+   * @ORMColumn(name="alias", type="string", length=255, nullable=false)
+   * @Assert\NotNull(message="Alias non renseignée")
+   * @Assert\Length(
+   *      max = 255,
+   *      maxMessage = "L'alias ne doit pas faire plus de {{ limit }} caractères"
+   * )
    *
-   * @Serializer\Groups({"personne", "mission", "projet"})
+   * @SerializerGroups({"personne", "salarie"})
    */
-  private $surnom;
+  private $alias;
 
   /**
-   * @ORM\Column(name="compte_gn_id", type="integer", nullable=true)
+   * @ORMColumn(name="compte_id", type="integer", nullable=true)
    *
-   * @Serializer\Groups({})
+   * @SerializerGroups({"personne", "salarie"})
    */
-  private $compte;
+  private $compteId;
 
   /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\ProjetPersonne", mappedBy="personne", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Salarie", mappedBy="personne", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
    *
-   * @Serializer\Groups({})
+   * @Serializer\Groups({"personne"})
    */
-  private $projets;
+  private $salaries;
+ 
+  
+
 
   /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\MissionPersonne", mappedBy="personne", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
-   *
-   * @Serializer\Groups({})
-   */
-  private $missions;
-
-  /**
-   * Get id
+   * Get id_projet
    *
    * @return integer 
    */
@@ -133,100 +140,75 @@ class Personne
   }
 
   /**
-   * Set surnom
+   * Set alias
    *
-   * @param string $surnom
+   * @param string $alias
    * @return string
    */
-  public function setSurnom($surnom)
+  public function setAlias($alias)
   {
-    $this->surnom = $surnom;
+    $this->alias = $alias;
 
     return $this;
   }
 
   /**
-   * Get surnom
+   * Get alias
    *
    * @return integer 
    */
-  public function getSurnom()
+  public function getAlias()
   {
-    return $this->surnom;
+    return $this->alias;
   }
 
   /**
-   * Set compte
+   * Set compteId
    *
-   * @param string $compte
+   * @param string $compteId
    * @return string
    */
-  public function setCompte($compte)
+  public function setNom($compteId)
   {
-    $this->compte = $compte;
+    $this->compteId = $compteId;
 
     return $this;
   }
 
   /**
-   * Get compte
+   * Get compteId
    *
    * @return integer 
    */
-  public function getCompte()
+  public function getNom()
+  compteId    return $this->nom;
+  }
+
+  /**
+  * Salarie
+  */
+  public function addSalarie(Salarie $salarie)
   {
-    return $this->compte;
+      // Ici, on utilise l'ArrayCollection vraiment comme un tableau
+      $this->salaries[] = $salarie;
+      
+      // liaison inverse avec entité
+      $salarie->setAntenne($this);
+
+      return $this;
   }
 
-  /**
-   * Add projets
-   *
-   * @param Projet $item
-   */
-  public function addProjet(ProjetPersonne $item) {
-    // Ici, on utilise l'ArrayCollection vraiment comme un tableau
-    $this->projets[] = $item;
-    
-    // On lie le releve au obseur orga
-    $item->setPersonne($this);
-
-    return $this;
-  }
-
-  public function removeProjet(ProjetPersonne $item) {
-    // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
-    $this->projets->removeElement($item);
-    $item->setPersonne(null);
+  public function removeSalarie(Salarie $salarie)
+  {
+      // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
+      $this->salaries->removeElement($salarie);
+      $salarie->setAntenne(null);
   }
 
   // Notez le pluriel, on récupère une liste de catégories ici !
-  public function getProjets() {
-    return $this->projets;
+  public function getSalaries()
+  {
+      return $this->salaries;
   }
 
-  /**
-   * Add mission
-   *
-   * @param Projet $item
-   */
-  public function addMission(MissionPersonne $item) {
-    // Ici, on utilise l'ArrayCollection vraiment comme un tableau
-    $this->missions[] = $item;
-    
-    // On lie le releve au obseur orga
-    $item->setPersonne($this);
-
-    return $this;
-  }
-
-  public function removeMission(MissionPersonne $item) {
-    // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
-    $this->missions->removeElement($item);
-    $item->setPersonne(null);
-  }
-
-  // Notez le pluriel, on récupère une liste de catégories ici !
-  public function getMissions() {
-    return $this->missions;
-  }
 }

@@ -3,71 +3,97 @@
 namespace API\ProjetBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
-* @ORM\Entity(repositoryClass="API\ProjetBundle\Entity\Repository\TravailRepository")
+* @ORM\Entity
 * @ORM\Table(name="projet.travail")
 */
 class Travail
 {
-	/**
-	 * @ORM\Id
-	 * @ORM\Column(name="id", type="integer")
-	 * @ORM\GeneratedValue(strategy="SEQUENCE")
-   * @ORM\SequenceGenerator(sequenceName="projet.travail_id_seq", allocationSize=1, initialValue=1)
-	 *
-	 * @Serializer\Groups({"travail"})
-	 */
-	private $id;
+	public function __construct() {
+    $this->deplacements = new ArrayCollection();
+  }
 
-	/**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Mission", inversedBy="travails", cascade={"all"}, fetch="EAGER")
-   * @ORM\JoinColumn(name="mission_id", referencedColumnName="id_mission", nullable=true)
+  /**
+   * @ORM\Id
+   * @ORM\Column(name="id_travail", type="integer")
+   * @ORM\GeneratedValue(strategy="SEQUENCE")
+   * @ORM\SequenceGenerator(sequenceName="projet.travail_id_travail_seq", allocationSize=1, initialValue=1)
+   *
+   * @Serializer\Groups({"travail", "deplacement"})
+   */
+  private $id;
+
+  /**
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Tache", cascade={"all"})
+   * @ORM\JoinColumn(name="tache_id", referencedColumnName="id_tache", nullable=false)
+   * @Assert\NotNull(message="Tâche non renseignée")
+   *
+   * @SerializerGroups({"travail"})
+   */
+  private $tache;
+
+  /**
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Salarie", cascade={"all"})
+   * @ORM\JoinColumn(name="salarie_id", referencedColumnName="id_salarie", nullable=false)
+   * @Assert\NotNull(message="Salarie non renseignée")
    *
    * @Serializer\Groups({"travail"})
    */
-  private $mission;
+  private $salarie;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Personne", cascade={"all"})
-   * @ORM\JoinColumn(name="personne_id", referencedColumnName="id_personne", nullable=false)
+   * @ORMColumn(name="date_travail", type="datetime", nullable=false)
    *
-   * @Serializer\Groups({"travail", "mission", "projet"})
+   * @SerializerGroups({"travail"})
    */
-  private $personne;
+  private $dateTravail;
 
   /**
-   * @ORM\Column(name="date", type="string", nullable=false)
+   * @ORMColumn(name="temps", type="integer", nullable=false)
    *
-   * @Serializer\Groups({"travail", "mission"})
+   * @SerializerGroups({"travail"})
    */
-  private $date;
+  private $temps;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Categorie", cascade={"all"})
-   * @ORM\JoinColumn(name="travail_categ_id", referencedColumnName="id_travail_categ", nullable=true)
+   * @ORMColumn(name="detail", type="string", nullable=true)
    *
-   * @Serializer\Groups({"travail"})
-   */
-  private $categorie;
-
-  /**
-   * @ORM\Column(name="duree", type="integer", nullable=true)
-   *
-   * @Serializer\Groups({"travail", "mission", "projet"})
-   */
-  private $duree;
-
-  /**
-   * @ORM\Column(name="detail", type="string", nullable=true)
-   *
-   * @Serializer\Groups({"travail"})
+   * @SerializerGroups({"travail"})
    */
   private $detail;
 
   /**
-   * Get id
+   * @ORMColumn(name="est_nuit", type="boolean", nullable=false)
+   *
+   * @SerializerGroups({"travail"})
+   */
+  private $estNuit;
+
+  /**
+   * @ORMColumn(name="est_we", type="boolean", nullable=false)
+   *
+   * @SerializerGroups({"travail"})
+   */
+  private $estWe;
+
+  /**
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Deplacement", mappedBy="travail", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   *
+   * @Serializer\Groups({"travail"})
+   */
+  private $deplacements;
+
+  
+  
+  
+
+
+  /**
+   * Get id_projet
    *
    * @return integer 
    */
@@ -77,118 +103,95 @@ class Travail
   }
 
   /**
-   * Set mission
+   * Set tache
    *
-   * @param string $mission
+   * @param string $tache
    * @return string
    */
-  public function setMission($mission)
+  public function setTache($tache)
   {
-    $this->mission = $mission;
+    $this->tache = $tache;
 
     return $this;
   }
 
   /**
-   * Get mission
+   * Get tache
    *
    * @return integer 
    */
-  public function getMission()
+  public function getTache()
   {
-    return $this->mission;
+    return $this->tache;
   }
 
   /**
-   * Set personne
+   * Set salarie
    *
-   * @param string $personne
+   * @param string $salarie
    * @return string
    */
-  public function setPersonne($personne)
+  public function setSalarie($salarie)
   {
-    $this->personne = $personne;
+    $this->salarie = $salarie;
 
     return $this;
   }
 
   /**
-   * Get personne
+   * Get salarie
    *
    * @return integer 
    */
-  public function getPersonne()
+  public function getSalarie()
   {
-    return $this->personne;
+    return $this->salarie;
   }
 
   /**
-   * Set date
+   * Set dateTravail
    *
-   * @param string $date
+   * @param string $dateTravail
    * @return string
    */
-  public function setDate($date)
+  public function setDateTravail($dateTravail)
   {
-    $this->date = $date;
+    $this->dateTravail = $dateTravail;
 
     return $this;
   }
 
   /**
-   * Get date
+   * Get dateTravail
    *
    * @return integer 
    */
-  public function getDate()
+  public function getDateTravail()
   {
-    return $this->date;
+    return $this->dateTravail;
   }
 
   /**
-   * Set categorie
+   * Set temps
    *
-   * @param string $categorie
+   * @param string $temps
    * @return string
    */
-  public function setCategorie($categorie)
+  public function setTemps($temps)
   {
-    $this->categorie = $categorie;
+    $this->temps = $temps;
 
     return $this;
   }
 
   /**
-   * Get categorie
+   * Get temps
    *
    * @return integer 
    */
-  public function getCategorie()
+  public function getTemps()
   {
-    return $this->categorie;
-  }
-
-  /**
-   * Set duree
-   *
-   * @param string $duree
-   * @return string
-   */
-  public function setDuree($duree)
-  {
-    $this->duree = $duree;
-
-    return $this;
-  }
-
-  /**
-   * Get duree
-   *
-   * @return integer 
-   */
-  public function getDuree()
-  {
-    return $this->duree;
+    return $this->temps;
   }
 
   /**
@@ -214,4 +217,76 @@ class Travail
     return $this->detail;
   }
 
+  /**
+   * Set estNuit
+   *
+   * @param string $estNuit
+   * @return string
+   */
+  public function setEstNuit($estNuit)
+  {
+    $this->estNuit = $estNuit;
+
+    return $this;
+  }
+
+  /**
+   * Get estNuit
+   *
+   * @return integer 
+   */
+  public function getEstNuit()
+  {
+    return $this->estNuit;
+  }
+
+  /**
+   * Set estWe
+   *
+   * @param string $estWe
+   * @return string
+   */
+  public function setEstWe($estWe)
+  {
+    $this->estWe = $estWe;
+
+    return $this;
+  }
+
+  /**
+   * Get estWe
+   *
+   * @return integer 
+   */
+  public function getEstWe()
+  {
+    return $this->estWe;
+  }
+
+  /**
+  * Deplacement
+  */
+  public function addDeplacement(Deplacement $item)
+  {
+      // Ici, on utilise l'ArrayCollection vraiment comme un tableau
+      $this->deplacements[] = $item;
+      
+      // liaison inverse avec entité
+      $item->setTravail($this);
+
+      return $this;
+  }
+
+  public function removeDeplacement(Deplacement $item)
+  {
+      // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
+      $this->deplacements->removeElement($item);
+      $item->setTravail(null);
+  }
+
+  // Notez le pluriel, on récupère une liste de catégories ici !
+  public function getDeplacements()
+  {
+      return $this->deplacements;
+  }
 }

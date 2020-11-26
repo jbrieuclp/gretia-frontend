@@ -1,0 +1,21 @@
+Liste des entities construites (31 tables) :
+_______________________________________________
+action
+antenne
+conge_paye
+deplacement
+etat_avancement
+fonction_salarie
+localisation
+personne
+projet
+projet_localisation
+projet_responsable
+recup
+salarie
+tache
+tache_attribution
+tache_periode
+travail
+type_projet
+type_projet_ref

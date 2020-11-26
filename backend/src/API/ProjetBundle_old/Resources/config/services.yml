@@ -1,0 +1,5 @@
+services:
+    # projet.entity.mission:
+    #     class: API\ProjetBundle\Entity\Mission
+    #     arguments:
+    #         EntityManager: "@doctrine.orm.gretiadb_entity_manager"

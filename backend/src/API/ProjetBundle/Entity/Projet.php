@@ -3,207 +3,133 @@
 namespace API\ProjetBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\PreFlushEventArgs;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-use API\ProjetBundle\Entity\Organisme;
-use API\ProjetBundle\Entity\Mission;
-use API\ProjetBundle\Entity\ProjetPersonne;
+use API\ProjetBundle\Entity\Localisation;
+use API\ProjetBundle\Entity\Salarie;
 
 /**
 * @ORM\Entity
 * @ORM\Table(name="projet.projet")
-* @ORM\HasLifecycleCallbacks
+* @UniqueEntity(fields="code", message="Un projet au même code existe déjà.")
+* @UniqueEntity(fields="intitule", message="Un projet au même intitulé existe déjà.")
 */
 class Projet
 {
 	public function __construct() {
-    $this->partenairesFinanciers = new ArrayCollection();
-    $this->partenairesTechniques = new ArrayCollection();
-    $this->missions = new ArrayCollection();
-    $this->travailleurs = new ArrayCollection();
+    $this->localisations = new ArrayCollection();
+    $this->responsables = new ArrayCollection();
+    $this->taches = new ArrayCollection();
   }
 
   /**
-	 * @ORM\Id
-	 * @ORM\Column(name="id_projet", type="integer")
-	 * @ORM\GeneratedValue(strategy="SEQUENCE")
+   * @ORM\Id
+   * @ORM\Column(name="id_projet", type="integer")
+   * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.projet_id_projet_seq", allocationSize=1, initialValue=1)
-	 *
-	 * @Serializer\Groups({"projet", "mission"})
-	 */
-	private $id;
-
-	/**
-	 * @ORM\Column(name="libelle", type="string", nullable=false)
-	 *
-	 * @Serializer\Groups({"projet", "mission"})
-	 */
-	private $libelle;
-
-	/**
-	 * @ORM\Column(name="localisation", type="string", nullable=true)
-	 *
-	 * @Serializer\Groups({"projet"})
-	 */
-	private $localisation;
-
+   *
+   * @Serializer\Groups({"projet", "salarie", "tache"})
+   */
+  private $id;
+  
   /**
-   * @ORM\ManyToMany(targetEntity="API\ProjetBundle\Entity\Organisme", inversedBy="projetsFinances", cascade={"all"})
-   * @ORM\JoinTable(name="projet.a_projet_part_financier",
-   *   joinColumns={@ORM\JoinColumn(name="projet_id", referencedColumnName="id_projet")},
-   *   inverseJoinColumns={@ORM\JoinColumn(name="organisme_id", referencedColumnName="id_organisme")}
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Projet", cascade={"all"})
+   * @ORM\JoinColumn(name="projet_parent_id", referencedColumnName="id_projet", nullable=true)
+   *
+   * @Serializer\Groups({"projet"})
+   */
+  private $projetParent;
+  
+  /**
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\TypeProjet", cascade={"all"})
+   * @ORM\JoinColumn(name="type_projet_id", referencedColumnName="id_type_projet", nullable=false)
+   * @Assert\NotNull(message="Type de projet non renseigné")
+   *
+   * @Serializer\Groups({"projet"})
+   */
+  private $typeProjet;
+  
+  /**
+   * @ORMColumn(name="code", type="string", length=50, nullable=false)
+   * @Assert\NotNull(message="Code non renseigné")
+   * @Assert\Length(
+   *      max = 50,
+   *      maxMessage = "Le code du projet ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @Serializer\Groups({"projet"})
+   * @SerializerGroups({"projet", "salarie", "tache"})
    */
-  private $partenairesFinanciers;
-
+  private $code;
+  
   /**
-   * @ORM\ManyToMany(targetEntity="API\ProjetBundle\Entity\Organisme", inversedBy="projetsTechniques", cascade={"all"})
-   * @ORM\JoinTable(name="projet.a_projet_part_technique",
-   *   joinColumns={@ORM\JoinColumn(name="projet_id", referencedColumnName="id_projet")},
-   *   inverseJoinColumns={@ORM\JoinColumn(name="organisme_id", referencedColumnName="id_organisme")}
+   * @ORMColumn(name="intitule", type="string", length=500, nullable=false)
+   * @Assert\NotNull(message="Intitulé non renseigné")
+   * @Assert\Length(
+   *      max = 500,
+   *      maxMessage = "L'intitulé' du projet ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @Serializer\Groups({"projet"})
+   * @SerializerGroups({"projet", "salarie", "tache"})
    */
-  private $partenairesTechniques;
-
+  private $intitule;
+  
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Type", cascade={"all"}, fetch="EAGER")
-   * @ORM\JoinColumn(name="type_id", referencedColumnName="id_projet_type", nullable=true)
+   * @ORMColumn(name="objectif", type="string", nullable=true)
    *
-   * @Serializer\Groups({"projet"})
+   * @SerializerGroups({"projet"})
    */
-  private $type;
-
+  private $objectif;
+  
   /**
-   * @ORM\Column(name="objet", type="string", nullable=true)
+   * @ORMColumn(name="date_debut", type="datetime", nullable=true)
    *
-   * @Serializer\Groups({"projet"})
-   */
-  private $objet;
-
-  /**
-   * @ORM\Column(name="milieux", type="string", nullable=true)
-   *
-   * @Serializer\Groups({"projet"})
-   */
-  private $milieux;
-
-  /**
-   * @ORM\Column(name="groupes", type="string", nullable=true)
-   *
-   * @Serializer\Groups({"projet"})
-   */
-  private $groupes;
-
-  /**
-   * @ORM\Column(name="nb_jour", type="float", nullable=true)
-   *
-   * @Serializer\Groups({"projet"})
-   */
-  private $nbJour;
-
-  /**
-   * @ORM\Column(name="cout", type="float", nullable=true)
-   *
-   * @Serializer\Groups({"projet"})
-   */
-  private $cout;
-
-  /**
-   * @ORM\Column(name="cout_total", type="float", nullable=true)
-   *
-   * @Serializer\Groups({"projet"})
-   */
-  private $coutTotal;
-
-  /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Personne", cascade={"all"}, fetch="EAGER")
-   * @ORM\JoinColumn(name="responsable_id", referencedColumnName="id_personne", nullable=true)
-   *
-   * @Serializer\Groups({"projet"})
-   */
-  private $responsable;
-
-  /**
-   * @ORM\Column(name="date_debut", type="string", nullable=true)
-   *
-   * @Serializer\Groups({"projet"})
+   * @SerializerGroups({"projet"})
    */
   private $dateDebut;
-
+  
   /**
-   * @ORM\Column(name="date_fin", type="string", nullable=true)
+   * @ORMColumn(name="date_fin", type="datetime", nullable=true)
    *
-   * @Serializer\Groups({"projet"})
+   * @SerializerGroups({"projet"})
    */
   private $dateFin;
 
   /**
-   * @ORM\Column(name="date_rendu", type="string", nullable=true)
+   * @ORM\ManyToMany(targetEntity="API\ProjetBundle\Entity\Localisation", inversedBy="projets", cascade={"all"})
+   * @ORM\JoinTable(name="projet.projet_localisation",
+   *   joinColumns={@ORM\JoinColumn(name="projet_id", referencedColumnName="id_projet")},
+   *   inverseJoinColumns={@ORM\JoinColumn(name="localisation_id", referencedColumnName="id_localisation")}
+   * )
    *
    * @Serializer\Groups({"projet"})
    */
-  private $dateRendu;
+  private $localisations;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Etat", cascade={"all"}, fetch="EAGER")
-   * @ORM\JoinColumn(name="etat_id", referencedColumnName="id_etat", nullable=true)
+   * @ORM\ManyToMany(targetEntity="API\ProjetBundle\Entity\Salarie", inversedBy="projets", cascade={"all"})
+   * @ORM\JoinTable(name="projet.projet_responsable",
+   *   joinColumns={@ORM\JoinColumn(name="projet_id", referencedColumnName="id_projet")},
+   *   inverseJoinColumns={@ORM\JoinColumn(name="salarie_id", referencedColumnName="id_salarie")}
+   * )
    *
    * @Serializer\Groups({"projet"})
    */
-  private $etat;
+  private $responsables;
 
   /**
-   * @ORM\Column(name="date_create", type="datetime", nullable=true)
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Tache", mappedBy="projet", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
    *
    * @Serializer\Groups({"projet"})
    */
-  private $dateCreate;
-
-  /**
-   * @ORM\Column(name="compte_create_id", type="string", nullable=true)
-   *
-   * @Serializer\Groups({"projet"})
-   */
-  private $compteCreate;
-
-  /**
-   * @ORM\Column(name="date_update", type="datetime", nullable=true)
-   *
-   * @Serializer\Groups({"projet"})
-   */
-  private $dateUpdate;
-
-  /**
-   * @ORM\Column(name="compte_update_id", type="string", nullable=true)
-   *
-   * @Serializer\Groups({"projet"})
-   */
-  private $compteUpdate;
-
-  /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Mission", mappedBy="projet", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
-   *
-   * @Serializer\Groups({"projet"})
-   */
-  private $missions;
-
-  /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\ProjetPersonne", mappedBy="projet", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
-   *
-   * @Serializer\Groups({"projet"})
-   */
-  private $travailleurs;
+  private $taches;
+  
 
 
   /**
-   * Get id
+   * Get id_projet
    *
    * @return integer 
    */
@@ -213,323 +139,118 @@ class Projet
   }
 
   /**
-   * Set libelle
+   * Set projetParent
    *
-   * @param string $libelle
+   * @param string $projetParent
    * @return string
    */
-  public function setLibelle($libelle)
+  public function setProjetParent($projetParent)
   {
-    $this->libelle = $libelle;
+    $this->projetParent = $projetParent;
 
     return $this;
   }
 
   /**
-   * Get libelle
+   * Get projetParent
    *
    * @return integer 
    */
-  public function getLibelle()
+  public function getProjetParent()
   {
-    return $this->libelle;
+    return $this->projetParent;
   }
 
   /**
-   * Set localisation
+   * Set typeProjet
    *
-   * @param string $localisation
+   * @param string $typeProjet
    * @return string
    */
-  public function setLocalisation($localisation)
+  public function setTypeProjet($typeProjet)
   {
-    $this->localisation = $localisation;
+    $this->typeProjet = $typeProjet;
 
     return $this;
   }
 
   /**
-   * Get localisation
+   * Get typeProjet
    *
    * @return integer 
    */
-  public function getLocalisation()
+  public function getTypeProjet()
   {
-    return $this->localisation;
+    return $this->typeProjet;
   }
 
   /**
-   * Add partenairesFinanciers
+   * Set code
    *
-   * @param Organisme $item
-   */
-  public function addPartenaireFinancier(Organisme $item) {
-    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
-    if (!$this->partenairesFinanciers->contains($item)) {
-      $this->partenairesFinanciers->add($item);
-    }
-  }
-
-  /**
-   * Remove partenairesFinanciers
-   *
-   * @param Organisme $item
-   */
-  public function removePartenaireFinancier(Organisme $item) {
-    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
-    if ($this->partenairesFinanciers->contains($item)) {
-      $this->partenairesFinanciers->removeElement($item);
-    }
-  }
-
-  public function setPartenairesFinanciers($items) {
-    if ($items instanceof ArrayCollection || is_array($items)) {
-      foreach ($items as $item) {
-        $this->addPartenaireFinancier($item);
-      }
-    } elseif ($items instanceof Organisme) {
-      $this->addPartenaireFinancier($items);
-    } else {
-      throw new Exception("$items must be an instance of Organisme or ArrayCollection");
-    }
-  }
-
-  /**
-   * Get ArrayCollection
-   *
-   * @return ArrayCollection $partenairesFinanciers
-   */
-  public function getPartenairesFinanciers() {
-    return $this->partenairesFinanciers;
-  }
-
-  /**
-   * Add partenairesTechniques
-   *
-   * @param Organisme $item
-   */
-  public function addPartenaireTechnique(Organisme $item) {
-    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
-    if (!$this->partenairesTechniques->contains($item)) {
-      $this->partenairesTechniques->add($item);
-    }
-  }
-
-  /**
-   * Remove partenairesTechniques
-   *
-   * @param Organisme $item
-   */
-  public function removePartenaireTechnique(Organisme $item) {
-    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
-    if ($this->partenairesTechniques->contains($item)) {
-      $this->partenairesTechniques->removeElement($item);
-    }
-  }
-
-  public function setPartenairesTechniques($items) {
-    if ($items instanceof ArrayCollection || is_array($items)) {
-      foreach ($items as $item) {
-        $this->addPartenaireTechnique($item);
-      }
-    } elseif ($items instanceof Organisme) {
-      $this->addPartenaireTechnique($items);
-    } else {
-      throw new Exception("$items must be an instance of Organisme or ArrayCollection");
-    }
-  }
-
-  /**
-   * Get ArrayCollection
-   *
-   * @return ArrayCollection $partenairesTechniques
-   */
-  public function getPartenairesTechniques() {
-    return $this->partenairesTechniques;
-  }
-
-  /**
-   * Set type
-   *
-   * @param string $type
+   * @param string $code
    * @return string
    */
-  public function setType($type)
+  public function setCode($code)
   {
-    $this->type = $type;
+    $this->code = $code;
 
     return $this;
   }
 
   /**
-   * Get type
+   * Get code
    *
    * @return integer 
    */
-  public function getType()
+  public function getCode()
   {
-    return $this->type;
+    return $this->code;
   }
 
   /**
-   * Set objet
+   * Set intitule
    *
-   * @param string $objet
+   * @param string $intitule
    * @return string
    */
-  public function setObjet($objet)
+  public function setIntitule($intitule)
   {
-    $this->objet = $objet;
+    $this->intitule = $intitule;
 
     return $this;
   }
 
   /**
-   * Get objet
+   * Get intitule
    *
    * @return integer 
    */
-  public function getObjet()
+  public function getIntitule()
   {
-    return $this->objet;
+    return $this->intitule;
   }
 
   /**
-   * Set milieux
+   * Set objectif
    *
-   * @param string $milieux
+   * @param string $objectif
    * @return string
    */
-  public function setMilieux($milieux)
+  public function setObjectif($objectif)
   {
-    $this->milieux = $milieux;
+    $this->objectif = $objectif;
 
     return $this;
   }
 
   /**
-   * Get milieux
+   * Get objectif
    *
    * @return integer 
    */
-  public function getMilieux()
+  public function getObjectif()
   {
-    return $this->milieux;
-  }
-
-  /**
-   * Set groupes
-   *
-   * @param string $groupes
-   * @return string
-   */
-  public function setGroupes($groupes)
-  {
-    $this->groupes = $groupes;
-
-    return $this;
-  }
-
-  /**
-   * Get groupes
-   *
-   * @return integer 
-   */
-  public function getGroupes()
-  {
-    return $this->groupes;
-  }
-
-  /**
-   * Set nbJour
-   *
-   * @param string $nbJour
-   * @return string
-   */
-  public function setNbJour($nbJour)
-  {
-    $this->nbJour = $nbJour;
-
-    return $this;
-  }
-
-  /**
-   * Get nbJour
-   *
-   * @return integer 
-   */
-  public function getNbJour()
-  {
-    return $this->nbJour;
-  }
-
-  /**
-   * Set cout
-   *
-   * @param string $cout
-   * @return string
-   */
-  public function setCout($cout)
-  {
-    $this->cout = $cout;
-
-    return $this;
-  }
-
-  /**
-   * Get cout
-   *
-   * @return integer 
-   */
-  public function getCout()
-  {
-    return $this->cout;
-  }
-
-  /**
-   * Set coutTotal
-   *
-   * @param string $coutTotal
-   * @return string
-   */
-  public function setCoutTotal($coutTotal)
-  {
-    $this->coutTotal = $coutTotal;
-
-    return $this;
-  }
-
-  /**
-   * Get coutTotal
-   *
-   * @return integer 
-   */
-  public function getCoutTotal()
-  {
-    return $this->coutTotal;
-  }
-
-  /**
-   * Set responsable
-   *
-   * @param string $responsable
-   * @return string
-   */
-  public function setResponsable($responsable)
-  {
-    $this->responsable = $responsable;
-
-    return $this;
-  }
-
-  /**
-   * Get responsable
-   *
-   * @return integer 
-   */
-  public function getResponsable()
-  {
-    return $this->responsable;
+    return $this->objectif;
   }
 
   /**
@@ -538,7 +259,7 @@ class Projet
    * @param string $dateDebut
    * @return string
    */
-  public function setDateDebut($dateDebut)
+  public function setdateDebut($dateDebut)
   {
     $this->dateDebut = $dateDebut;
 
@@ -579,232 +300,130 @@ class Projet
   }
 
   /**
-   * Set dateRendu
+   * Add localisation
    *
-   * @param string $dateRendu
-   * @return string
+   * @param Localisation $item
    */
-  public function setDateRendu($dateRendu)
-  {
-    $this->dateRendu = $dateRendu;
-
-    return $this;
+  public function addLocalisation(Localisation $item) {
+    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+    if (!$this->localisations->contains($item)) {
+      $this->localisations->add($item);
+    }
   }
 
   /**
-   * Get dateRendu
+   * Remove localisation
    *
-   * @return integer 
+   * @param Localisation $item
    */
-  public function getDateRendu()
-  {
-    return $this->dateRendu;
+  public function removeLocalisation(Localisation $item) {
+    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+    if ($this->localisations->contains($item)) {
+      $this->localisations->removeElement($item);
+    }
   }
 
   /**
-   * Set etat
+   * Set Localisations
    *
-   * @param string $etat
-   * @return string
+   * @return ArrayCollection $localisations
    */
-  public function setEtat($etat)
-  {
-    $this->etat = $etat;
-
-    return $this;
+  public function setLocalisations($items) {
+    if ($items instanceof ArrayCollection || is_array($items)) {
+      foreach ($items as $item) {
+        $this->addLocalisation($item);
+      }
+    } elseif ($items instanceof Localisation) {
+      $this->addLocalisation($items);
+    } else {
+      throw new Exception("$items must be an instance of Localisation or ArrayCollection");
+    }
   }
 
   /**
-   * Get etat
+   * Get ArrayCollection
    *
-   * @return integer 
+   * @return ArrayCollection $localisations
    */
-  public function getEtat()
-  {
-    return $this->etat;
+  public function getLocalisations() {
+    return $this->localisations;
   }
 
   /**
-   * Set dateCreate
+   * Add reponsable
    *
-   * @param string $dateCreate
-   * @return string
+   * @param Salarie $item
    */
-  public function setDateCreate($dateCreate)
-  {
-    $this->dateCreate = $dateCreate;
-
-    return $this;
+  public function addReponsable(Salarie $item) {
+    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+    if (!$this->reponsables->contains($item)) {
+      $this->reponsables->add($item);
+    }
   }
 
   /**
-   * Get dateCreate
+   * Remove reponsable
    *
-   * @return integer 
+   * @param Salarie $item
    */
-  public function getDateCreate()
-  {
-    return $this->dateCreate;
+  public function removeReponsable(Salarie $item) {
+    // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+    if ($this->reponsables->contains($item)) {
+      $this->reponsables->removeElement($item);
+    }
   }
 
   /**
-   * Set compteCreate
+   * Set Reponsables
    *
-   * @param string $compteCreate
-   * @return string
+   * @return ArrayCollection $reponsables
    */
-  public function setCompteCreate($compteCreate)
-  {
-    $this->compteCreate = $compteCreate;
-
-    return $this;
+  public function setReponsables($items) {
+    if ($items instanceof ArrayCollection || is_array($items)) {
+      foreach ($items as $item) {
+        $this->addReponsable($item);
+      }
+    } elseif ($items instanceof Salarie) {
+      $this->addReponsable($items);
+    } else {
+      throw new Exception("$items must be an instance of Salarie or ArrayCollection");
+    }
   }
 
   /**
-   * Get compteCreate
+   * Get ArrayCollection
    *
-   * @return integer 
+   * @return ArrayCollection $reponsables
    */
-  public function getCompteCreate()
-  {
-    return $this->compteCreate;
+  public function getReponsables() {
+    return $this->reponsables;
   }
 
   /**
-   * Set dateUpdate
-   *
-   * @param string $dateUpdate
-   * @return string
-   */
-  public function setDateUpdate($dateUpdate)
-  {
-    $this->dateUpdate = $dateUpdate;
-
-    return $this;
-  }
-
-  /**
-   * Get dateUpdate
-   *
-   * @return integer 
-   */
-  public function getDateUpdate()
-  {
-    return $this->dateUpdate;
-  }
-
-  /**
-   * Set compteUpdate
-   *
-   * @param string $compteUpdate
-   * @return string
-   */
-  public function setCompteUpdate($compteUpdate)
-  {
-    $this->compteUpdate = $compteUpdate;
-
-    return $this;
-  }
-
-  /**
-   * Get compteUpdate
-   *
-   * @return integer 
-   */
-  public function getCompteUpdate()
-  {
-    return $this->compteUpdate;
-  }
-
-  public function addTravailleur(ProjetPersonne $item) {
-    // Ici, on utilise l'ArrayCollection vraiment comme un tableau
-    $this->travailleurs[] = $item;
-    
-    // On lie le releve au obseur orga
-    $item->setProjet($this);
-
-    return $this;
-  }
-
-  public function removeTravailleur(ProjetPersonne $item) {
-    // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
-    $this->travailleurs->removeElement($item);
-    $item->setProjet(null);
-  }
-
-  // Notez le pluriel, on récupère une liste de catégories ici !
-  public function getTravailleurs() {
-    return $this->travailleurs;
-  }
-
-  /**
-  * Mission
+  * Tache
   */
-  public function addMission(Mission $mission)
+  public function addTache(Tache $item)
   {
       // Ici, on utilise l'ArrayCollection vraiment comme un tableau
-      $this->missions[] = $mission;
+      $this->taches[] = $item;
       
-      // On lie le observation au obseur orga
-      $mission->setProjet($this);
+      // liaison inverse avec entité
+      $item->setProjet($this);
 
       return $this;
   }
 
-  public function removeMission(Mission $mission)
+  public function removeTache(Tache $item)
   {
       // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
-      $this->missions->removeElement($mission);
-      $mission->setProjet(null);
+      $this->taches->removeElement($item);
+      $item->setProjet(null);
   }
 
   // Notez le pluriel, on récupère une liste de catégories ici !
-  public function getMissions()
+  public function getTaches()
   {
-      return $this->missions;
-  }
-  
-  /**
-  * @ORM\PrePersist()
-  */
-  public function prePersist(LifecycleEventArgs $args) {
-    $this->dateCreate = new \Datetime();
-    $this->dateUpdate = new \Datetime();
-  }
-
-  /**
-  * @ORM\PreFlush()
-  */
-  public function preFlush(PreFlushEventArgs $args) {
-    $this->dateUpdate = new \Datetime();
-  }
-
-  /**
-   * @Serializer\VirtualProperty
-   * @Serializer\SerializedName("usage_jour")
-   * @Serializer\Groups({"projet"})
-   */
-  public function getUsageJours() {
-    $temps_utilise = new \DateTime('00:00');
-    foreach ($this->missions as $mission) {
-      list($hours, $minutes, $seconds) = sscanf('14:30:00', '%d:%d:%d');
-      $interval = new \DateInterval(sprintf('PT%dH%dM%dS', $hours, $minutes, $seconds));
-      $temps_utilise->add($interval);
-    }
-    $heures = $temps_utilise->format("H");
-    $minutes = $temps_utilise->format("I");
-
-    $jours = ($heures/7) + ($minutes/3660);
-    return round($jours, 2);
-  }
-
-  /**
-   * @Serializer\VirtualProperty
-   * @Serializer\SerializedName("usage_pc")
-   * @Serializer\Groups({"projet"})
-   */
-  public function getUsagePC() {
-    return $this->nbJour ? round($this->getUsageJours() / $this->nbJour * 100) : null;
+      return $this->taches;
   }
 
 }

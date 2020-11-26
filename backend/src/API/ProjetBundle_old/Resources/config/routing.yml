@@ -1,0 +1,29 @@
+api_projet_projet:
+    resource: "@APIProjetBundle/Controller/ProjetController.php"
+    type:     rest
+    prefix: /
+
+api_projet_mission:
+    resource: "@APIProjetBundle/Controller/MissionController.php"
+    type:     rest
+    prefix: /
+
+api_projet_person:
+    resource: "@APIProjetBundle/Controller/PersonController.php"
+    type:     rest
+    prefix: /
+
+api_projet_organisme:
+    resource: "@APIProjetBundle/Controller/OrganismeController.php"
+    type:     rest
+    prefix: /
+
+api_projet_suiveuse:
+    resource: "@APIProjetBundle/Controller/SuiveuseController.php"
+    type:     rest
+    prefix: /
+
+api_projet_parameter:
+    resource: "@APIProjetBundle/Controller/ParameterController.php"
+    type:     rest
+    prefix: /
