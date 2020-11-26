@@ -22,6 +22,8 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
   field_observer: any;
   private subscription: Subscription
 
+  saving: boolean = false;
+
   get good_observers(): any[] {
     if (!this._observers || this._observers === null) return [];
     return this._observers.filter(observer=>observer.ok);
@@ -110,12 +112,16 @@ export class FieldObserversComponent implements OnInit, OnDestroy {
   }
 
   recuperationID() {
+    this.saving = true;
     this.importS.setOberversIds(this.fichier.id)
-                    .subscribe(
-                      observers => {
-                        //this.observers = observers;
-                      }, 
-                      error => this.error = error
-                    );
+      .pipe(
+        tap(()=>this.saving = false)
+      )
+      .subscribe(
+        observers => {
+          //this.observers = observers;
+        }, 
+        error => this.error = error
+      );
   }
 }

@@ -9,7 +9,6 @@ import { AppConfig } from '../../../shared/app.config';
 
 const httpOptions = {
   headers: new HttpHeaders({
-  //  'Content-Type':  'application/json',
     'Authorization': 'my-auth-token'
   })
 };
@@ -148,6 +147,17 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  replaceEmptyByField(id: number, replacement_id: number, returnList: 't'|'f' = 't'): Observable<any> {
+    const url = `${this.httpUrlBase}/field/${id}/replace-empty-by/${replacement_id}?values=${returnList}`;
+    return this.http
+      .patch(url, {}, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   getFields(id: number, mapped: boolean = false): Observable<any> {
     let url = `${this.httpUrlBase}/fichier/${id}/fields`;
     if (mapped) {
@@ -246,6 +256,18 @@ export class ImportService {
   /** GET taxon par ID (cd_nom) **/
   getFieldValues(id: number): Observable<any> {
     const url = `${this.httpUrlBase}/field/${id}/values`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map(res => res), 
+        retry(3)
+      );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  getFieldsValues(fields_id: number[]): Observable<any> {
+    const params = fields_id.map(field_id => 'fields[]=' + field_id).join('&');
+    const url = `${this.httpUrlBase}/localisation/values?${params}`;
     return this.http
       .get(url, httpOptions)
       .pipe(
@@ -428,6 +450,12 @@ export class ImportService {
   }
 
   /** GET taxon par ID (cd_nom) **/
+  postLocalisationGeom(fichier_id: number, location: any): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${fichier_id}/localisation`;
+    return this.http.post(url, location, httpOptions);
+  }
+
+  /** GET taxon par ID (cd_nom) **/
   postTaxrefMatch(taxons: any): Observable<any> {
     const url = `${AppConfig.URL_API_MT}/name-checker`;
     const sources = taxons;
@@ -437,6 +465,20 @@ export class ImportService {
         map(res => res), 
        // retry(3)
       );
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  searchCommune(term): Observable<any> {
+    const url = `${this.httpUrlBase}/communes?q=${term}`;
+    return this.http
+      .get(url);
+  }
+
+  /** GET taxon par ID (cd_nom) **/
+  postCoordsToPoint(fichier_id, coords: any[]): Observable<any> {
+    const url = `${this.httpUrlBase}/fichier/${fichier_id}/coords-to-point`;
+    const sources = {data: coords};
+    return this.http.post(url, sources, httpOptions);
   }
 
 }

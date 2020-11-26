@@ -1,4 +1,0 @@
-api_metadata:
-    resource: "@APIMetadataBundle/Controller/MetadataController.php"
-    type:     rest
-    prefix: /

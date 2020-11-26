@@ -1,5 +1,34 @@
 <div class="legend-panel" *ngIf="layerS.layers.length">
-	<div class="legend-panel-header">légende</div>
+	<div class="legend-panel-header">Légende :
+		<table>
+			<tr>
+				<td><b>Échelle</b> :</td>
+				<td>{{ layerS.scale.label }}</td>
+			</tr>
+			<tr *ngIf="layerS.periodes.length">
+				<td><b>Période{{ layerS.periodes.length > 1 ? 's' : '' }}</b> :</td>
+				<td>
+					<div *ngFor="let periode of layerS.periodes; let isFirst = first;">
+						<ng-container *ngIf="!isFirst">ET </ng-container>
+						<ng-container *ngIf="periode.start && !periode.end">à partir du {{ periode.start|date:'dd/MM/yyyy' }}</ng-container>
+						<ng-container *ngIf="!periode.start && periode.end">avant {{ periode.end|date:'dd/MM/yyyy' }}</ng-container>
+						<ng-container *ngIf="periode.start && periode.end">du {{ periode.start|date:'dd/MM/yyyy' }} au {{ periode.end|date:'dd/MM/yyyy' }}</ng-container>
+					</div>
+				</td>
+			</tr>
+			<tr *ngIf="layerS.saisons.length">
+				<td><b>Saison{{ layerS.saisons.length > 1 ? 's' : '' }}</b> :</td>
+				<td>
+					<div *ngFor="let saison of layerS.saisons; let isFirst = first;">
+						<ng-container *ngIf="!isFirst">ET </ng-container>
+						<ng-container *ngIf="saison.start && !saison.end">à partir du {{ saison.start }}</ng-container>
+						<ng-container *ngIf="!saison.start && saison.end">avant {{ saison.end }}</ng-container>
+						<ng-container *ngIf="saison.start && saison.end">du {{ saison.start }} au {{ saison.end }}</ng-container>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
 	<div class="legend-panel-content">
 		<div *ngFor="let layer of layerS.layers">
 			<ng-container *ngIf="layer.olLayer.get('displayInLegend')">
@@ -61,6 +90,10 @@
 										(click)="layer.olLayer.set('displayInLegend', false)"
 										(click)="layer.olLayer.setVisible(false)"
 										matTooltip="Enlever cette couche de la carte">clear</mat-icon>
+		
+									<mat-icon class="float-left pointer"
+										matTooltip="Modifier la représentation cartographique"
+										(click)="openTuneDialog(layer)">tune</mat-icon>
 
 									<mat-icon class="float-left pointer"
 										matTooltip="Masquer cette couche"

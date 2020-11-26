@@ -347,7 +347,7 @@ class FichierController extends FOSRestController implements ClassResourceInterf
     {
       list($fichier, $em) = $this->getFichier($id);
 
-      $fields_localisation = ['latitude' => null, 'longitude' => null, 'area' => null];
+      $fields_localisation = ['latitude' => null, 'longitude' => null];
 
       foreach ($fichier->getChamps() as $champ) {
         switch ($champ->getFieldFSD()->getChamp()) {
@@ -364,17 +364,10 @@ class FichierController extends FOSRestController implements ClassResourceInterf
             }
             $fields_localisation['longitude'] = $champ->getChamp();
             break;
-
-          case '__LIB_AREA__':
-            if ( !is_null($fields_localisation['area']) ) {
-              return new JsonResponse(['message' => 'Champ area mappé plusieurs fois'], Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-            $fields_localisation['area'] = $champ->getChamp();
-            break;
         }
       }
 
-      if ( is_null($fields_localisation['latitude']) and is_null($fields_localisation['longitude']) and is_null($fields_localisation['area'])) {
+      if ( is_null($fields_localisation['latitude']) and is_null($fields_localisation['longitude']) ) {
         return new JsonResponse(['message' => 'Aucun champ de  localisation n\'est spécifié pour ce fichier'], Response::HTTP_NOT_FOUND);
       }
 
@@ -394,6 +387,52 @@ class FichierController extends FOSRestController implements ClassResourceInterf
 
       //champs : value, ok, ban
       return $em->getRepository('APIImportBundle:Fichier')->getLocalisationsGeoms($fichier);
+    }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Post("/fichier/{id}/localisation")
+    */
+    public function setGeomAction(Request $request, $id)
+    {
+      list($fichier, $em) = $this->getFichier($id);
+
+      $geom = json_encode($request->request->get('app_geom'));
+      $fields = $request->request->all();
+      unset($fields['app_geom']);
+
+      return $em->getRepository('APIImportBundle:Fichier')->updateGeometry($fichier, $geom, $fields);
+    }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Post("/fichier/{id}/coords-to-point")
+    */
+    public function setCoordsToPointAction(Request $request, $id)
+    {
+      list($fichier, $em) = $this->getFichier($id);
+
+      if ( count($fichier->getFieldByFSD('__LATITUDE__')) !== 1 or count($fichier->getFieldByFSD('__LONGITUDE__')) !== 1 ) {
+        new JsonResponse(['message' => 'Plusieurs champs mappés vers Latitude ou Longitude'], Response::HTTP_INTERNAL_SERVER_ERROR);
+      }
+
+      $data = $request->request->get('data');
+
+      $result = ['ok'=>0, 'bad'=>0];
+
+      foreach ($data as $coords) {
+        if ( $em->getRepository('APIImportBundle:Fichier')->coordsToPoint($fichier, $coords) ) {
+          $result['ok']++;
+        } else {
+          $result['bad']++;
+        }
+      }
+
+      return $result;
     }
 
 

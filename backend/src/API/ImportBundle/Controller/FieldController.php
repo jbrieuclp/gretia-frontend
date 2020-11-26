@@ -150,6 +150,32 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
         return new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
+    /**
+    * @Rest\View(serializerGroups = {"champ"})
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Patch("/field/{id_to_replace}/replace-empty-by/{replacement_id}")
+    */
+    public function replaceEmptyByFieldAction(Request $request, $id_to_replace, $replacement_id)
+    {
+        $em = $this->getDoctrine()->getManager('geonature_db');
+        $field_to_replace = $em->getRepository('APIImportBundle:FichierChamp')->find($id_to_replace);
+        $replacement_field = $em->getRepository('APIImportBundle:FichierChamp')->find($replacement_id);
+        if (empty($field_to_replace) or empty($replacement_field)) {
+          return new JsonResponse(['message' => 'Field not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if ($em->getRepository('APIImportBundle:FichierChamp')->replaceEmptyByField($field_to_replace, $replacement_field)) {
+          if ( $request->query->get('values') === 'f' ) {
+            return $data['replace'];
+          }
+          return $this->getFieldValuesAction($field_to_replace->getId());
+        }
+        return new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
 
     /**
     * @Rest\View(serializerGroups = {"champ"})
@@ -227,6 +253,63 @@ class FieldController extends FOSRestController implements ClassResourceInterfac
 
       //Pas de comparaison
       return $values;
+    }
+
+    /**
+    * @Rest\View()
+    * @Security("has_role('IMPORT')")
+    *
+    * @Rest\Get("/localisation/values")
+    */
+    public function getLocalisationsValuesAction(Request $request)
+    {
+      $return_data = ['messages'=>[], 'data'=>[]];
+
+      $ids = $request->query->get('fields');
+      if (empty($ids)) {
+          $return_data['messages'][] = ['type'=>'alert', 'message'=>'Aucun champ selectionné'];
+          return $return_data;
+      }
+
+      $em = $this->getDoctrine()->getManager('geonature_db');
+      $items = $em->createQuery('SELECT c FROM APIImportBundle:FichierChamp c WHERE c.id IN (:ids)')
+                  ->setParameter('ids', $ids)
+                  ->getResult();
+
+      $fichier = $items[0]->getFichier();
+      if (empty($fichier)) {
+        return new JsonResponse(['message' => 'File not found'], Response::HTTP_NOT_FOUND);
+      }
+
+      //recuperation des champs mappés vers Latitude/Longitude
+      $lat_lon = ['lat'=>[], 'lon'=>[]];
+      foreach ($fichier->getChamps() as $champ) {
+        switch ($champ->getFieldFSD()->getChamp()) {
+          case '__LATITUDE__':
+            if ( count($lat_lon['lat']) ) {
+              $return_data['messages'][] = ['type'=>'info', 'message'=>'Attention , plusieurs champs sont mappé vers "Latitude"'];
+            }
+            $lat_lon['lat'][] = $champ->getChamp();
+            break;
+
+          case '__LONGITUDE__':
+            if ( count($lat_lon['lon']) ) {
+              $return_data['messages'][] = ['type'=>'info', 'message'=>'Attention , plusieurs champs sont mappé vers "Longitude"'];
+            }
+            $lat_lon['lon'][] = $champ->getChamp();
+            break;
+        }
+      }
+      //si plusieurs champs mappé vers latitude/longitude on ne les récupère pas
+      if ( count($lat_lon['lat']) == 1 and count($lat_lon['lon']) == 1 ) {
+        $lat_lon['lat'] = $lat_lon['lat'][0];
+        $lat_lon['lon'] = $lat_lon['lon'][0];
+      } else {
+        $lat_lon = null;
+      }
+
+      $return_data['data'] = $em->getRepository('APIImportBundle:FichierChamp')->getFieldsValues($items, $lat_lon);
+      return $return_data;
     }
 
     /**

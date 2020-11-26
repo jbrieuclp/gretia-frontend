@@ -1,0 +1,201 @@
+<mat-accordion>
+  <mat-expansion-panel [expanded]="panelExpanded" (opened)="panelExpanded=true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Afficher les champs du fichier
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div>
+    	Selectionner les champs relatif à la localisation
+    	<button 
+	    	mat-raised-button 
+	    	color="primary" 
+	    	style="margin-left: 20px;"
+	    	(click)="submit()" 
+	    	[disabled]="!fields.length || searching">
+	    	<mat-spinner 
+  				*ngIf="searching"
+					diameter="25"
+					strokeWidth="2">
+				</mat-spinner>
+    		Chercher
+    	</button>
+    </div>
+
+    <form [formGroup]="form">
+
+		  <div formArrayName="fields" *ngFor="let field of form.get('fields')['controls']; let i = index">
+				<mat-checkbox 
+					color="primary" 
+					[formControlName]="i">
+					<b>{{ fields[i].champ }}</b> ({{ fields[i].fieldFSD.description }})
+				</mat-checkbox>
+			</div>
+
+
+		</form>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<div class="table-container" *ngIf="localisations.length">
+	<table 
+		mat-table
+	  [dataSource]="localisations" multiTemplateDataRows
+	  class="table">
+
+	  <ng-container matColumnDef="{{column}}" *ngFor="let column of columns">
+	    <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+	    <td mat-cell *matCellDef="let localisation"> 
+	    	<ng-container *ngIf="column === 'Voir'; else dataValue">
+	    		<button 
+				  	mat-icon-button
+				  	color="primary"
+				  	(click)="displayTableData(localisation)">
+				    <mat-icon>table_chart</mat-icon>
+				  </button>
+	    	</ng-container>
+	    	<ng-template #dataValue>
+	    		{{ localisation[column] }} 
+	    	</ng-template>
+	    </td>
+	  </ng-container>
+
+	  <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+	  <ng-container matColumnDef="expandedDetail">
+	    <td mat-cell *matCellDef="let localisation" [attr.colspan]="columns.length">
+	      <div class="example-element-detail"
+	           [@detailExpand]="localisation == expandedElement ? 'expanded' : 'collapsed'">
+	        <div class="location-content">
+
+	        	<div class="row">
+	        		<div class="col-sm-7">
+			        	<div class="searcher">
+				        	<mat-form-field appearance="outline">
+				        		<mat-label>Recherche dans OpenStreetMap</mat-label>
+								    <input 
+								    	#inputOSM
+								    	matInput 
+								    	[matAutocomplete]="autoOSM"
+								    	placeholder="Rechercher une localisation sur OSM" 
+								    	[value]="localisation.app_searchValue|async">
+								    <mat-autocomplete 
+								    	#autoOSM="matAutocomplete"
+								    	[displayWith]="displayFnOSM">
+								    	<ng-container *ngIf="localisation.app_searchResults">
+									      <ng-container *ngIf="localisation.app_searchResults.length; else noOSMResult">
+										      <mat-option 
+										      	*ngFor="let option of localisation.app_searchResults" 
+										      	[value]="option" 
+										      	(click)="setOSMLocation(localisation, option)"
+										      	(mouseenter)="localisationS.OSMDataHover.next(option.osm_id)"
+										      	(mouseleave)="localisationS.OSMDataHover.next(null)">
+										        {{ displayFnOSM(option) }}
+										      </mat-option>
+										    </ng-container>
+										    <ng-template #noOSMResult>
+										    	<mat-option>
+										        Aucun résultat ne correspond à la recherche
+										      </mat-option>
+										    </ng-template>
+										  </ng-container>
+								    </mat-autocomplete>
+								  </mat-form-field>
+								  <button 
+								  	mat-mini-fab 
+								  	color="primary"
+								  	(click)="searchOSM(inputOSM.value, localisation)">
+								    <mat-icon aria-label="Example icon-button with a heart icon">search</mat-icon>
+								  </button>
+								</div>
+								<div style="margin: 5px 00px;text-align: center;font-weight: 900;">OU</div>
+								<div>
+									<button 
+										mat-raised-button 
+										(click)="getPointOnMap(localisation)">
+										<mat-icon>get_app</mat-icon>
+										Récupérer le pointage sur la carte
+									</button>
+								</div>
+								<div style="margin: 5px 00px;text-align: center;font-weight: 900;">OU</div>
+								<div class="searcher">
+				        	<mat-form-field appearance="outline">
+				        		<mat-label>Recherche dans liste des communes</mat-label>
+								    <input 
+								    	#inputCommune
+								    	matInput 
+								    	[matAutocomplete]="autoCommune"
+								    	placeholder="Rattacher à une commune" 
+								    	[value]="localisation.app_searchValue|async">
+								    <mat-autocomplete 
+								    	#autoCommune="matAutocomplete"
+								    	[displayWith]="displayFnCommune">
+								    	<ng-container *ngIf="localisation.app_searchResults">
+									      <ng-container *ngIf="localisation.app_searchResults.length; else noOSMResult">
+										      <mat-option 
+										      	*ngFor="let option of localisation.app_searchResults" 
+										      	[value]="option" 
+										      	(click)="setCommuneLocation(localisation, option)"
+										      	(mouseenter)="localisationS.OSMDataHover.next(option.osm_id)"
+										      	(mouseleave)="localisationS.OSMDataHover.next(null)">
+										        {{ displayFnCommune(option) }}
+										      </mat-option>
+										    </ng-container>
+										    <ng-template #noOSMResult>
+										    	<mat-option>
+										        Aucun résultat ne correspond à la recherche
+										      </mat-option>
+										    </ng-template>
+										  </ng-container>
+								    </mat-autocomplete>
+								  </mat-form-field>
+								  <button 
+								  	mat-mini-fab 
+								  	color="primary"
+								  	(click)="searchCommune(inputCommune.value, localisation)">
+								    <mat-icon aria-label="Example icon-button with a heart icon">search</mat-icon>
+								  </button>
+								</div>
+							</div>
+							
+							<div class="col-sm-5">
+
+								<div style="margin: 10px 20px;">
+									<mat-icon style="font-size: 40px;width: 40px;">place</mat-icon>
+									<ng-container *ngIf="localisation?.app_geom?.type !== null; else noGeom">
+										{{ (localisation?.app_geom?.type == 'Point') ? 'Pointage' : 'Commune' }}
+									</ng-container>
+									<ng-template #noGeom>
+										Pas de géométrie rattachée
+									</ng-template>
+								</div>
+								<div>
+									<button 
+										mat-raised-button 
+										color="primary"
+										(click)="saveGeom(localisation)"
+										[disabled]="!(localisation.app_geom) || saving">
+										<mat-spinner 
+				      				*ngIf="saving"
+											diameter="25"
+											strokeWidth="2">
+										</mat-spinner>
+										<mat-icon *ngIf="!saving">save</mat-icon> Enregistrer la geom pour la donnée
+									</button>
+								</div>
+							</div>
+						</div>
+	        </div>
+	      </div>
+	    </td>
+	  </ng-container>
+
+	  <tr mat-header-row *matHeaderRowDef="columns; sticky: true"></tr>
+	  <tr mat-row *matRowDef="let localisation; columns: columns;"
+	      class="example-element-row"
+	      [class.example-expanded-row]="expandedElement === localisation"
+	      (click)="expandedElement = expandedElement === localisation ? null : localisation">
+	  </tr>
+	  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+	</table>
+</div>

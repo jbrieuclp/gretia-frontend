@@ -33,7 +33,6 @@ class AppKernel extends Kernel
             new API\MagicTaxrefBundle\APIMagicTaxrefBundle(),
             new API\CoreBundle\APICoreBundle(),
             new API\CartoBundle\APICartoBundle(),
-            new API\MetadataBundle\APIMetadataBundle(),
             new API\ProjetBundle\APIProjetBundle(),
             new API\ImportBundle\APIImportBundle(),
         ];

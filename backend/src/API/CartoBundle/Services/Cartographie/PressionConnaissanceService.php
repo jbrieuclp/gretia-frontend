@@ -16,7 +16,7 @@ class PressionConnaissanceService extends IndicateurService
         $qb = $this->queryBuilder;
 
         // En fonction de si filtre sur taxon ou pas on change le select
-        $qb->addSelect('count(DISTINCT unique_id_sinp) AS total');
+        $qb->addSelect('count(DISTINCT unique_id_sinp) AS nb_data');
     }
 	
     /**

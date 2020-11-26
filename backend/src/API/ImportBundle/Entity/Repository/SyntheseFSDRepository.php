@@ -91,6 +91,41 @@ class SyntheseFSDRepository extends EntityRepository
     }
 
 
+    /**
+    *   Import un fichier présent sur le serveur dans Postgres en commande SQL COPY
+    **/
+    public function searchCommune($term)
+    {
+        
+        $tab = explode(' ' , str_replace("'", "''", str_replace(",", "", $term)));
+
+        $firstData = array_shift($tab);
+
+        $sql = "SELECT area_name, area_code, ST_AsGeoJSON(ST_Transform(geom, 3857)) as geometry
+            FROM ref_geo.l_areas
+            WHERE id_type = 25 AND (unaccent(area_name) ILIKE unaccent(:firstData) OR area_code = :firstData) ";
+
+        if ( count($tab) ) {
+            foreach ($tab as $value) {
+                if (strlen($value) > 2)
+                    $sql .= " AND unaccent(area_name) ILIKE unaccent('%".$value."%')";
+            }
+        }
+
+        $sql .= " ORDER BY area_name ASC";
+
+        $requete = $this->_em->getConnection()->prepare($sql);
+
+        $requete->bindValue(':firstData', '%'.$firstData.'%');
+
+        $requete->execute();
+        $result = $requete->fetchAll();
+        $requete->closeCursor();
+        return $result;
+
+    }
+
+
 
 
 

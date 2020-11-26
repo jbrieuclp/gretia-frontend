@@ -28,6 +28,38 @@ class FichierChampRepository extends EntityRepository
     }
 
     /**
+    *   Retourne la liste distinct des valeur du champ
+    **/
+    public function getFieldsValues($fields, $latlon)
+    {
+        $select = [];
+        foreach ($fields as $field) {
+            $select[] = $field->getChamp();
+        }
+
+        $sql = "SELECT ".implode(', ', $select);
+        $sql .= " FROM ".$field->getFichier()->getTable();
+        $sql .= " WHERE adm_geom IS NULL";
+        if (!is_null($latlon)) {
+            $sql .= " AND ".$latlon['lat']." IS NULL";
+            $sql .= " AND ".$latlon['lon']." IS NULL";
+        }   
+        $sql .= " GROUP BY ".implode(', ', $select);
+        $sql .= " ORDER BY ".implode(', ', $select);
+
+        $requete = $this->_em->getConnection()->prepare($sql);
+        
+        $requete->execute();
+
+        $data = $requete->fetchAll(\PDO::FETCH_ASSOC);
+        
+        $requete->closeCursor();
+        
+        return $data;
+
+    }
+
+    /**
     *   Mise à jour d'une valeur d'un champ dans un tableau importé
     **/
     public function updateValue($champ, $oldValue, $newValue)
@@ -112,6 +144,21 @@ class FichierChampRepository extends EntityRepository
         
         return true;
 
+    }
+
+    /**
+    *   Remplace toutes les occurrences d'un champs par une autre chaine
+    **/
+    public function replaceEmptyByField($field_to_replace, $replacement_field)
+    {
+        
+        $sql = "UPDATE ".$field_to_replace->getFichier()->getTable()." SET ".$field_to_replace->getChamp()." = ".$replacement_field->getChamp()." WHERE NULLIF(".$field_to_replace->getChamp().", '') IS NULL";
+
+        $requete = $this->_em->getConnection()->prepare($sql);
+        
+        $requete->execute();
+        
+        return true;
     }
 
     /**

@@ -20,8 +20,7 @@
         ]
     },
     "require": {
-        "php": ">=5.5.9",
-        "creof/doctrine2-spatial": "^1.2",
+        "php": "^7.3.19",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
         "friendsofsymfony/rest-bundle": "^2.3",
@@ -38,7 +37,7 @@
         "twig/twig": "^1.0"
     },
     "require-dev": {
-        "sensio/generator-bundle": "^3.0",
+        "sensio/generator-bundle": "^3.1.7",
         "symfony/phpunit-bridge": "^3.0"
     },
     "scripts": {

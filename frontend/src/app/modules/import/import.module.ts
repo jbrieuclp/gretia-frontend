@@ -35,7 +35,11 @@ import { FieldLocalisationsComponent } from './components/field/localisations/lo
 import { CellComponent } from './components/file/table/cell.component';
 import { FileAddFieldComponent } from './components/file/add-field/add-field.component';
 import { RegexpReplaceComponent } from './components/field/toolsbox/tools/regexp-replace.component';
+import { ReplaceEmptyByFieldComponent } from './components/field/toolsbox/tools/replace-empty-by-field.component';
 import { SearchReplaceComponent } from './components/field/toolsbox/tools/search-replace.component';
+import { SearchLocComponent } from './components/field/localisations/search-loc.component';
+import { CoordinateComponent } from './components/field/localisations/coordinate.component';
+import { LocTableDialog } from './components/field/localisations/loc-table.dialog';
 
 //services
 import { ImportService } from './services/import.service';
@@ -46,7 +50,6 @@ import { LocalisationService } from './components/field/localisations/localisati
 
 //directives
 import { AutofocusDirective } from './directives/autofocus.directive';
-import { ColorDifferenceDirective } from './directives/color-difference.directive';
 import { FileInsertComponent } from './components/file/insert/insert.component';
 import { DuplicateLinesComponent } from './components/file/duplicate-lines/duplicate-lines.component';
 import { ExistsInDbComponent } from './components/file/exists-in-db/exists-in-db.component';
@@ -80,7 +83,6 @@ import { TaxonomieComponent } from './components/field/taxonomie/taxonomie.compo
     EditObserverComponent,
     ToolsboxComponent,
     AutofocusDirective,
-    ColorDifferenceDirective,
     AddObserverComponent,
     FileImportComponent,
     FieldLocalisationsComponent,
@@ -96,8 +98,12 @@ import { TaxonomieComponent } from './components/field/taxonomie/taxonomie.compo
     RegroupingComponent,
     RegexpReplaceComponent,
     SearchReplaceComponent,
+    ReplaceEmptyByFieldComponent,
     RecapComponent,
-    TaxonomieComponent
+    TaxonomieComponent,
+    SearchLocComponent,
+    CoordinateComponent,
+    LocTableDialog
   ],
   entryComponents: [ 
     EditInputDialog,
@@ -105,7 +111,8 @@ import { TaxonomieComponent } from './components/field/taxonomie/taxonomie.compo
     EditRadioDialog,
     ViewTableDialog,
     ToolsboxComponent,
-    FileRequiredFieldDialog
+    FileRequiredFieldDialog,
+    LocTableDialog
   ],
   providers: [
     ImportService,

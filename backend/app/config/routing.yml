@@ -9,10 +9,6 @@ api_carto:
     resource: "@APICartoBundle/Resources/config/routing.yml"
     prefix:   /carto
 
-api_metadata:
-    resource: "@APIMetadataBundle/Resources/config/routing.yml"
-    prefix:   /metadata/
-
 api_biblio:
     resource: "@APIBiblioBundle/Resources/config/routing.yml"
     type: rest

@@ -98,7 +98,7 @@
 			</table>
 		</ng-container>
 		<ng-template #loadingBlock>
-			Chargement en cours...
+			{{ waiting ? 'Chargement en cours...' : 'Aucun taxon problématique' }}
 		</ng-template>
 	</mat-card-content>
 </mat-card>

@@ -89,7 +89,13 @@
 					matTooltip="Lancer la récupération des ID des observateur" 
 					mat-raised-button 
 					color="primary"
-					(click)="recuperationID()">
+					(click)="recuperationID()"
+					[disabled]="saving">
+					<mat-spinner 
+	  				*ngIf="saving"
+						diameter="25"
+						strokeWidth="2">
+					</mat-spinner>
 					Récuperer
 				</button>
 			</ng-template>

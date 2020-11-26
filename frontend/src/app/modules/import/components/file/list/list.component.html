@@ -1,18 +1,43 @@
 <h4>Liste des fichiers importés</h4>
-<table mat-table [dataSource]="dataSource | async" class="mat-elevation-z8">
+
+<div class="row">
+  <mat-form-field class="col-sm-6">
+    <input matInput 
+      placeholder="Rechercher..." 
+      [formControl]="filterInput">
+  </mat-form-field>
+  <div class="col-sm-3">
+    <mat-checkbox 
+      class="checkbox-filter" 
+      color="primary"
+      [checked]="closing|async"
+      (change)="closing.next(!closing.getValue())">Afficher cloturés</mat-checkbox>
+    <mat-checkbox 
+      class="checkbox-filter"
+      color="primary" 
+      [checked]="notClosing|async"
+      (change)="notClosing.next(!notClosing.getValue())">Afficher non cloturés</mat-checkbox>
+  </div>
+</div>
+
+<table 
+  mat-table 
+  [dataSource]="dataSource" 
+  matSort
+  class="mat-elevation-z8">
 
   <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->
 
   <!-- Position Column -->
   <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef> # </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
     <td mat-cell *matCellDef="let element"> {{element.id}} </td>
   </ng-container>
 
   <!-- Name Column -->
   <ng-container matColumnDef="table">
-    <th mat-header-cell *matHeaderCellDef> Nom </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Nom </th>
     <td mat-cell *matCellDef="let element"> 
     	<a [routerLink]="['./fichier', element.id]" 
     		matTooltip="Travailler sur le fichier {{element.table}}"
@@ -28,7 +53,7 @@
 
   <!-- Weight Column -->
   <ng-container matColumnDef="avancement">
-    <th mat-header-cell *matHeaderCellDef> Avancement </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Avancement </th>
     <td mat-cell *matCellDef="let element">
     	<ng-container *ngIf="element.champs.length; else noFieldMappingBlock">
     		{{ element.nb_field_ok }} / {{ element.champs.length }} ({{ ( (element.nb_field_ok / element.champs.length) * 100 ) | number:'1.0-0' }}%)
@@ -39,7 +64,7 @@
 
   <!-- Symbol Column -->
   <ng-container matColumnDef="dateImport">
-    <th mat-header-cell *matHeaderCellDef> Date d'import </th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Date d'import </th>
     <td mat-cell *matCellDef="let element"> {{element.dateImport | date:'yyyy-MM-dd' }} </td>
   </ng-container>
 

@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ToolsboxComponent } from '../toolsbox/toolsbox.component';
 
 import { ImportService } from '../../../services/import.service';
-import { FileService } from '../../../services/file.service';
+import { FileService, FileDataService } from '../../../services/file.service';
 import { FieldService } from '../field.service';
 
 @Component({
@@ -47,6 +47,7 @@ export class FieldListComponent implements OnInit, OnDestroy {
   	private route: ActivatedRoute,
   	private importS: ImportService,
     public fileS: FileService,
+    public fileDataS: FileDataService,
     private fieldS: FieldService,
     private _bottomSheet: MatBottomSheet,
     private _snackBar: MatSnackBar

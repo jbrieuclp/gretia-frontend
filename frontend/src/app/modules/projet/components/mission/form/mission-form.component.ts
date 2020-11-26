@@ -29,7 +29,6 @@ export class MissionFormComponent implements OnInit {
   //Mission si update, null si create
   mission: Mission = {};
   travailleurs: MissionTravailleur[] = [];
-  id_projet: number;
   projet: Projet;
   firstPanelState: boolean = true;
 
@@ -49,18 +48,28 @@ export class MissionFormComponent implements OnInit {
   ngOnInit() {
     //get ID projet
     let id_projet = this.route.snapshot.paramMap.get('projet');
-    this.id_projet = ( id_projet !== null && Number.isInteger(Number(id_projet)) ) ? Number(id_projet) : null;
+    if ( id_projet !== null && Number.isInteger(Number(id_projet)) ) {
+      this.projetR.getProjet(Number(id_projet))
+        .subscribe(
+          (projet: Projet) => {
+            this.projet = projet;
+          	this.form = this.setForm();
+            
+          },
+          error => { /*this.errors = error.error;*/ }
+        );
+    } 
 
-  	this.form = this.setForm();
     this.getMission();
     this.etats = this.etatR.etats();
+
   }
 
   private setForm(): FormGroup{
     return this.fb.group({
       libelle: [null, [Validators.required]],
-      detail: [''],
-      nbJour: [''],
+      detail: [null],
+      nbJour: [null, [Validators.required, Validators.max((this.projet ? this.projet.nbJour : 0)), Validators.min(0)]],
       etat: [null, [Validators.required]]
     });
   }
@@ -72,6 +81,7 @@ export class MissionFormComponent implements OnInit {
           .subscribe(
             (mission: Mission) => {
               this.mission = mission;
+              this.form = this.setForm();
               this.mission.etat = this.mission.etat.id;
               this.form.patchValue(this.mission);
               this.refreshJourInUse();
@@ -101,7 +111,7 @@ export class MissionFormComponent implements OnInit {
   }
 
   add() {
-		this.missionR.postMission(this.id_projet, this.form.value)
+		this.missionR.postMission(this.projet.id, this.form.value)
                    .subscribe((mission: Mission) => {
                       this.router.navigate(['/projet', 'mission', mission.id]);
                      },

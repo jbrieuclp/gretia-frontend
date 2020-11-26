@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 
 @Component({
@@ -10,6 +10,6 @@ export class ToolsboxComponent {
 
   constructor(
   	private _bottomSheetRef: MatBottomSheetRef<ToolsboxComponent>,
-  ) { }
+  ) {}
 
 }

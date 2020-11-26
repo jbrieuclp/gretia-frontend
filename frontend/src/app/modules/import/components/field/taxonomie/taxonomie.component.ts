@@ -24,7 +24,7 @@ export class TaxonomieComponent implements OnInit, OnDestroy {
   field: any;
   error: any;
   taxons: TaxrefMatch[] = [];
-  waiting: boolean = false;
+  waiting: boolean = true;
 
   constructor(
   	private importS: ImportService,
@@ -43,6 +43,7 @@ export class TaxonomieComponent implements OnInit, OnDestroy {
     this.fieldS.values
                 .pipe(
                   tap(()=>this.taxons = []),
+                  tap(()=>this.waiting = false),
                   map(values=> {
                     return values
                             .filter(v=>!v.ok)

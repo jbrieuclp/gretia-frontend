@@ -36,6 +36,7 @@ export class TravailFormDialog implements OnInit {
   travail: Travail = {};
   optionsHour: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   optionsMinute: number[] = [0, 15, 30, 45];
+  timeFormDisplay: boolean = false;
 
   constructor (
     public dialogRef: MatDialogRef<TravailFormDialog>,

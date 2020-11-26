@@ -27,7 +27,8 @@ import {
   MatTreeModule,
   MatSelectModule,
   MatDatepickerModule,
-  MatProgressBarModule
+  MatProgressBarModule,
+  MatMenuModule
 } from '@angular/material';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -42,6 +43,9 @@ import { ConfirmationDialogComponent } from './components/confirmation-dialog/co
 import { KeysPipe } from './pipes/keys.pipe';
 import { TimeFormatPipe } from './pipes/time-format.pipe';
 import { SortByPipe } from './pipes/sort-by.pipe';
+
+//Directives
+import { ColorDifferenceDirective } from './directives/color-difference.directive';
 
 @NgModule({
   imports: [
@@ -76,13 +80,15 @@ import { SortByPipe } from './pipes/sort-by.pipe';
     MatSelectModule,
     MatDatepickerModule,
     MatProgressBarModule,
-    LayoutModule
+    MatMenuModule,
+    LayoutModule,
   ],
   declarations: [
     ConfirmationDialogComponent,
     KeysPipe,
     TimeFormatPipe,
-    SortByPipe
+    SortByPipe,
+    ColorDifferenceDirective
   ],
   entryComponents: [
     ConfirmationDialogComponent
@@ -119,11 +125,13 @@ import { SortByPipe } from './pipes/sort-by.pipe';
     MatSelectModule,
     MatDatepickerModule,
     MatProgressBarModule,
+    MatMenuModule,
     LayoutModule,
     ConfirmationDialogComponent,
     KeysPipe,
     TimeFormatPipe,
-    SortByPipe
+    SortByPipe,
+    ColorDifferenceDirective
   ]
 })
 export class SharedModule { }

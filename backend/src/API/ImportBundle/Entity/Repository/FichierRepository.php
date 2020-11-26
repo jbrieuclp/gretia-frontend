@@ -4,6 +4,8 @@
 namespace API\ImportBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class FichierRepository extends EntityRepository
 {
@@ -68,7 +70,7 @@ class FichierRepository extends EntityRepository
 
         $colonnes = []; //liste les colonne du doc
         foreach ($entete as $key => $value) {
-            $colonne = $this->wd_remove_accents($value);
+            $colonne = $this->column_header($value);
             //si une colonne existe deja on lève une erreur
             if ( in_array($colonne, $colonnes) ) {
                 return array('error' => true, 'message' => 'La colonne "'.$value.'" modifiée en "'.$colonne.'" existe déjà');
@@ -122,14 +124,10 @@ class FichierRepository extends EntityRepository
       if ( !is_null($fields['latitude']) and !is_null($fields['longitude'])) {
         $select[] = "f.".$fields['latitude']." AS latitude";
         $select[] = "f.".$fields['longitude']." AS longitude";
-        $select[] = "ST_AsGeoJSON(ST_Transform(ST_SetSRID(st_MakePoint(NULLIF(f.".$fields['longitude'].", '')::double precision, NULLIF(f.".$fields['latitude'].", '')::double precision), 4326), 3857)) as the_geom";
+        /*$select[] = "ST_AsGeoJSON(ST_Transform(ST_SetSRID(st_MakePoint(NULLIF(f.".$fields['longitude'].", '')::double precision, NULLIF(f.".$fields['latitude'].", '')::double precision), 4326), 3857)) as the_geom";*/
       }
 
-      if ( !is_null($fields['area']) ) {
-        $select[] = "f.".$fields['area']." AS area";
-      }
-
-      $sql = "SELECT DISTINCT ".implode(', ', $select)." FROM ".$fichier->getTable()." f";
+      $sql = "SELECT DISTINCT ".implode(', ', $select)." FROM ".$fichier->getTable()." f WHERE adm_geom IS NULL";
 
       $requete = $this->_em->getConnection()->prepare($sql);
       $requete->execute();
@@ -153,9 +151,11 @@ class FichierRepository extends EntityRepository
         $qb->addOrderBy('adm_id_import', 'ASC');
       }
 
+      $i = 0;
       foreach ($request as $champ => $valeur) {
-        $qb->andWhere("COALESCE(\"".$champ."\", '') = COALESCE(:valeur, '')")
-            ->setParameter('valeur', $valeur);
+        $qb->andWhere("COALESCE(\"".$champ."\", '') = COALESCE(:valeur".$i.", '')")
+            ->setParameter('valeur'.$i, $valeur);
+        $i++;
       }
 
       return $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
@@ -305,7 +305,10 @@ class FichierRepository extends EntityRepository
 
         $qb->select('count(*)')
            ->from($fichier->getTable(), 'f')
-           ->where('adm_geom IS NOT NULL');
+           ->where('adm_geom IS NOT NULL')
+           ->andWhere('NOT adm_doublon_fichier')
+           ->andWhere('NOT adm_doublon_bd')
+           ->andWhere('NOT adm_import_exclude');
 
         return $qb->execute()->fetch(\PDO::FETCH_COLUMN, 0);
     }
@@ -320,7 +323,10 @@ class FichierRepository extends EntityRepository
 
         $qb->select('count(*)')
            ->from($fichier->getTable(), 'f')
-           ->where('adm_geom IS NULL');
+           ->where('adm_geom IS NULL')
+           ->andWhere('NOT adm_doublon_fichier')
+           ->andWhere('NOT adm_doublon_bd')
+           ->andWhere('NOT adm_import_exclude');
 
         return $qb->execute()->fetch(\PDO::FETCH_COLUMN, 0);
     }
@@ -412,6 +418,64 @@ class FichierRepository extends EntityRepository
         }
 
        return true;
+    }
+
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    **/
+    public function updateGeometry($fichier, $geom, $fields)
+    {
+      try {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $sql = '';
+
+        $qb->update($fichier->getTable())
+           ->set('"adm_geom"', 'ST_Transform(ST_SetSRID(ST_GeomFromGeoJSON(:geom), 3857), 2154)')
+           ->setParameter('geom', $geom);
+
+        $i = 0;
+        foreach ($fields as $champ => $valeur) {
+          if (is_null($valeur)) {
+            $qb->andWhere($qb->expr()->isNull('"'.$champ.'"'));
+          } else {
+            $qb->andWhere('trim("'.$champ.'") = :valeur'.$i)
+               ->setParameter('valeur'.$i, trim($valeur));
+          }
+          $i++;
+        }
+        $qb->andWhere($qb->expr()->isNull('"adm_geom"'));
+
+        return $qb->execute();
+      } catch (Exception $e) {
+        return new JsonResponse(['message' => 'Une erreur est survenue'], Response::HTTP_INTERNAL_SERVER_ERROR);
+      }
+
+      //return $qb->execute();//->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+    *   Charge fichier, champs et champs du FSD liés
+    **/
+    public function coordsToPoint($fichier, $coords)
+    {
+      try {
+        $qb = $this->_em->getConnection()->createQueryBuilder();
+
+        $qb->update($fichier->getTable())
+           ->set('"adm_geom"', 'ST_Transform(ST_SetSRID(ST_MakePoint(:longitude, :latitude), :epsg), 2154)')
+           ->where('"'.$fichier->getFieldByFSD('__LATITUDE__')[0].'" = :latitude')
+           ->andWhere('"'.$fichier->getFieldByFSD('__LONGITUDE__')[0].'" = :longitude')
+           ->setParameter('longitude', $coords['longitude'])
+           ->setParameter('latitude', $coords['latitude'])
+           ->setParameter('epsg', $coords['projection']["epsg"]);
+
+        return $qb->execute();
+      } catch (Exception $e) {
+        return false;
+      }
+
+      return true;
     }
 
     //----------------
@@ -633,21 +697,27 @@ class FichierRepository extends EntityRepository
         return $qb->execute()->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-
-    private function wd_remove_accents($str, $charset='utf-8')
+    private function remove_accents($str, $charset='utf-8')
     {
-        $str = mb_strtolower($str, 'UTF-8');
         $str = strip_tags($str);//on enlève les balises HTML
 
         $str = htmlentities($str, ENT_NOQUOTES, $charset);
         
         $str = preg_replace('#&([A-Za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml|lt|gt);#', '\1', $str);
         $str = preg_replace('#&([A-Za-z]{2})(?:lig);#', '\1', $str); // pour les ligatures e.g. '&oelig;'
-        $str = preg_replace('#&[^;]+;#', '', $str); // supprime les autres caractères
-        $str = preg_replace('#^([0-9])#', 'n\1', $str); // si le premier char est un chiffre le prefixe
 
         $str = html_entity_decode($str);
 
+        return $str;
+    }
+
+    private function column_header($str, $charset='utf-8')
+    {
+        $str = mb_strtolower($str, 'UTF-8');
+        $str = $this->remove_accents($str, $charset);
+        
+        $str = preg_replace('#&[^;]+;#', '', $str); // supprime les autres caractères
+        $str = preg_replace('#^([0-9])#', 'n\1', $str); // si le premier char est un chiffre le prefixe
         $str = preg_replace("/([^a-zA-Z0-9])/", "_", $str);
         $str = preg_replace("/([_]{2,})/", "_", $str);
         $str = preg_replace("/(^[_]+|[_]+$)/", "", $str);
@@ -838,7 +908,9 @@ class FichierRepository extends EntityRepository
 
     
 
-
+    public function stripAccents($stripAccents){
+      return strtr($stripAccents,'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ','aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
+    }
     
 
 }

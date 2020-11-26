@@ -59,7 +59,13 @@
 						<tr *ngFor="let taxon of taxons">
 							<td>
 								<div>{{ taxon.taxon }}</div>
-								<div *ngIf="taxon.match != null"><b>{{ taxon.match }}</b></div>
+								<div *ngIf="taxon.match != null">
+									<b 
+										colorDifference 
+										[reference]="taxon.taxon" 
+										[compare]="taxon.match.nom_complet">
+									</b>
+								</div>
 							</td>
 							<td>
 								<ng-container  [ngSwitch]="taxon.matchs.length">
@@ -69,11 +75,11 @@
 									<ng-container *ngSwitchCase="1">
 										<mat-checkbox 
 											color="primary" 
-											[value]="taxon.matchs[0]" 
+											[value]="taxon.matchs[0].nom_complet" 
 											(change)="checkboxMatchChange($event, taxon)" 
-											[checked]="taxon.taxon === taxon.match">
-											<div><b>{{ taxon.matchs[0].cd_nom }} - {{ taxon.matchs[0].nom_complet }}</b></div>
-											<div>{{ taxon.matchs[0].cd_ref }} - {{ taxon.matchs[0].nom_valide }}</div>
+											[checked]="taxon.matchs[0].nom_complet === taxon.match.nom_complet">
+											<div><b>{{ taxon.match.cd_nom }} - {{ taxon.match.nom_complet }}</b></div>
+											<div>{{ taxon.match.cd_ref }} - {{ taxon.match.nom_valide }}</div>
 										</mat-checkbox>
 									</ng-container>
 									<ng-container *ngSwitchDefault>
