@@ -22,8 +22,8 @@ import { AdminComponent } from './components/admin/admin.component';
 // import { PListComponent } from './components/projet/p-list/p-list.component';
 // import { MissionFormComponent } from './components/mission/form/mission-form.component';
 // import { MissionTravailleurFormComponent } from './components/mission/form/m-travailleur-form.component';
-// import { TravailleurFormComponent } from './components/person/form/travailleur-form.component';
-// import { SListUserComponent } from './components/suiveuse/list-user/list-user.component';
+import { TravailleurFormComponent } from './components/person/form/travailleur-form.component';
+import { SListUserComponent } from './components/suiveuse/list-user/list-user.component';
 import { CalendarComponent } from './components/suiveuse/calendar/calendar.component';
 //news
 import { SalariesComponent } from './components/admin/salarie/salaries.component';
@@ -185,8 +185,8 @@ export const MY_FORMATS = {
     // PListComponent,
     // MissionFormComponent,
     // MissionTravailleurFormComponent,
-    // TravailleurFormComponent,
-    // SListUserComponent,
+    TravailleurFormComponent,
+    SListUserComponent,
     CalendarComponent,
     //news
     SalariesComponent,
