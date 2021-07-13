@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { tap, map, filter, switchMap } from 'rxjs/operators';
 
 import { Task, TaskAttribution, TaskRepository } from '../../../../../../repository/task.repository';

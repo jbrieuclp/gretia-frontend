@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter, Inject, HostListener } from '@
 import { Router, ActivatedRoute } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { filter } from 'rxjs/operators';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 
 import { SignInDialog } from './sign-in.dialog';
 import { AuthService } from '../../auth/authentication.service';

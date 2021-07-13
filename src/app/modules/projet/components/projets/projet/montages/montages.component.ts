@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { MatSelectionList } from '@angular/material/list'
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { FormControl, Validators } from "@angular/forms";
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { filter, switchMap, map, tap } from 'rxjs/operators';

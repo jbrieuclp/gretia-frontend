@@ -7,10 +7,8 @@ import { PageNotFoundComponent } from './page-not-found.component';
 import { JwtModule } from '@auth0/angular-jwt'
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from './shared/auth/token.interceptor';
-import { 
-   MatSidenavModule,
-   MatCheckboxModule
- } from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 //modules
 import { SharedModule } from './shared';

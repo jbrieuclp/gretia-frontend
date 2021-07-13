@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
-import { MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 import { tap, map, filter, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import VectorLayer from 'ol/layer/Vector';

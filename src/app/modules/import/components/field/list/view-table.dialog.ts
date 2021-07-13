@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, Inject, EventEmitter, OnDestroy } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { FieldService } from '../field.service';

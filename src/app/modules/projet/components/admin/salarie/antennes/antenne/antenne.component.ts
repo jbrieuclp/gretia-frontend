@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { switchMap, filter, distinctUntilChanged, tap } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 import { AntenneService } from '../antenne.service';
 import { SalarieRepository, Antenne } from '../../../../../repository/salarie.repository';

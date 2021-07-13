@@ -1,5 +1,5 @@
 import { Component, Input, Inject, ViewChild, ComponentFactoryResolver } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 
 import { LayerService } from '../../services/layer.service';
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { switchMap, filter, distinctUntilChanged, tap } from 'rxjs/operators';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 
 import { FonctionService } from '../fonction.service';
 import { SalarieRepository, Fonction } from '../../../../../repository/salarie.repository';

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewEncapsulation, IterableDiffers, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 
 import { TaxrefApiService } from '../../../../../shared/services/taxref-api.service'
 import { LayerService } from '../../../services/layer.service';

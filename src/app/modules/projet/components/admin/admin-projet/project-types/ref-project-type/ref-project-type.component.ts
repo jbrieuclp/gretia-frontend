@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { MatStepper } from '@angular/material/stepper';
 import { Subscription, Observable } from 'rxjs';
 import { switchMap, filter, distinctUntilChanged, tap } from 'rxjs/operators';
