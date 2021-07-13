@@ -69,8 +69,32 @@ body {
 }
 
 .mat-error {
-  font-size: 0.8em;
+  font-size: 0.9em;
   margin-top: -10px;
 }
 
+mat-error.mat-error {
+  margin-top: 0!important;
+}
+
 .pointer { cursor: pointer; }
+
+.red-snackbar {
+  background: #e82828;
+  color: #fff;
+  white-space: pre-wrap
+}
+
+.red-snackbar .mat-simple-snackbar-action {
+    color: #330606;
+}
+
+.green-snackbar {
+  background: #14b112;
+  color: #fff;
+  white-space: pre-wrap
+}
+
+.green-snackbar .mat-simple-snackbar-action {
+  color: #011905;
+}

@@ -3,6 +3,7 @@
 namespace API\ProjetBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -10,11 +11,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
 * @ORM\Entity
 * @ORM\Table(name="projet.localisation")
-* @UniqueEntity(fields="intitule", message="Un même nom de localisation existe déjà")
+* @UniqueEntity(fields="nom", message="Un même nom de localisation existe déjà")
 */
 class Localisation
 {
 	public function __construct() {
+    $this->projets = new ArrayCollection();
   }
 
   /**
@@ -28,20 +30,29 @@ class Localisation
   private $id;
 
   /**
-   * @ORMColumn(name="nom", type="string", nullable=false)
+   * @ORM\Column(name="nom", type="string", nullable=false)
    * @Assert\NotNull(message="Nom de localisation non renseigné")
    *
-   * @SerializerGroups({"localisation", "projet"})
+   * @Serializer\Groups({"localisation", "projet"})
    */
   private $nom;
 
   /**
    * @var ArrayCollection Projet $projets
    *
-   * @ORM\ManyToMany(targetEntity="API\ProjetBundle\Entity\Projet", mappedBy="localisations")
+   * @ORM\ManyToMany(targetEntity="API\ProjetBundle\Entity\Projet", mappedBy="localisations", cascade={"persist", "merge"})
    * @Serializer\Groups({"localisation"})
    */
   private $projets;
+
+  /**
+   * @Serializer\VirtualProperty
+   * @Serializer\SerializedName("removable")
+   * @Serializer\Groups({"localisation"})
+   */
+  public function isRemovable(): bool {
+   return !(count($this->getProjets()) ?: false);
+  }
   
 
   /**

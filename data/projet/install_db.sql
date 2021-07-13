@@ -258,3 +258,149 @@ CREATE TABLE projet_convention (
 	quant_eligible double precision,
 	PRIMARY KEY (projet_id, convention_id, type_frais_id)
 );
+
+
+ALTER TABLE projet.action ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.action ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.action ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.action ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.antenne ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.antenne ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.antenne ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.antenne ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.conge_paye ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.conge_paye ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.conge_paye ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.conge_paye ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.convention ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.convention ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.convention ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.convention ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.convention_echeance ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.convention_echeance ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.convention_echeance ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.convention_echeance ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.convention_financeur ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.convention_financeur ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.convention_financeur ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.convention_financeur ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.convention_signataire ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.convention_signataire ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.convention_signataire ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.convention_signataire ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.deplacement ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.deplacement ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.deplacement ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.deplacement ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.etat_avancement ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.etat_avancement ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.etat_avancement ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.etat_avancement ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.fonction_salarie ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.fonction_salarie ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.fonction_salarie ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.fonction_salarie ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.justificatif ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.justificatif ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.justificatif ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.justificatif ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.localisation ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.localisation ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.localisation ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.localisation ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.organisme ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.organisme ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.organisme ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.organisme ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.personne ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.personne ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.personne ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.personne ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.projet ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.projet ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.projet ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.projet ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.projet_convention ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.projet_convention ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.projet_convention ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.projet_convention ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.recup ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.recup ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.recup ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.recup ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.salarie ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.salarie ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.salarie ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.salarie ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.tache ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.tache ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.tache ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.tache ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.tache_attribution ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.tache_attribution ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.tache_attribution ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.tache_attribution ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.tache_periode ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.tache_periode ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.tache_periode ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.tache_periode ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.travail ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.travail ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.travail ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.travail ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.type_echeance ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_echeance ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.type_echeance ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_echeance ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.type_frais ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_frais ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.type_frais ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_frais ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.type_frais_ref ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_frais_ref ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.type_frais_ref ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_frais_ref ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.type_projet ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_projet ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.type_projet ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_projet ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.type_projet_ref ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_projet_ref ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.type_projet_ref ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_projet_ref ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.type_versement ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_versement ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.type_versement ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.type_versement ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);
+
+ALTER TABLE projet.versement ADD COLUMN created_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.versement ADD COLUMN created_by integer REFERENCES projet.personne(id_personne);
+ALTER TABLE projet.versement ADD COLUMN updated_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE projet.versement ADD COLUMN updated_by integer REFERENCES projet.personne(id_personne);

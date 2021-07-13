@@ -18,7 +18,7 @@ use API\ProjetBundle\Entity\TypeProjet;
 class TypeProjetRef
 {
 	public function __construct() {
-    $this->typeProjets = new ArrayCollection();
+    $this->typesProjet = new ArrayCollection();
   }
 
   /**
@@ -32,37 +32,37 @@ class TypeProjetRef
   private $id;
   
   /**
-   * @ORMColumn(name="libelle", type="string", length=255, nullable=false)
+   * @ORM\Column(name="libelle", type="string", length=255, nullable=false)
    * @Assert\NotNull(message="Libellé non renseignée")
    * @Assert\Length(
    *      max = 255,
    *      maxMessage = "Le libellé ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @SerializerGroups({"type_projet_ref", "type_projet", "projet"})
+   * @Serializer\Groups({"type_projet_ref", "type_projet", "projet"})
    */
   private $libelle;
 
   /**
-   * @ORMColumn(name="description", type="string", nullable=true)
+   * @ORM\Column(name="description", type="string", nullable=true)
    *
-   * @SerializerGroups({"type_projet_ref"})
+   * @Serializer\Groups({"type_projet_ref"})
    */
   private $description;
 
   /**
-   * @ORMColumn(name="ordre", type="integer", nullable=true)
+   * @ORM\Column(name="ordre", type="integer", nullable=true)
    *
-   * @SerializerGroups({"type_projet_ref"})
+   * @Serializer\Groups({"type_projet_ref"})
    */
   private $ordre;
 
   /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\TypeProjet", mappedBy="typeProjetRef", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\TypeProjet", mappedBy="typeProjetRef", cascade={"persist", "merge"}, orphanRemoval=true, fetch="EAGER")
    *
    * @Serializer\Groups({"type_projet_ref"})
    */
-  private $typeProjets;
+  private $typesProjet;
  
   
 
@@ -151,26 +151,42 @@ class TypeProjetRef
   */
   public function addTypeProjet(TypeProjet $item)
   {
-      // Ici, on utilise l'ArrayCollection vraiment comme un tableau
-      $this->typeProjets[] = $item;
-      
-      // liaison inverse avec entité
-      $item->setTypeProjetRef($this);
-
-      return $this;
+      // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+      if (!$this->typesProjet->contains($item)) {
+        $this->typesProjet->add($item);
+        $item->setTypeProjetRef($this);
+      }
   }
 
   public function removeTypeProjet(TypeProjet $item)
   {
-      // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
-      $this->typeProjets->removeElement($item);
-      $item->setTypeProjetRef(null);
+      // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+      if ($this->typesProjet->contains($item)) {
+        $this->typesProjet->removeElement($item);
+        $item->setTypeProjetRef(null);
+      }
   }
 
-  // Notez le pluriel, on récupère une liste de catégories ici !
-  public function getTypeProjets()
+  // // Notez le pluriel, on récupère une liste de catégories ici !
+  public function setTypesProjet($items) 
   {
-      return $this->typeProjets;
+    if ($items instanceof ArrayCollection || is_array($items)) {
+      foreach ($items as $item) {
+        $this->addTypeProjet($item);
+      }
+    } elseif ($items instanceof TypeProjet) {
+      $this->addTypeProjet($items);
+    } else {
+      throw new \Exception('TypeProjet must be an instance of TypeProjet or ArrayCollection');
+    }
+  }
+
+  /**
+   * @return ArrayCollection|TypeProjet[]
+   */
+  public function getTypesProjet()
+  {
+      return $this->typesProjet;
   }
 
 }

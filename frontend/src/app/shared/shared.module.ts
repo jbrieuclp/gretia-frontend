@@ -28,7 +28,9 @@ import {
   MatSelectModule,
   MatDatepickerModule,
   MatProgressBarModule,
-  MatMenuModule
+  MatMenuModule,
+  MatSliderModule,
+  MatSlideToggleModule
 } from '@angular/material';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -46,6 +48,11 @@ import { SortByPipe } from './pipes/sort-by.pipe';
 
 //Directives
 import { ColorDifferenceDirective } from './directives/color-difference.directive';
+
+//Services
+import { GlobalsService } from './services/globals.service';
+import { LoaderComponent } from './templates/loader/loader.component';
+import { SubmitBtnComponent } from './templates/submit-btn/submit-btn.component';
 
 @NgModule({
   imports: [
@@ -81,6 +88,8 @@ import { ColorDifferenceDirective } from './directives/color-difference.directiv
     MatDatepickerModule,
     MatProgressBarModule,
     MatMenuModule,
+    MatSliderModule,
+    MatSlideToggleModule,
     LayoutModule,
   ],
   declarations: [
@@ -88,10 +97,15 @@ import { ColorDifferenceDirective } from './directives/color-difference.directiv
     KeysPipe,
     TimeFormatPipe,
     SortByPipe,
-    ColorDifferenceDirective
+    ColorDifferenceDirective,
+    LoaderComponent,
+    SubmitBtnComponent
   ],
   entryComponents: [
     ConfirmationDialogComponent
+  ],
+  providers: [
+    GlobalsService
   ],
   exports: [
     CommonModule,
@@ -126,12 +140,16 @@ import { ColorDifferenceDirective } from './directives/color-difference.directiv
     MatDatepickerModule,
     MatProgressBarModule,
     MatMenuModule,
+    MatSliderModule,
+    MatSlideToggleModule,
     LayoutModule,
     ConfirmationDialogComponent,
     KeysPipe,
     TimeFormatPipe,
     SortByPipe,
-    ColorDifferenceDirective
+    ColorDifferenceDirective,
+    LoaderComponent,
+    SubmitBtnComponent
   ]
 })
 export class SharedModule { }

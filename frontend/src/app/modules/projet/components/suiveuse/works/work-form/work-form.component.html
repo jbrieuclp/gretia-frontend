@@ -1,0 +1,137 @@
+{{form.value|json}}
+<form [formGroup]="form">
+	<div>
+		<app-projet-task-control 
+			[form]="form.get('tache')"
+			required="true"
+		></app-projet-task-control>
+	</div>
+
+	<div class="row">
+		<div class="col-8">
+			<div class="row">
+				<ng-container *ngIf="!timeFormDisplay;else timeFormBlock">
+					<mat-form-field class="col-sm-5">
+						<mat-label>Durée</mat-label>
+				    <input matInput 
+					    placeholder="Ex : 1.25 pour 1h15"
+					    autocomplete="off"
+					    [formControl]="dureeForm">
+					  <mat-error>Renseignez au quart d'heure (0.25, 0.5 ou 0.75)</mat-error>
+				  </mat-form-field>
+				</ng-container>
+
+			  <ng-template #timeFormBlock>
+					<div class="col-sm-6">
+						<form 
+							[formGroup]="timeForm" 
+							class="row"
+						>
+							<mat-form-field class="col-6">
+								<mat-label>Heure(s)</mat-label>
+						    <input 
+						    	matInput 
+							    placeholder="Ex: 1" 
+							    formControlName="heure" 
+							    [matAutocomplete]="autoHour"
+							  >
+						    <mat-autocomplete #autoHour>
+						      <mat-option 
+						      	*ngFor="let option of optionsHour" 
+						      	[value]="option"
+						      >
+						        {{ option }}
+						      </mat-option>
+						    </mat-autocomplete>
+						  </mat-form-field>
+						  <mat-form-field class="col-6">
+								<mat-label>Minutes</mat-label>
+						    <input 
+						    	matInput 
+							    placeholder="Ex: 15" 
+							    formControlName="minutes" 
+							    [matAutocomplete]="autoMinute"
+							  >
+						    <mat-autocomplete #autoMinute>
+						      <mat-option 
+						      	*ngFor="let option of optionsMinute" 
+						      	[value]="option"
+						      >
+						        {{ option }}
+						      </mat-option>
+						    </mat-autocomplete>
+
+						  </mat-form-field>
+						</form>
+						<div 
+							*ngIf="(timeForm.get('heure').errors && timeForm.get('heure').errors.inArrayError) || (timeForm.get('minutes').errors && timeForm.get('minutes').errors.inArrayError)"
+							class="error"
+						>
+							Veuillez choisir une valeur dans la liste
+						</div>
+					</div>
+				</ng-template>
+
+				<mat-radio-group 
+					[ngClass]="{'offset-sm-1': !timeFormDisplay, 'col-sm-2': true}"
+					(change)="timeFormDisplay=!timeFormDisplay">
+				  <mat-radio-button 
+				  	value="1" 
+				  	color="primary"
+				  	[checked]="!timeFormDisplay"
+				  >Heure décimal</mat-radio-button>
+				  <mat-radio-button 
+				  	value="2" 
+				  	color="primary"
+				  	[checked]="timeFormDisplay"
+				  >Heure minutes</mat-radio-button>
+				</mat-radio-group>
+			</div>
+		</div>
+
+		<div class="col-4">
+			<div>
+				<mat-checkbox
+			  	color="primary"
+			    formControlName="estNuit"
+			  >
+			  	Heure de nuit
+			  </mat-checkbox>
+			</div>
+			<div *ngIf="form.get('estWe').value">
+				<b>Week-end pris en compte</b>
+			</div>
+		</div>
+	</div>
+
+	<mat-form-field>
+    <textarea
+	    matInput 
+	    placeholder="Détail"  
+			formControlName="detail"
+		>
+		</textarea> 
+  </mat-form-field>
+
+	<div>
+		<app-submit-btn
+			type="button"
+    	[disabled]="form.invalid || dureeForm.invalid || timeForm.invalid"
+    	[waiting]="saving"
+    	matTooltip="Enregistrer"
+    	(click)="save()"
+    >
+    	Ajouter
+    </app-submit-btn>
+		<button
+			style="margin-left: 10px;"
+			mat-raised-button
+			type="button"
+			matTooltip="Remettre à zéro le formulaire"
+			(click)="reset()"
+		>
+		  Annuler
+		</button>
+	</div>
+
+</form>

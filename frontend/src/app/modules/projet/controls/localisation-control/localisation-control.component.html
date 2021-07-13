@@ -1,0 +1,34 @@
+<div class="localisation-form">
+	<mat-form-field>
+		<mat-label>
+			<mat-spinner 
+				*ngIf="loading"
+				diameter="20"
+				strokeWidth="2"
+			>
+			</mat-spinner>
+			Localisations
+		</mat-label>
+	  <input 
+		  type="text" 
+		  placeholder="Rechercher ou saisir une localisation" 
+		  matInput 
+		  [formControl]="form" 
+		  [matAutocomplete]="auto">
+	  <mat-autocomplete 
+	  	#auto="matAutocomplete"
+	  	[displayWith]="displayFn.bind(this)">
+	    <mat-option *ngFor="let localisation of _localisations | async" [value]="localisation['@id']">
+	      {{ localisation.nom }}
+	    </mat-option>
+	  </mat-autocomplete>
+	</mat-form-field>
+	<button
+		*ngIf="buttonDisplay" 
+		mat-mini-fab
+		color="primary"
+		matTooltip="Créer cette nouvelle localisation"
+		(click)="addLocalisation()">
+	  <mat-icon>done</mat-icon>
+	</button>
+</div>

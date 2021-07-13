@@ -1,0 +1,43 @@
+<mat-icon>magnify</mat-icon>
+<mat-form-field class="form-element" id="search-taxon-zone">
+  <input 
+    matInput 
+    #zone 
+    [matAutocomplete]="auto" 
+  	(keyup)="searchTerm$.next(zone.value)" 
+  	placeholder="Rechercher un taxon" 
+  	id="autocomplete-input" 
+  	class="autocomplete" 
+  	value="{{ textTaxon }}"
+  >
+  <mat-autocomplete #auto="matAutocomplete">
+    <ng-container *ngIf="(!isWaiting && autocomplete.length)">
+      <mat-option 
+        *ngFor="let val of autocomplete" 
+        (click)=selectTaxon(val) 
+      >
+        <span class="right circle">
+          <i class="mdi mdi-phone"></i>
+        </span>
+        <span>[{{ val.cd_nom }}] - {{ val.nom_complet }}</span>
+      </mat-option>
+    </ng-container>
+    <ng-container *ngIf="isWaiting && zone.value.length">
+      <mat-option disabled>
+        <span class="left loader"></span>
+        <span>Recherche en cours</span>
+      </mat-option>
+    </ng-container>
+    <ng-container *ngIf="!isWaiting && !autocomplete.length && zone.value.length">
+      <mat-option disabled>
+        <mat-icon>error</mat-icon>
+        <span>Aucun résultat ne correspond à la recherche</span>
+      </mat-option>
+    </ng-container>
+  </mat-autocomplete>
+</mat-form-field>
+
+
+<!--
+	<li _ngcontent-c4=""><span _ngcontent-c4="" class="left loader"></span><span _ngcontent-c4="">Recherche en cours</span></li>
+-->

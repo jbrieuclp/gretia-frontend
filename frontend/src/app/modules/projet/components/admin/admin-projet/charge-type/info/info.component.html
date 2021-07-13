@@ -1,0 +1,84 @@
+<ng-container *ngIf="chargeTypeRef">
+
+	<div class="text-right">
+		<button 
+			mat-mini-fab
+			matTooltip="Modifier"
+			color="primary"
+			(click)="edit(chargeTypeRef)">
+	    <mat-icon>edit</mat-icon>
+	  </button>
+	  <button 
+	  	*ngIf="!chargeTypeRef.chargeTypes.length"
+			mat-mini-fab
+			matTooltip="Supprimer"
+			color="warn"
+			(click)="delete(chargeTypeRef)">
+	    <mat-icon>clear</mat-icon>
+	  </button>
+	</div>
+
+	<div class="row">
+		<div class="col-4">
+			<div class="detail-element">
+				<div class="element-label"> Libelle </div>
+				<div class="element-content"> {{ chargeTypeRef.label }} </div>
+			</div>
+		</div>
+
+		<div class="col-4">
+			<div class="detail-element">
+				<div class="element-label"> Ordre dans la liste déroulante </div>
+				<div class="element-content"> {{ chargeTypeRef.orderBy }} </div>
+			</div>
+		</div>
+	</div>
+
+	<div>
+		<div class="detail-element">
+			<div class="element-label"> Description </div>
+			<div class="element-content"> {{ chargeTypeRef.description }} </div>
+		</div>
+	</div>
+
+
+	<h5>Historique des coûts</h5>
+	<div style="margin-bottom: 5px;">
+		<button 
+			mat-stroked-button 
+			color="primary"
+			(click)="openDialog()">Nouveau coût jour
+		</button>
+	</div>
+
+	<div>
+		<table class="table table-bordered">
+			<thead class="thead-dark">
+				<tr>
+					<th>Début d'application</th>
+					<th>Fin d'application</th>
+					<th *ngIf="!chargeTypeRef.isPerDay">Coût jour</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let chargeType of chargeTypeRef.chargeTypes;">
+					<td>{{ chargeType.applicationStart | date:'dd/MM/yyyy' }}</td>
+					<td>{{ (chargeType.applicationEnd | date:'dd/MM/yyyy') || '-' }}</td>
+					<td *ngIf="!chargeTypeRef.isPerDay">{{ chargeType.unitCost }}</td>
+					<td>
+						<ng-container *ngIf="chargeType.removable">
+							<button 
+								mat-icon-button 
+								color="warn"
+								(click)="deleteRow(chargeType)">
+						    <mat-icon matTooltip="Supprimer cette ligne">clear</mat-icon>
+						  </button>
+						</ng-container>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+</ng-container>

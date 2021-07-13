@@ -1,0 +1,12 @@
+.carousel, 
+.carousel img{
+	height: 200px;
+}
+
+.carousel {
+	background-color: #aaa;
+}
+
+.carousel-item {
+	text-align: center;
+}

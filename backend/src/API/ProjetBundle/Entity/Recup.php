@@ -35,16 +35,16 @@ class Recup
   private $salarie;
 
   /**
-   * @ORMColumn(name="date_recup", type="datetime", nullable=false)
+   * @ORM\Column(name="date_recup", type="datetime", nullable=false)
    *
-   * @SerializerGroups({"recup", "salarie"})
+   * @Serializer\Groups({"recup", "salarie"})
    */
   private $dateRecup;
 
   /**
-   * @ORMColumn(name="quantite", type="decimal", nullable=false)
+   * @ORM\Column(name="quantite", type="decimal", nullable=false)
    *
-   * @SerializerGroups({"recup", "salarie"})
+   * @Serializer\Groups({"recup", "salarie"})
    */
   private $quantite;
 

@@ -27,17 +27,17 @@ class Travail
    */
   private $id;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Tache", cascade={"all"})
+  /*
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Tache", inversedBy="travaux", cascade={"all"})
    * @ORM\JoinColumn(name="tache_id", referencedColumnName="id_tache", nullable=false)
    * @Assert\NotNull(message="Tâche non renseignée")
    *
-   * @SerializerGroups({"travail"})
+   * @Serializer\Groups({"travail"})
    */
   private $tache;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Salarie", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Salarie", inversedBy="travaux", cascade={"all"})
    * @ORM\JoinColumn(name="salarie_id", referencedColumnName="id_salarie", nullable=false)
    * @Assert\NotNull(message="Salarie non renseignée")
    *
@@ -46,37 +46,37 @@ class Travail
   private $salarie;
 
   /**
-   * @ORMColumn(name="date_travail", type="datetime", nullable=false)
+   * @ORM\Column(name="date_travail", type="datetime", nullable=false)
    *
-   * @SerializerGroups({"travail"})
+   * @Serializer\Groups({"travail"})
    */
   private $dateTravail;
 
   /**
-   * @ORMColumn(name="temps", type="integer", nullable=false)
+   * @ORM\Column(name="temps", type="integer", nullable=false)
    *
-   * @SerializerGroups({"travail"})
+   * @Serializer\Groups({"travail"})
    */
   private $temps;
 
   /**
-   * @ORMColumn(name="detail", type="string", nullable=true)
+   * @ORM\Column(name="detail", type="string", nullable=true)
    *
-   * @SerializerGroups({"travail"})
+   * @Serializer\Groups({"travail"})
    */
   private $detail;
 
   /**
-   * @ORMColumn(name="est_nuit", type="boolean", nullable=false)
+   * @ORM\Column(name="est_nuit", type="boolean", nullable=false)
    *
-   * @SerializerGroups({"travail"})
+   * @Serializer\Groups({"travail"})
    */
   private $estNuit;
 
   /**
-   * @ORMColumn(name="est_we", type="boolean", nullable=false)
+   * @ORM\Column(name="est_we", type="boolean", nullable=false)
    *
-   * @SerializerGroups({"travail"})
+   * @Serializer\Groups({"travail"})
    */
   private $estWe;
 
@@ -105,8 +105,8 @@ class Travail
   /**
    * Set tache
    *
-   * @param string $tache
-   * @return string
+   * @param Tache $tache
+   * @return self
    */
   public function setTache($tache)
   {
@@ -118,7 +118,7 @@ class Travail
   /**
    * Get tache
    *
-   * @return integer 
+   * @return Tache 
    */
   public function getTache()
   {
@@ -129,7 +129,7 @@ class Travail
    * Set salarie
    *
    * @param string $salarie
-   * @return string
+   * @return self
    */
   public function setSalarie($salarie)
   {

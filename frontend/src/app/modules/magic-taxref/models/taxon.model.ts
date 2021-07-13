@@ -13,6 +13,7 @@ import { Taxref11 } from './taxref11.model';
 import { Taxref12 } from './taxref12.model';
 import { Taxref13 } from './taxref13.model';
 
+export const LATEST_VERSION = '13';
 
 export class Taxon {
 
@@ -94,5 +95,9 @@ export class Taxon {
 
 	get nom_complet() {
 		return this.nomComplet;
+	}
+
+	get latest() {
+		return this['taxref'+LATEST_VERSION];
 	}
 }

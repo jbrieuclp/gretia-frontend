@@ -28,23 +28,23 @@ class TachePeriode
    * @ORM\JoinColumn(name="tache_id", referencedColumnName="id_tache", nullable=true)
    * @Assert\NotNull(message="Tâche non renseignée")
    *
-   * @SerializerGroups({"tache_periode"})
+   * @Serializer\Groups({"tache_periode"})
    */
   private $tache;
 
   /**
-   * @ORMColumn(name="date_debut", type="", nullable=false)
+   * @ORM\Column(name="date_debut", type="datetime", nullable=false)
    * @Assert\NotNull(message="Date de début non renseignée")
    *
-   * @SerializerGroups({"tache_periode", "tache"})
+   * @Serializer\Groups({"tache_periode", "tache"})
    */
   private $dateDebut;
 
   /**
-   * @ORMColumn(name="date_fin", type="", nullable=false)
+   * @ORM\Column(name="date_fin", type="datetime", nullable=false)
    * @Assert\NotNull(message="Date de fin non renseignée")
    *
-   * @SerializerGroups({"tache_periode", "tache"})
+   * @Serializer\Groups({"tache_periode", "tache"})
    */
   private $dateFin;
   

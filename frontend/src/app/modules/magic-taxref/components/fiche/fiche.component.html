@@ -1,0 +1,30 @@
+<div class="row" style="margin-top: -30px;">
+  <div class="col-sm-6">
+	<app-magictaxref-fiche-searcher></app-magictaxref-fiche-searcher>
+  </div>
+  
+</div>
+
+<ng-container *ngIf="!loading; else loadingTemplate">
+  <div class="row" *ngIf="taxon?.cd_nom">
+    <div class="col-md-4">
+      <app-magictaxref-fiche-image></app-magictaxref-fiche-image>
+      <mat-card *ngIf="taxon">
+      	<ul class="list-group">
+          <li class="list-group-item list-group-item-success"><h5>CD Nom : {{ taxon.cd_nom }}</h5></li>
+          <li class="list-group-item list-group-item-light" *ngFor="let nom of taxon.nom_complet">{{ nom }}</li>
+        </ul>
+      </mat-card>
+      <app-magictaxref-fiche-repartition></app-magictaxref-fiche-repartition>
+      <app-magictaxref-fiche-synonyme></app-magictaxref-fiche-synonyme>
+      <app-magictaxref-fiche-tree></app-magictaxref-fiche-tree>
+  	</div>
+
+  	<div class="col-md-8">
+  		<app-magictaxref-fiche-detail></app-magictaxref-fiche-detail>
+  	</div>
+  </div>
+</ng-container>
+<ng-template #loadingTemplate>
+  <app-loader message="Chargement en cours"></app-loader>
+</ng-template>

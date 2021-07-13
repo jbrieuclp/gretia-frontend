@@ -26,35 +26,35 @@ class Deplacement
   private $id;
   
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Travail", cascade={"all"})
-   * @ORM\JoinColumn(name="tache_id", referencedColumnName="id_tache", nullable=false)
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Travail", inversedBy="deplacements", cascade={"all"})
+   * @ORM\JoinColumn(name="travail_id", referencedColumnName="id_travail", nullable=false)
    * @Assert\NotNull(message="Travail non renseigné")
    *
-   * @SerializerGroups({"deplacement"})
+   * @Serializer\Groups({"deplacement"})
    */
   private $travail;
 
   /**
-   * @ORMColumn(name="quantite", type="integer", nullable=false)
+   * @ORM\Column(name="duree", type="integer", nullable=false)
    * @Assert\NotNull(message="Durée non renseignée")
    *
-   * @SerializerGroups({"deplacement", "travail"})
+   * @Serializer\Groups({"deplacement", "travail"})
    */
   private $duree;
 
   /**
-   * @ORMColumn(name="quantite", type="integer", nullable=false)
+   * @ORM\Column(name="distance", type="integer", nullable=false)
    * @Assert\NotNull(message="Distance non renseignée")
    *
-   * @SerializerGroups({"deplacement", "travail"})
+   * @Serializer\Groups({"deplacement", "travail"})
    */
   private $distance;
 
   /**
-   * @ORMColumn(name="quantite", type="boolean", nullable=false)
+   * @ORM\Column(name="covoiturage", type="boolean", nullable=false)
    * @Assert\NotNull(message="Covoiturage non renseigné")
    *
-   * @SerializerGroups({"deplacement", "travail"})
+   * @Serializer\Groups({"deplacement", "travail"})
    */
   private $covoiturage;
   

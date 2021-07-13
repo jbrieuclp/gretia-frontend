@@ -35,16 +35,16 @@ class CongePaye
   private $salarie;
 
   /**
-   * @ORMColumn(name="date_cp", type="datetime", nullable=false)
+   * @ORM\Column(name="date_cp", type="datetime", nullable=false)
    *
-   * @SerializerGroups({"conge", "salarie"})
+   * @Serializer\Groups({"conge", "salarie"})
    */
   private $dateCp;
 
   /**
-   * @ORMColumn(name="quantite", type="decimal", nullable=false)
+   * @ORM\Column(name="quantite", type="decimal", nullable=false)
    *
-   * @SerializerGroups({"conge", "salarie"})
+   * @Serializer\Groups({"conge", "salarie"})
    */
   private $quantite;
 

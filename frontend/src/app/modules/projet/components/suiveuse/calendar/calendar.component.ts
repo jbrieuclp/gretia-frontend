@@ -1,163 +1,131 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { BehaviorSubject, combineLatest  } from 'rxjs';
-import { filter, tap, switchMap, map } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { BehaviorSubject, combineLatest, Subscription } from 'rxjs';
+import { filter, tap, switchMap, map, distinctUntilChanged } from 'rxjs/operators';
 import * as moment from 'moment';
-import { MatDialog, MatDialogConfig } from '@angular/material';
-import { TRAVAIL_OPTIONS, Travail, SuiveuseRepository } from '../../../repository/suiveuse.repository';
-import { SuiveuseService } from '../suiveuse.service';
-import { Personne } from '../../../repository/person.repository';
-import { TravailFormDialog } from './travail-form.dialog';
+import 'moment/locale/fr'  // without this line it didn't work
 
-const today = new Date();
+import { SuiveuseService } from '../suiveuse.service';
 
 @Component({
-  selector: 'app-projet-suiv-calendar',
+  selector: 'app-projet-suiveuse-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.css']
 })
-export class CalendarComponent implements OnInit  {
+export class CalendarComponent implements OnInit, OnDestroy  {
 
-  _month: BehaviorSubject<Date> = new BehaviorSubject(new Date());
-  get month() {
-    return this._month;
-  }
-  get monthValue(): Date {
-    return this._month.getValue();
-  }
-  @Input() set month(value: any) {
-    this._month.next(value);
+  get month(): Date {
+    return this.suiveuseS.displayMonth.getValue();
   }
   dates: BehaviorSubject<Array<any>> = new BehaviorSubject([]);
   months: Array<string> = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-  user: BehaviorSubject<Personne>;
-  worksOfTheDay: {day: Date, works: any[], totalTime: number} = null;
-  travauxSynthese = [];
+  today: Date = moment().toDate();
 
-  selectedDate: BehaviorSubject<Date> = new BehaviorSubject(null);
+  worksOfTheDay: {day: Date, works: any[], totalTime: number} = null;
+  
+  _subscriptions: Subscription[] = [];
+
+  /* Date selectionnée sur le calendrier */
+  get selectedDate() {
+    return this.suiveuseS.selectedDate;
+  }
+
+  get loadingWork(): boolean { return this.suiveuseS.loading }
 
   constructor(
-    public dialog: MatDialog,
+    private route: ActivatedRoute,
+    private router: Router,
+    private location: Location,
     private suiveuseS: SuiveuseService,
-    private suiveuseR: SuiveuseRepository
   ) {}
   
   ngOnInit() {
-    this._month.subscribe(date=>this.initMonths());
 
-    this.user = this.suiveuseS.user;
-    //Récupéraion des travaux de l'user sur les jours du mois affiché
-    combineLatest(this.user.asObservable(), this.dates.asObservable(), this.dialog.afterAllClosed)
-      .pipe(
-        filter(([user, dates])=>user !== null),
-        //map return [user, premiere_date, derniere_date]
-        map(([user, dates])=>[user, dates[0].days[0], dates[dates.length-1].days[dates[dates.length-1].days.length-1]]),
-        switchMap(([user, firstDate, lastDate]) => { 
-          return this.suiveuseR
-                    .getSynthese(user.id, {startAt: moment(firstDate).format('YYYY-MM-DD'), endAt: moment(lastDate).format('YYYY-MM-DD')})
-        }),
-      )
-      .subscribe((synthese)=> this.travauxSynthese = synthese);
-
-    //Observable sur la date selectionnée permettant de recupérer les travaux réalisés à cette date.
-    combineLatest(this.selectedDate.asObservable(), this.dialog.afterAllClosed)
-      .pipe(
-        tap(([date]) => {this.worksOfTheDay = null}),
-        filter(()=>this.user.getValue() !== null),
-        filter(([date])=>date !== null),
-        switchMap(
-          ([date]) => this.suiveuseR.getTravaux(this.user.getValue().id, {startAt: moment(date).format('YYYY-MM-DD'), endAt: moment(date).format('YYYY-MM-DD')})
-        ),
-        map(works=>{
-          let totalTime = 0;
-          let day = null;
-          works.forEach(e=>{
-            if ( day === null ) { day = new Date(e.date) }
-            totalTime += e.duree;
-          });
-          return {day: day, works: works, totalTime: totalTime};
+    /**
+    * Permet de passer une date dans l'URL
+    * La vérification que le parametre date est bien une Date est effectué
+    **/
+    this._subscriptions.push(
+      this.route.queryParams
+        .pipe(
+          filter(params => !isNaN(Date.parse(params['date']))),
+          map((params): Date => new Date(params['date'])),
+          tap((date: Date) => this.suiveuseS.displayMonth.next(date))
+        )
+        .subscribe((date: Date) => {
+          this.selectedDate.next(date);
         })
-      )
-      .subscribe(worksOfTheDay=>this.worksOfTheDay = worksOfTheDay);
-  }
+    );
 
-  get today() {
-    return today;
+    this._subscriptions.push(
+      this.suiveuseS.displayMonth
+        .subscribe(date=>this.initMonths())
+    );
+
+    /**
+     * Observe le changement de la date selectionnée et ajuste l'URL en conséquence
+     * ajoute la date en parametre GET dans l'URL
+     **/
+    this._subscriptions.push(
+      this.selectedDate.asObservable()
+        .pipe(
+          filter((date: Date) => date !== null),
+          distinctUntilChanged(),
+          map((date: Date): string => moment(date).format('YYYY-MM-DD'))
+        )
+        .subscribe((date: string) => this.location.go(`${this.router.url.split('?')[0]}?date=${date}`))
+    );
   }
 
   setToday() {
-    let date = new Date();
-    this.month = date;
+    this.suiveuseS.displayMonth = moment().toDate();
+    this.dateSelect(moment().toDate());
   }
 
-  previous() {
-    let date = new Date(this.month.getValue());
-    date.setMonth(this.month.getValue().getMonth() - 1);
-    this.month = date;
+  previousMonth(): void {
+    this.suiveuseS.displayMonth = moment(this.suiveuseS.displayMonth.getValue()).subtract(1, 'month').toDate();
   }
 
-  next() {
-    let date = new Date(this.month.getValue());
-    date.setMonth(this.month.getValue().getMonth() + 1);
-    this.month = date;
+  nextMonth() {
+    this.suiveuseS.displayMonth = moment(this.suiveuseS.displayMonth.getValue()).add(1, 'month').toDate();
   }
 
   getWorkingTimeByDate(date) {
-    let travail = this.travauxSynthese.find(e=>e.date === moment(date).format('YYYY-MM-DD'));
-    return travail !== undefined ? this.displayTime(travail.duree) : "-";
+    const work = this.suiveuseS.workByDay.find(w => moment(w.date).isSame(moment(date), 'day'));
+    return work !== undefined ? this.displayTime(work.time) : "-";
   }
 
-  displayTime(time) {
+  dateSelect(date): void {
+    this.suiveuseS.selectedDate.next(moment(date).toDate());
+  }
+
+  private displayTime(time) {
     return time !== undefined ? Math.trunc(time/60) + "h" + (time%60 !== 0 ? time%60 :'') : "-";
   }
 
-  openTravailDialog(id_travail = null): void {
-
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = 
-      {
-        id_travail: id_travail,
-        date: this.selectedDate.getValue()
-      };
-
-    const dialogRef = this.dialog.open(TravailFormDialog, dialogConfig);
-  }
-
+  /**
+  *  Retourne les semaine et les jours associés pour un mois donné
+  **/
   private initMonths(): void {
     let dates: {weekNumber: number, days: Date[]}[] = [];
-    let weeksOfMonth = [];
+    let firstDayMonth = moment(this.suiveuseS.displayMonth.getValue()).startOf('month').startOf('week');
+    let lastDayMonth = moment(this.suiveuseS.displayMonth.getValue()).endOf('month').endOf('week');
 
-    //pour m = 3 pour les 3 mois entourant la date : mois précédent m=0, présent m=1, suivant m=2
-    for ( let m = 0; m < 3 ; m++) {
-      //pour chaque jour du mois
-      for (let j = 0; j < new Date(this.monthValue.getFullYear(), this.monthValue.getMonth() + m, 0).getDate(); j++) {
-        let day = new Date(this.monthValue.getFullYear(), this.monthValue.getMonth() + (m - 1), j+1)
-        if ( dates.find(date=>date.weekNumber === this.getWeekNumber(day)) === undefined ){
-          dates.push({weekNumber: this.getWeekNumber(day), days: []});
-        }
-
-        let week = dates.find(date=>date.weekNumber === this.getWeekNumber(day));
-        //si on est sur le mois en cours, on conserve les numeros de semaines concernées, pour filtrer les données par la suite
-        if (m === 1 && weeksOfMonth.indexOf(this.getWeekNumber(day)) === -1) {
-          weeksOfMonth.push(this.getWeekNumber(day));
-        }
-        week.days.push(day);
+    while (!moment(firstDayMonth).isAfter(lastDayMonth, 'day')) {
+      if ( dates.findIndex(e => e.weekNumber == firstDayMonth.week()) === -1 ) {
+        dates.push({weekNumber: firstDayMonth.week(), days:[]});
       }
+      const week = dates.find(e => e.weekNumber == firstDayMonth.week())
+      week.days.push(firstDayMonth.toDate());
+      firstDayMonth.add(1, 'days');
     }
-    dates.forEach((week, idx)=>{
-      if (weeksOfMonth.indexOf(week.weekNumber) === -1) {
-        delete dates[idx];
-      }
-    })
-    //suppression des valeurs empty du tableau
-    this.dates.next(dates.filter(e=>e != null));
+
+    this.dates.next(dates);
   }
 
-  private getWeekNumber(d) {
-    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
-    let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
-    let weekNo = Math.ceil(( ( (d - +(yearStart)) / 86400000) + 1)/7);
-    return weekNo;
+  ngOnDestroy() {
+    this._subscriptions.forEach(s => {s.unsubscribe()});
   }
 
 }

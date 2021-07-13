@@ -1,0 +1,13 @@
+.mat-card a {
+	display: block;
+}
+
+.mat-card a .mat-icon {
+	font-size: 70px;
+  height: 70px;
+  width: 70px;
+}
+
+.mat-card a .caption {
+	font-size: 18px;
+}

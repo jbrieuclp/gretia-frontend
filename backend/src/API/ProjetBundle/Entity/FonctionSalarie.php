@@ -27,31 +27,24 @@ class FonctionSalarie
    * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.fonction_salarie_id_fonction_salarie_seq", allocationSize=1, initialValue=1)
    *
-   * @Serializer\Groups({"fonction_salarie", "salarie"})
+   * @Serializer\Groups({"fonction_salarie", "salarie", "personne"})
    */
   private $id;
   
   /**
-   * @ORMColumn(name="libelle", type="string", length=255, nullable=false)
+   * @ORM\Column(name="libelle", type="string", length=255, nullable=false)
    * @Assert\NotNull(message="Libellé non renseignée")
    * @Assert\Length(
    *      max = 255,
    *      maxMessage = "Le libellé ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @SerializerGroups({"fonction_salarie", "salarie"})
+   * @Serializer\Groups({"fonction_salarie", "salarie", "personne"})
    */
   private $libelle;
 
   /**
-   * @ORMColumn(name="ordre", type="integer", nullable=true)
-   *
-   * @SerializerGroups({"fonction_salarie"})
-   */
-  private $ordre;
-
-  /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Salarie", mappedBy="fonction", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Salarie", mappedBy="fonction", fetch="EAGER")
    *
    * @Serializer\Groups({"fonction_salarie"})
    */
@@ -91,29 +84,6 @@ class FonctionSalarie
   public function getLibelle()
   {
     return $this->libelle;
-  }
-
-  /**
-   * Set ordre
-   *
-   * @param string $ordre
-   * @return string
-   */
-  public function setOrdre($ordre)
-  {
-    $this->ordre = $ordre;
-
-    return $this;
-  }
-
-  /**
-   * Get ordre
-   *
-   * @return integer 
-   */
-  public function getOrdre()
-  {
-    return $this->ordre;
   }
 
   /**

@@ -1,0 +1,66 @@
+<ng-container *ngIf="localisation">
+
+	<div class="text-right">
+		<button 
+			mat-mini-fab
+			matTooltip="Modifier"
+			color="primary"
+			(click)="edit(localisation)">
+	    <mat-icon>edit</mat-icon>
+	  </button>
+	  <button 
+	  	*ngIf="localisation.removable"
+			mat-mini-fab
+			matTooltip="Supprimer"
+			color="warn"
+			(click)="delete(localisation)">
+	    <mat-icon>clear</mat-icon>
+	  </button>
+	</div>
+
+	<div class="row">
+		<div class="col-4">
+			<div class="detail-element">
+				<div class="element-label"> Nom </div>
+				<div class="element-content"> {{ localisation.nom }} </div>
+			</div>
+		</div>
+	</div>
+
+	<!-- <h5>Liste des Projets</h5>
+	
+	<div>
+		<table class="table table-bordered">
+			<thead class="thead-dark">
+				<tr>
+					<th>Antenne</th>
+					<th>Fonction</th>
+					<th>Taux (%)</th>
+					<th>Début</th>
+					<th>Fin</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let salarie of personne.salaries;">
+					<td>{{ salarie.antenne.nom }}</td>
+					<td>{{ salarie.fonction.libelle }}</td>
+					<td>{{ salarie.taux }}</td>
+					<td>{{ salarie.dateDebut }}</td>
+					<td>{{ salarie.dateFin }}</td>
+					<td>
+						<ng-container *ngIf="salarie.removable">
+							<button 
+								mat-icon-button 
+								color="warn"
+								(click)="deleteContrat(salarie)">
+						    <mat-icon matTooltip="Supprimer cette ligne">clear</mat-icon>
+						  </button>
+						</ng-container>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div> -->
+</ng-container>

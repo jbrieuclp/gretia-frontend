@@ -39,21 +39,8 @@ export class TaxonRepository {
       );
   }
 
-  /* GET taxon whose name contains search term */
-	searchTaxons(terms: Observable<any[]>) {
-	  return terms
-      .pipe(
-        debounceTime(300), 
-        distinctUntilChanged(),
-        switchMap(term => {
-        	return term.length >= 5 ?
-        		this.searchTaxonsEntries(term) : [];
-        })
-      );
-	}
-
-	searchTaxonsEntries(term) {
-		const taxonUrl = this.httpUrlBase + '/taxons/recherche';
+	searchTaxons(term) {
+		const taxonUrl = this.httpUrlBase + '/nom_complets/recherche';
 	  const options = term ? 
 	   { params: new HttpParams().set('name', term) } : {};
 
@@ -68,7 +55,7 @@ export class TaxonRepository {
 
   /** GET taxon par ID (cd_nom) **/
   getChangement(cd_nom: number, version: number): Observable<Change[]> {
-    const taxonUrl = this.httpUrlBase + '/taxref/' + version + '/taxons/' + cd_nom + '/change';
+    const taxonUrl = this.httpUrlBase + '/taxref-' + version + '/taxons/' + cd_nom + '/change';
     const options = {};
     return this.http
       .get(taxonUrl, options)

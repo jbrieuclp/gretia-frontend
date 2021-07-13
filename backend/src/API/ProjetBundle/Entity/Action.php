@@ -32,28 +32,28 @@ class Action
   private $id;
   
   /**
-   * @ORMColumn(name="libelle", type="string", length=255, nullable=false)
+   * @ORM\Column(name="libelle", type="string", length=255, nullable=false)
    * @Assert\NotNull(message="Libellé non renseignée")
    * @Assert\Length(
    *      max = 255,
    *      maxMessage = "Le libellé ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @SerializerGroups({"action", "tache"})
+   * @Serializer\Groups({"action", "tache"})
    */
   private $libelle;
 
   /**
-   * @ORMColumn(name="description", type="string", nullable=true)
+   * @ORM\Column(name="description", type="string", nullable=true)
    *
-   * @SerializerGroups({"action"})
+   * @Serializer\Groups({"action"})
    */
   private $description;
 
   /**
-   * @ORMColumn(name="ordre", type="integer", nullable=true)
+   * @ORM\Column(name="ordre", type="integer", nullable=true)
    *
-   * @SerializerGroups({"action"})
+   * @Serializer\Groups({"action"})
    */
   private $ordre;
 

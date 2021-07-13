@@ -1,0 +1,42 @@
+<a mat-raised-button 
+	routerLink="/projet/admin"
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Revenir au tableau d'administration"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+<div class="row">
+	<div class="col-sm-3 col-md-2">
+		<mat-card>
+			<a routerLink="antennes" matTooltip="Gérer les antennes" class="text-center">
+				<mat-icon>public</mat-icon>
+				<div class="caption">
+					Antennes
+				</div>
+			</a>
+		</mat-card>
+	</div>
+
+	<div class="col-sm-3 col-md-2">
+		<mat-card>
+			<a routerLink="fonctions" matTooltip="Gérer les différentes fonctions occupées" class="text-center">
+				<mat-icon>color_lens</mat-icon>
+				<div class="caption">
+					Fonctions occupées
+				</div>
+			</a>
+		</mat-card>
+	</div>
+
+	<div class="col-sm-3 col-md-2">
+		<mat-card>
+			<a routerLink="personnes" matTooltip="Gérer les personnes" class="text-center">
+				<mat-icon>person</mat-icon>
+				<div class="caption">
+					Personnes
+				</div>
+			</a>
+		</mat-card>
+	</div>
+</div>

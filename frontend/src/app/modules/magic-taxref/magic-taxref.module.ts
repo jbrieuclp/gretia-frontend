@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AngularResizedEventModule } from 'angular-resize-event';
 import { SharedModule } from '../../shared';
 
 //modules
@@ -9,33 +8,36 @@ import { MagicTaxrefRoutingModule } from './magic-taxref-routing.module';
 
 //components
 import { MagicTaxrefInitComponent } from './magic-taxref-init.component';
-import { DisplayComponent } from './components/display/display.component';
+import { FicheComponent } from './components/fiche/fiche.component';
+import { SynonymeComponent } from './components/fiche/synonyme/synonyme.component';
+import { FicheDetailComponent } from './components/fiche/detail/detail.component';
+import { ChangementInfoComponent } from './components/fiche/detail/detail.component';
+import { SearchingComponent } from './components/fiche/searching/searching.component';
+import { TreeComponent } from './components/fiche/tree/tree.component';
+import { TreeChildrenComponent } from './components/fiche/tree/children.component';
+import { ImageComponent } from './components/fiche/image/image.component';
+import { RepartitionComponent } from './components/fiche/repartition/repartition.component';
+import { MatchComponent } from './components/match/match.component';
 
 //service
 import { VersioningService } from '../magic-taxref/services/versioning.service';
-import { SynonymeComponent } from './components/synonyme/synonyme.component';
-import { VDetailComponent } from './components/v-detail/v-detail.component';
-import { ChangementInfoComponent } from './components/v-detail/v-detail.component';
-import { SearchingComponent } from './components/searching/searching.component';
-import { TreeComponent } from './components/tree/tree.component';
-import { TreeChildrenComponent } from './components/tree/children.component';
-import { ImageComponent } from './components/image/image.component';
-import { RepartitionComponent } from './components/repartition/repartition.component';
-import { MatchComponent } from './components/match/match.component';
+import { TreeService } from './components/fiche/tree/tree.service';
+import { FicheService } from './components/fiche/fiche.service';
+import { TaxonRepository } from './models/repositories/taxon.repository';
+import { TaxrefRepository } from './models/repositories/taxref.repository';
 
 @NgModule({
   imports: [
     CommonModule,
     NgbModule,
-    AngularResizedEventModule,
     MagicTaxrefRoutingModule,
     SharedModule
   ],
   declarations: [
     MagicTaxrefInitComponent,
-  	DisplayComponent,
+  	FicheComponent,
     SynonymeComponent,
-    VDetailComponent,
+    FicheDetailComponent,
     SearchingComponent,
     TreeComponent,
     TreeChildrenComponent,
@@ -45,7 +47,11 @@ import { MatchComponent } from './components/match/match.component';
     MatchComponent
   ],
   providers: [
-  	VersioningService
+  	VersioningService,
+    TaxonRepository,
+    TaxrefRepository,
+    FicheService,
+    TreeService
   ],
   entryComponents: [ ChangementInfoComponent ]
 })

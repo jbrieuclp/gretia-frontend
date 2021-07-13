@@ -52,7 +52,7 @@ export class AccueilComponent implements OnInit {
   	  	text: '<p>Outil de correction de fichier de données en vue d\'être intégré en BDD.</p>',
   	  	image: '/assets/images/import.png',
   	  	url: '/import',
-        role: 'IMPORT',
+        role: 'ROLE_IMPORT',
         target: "_self"
   	  },
   	  {

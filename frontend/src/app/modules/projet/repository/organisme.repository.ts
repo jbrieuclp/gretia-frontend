@@ -25,7 +25,7 @@ const httpOptions = {
 export interface Organisme {
   id?: number,
   nom?: string,
-  sigle?: string,
+  isPublic?: string,
   projetsFinances?: any,
   projetsTechniques?: any
 }
@@ -39,98 +39,39 @@ export class OrganismeRepository {
     this.httpUrlBase = AppConfig.URL_PROJET;
   }
 
-  /** GET personnes par ID (cd_nom) **/
-  organismes(limit?: number): Observable<Organisme[]> {
-  	const url = this.httpUrlBase + '/organismes';
+  ////////////////////
+  //  ORGANISME  //
+  ////////////////////
+  /** GET list of Organisme **/
+  organismes(): Observable<Organisme[]> {
+    const url = `${this.httpUrlBase}/organismes`;
+    const options = {};
     return this.http
-    	.get(url, httpOptions)
-    	.pipe(
-        map((res: Organisme[]) => { 
-          return res;
-        })
-        , retry(3)
-	   	);
-  }
-
-  /** GET personnes par ID (cd_nom) **/
-  get(id: number): Observable<Organisme> {
-    const url = this.httpUrlBase + '/organisme/'+id;
-    return this.http
-      .get(url, httpOptions)
+      .get(url, options)
       .pipe(
-        map((res: Organisme) => { 
-          return res;
-        })
-        , retry(3)
-       );
-  }
-
-  /** POST personnes par ID (cd_nom) **/
-  post(data: Organisme): Observable<Organisme> {
-    const url = this.httpUrlBase + '/organismes';
-    const sources = JSON.stringify(data);
-    return this.http
-      .post(url, sources, httpOptions)
-      .pipe(
-        map((res: Organisme) => { 
-          return res;
-        })
-       );
-  }
-
-  /** PUT personnes par ID (cd_nom) **/
-  put(init: Organisme, update: Organisme): Observable<Organisme> {
-    const url = this.httpUrlBase + '/organisme/'+init.id;
-    const sources = JSON.stringify(update);
-    return this.http
-      .put(url, sources, httpOptions)
-      .pipe(
-        map((res: Organisme) => { 
-          return res;
-        })
-       );
-  }
-
-  /** DELETE personnes par ID (cd_nom) **/
-  delete(organisme: Organisme): Observable<Boolean> {
-    const url = this.httpUrlBase + '/organisme/'+organisme.id;
-    return this.http
-      .delete(url, httpOptions)
-      .pipe( 
-        map((res: Boolean) => { 
-          return res;
-        })
-        , retry(3)/*, catchError(this.handleError('deleteHero'))*/ );
-  }
-
-  /* 
-  * GET taxon whose name contains search term 
-  * Observe terms, au changement execute switchMap
-  */
-  search(terms: Observable<any[]>) {
-    return terms
-      .pipe(
-        debounceTime(300), 
-        distinctUntilChanged(),
-        switchMap(term => {
-          return term.length >= 2 ?
-            this.searchEntries(term) : [];
-        })
+        map((res: Organisme[]) => res), 
+        retry(3)
       );
   }
 
-  searchEntries(term) {
-    const url = this.httpUrlBase + '/organismes/recherche';
-    const options = term ? 
-     { params: new HttpParams().set('term', term) } : {};
+  /** POST create new Organisme **/
+  postOrganismes(data: Organisme): Observable<Organisme> {
+    const url = `${this.httpUrlBase}/organismes`;
+    const sources = JSON.stringify(data);
+    return this.http.post(url, sources, httpOptions);
+  }
 
-    return this.http
-        .get(url, options)
-        .pipe(
-          map((response: Response) => { 
-            return response;
-          })
-        );
+  /** POST update Organisme **/
+  patchOrganismes(id, data: Organisme): Observable<Organisme> {
+    const url = `${this.httpUrlBase}/organismes/${id}`;
+    const sources = JSON.stringify(data);
+    return this.http.patch(url, sources, httpOptions);
+  }
+
+  /** DELETE delete Organisme **/
+  deleteOrganisme(id): Observable<Organisme> {
+    const url = `${this.httpUrlBase}/organismes/${id}`;
+    return this.http.delete(url, httpOptions);
   }
 
 }

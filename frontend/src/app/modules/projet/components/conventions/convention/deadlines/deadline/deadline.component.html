@@ -1,0 +1,141 @@
+<ng-container 
+	*ngIf="displayForm; else displayTemplate"
+	[formGroup]="form"
+>
+
+	<mat-card>
+		<mat-card-content>
+
+			<div class="row">
+				<mat-form-field class="col-sm-2">
+			  	<mat-label>Date</mat-label>
+				  <input 
+				  	matInput 
+				  	[matDatepicker]="dateP" 
+				  	placeholder="jj/mm/aaaa" 
+				  	formControlName="date"
+				  	required>
+				  <mat-datepicker-toggle matSuffix [for]="dateP"></mat-datepicker-toggle>
+				  <mat-datepicker #dateP></mat-datepicker>
+				</mat-form-field>
+
+				<mat-form-field class="col-sm-2">
+				  <mat-label>Type</mat-label>
+				  <mat-select 
+				  	formControlName="deadlineType"
+				  	required>
+						<mat-option 
+							*ngFor="let deadlineType of deadlineTypes" 
+							[value]="deadlineType['@id']">
+				      {{ deadlineType.label }}
+				    </mat-option>
+				  </mat-select>
+				</mat-form-field>
+			</div>
+
+			<div class="row">
+				<div class="offset-sm-1 col-sm-11">
+
+					<div>
+						<mat-checkbox
+					  	color="primary"
+				      formControlName="isReported"
+				    >
+				    	Report
+				    </mat-checkbox>
+						-
+						<mat-checkbox
+					  	color="primary"
+				      formControlName="isObsolete"
+				    >
+				    	Caduque
+				    </mat-checkbox>
+					</div>
+
+					<mat-form-field>
+						<mat-label>Commentaire</mat-label>
+				    <textarea 
+				    	matInput 
+				    	placeholder="Détail pour cette échéance"
+				    	formControlName="comment"
+				    ></textarea>
+				  </mat-form-field>
+
+				</div>
+			</div>
+
+			<div>
+				<button
+					style="margin-left: 10px;"
+					mat-raised-button
+					type="button"
+					matTooltip="Annuler"
+					(click)="cancel()"
+				>
+				  Annuler
+				</button>
+				<button
+					mat-raised-button
+					type="button"
+					color="primary"
+					matTooltip="Ajouter l'échéance"
+					[disabled]="form.invalid" 
+					(click)="save()"
+				>
+				  Modifier
+				</button>
+			</div>
+		</mat-card-content>
+	</mat-card>
+
+</ng-container>
+<ng-template #displayTemplate>
+
+	<mat-card>
+		<mat-card-title>
+			{{ deadline.date | date:'dd/MM/yyyy' }} : {{ deadline.deadlineType.label }}
+			<div class="float-right" style="margin-bottom: 10px;">
+				<button
+					mat-icon-button
+					class="delete-btn"
+					type="button"
+					color="primary"
+					matTooltip="Modifier cette ligne"
+					(click)="edit()"
+				>
+				  <mat-icon>edit</mat-icon>
+				</button>
+				<button
+					mat-icon-button
+					class="delete-btn"
+					type="button"
+					color="warn"
+					matTooltip="Enlever cette ligne"
+					(click)="delete()"
+				>
+				  <mat-icon>clear</mat-icon>
+				</button>
+			</div>
+		</mat-card-title>
+		<mat-card-content>
+
+			<div class="row">
+				<div class="offset-sm-1 col-sm-11">
+					<div>
+						<mat-icon>{{ deadline.isReported ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Report
+						-
+						<mat-icon>{{ deadline.isObsolete ? 'check_box' : 'check_box_outline_blank' }}</mat-icon> Caduque
+					</div>
+
+					<div class="row">
+						<div class="col-sm-2"><b>Commentaire :</b></div>
+						<div class="col-sm-10">{{ deadline.comment }}</div>
+					</div>
+				</div>
+			</div>
+
+			
+		</mat-card-content>
+	</mat-card>
+
+</ng-template>

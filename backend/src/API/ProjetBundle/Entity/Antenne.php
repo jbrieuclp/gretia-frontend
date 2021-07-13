@@ -27,24 +27,24 @@ class Antenne
    * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.antenne_id_antenne_seq", allocationSize=1, initialValue=1)
    *
-   * @Serializer\Groups({"antenne", "salarie"})
+   * @Serializer\Groups({"antenne", "salarie", "personne"})
    */
   private $id;
   
   /**
-   * @ORMColumn(name="nom", type="string", length=255, nullable=false)
+   * @ORM\Column(name="nom", type="string", length=255, nullable=false)
    * @Assert\NotNull(message="Nom non renseignée")
    * @Assert\Length(
    *      max = 255,
    *      maxMessage = "Le nom ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @SerializerGroups({"antenne", "salarie"})
+   * @Serializer\Groups({"antenne", "salarie", "personne"})
    */
   private $nom;
 
   /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Salarie", mappedBy="antenne", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Salarie", mappedBy="antenne", fetch="EAGER")
    *
    * @Serializer\Groups({"antenne"})
    */

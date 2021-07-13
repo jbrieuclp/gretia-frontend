@@ -1,15 +1,48 @@
+<h4>Administration des différentes listes et menus</h4>
+
 <div class="row">
-	<div class="col-sm-4">
-		<mat-list>
-		  <mat-list-item><a routerLink="personne">Personne <mat-icon>chevron_right</mat-icon></a></mat-list-item>
-		  <mat-divider></mat-divider>
-		  <mat-list-item><a routerLink="organisme">Organisme <mat-icon>chevron_right</mat-icon></a></mat-list-item>
-		  <mat-divider></mat-divider>
-		  <mat-list-item><a routerLink="categorie">Catégorie de projet <mat-icon>chevron_right</mat-icon></a></mat-list-item>
-		  <mat-divider></mat-divider>
-		  <mat-list-item><a routerLink="etat">État d'avancement <mat-icon>chevron_right</mat-icon></a></mat-list-item>
-		  <mat-divider></mat-divider>
-		  <mat-list-item><a routerLink="type">Type de projet <mat-icon>chevron_right</mat-icon></a></mat-list-item>
-		</mat-list>
+	<div class="col-sm-3 col-md-2">
+		<mat-card>
+			<a routerLink="salaries" matTooltip="Mapper le fichier" class="text-center">
+				<mat-icon>face</mat-icon>
+				<div class="caption">
+					Gestion des personnes
+				</div>
+			</a>
+		</mat-card>
 	</div>
+
+<!-- 	<div class="col-sm-3 col-md-2">
+		<mat-card>
+			<a routerLink="organismes" matTooltip="Mapper le fichier" class="text-center">
+				<mat-icon>business</mat-icon>
+				<div class="caption">
+					Organismes
+				</div>
+			</a>
+		</mat-card>
+	</div> -->
+
+	<div class="col-sm-3 col-md-2">
+		<mat-card>
+			<a routerLink="projets" matTooltip="Paramétrer les informations relatives aux projets" class="text-center">
+				<mat-icon>folder</mat-icon>
+				<div class="caption">
+					Parametrage des projets
+				</div>
+			</a>
+		</mat-card>
+	</div>
+
+<!-- 	<div class="col-sm-3 col-md-2">
+		<mat-card>
+			<a routerLink="etat" matTooltip="Mapper le fichier" class="text-center">
+				<mat-icon>update</mat-icon>
+				<div class="caption">
+					États d'avancement
+				</div>
+			</a>
+		</mat-card>
+	</div> -->
+
 </div>

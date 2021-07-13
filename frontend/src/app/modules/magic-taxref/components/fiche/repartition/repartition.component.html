@@ -1,0 +1,18 @@
+<mat-card class="card-repartition">
+	<div 
+		class="view-main-screen" 
+		#mapCard 
+	>
+	  <iframe 
+	  	*ngIf="mapUrl"
+	  	[src]="mapUrl" 
+	  	frameborder="0"
+	  	[width]="mapCardWidth" 
+	  	[height]="mapCardHeight"
+	    webkitallowfullscreen 
+	    mozallowfullscreen 
+	    allowfullscreen
+	  >
+	  </iframe>
+	</div>
+</mat-card>

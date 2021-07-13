@@ -1,0 +1,82 @@
+<form [formGroup]="form">
+
+	<div class="row">
+		<mat-form-field class="col-md-6">
+	    <input 
+		    matInput 
+		    placeholder="Libelle"  
+  			required
+  			formControlName="label">
+	  </mat-form-field>
+	  <mat-form-field class="col-md-6">
+	    <input 
+		    matInput 
+		    type="number"
+		    placeholder="Ordre"  
+  			required
+  			formControlName="orderBy">
+	  </mat-form-field>
+	</div>
+
+	<div class="row">
+    <div class="col-4">
+      <label id="radio-group-label">Quantification *</label>
+      <mat-radio-group
+        aria-labelledby="radio-group-label"
+        class="radio-group"
+        formControlName="isPerDay"
+        required
+      >
+        <mat-radio-button 
+          class="radio-button" 
+          color="primary"
+          [value]="true"
+        >
+          Par jour de travail
+        </mat-radio-button>
+        <mat-radio-button 
+          class="radio-button" 
+          color="primary"
+          [value]="false"
+        >
+          Par unité (repas, nuit, materiel)
+        </mat-radio-button>
+      </mat-radio-group>
+    </div>
+		<mat-form-field class="col-8">
+	    <textarea  
+		    matInput 
+		    placeholder="Description"  
+  			formControlName="description">
+  		</textarea>
+	  </mat-form-field>
+		
+	</div>
+
+  <ng-container *ngIf="form.get('chargeTypes')">
+    <div
+      *ngFor="let chargeTypeForm of chargeTypesControls; index as i"
+      class="blc-expansion-panel">
+
+      <app-projet-charge-type-form [form]="chargeTypeForm"></app-projet-charge-type-form>
+
+    </div>
+  </ng-container>
+
+	<div>
+    <button 
+      mat-raised-button
+      style="margin-right: 10px;"
+      (click)="cancel()">
+      Annuler
+    </button>
+  	<button 
+  		mat-raised-button 
+  		style="min-width: 0; margin-top: 20px;" 
+  		color="primary" 
+  		[disabled]="!form.valid"
+  		(click)="save()">
+  		<mat-icon>done</mat-icon> {{ form.get('chargeTypes') ? 'Ajouter' : 'Modifier' }}
+  	</button>
+  </div>
+</form>

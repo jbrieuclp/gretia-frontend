@@ -37,7 +37,7 @@ class Tache
    * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Projet", cascade={"all"})
    * @ORM\JoinColumn(name="projet_id", referencedColumnName="id_projet", nullable=true)
    *
-   * @SerializerGroups({"tache", "salarie"})
+   * @Serializer\Groups({"tache", "salarie"})
    */
   private $projet;
 
@@ -45,7 +45,7 @@ class Tache
    * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Action", cascade={"all"})
    * @ORM\JoinColumn(name="action_id", referencedColumnName="id_action", nullable=true)
    *
-   * @SerializerGroups({"tache", "salarie"})
+   * @Serializer\Groups({"tache", "salarie"})
    */
   private $action;
 
@@ -53,33 +53,33 @@ class Tache
    * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\EtatAvancement", cascade={"all"})
    * @ORM\JoinColumn(name="etat_avancement_id", referencedColumnName="id_etat_avancement", nullable=true)
    *
-   * @SerializerGroups({"tache", "salarie"})
+   * @Serializer\Groups({"tache", "salarie"})
    */
   private $avancement;
 
   /**
-   * @ORMColumn(name="intitule", type="", nullable=true)
+   * @ORM\Column(name="intitule", type="string", nullable=false)
    * @Assert\NotNull(message="Intitulé non renseigné")
    * @Assert\Length(
    *      max = 500,
    *      maxMessage = "L'intitulé ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @SerializerGroups({"tache", "salarie"})
+   * @Serializer\Groups({"tache", "salarie"})
    */
   private $intitule;
 
   /**
-   * @ORMColumn(name="objectif", type="string", nullable=true)
+   * @ORM\Column(name="objectif", type="string", nullable=true)
    *
-   * @SerializerGroups({"tache", "salarie"})
+   * @Serializer\Groups({"tache", "salarie"})
    */
   private $objectif;
 
   /**
-   * @ORMColumn(name="nb_jours", type="decimal", nullable=true)
+   * @ORM\Column(name="nb_jours", type="decimal", nullable=true)
    *
-   * @SerializerGroups({"tache"})
+   * @Serializer\Groups({"tache"})
    */
   private $nbJours;
 
@@ -98,9 +98,9 @@ class Tache
   private $attributionSalaries;
 
   /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Travail", mappedBy="tache", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   * @ ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Travail", mappedBy="tache", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
    *
-   * @Serializer\Groups({"tache"})
+   * @ Serializer\Groups({"tache"})
    */
   private $travaux;
   

@@ -1,0 +1,44 @@
+<ng-container *ngIf="!loading; else loadingTemplate">
+
+	<ng-container *ngIf="!works.length; else tableElement">
+		<mat-list>
+		  <mat-divider></mat-divider>
+		  <mat-list-item>
+		    <p mat-line> Aucun travail ce jour </p>
+		  </mat-list-item>
+		  <mat-divider></mat-divider>
+		</mat-list>
+	</ng-container>
+	<ng-template #tableElement>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Tache</th>
+					<th>Temps</th>
+					<th>Nuit</th>
+					<th>WE</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let work of works">
+					<td>
+						<div>{{ work.tache.projet.intitule || '-' }}</div>
+						<div>{{ work.tache.intitule || '-' }}</div>
+					</td>
+					<td>{{ displayTime(work.temps) }}</td>
+					<td>
+						<mat-icon>{{ work.estNuit ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+					</td>
+					<td>
+						<mat-icon>{{ work.estWe ? 'check_box' : 'check_box_outline_blank' }}</mat-icon>
+					</td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</ng-template>
+</ng-container>
+<ng-template #loadingTemplate>
+	<app-loader message="Récupération des tâches réalisées"></app-loader>
+</ng-template>

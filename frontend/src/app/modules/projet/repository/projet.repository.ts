@@ -4,255 +4,265 @@ import { catchError, retry, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { Mission } from './mission.repository';
-
 
 import { AppConfig } from '../../../shared/app.config';
-import { Personne, Travailleur } from './person.repository';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-    'Content-Type':  'application/json',
-    'Authorization': 'my-auth-token'
-  })
-};
+import { HTTP_OPTIONS, ApiProjectRepository } from './api-project.repository';
+import { Salarie } from './salarie.repository';
+import { Task } from './task.repository';
+import { ChargeType } from './charge-type.repository';
+import { ProjectType } from './project-type.repository';
+import { Convention, ProjectFunding } from './conventions.repository';
 
 export interface Projet {
-  id?: number,
-  libelle?: string,
-  localisation?: string,
-  partenairesFinanciers?: any,
-  partenairesTechniques?: any,
-  type?: any,
-  objet?: any,
-  milieux?: any,
-  groupes?: any,
-  nbJour?: any,
-  cout?: any,
-  coutTotal?: any,
-  responsable?: any,
-  dateDebut?: any,
-  dateFin?: any,
-  dateRendu?: any,
-  etat?: any,
-  travailleurs?: any,
-  dateCreate?: any,
-  compteCreate?: any,
-  dateUpdate?: any,
-  compteUpdate?: any,
-  missions?: Mission[]
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "code"?: string;
+  "intitule"?: string;
+  "objectif"?: string;
+  "dateDebut"?: string;
+  "dateFin"?: string;
+  "groupeTaxo"?: string;
+  "milieu"?: string;
+  "projectType"?: any;
+  "localisations"?: any[];
+  "responsables"?: any[];
+  "tasks"?: Task[];
+  "fundings"?: ProjectFunding[];
+  "parent"?: Projet;
+  "charges"?: Charge[];
+  "childrens"?: Projet[];
+  "createdAt"?: Date;
+  "createdBy"?: any;
+  "updatedAt"?: Date;
+  "updatedBy"?: any;
 }
 
 export interface Organisme {
   id?: number,
-  nom?: string,
-  sigle?: string,
-  projetsFinances?: any,
-  projetsTechniques?: any
+  
 }
 
-export interface ProjetTravailleur {
-  projet?: Projet,
-  personne?: Personne,
-  temps?: number
+export interface Localisation {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "nom"?: string;
+  "projets"?: Projet[];
+  "createdAt"?: Date;
+  "createdBy"?: any;
+  "updatedAt"?: Date;
+  "updatedBy"?: any;
 }
+
+export interface Charge {
+  "@id"?: string;
+  "@type"?: string;
+  "id"?: number;
+  "label"?: string;
+  "description"?: string;
+  "unitCostApplied"?: number;
+  "quantity"?: number;
+  "quantityUsed"?: number;
+  "project"?: Projet;
+  "chargeType"?: ChargeType;
+  "tasks"?: ChargeType;
+  "createdAt"?: Date;
+  "createdBy"?: any;
+  "updatedAt"?: Date;
+  "updatedBy"?: any;
+}
+
 
 @Injectable()
-export class ProjetRepository {
+export class ProjetRepository extends ApiProjectRepository {
 
-	httpUrlBase: string;
-  // constructeur ...
-  constructor(private http: HttpClient) {
-    this.httpUrlBase = AppConfig.URL_PROJET;
-  }
 
-  /** GET personnes par ID (cd_nom) **/
-  projets(limit?: number): Observable<Projet[]> {
-  	const url = this.httpUrlBase + '/projets';
-    return this.http
-    	.get(url, httpOptions)
-    	.pipe(
-        map((res: Projet[]) => { 
-          return res;
-        })
-        , retry(3)
-	   	);
-  }
-
-  /** GET personnes par ID (cd_nom) **/
-  getProjet(id: number): Observable<Projet> {
-    const url = this.httpUrlBase + '/projet/'+id;
-    return this.http
-      .get(url, httpOptions)
-      .pipe(
-        map((res: Projet) => { 
-          return res;
-        })
-        , retry(3)
-       );
-  }
-
-  /** POST personnes par ID (cd_nom) **/
-  postProjet(data: any): Observable<Projet> {
-    const url = this.httpUrlBase + '/projets';
+  update(id, data: any) {
+    const url = `${this.url_backend}${id}`;
     const sources = JSON.stringify(data);
-    return this.http
-      .post(url, sources, httpOptions)
-      .pipe(
-        map((projet: Projet) => { 
-          return projet;
-        })
-       );
+    return this.http.patch(url, sources, HTTP_OPTIONS);
   }
 
-  /** PUT personnes par ID (cd_nom) **/
-  putProjet(projet: Projet, data: any): Observable<Projet> {
-    const url = this.httpUrlBase + '/projet/'+projet.id;
+  ////////////////////
+  //  LOCALISATION  //
+  ////////////////////
+  /** GET list of Localisation **/
+  localisations(): Observable<Localisation[]> {
+    const url = `${this.httpUrlBase}/localisations`;
+    const options = {};
+    return this.http
+      .get(url, options)
+      .pipe(
+        map((res: Localisation[]) => res), 
+        retry(3)
+      );
+  }
+
+  /** POST create new Localisation **/
+  createLocalisation(data: Localisation): Observable<Localisation> {
+    const url = `${this.httpUrlBase}/localisations`;
     const sources = JSON.stringify(data);
+    return this.http.post(url, sources, HTTP_OPTIONS);
+  }
+
+  /** POST update Localisation **/
+  updateLocalisation(id, data: Localisation): Observable<Localisation> {
+    const url = `${this.httpUrlBase}/localisations/${id}`;
+    const sources = JSON.stringify(data);
+    return this.http.patch(url, sources, HTTP_OPTIONS);
+  }
+
+  /** DELETE delete Localisation **/
+  deleteLocalisation(id): Observable<Localisation> {
+    const url = `${this.httpUrlBase}/localisations/${id}`;
+    return this.http.delete(url, HTTP_OPTIONS);
+  }
+
+  //////////////
+  //  PROJET  //
+  //////////////
+  /** GET list of Localisation **/
+  projets(): Observable<Projet[]> {
+    const url = `${this.httpUrlBase}/projets`;
+    const options = {};
     return this.http
-      .put(url, sources, httpOptions)
+      .get(url, options)
       .pipe(
-        map((projet: Projet) => { 
-          return projet;
-        })
-       );
+        map((res: Projet[]) => res), 
+        retry(3)
+      );
   }
 
-  /** DELETE personnes par ID (cd_nom) **/
-  deleteProjet(projet: Projet): Observable<Boolean> {
-    const url = this.httpUrlBase + '/projet/'+projet.id;
+  /** GET list of Localisation **/
+  projets_select(): Observable<Projet[]> {
+    const url = `${this.httpUrlBase}/projets/select`;
+    const options = {};
     return this.http
-      .delete(url, httpOptions)
-      .pipe( 
-        map((res: Boolean) => { 
-          return res;
-        })
-        , retry(3)/*, catchError(this.handleError('deleteHero'))*/ );
-  }
-
-  /** GET travailleurs par ID  **/
-  getTravailleurs(projet_id: number): Observable<ProjetTravailleur[]> {
-    const url = this.httpUrlBase + '/projet/'+projet_id+'/travailleurs';
-    return this.http
-      .get(url, httpOptions)
+      .get(url, options)
       .pipe(
-        map((travailleurs: ProjetTravailleur[]) => travailleurs)
-        , retry(3)
-       );
+        map((res: Projet[]) => res), 
+        retry(3)
+      );
   }
 
-  /** POST travailleur par ID  **/
-  postTravailleurs(projet_id: number, data: any): Observable<ProjetTravailleur[]> {
-    const url = this.httpUrlBase + '/projet/'+projet_id+'/travailleurs';
-    const options = JSON.stringify(data);
+  /** GET list of Localisation **/
+  myProjets(): Observable<Projet[]> {
+    const url = `${this.httpUrlBase}/projets/me`;
+    const options = {};
     return this.http
-      .post(url, options, httpOptions)
+      .get(url, options)
       .pipe(
-        map((travailleurs: ProjetTravailleur[]) => travailleurs)
-        , retry(3)
-       );
+        map((res: Projet[]) => res), 
+        retry(3)
+      );
   }
 
-  /** PUT travailleur par ID  **/
-  putTravailleur(projet_id: number, trav_init_id: number, data: any): Observable<ProjetTravailleur[]> {
-    const url = this.httpUrlBase + '/projet/'+projet_id+'/travailleur/'+trav_init_id;
-    const options = JSON.stringify(data);
+  /** GET list of Localisation **/
+  projet(id): Observable<Projet> {
+    const url = `${this.httpUrlBase}/projets/${id}`;
+    const options = {};
     return this.http
-      .put(url, options, httpOptions)
+      .get(url, options)
       .pipe(
-        map((travailleurs: ProjetTravailleur[]) => travailleurs)
-        , retry(3)
-       );
+        map((res: Projet) => res), 
+        retry(3)
+      );
   }
 
-  /** DELETE travailleur par ID  **/
-  removeTravailleur(projet: Projet, travailleur: ProjetTravailleur): Observable<ProjetTravailleur[]> {
-    const url = this.httpUrlBase + '/projet/'+projet.id+'/travailleur/'+travailleur.personne.id;
+  /** POST create new Project **/
+  createProjet(data: Projet): Observable<Projet> {
+    const url = `${this.httpUrlBase}/projets`;
+    const sources = JSON.stringify(data);
+    return this.http.post(url, sources, HTTP_OPTIONS);
+  }
+
+  /** GET list of Task **/
+  tasksProject(id): Observable<Task[]> {
+    const url = `${this.httpUrlBase}/projets/${id}/tasks`;
+    const options = {};
     return this.http
-      .delete(url, httpOptions)
+      .get(url, options)
       .pipe(
-        map((travailleurs: ProjetTravailleur[]) => travailleurs)
-        , retry(3)
-       );
+        map((res: Task[]) => res), 
+        retry(3)
+      );
   }
 
-
-  /****************************/ 
-  /** Organismes partenaires **/
-  /****************************/ 
-
-  /** GET partenaires financiers projet ID **/
-  getPartFinanciers(projet_id: number): Observable<Organisme[]> {
-    const url = this.httpUrlBase + '/projet/'+projet_id+'/partenaires-financiers';
+  //////////////
+  //  Charge  //
+  //////////////
+  /** GET list of charge **/
+  chargesProject(id): Observable<Charge[]> {
+    const url = `${this.httpUrlBase}/projets/${id}/charges`;
+    const options = {};
     return this.http
-      .get(url, httpOptions)
+      .get(url, options)
       .pipe(
-        map((res: Organisme[]) => { 
-          return res;
-        })
-        , retry(3)
-       );
+        map((res: Charge[]) => res), 
+        retry(3)
+      );
   }
 
-  /** POST partenaires financiers projet ID **/
-  addPartFinanciers(projet_id: number, organisme_id: number): Observable<Organisme[]> {
-    const url = this.httpUrlBase + '/projet/'+projet_id+'/partenaires-financiers/'+organisme_id;
+  /** POST create new Charge **/
+  createCharge(data: Charge): Observable<Charge> {
+    const url = `${this.httpUrlBase}/charges`;
+    const sources = JSON.stringify(data);
+    return this.http.post(url, sources, HTTP_OPTIONS);
+  }
+
+  /** PATCH update Charge **/
+  updateCharge(id, data: Charge): Observable<Charge> {
+    const url = `${this.httpUrlBase}/charges/${id}`;
+    const sources = JSON.stringify(data);
+    return this.http.patch(url, sources, HTTP_OPTIONS);
+  }
+
+  /** DELETE delete Localisation **/
+  deleteCharge(id): Observable<Charge> {
+    const url = `${this.httpUrlBase}/charges/${id}`;
+    return this.http.delete(url, HTTP_OPTIONS);
+  }
+
+  ////////////////
+  //  Fundings  //
+  ////////////////
+  /** GET list of charge **/
+  fundings(id): Observable<ProjectFunding[]> {
+    const url = `${this.httpUrlBase}/projets/${id}/fundings`;
+    const options = {};
     return this.http
-      .post(url, {}, httpOptions)
+      .get(url, options)
       .pipe(
-        map((res: Organisme[]) => { 
-          return res;
-        })
-        , retry(3)
-       );
+        map((res: ProjectFunding[]) => res), 
+        retry(3)
+      );
   }
 
-  /** DELETE partenaires financiers projet ID  **/
-  removePartFinancier(projet: Projet, organisme: Organisme): Observable<Organisme[]> {
-    const url = this.httpUrlBase + '/projet/'+projet.id+'/partenaire-financier/'+organisme.id;
+  ////////////////
+  //  Fundings  //
+  ////////////////
+  /** GET list of charge **/
+  project_localisations(id): Observable<Localisation[]> {
+    const url = `${this.httpUrlBase}/projets/${id}/localisations`;
+    const options = {};
     return this.http
-      .delete(url, httpOptions)
+      .get(url, options)
       .pipe(
-        map((organismes: Organisme[]) => organismes)
-        , retry(3)
-       );
+        map((res: Localisation[]) => res), 
+        retry(3)
+      );
   }
 
-  /** GET partenaires financiers projet ID **/
-  getPartTechniques(projet_id: number): Observable<Organisme[]> {
-    const url = this.httpUrlBase + '/projet/'+projet_id+'/partenaires-techniques';
+  /** GET list of charge **/
+  project_responsables(id): Observable<Salarie[]> {
+    const url = `${this.httpUrlBase}/projets/${id}/responsables`;
+    const options = {};
     return this.http
-      .get(url, httpOptions)
+      .get(url, options)
       .pipe(
-        map((res: Organisme[]) => { 
-          return res;
-        })
-        , retry(3)
-       );
+        map((res: Salarie[]) => res), 
+        retry(3)
+      );
   }
-
-  /** POST partenaires techniques projet ID **/
-  addPartTechniques(projet_id: number, organisme_id: number): Observable<Organisme[]> {
-    const url = this.httpUrlBase + '/projet/'+projet_id+'/partenaires-techniques/'+organisme_id;
-    return this.http
-      .post(url, {}, httpOptions)
-      .pipe(
-        map((res: Organisme[]) => { 
-          return res;
-        })
-        , retry(3)
-       );
-  }
-
-  /** DELETE partenaires financiers projet ID  **/
-  removePartTechnique(projet: Projet, organisme: Organisme): Observable<Organisme[]> {
-    const url = this.httpUrlBase + '/projet/'+projet.id+'/partenaire-technique/'+organisme.id;
-    return this.http
-      .delete(url, httpOptions)
-      .pipe(
-        map((organismes: Organisme[]) => organismes)
-        , retry(3)
-       );
-  }
-
 }

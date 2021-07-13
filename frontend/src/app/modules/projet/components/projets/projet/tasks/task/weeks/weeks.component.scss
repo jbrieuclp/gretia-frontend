@@ -1,0 +1,21 @@
+table {
+	width: 100%;
+	background-color: #fff;
+}
+
+
+td, th {
+  border: 1px solid #dee2e6;
+  text-align: center;
+}
+
+.year-label {
+	vertical-align: -11px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #5a5a5a;
+}
+
+.cursor {
+  pointer: cursor;
+}

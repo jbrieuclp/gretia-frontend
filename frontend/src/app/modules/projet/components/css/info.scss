@@ -1,0 +1,39 @@
+.detail-element {
+	padding: 10px 20px;
+	font-family: Roboto,"Helvetica Neue",sans-serif;
+}
+
+.detail-element .element-label {
+	font-size: 1em;
+	color: rgba(0,0,0,.54);
+	font-style: italic;
+}
+
+.detail-element .element-content {
+	font-size: 1.5em;
+  font-weight: 400;
+}
+
+.table .mat-icon-button {
+	height: 24px;
+	line-height: 24px;
+}
+
+.edit-delete-bloc-btn {
+	position: absolute;
+  top: 20px;
+  right: 30px;
+}
+
+.edit-delete-bloc-btn button {
+	margin-left: 5px;
+}
+
+.item-metadata {
+	position: absolute;
+  bottom: 10px;
+  left: 20px;
+  font-style: italic;
+  font-size: .8em;
+  color: #999;
+}

@@ -1,0 +1,19 @@
+<button 
+	mat-button
+	[ngClass]="!waiting ? 'mat-raised-button' : 'mat-mini-fab'"
+	class="form-element waves-effect waves-light btn"
+	[type]="type"
+	[color]="color" 
+	[disabled]="disabled || waiting"
+>
+	<ng-container *ngIf="waiting; else displayIcon">
+		<mat-spinner 
+			*ngIf="waiting"
+			diameter="25"
+			strokeWidth="2">
+		</mat-spinner>
+	</ng-container>
+	<ng-template #displayIcon>
+		<ng-content></ng-content> 
+	</ng-template>
+</button>

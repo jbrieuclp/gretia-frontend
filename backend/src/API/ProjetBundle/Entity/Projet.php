@@ -21,6 +21,7 @@ class Projet
 {
 	public function __construct() {
     $this->localisations = new ArrayCollection();
+    $this->projetsEnfant = new ArrayCollection();
     $this->responsables = new ArrayCollection();
     $this->taches = new ArrayCollection();
   }
@@ -36,64 +37,71 @@ class Projet
   private $id;
   
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Projet", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Projet", inversedBy="childrens", cascade={"all"})
    * @ORM\JoinColumn(name="projet_parent_id", referencedColumnName="id_projet", nullable=true)
    *
    * @Serializer\Groups({"projet"})
    */
-  private $projetParent;
+  private $parent;
+
+  /**
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Projet", mappedBy="parent")
+   *
+   * @Serializer\Groups({"projet"})
+   */
+    protected $childrens;
   
   /**
    * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\TypeProjet", cascade={"all"})
    * @ORM\JoinColumn(name="type_projet_id", referencedColumnName="id_type_projet", nullable=false)
-   * @Assert\NotNull(message="Type de projet non renseigné")
+   * @ Assert\NotNull(message="Type de projet non renseigné")
    *
    * @Serializer\Groups({"projet"})
    */
   private $typeProjet;
   
   /**
-   * @ORMColumn(name="code", type="string", length=50, nullable=false)
+   * @ORM\Column(name="code", type="string", length=50, nullable=false)
    * @Assert\NotNull(message="Code non renseigné")
    * @Assert\Length(
    *      max = 50,
    *      maxMessage = "Le code du projet ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @SerializerGroups({"projet", "salarie", "tache"})
+   * @Serializer\Groups({"projet", "salarie", "tache"})
    */
   private $code;
   
   /**
-   * @ORMColumn(name="intitule", type="string", length=500, nullable=false)
+   * @ORM\Column(name="intitule", type="string", length=500, nullable=false)
    * @Assert\NotNull(message="Intitulé non renseigné")
    * @Assert\Length(
    *      max = 500,
    *      maxMessage = "L'intitulé' du projet ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @SerializerGroups({"projet", "salarie", "tache"})
+   * @Serializer\Groups({"projet", "salarie", "tache"})
    */
   private $intitule;
   
   /**
-   * @ORMColumn(name="objectif", type="string", nullable=true)
+   * @ORM\Column(name="objectif", type="string", nullable=true)
    *
-   * @SerializerGroups({"projet"})
+   * @Serializer\Groups({"projet"})
    */
   private $objectif;
   
   /**
-   * @ORMColumn(name="date_debut", type="datetime", nullable=true)
+   * @ORM\Column(name="date_debut", type="datetime", nullable=true)
    *
-   * @SerializerGroups({"projet"})
+   * @Serializer\Groups({"projet"})
    */
   private $dateDebut;
   
   /**
-   * @ORMColumn(name="date_fin", type="datetime", nullable=true)
+   * @ORM\Column(name="date_fin", type="datetime", nullable=true)
    *
-   * @SerializerGroups({"projet"})
+   * @Serializer\Groups({"projet"})
    */
   private $dateFin;
 
@@ -139,26 +147,26 @@ class Projet
   }
 
   /**
-   * Set projetParent
+   * Set parent
    *
-   * @param string $projetParent
+   * @param string $parent
    * @return string
    */
-  public function setProjetParent($projetParent)
+  public function setParent($parent)
   {
-    $this->projetParent = $projetParent;
+    $this->parent = $parent;
 
     return $this;
   }
 
   /**
-   * Get projetParent
+   * Get parent
    *
    * @return integer 
    */
-  public function getProjetParent()
+  public function getParent()
   {
-    return $this->projetParent;
+    return $this->parent;
   }
 
   /**
@@ -350,41 +358,41 @@ class Projet
   }
 
   /**
-   * Add reponsable
+   * Add responsable
    *
    * @param Salarie $item
    */
-  public function addReponsable(Salarie $item) {
+  public function addResponsable(Salarie $item) {
     // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
-    if (!$this->reponsables->contains($item)) {
-      $this->reponsables->add($item);
+    if (!$this->responsables->contains($item)) {
+      $this->responsables->add($item);
     }
   }
 
   /**
-   * Remove reponsable
+   * Remove responsable
    *
    * @param Salarie $item
    */
-  public function removeReponsable(Salarie $item) {
+  public function removeResponsable(Salarie $item) {
     // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
-    if ($this->reponsables->contains($item)) {
-      $this->reponsables->removeElement($item);
+    if ($this->responsables->contains($item)) {
+      $this->responsables->removeElement($item);
     }
   }
 
   /**
-   * Set Reponsables
+   * Set Responsables
    *
-   * @return ArrayCollection $reponsables
+   * @return ArrayCollection $responsables
    */
-  public function setReponsables($items) {
+  public function setResponsables($items) {
     if ($items instanceof ArrayCollection || is_array($items)) {
       foreach ($items as $item) {
-        $this->addReponsable($item);
+        $this->addResponsable($item);
       }
     } elseif ($items instanceof Salarie) {
-      $this->addReponsable($items);
+      $this->addResponsable($items);
     } else {
       throw new Exception("$items must be an instance of Salarie or ArrayCollection");
     }
@@ -393,10 +401,10 @@ class Projet
   /**
    * Get ArrayCollection
    *
-   * @return ArrayCollection $reponsables
+   * @return ArrayCollection $responsables
    */
-  public function getReponsables() {
-    return $this->reponsables;
+  public function getResponsables() {
+    return $this->responsables;
   }
 
   /**
@@ -424,6 +432,33 @@ class Projet
   public function getTaches()
   {
       return $this->taches;
+  }
+
+  /**
+  * Projets Enfant
+  */
+  public function addChildren(Projet $item)
+  {
+      // Ici, on utilise l'ArrayCollection vraiment comme un tableau
+      $this->childrens[] = $item;
+      
+      // liaison inverse avec entité
+      $item->setParent($this);
+
+      return $this;
+  }
+
+  public function removeChildren(Projet $item)
+  {
+      // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
+      $this->childrens->removeElement($item);
+      $item->setParent(null);
+  }
+
+  // Notez le pluriel, on récupère une liste de catégories ici !
+  public function getChildrens()
+  {
+      return $this->childrens;
   }
 
 }

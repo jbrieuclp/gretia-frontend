@@ -55,7 +55,7 @@ export class AuthService {
   }
 
   login(user: any): Observable<any> {
-  	const url = this.httpUrlBase + '/login_check';
+  	const url = this.httpUrlBase + '/login';
     return this.http
     	.post<User>(url, user)
     	.pipe(

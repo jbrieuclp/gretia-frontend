@@ -1,0 +1,81 @@
+<table>
+	<ng-container *ngIf="!loading; else loadingBar">
+		<tr *ngIf="displayMonths">
+			<th 
+				*ngFor="let month of headerMonths"
+				[attr.colspan]="month.weeks"
+			>
+				{{ month.label }}
+			</th>
+		</tr>
+
+		<tr>
+			<td 
+				*ngFor="let week of weeks"
+				(mouseenter)="mouseEnter($event, week)"  
+				(mouseleave)="mouseLeave($event)"
+			>
+				<mat-checkbox 
+					color="primary"
+					[checked]="week.isUse"
+					[matTooltip]="week.label"
+					[disabled]="!editionMode"
+					(change)="changeEvent($event, week)"
+				>
+				</mat-checkbox>
+			</td>
+		</tr>
+
+		<tr *ngIf="displayYear">
+			<td 
+				[attr.colspan]="weeks.length"
+				style="text-align: center;"
+			>
+				<button 
+					mat-icon-button
+					class="float-left"
+					(click)="downYear()"
+				>
+			    <span class="material-icons">
+						west
+					</span>
+			  </button>
+
+			  <ng-container *ngIf="!displaySelectYear; else selectYearTmp">
+					<span 
+						class="year-label cursor"
+						(click)="displaySelectYear = true;"
+					> {{ weeks[0].year }} </span>
+			  </ng-container>
+			  <ng-template #selectYearTmp>
+			  	<mat-form-field style="width: 100px;">
+					  <mat-label>Années</mat-label>
+					  <mat-select
+					  	[(value)]="year"
+					  	(selectionChange)="displaySelectYear = false;"
+					  >
+					    <mat-option *ngFor="let option of getSelectYear()" [value]="option">
+					      {{ option }}
+					    </mat-option>
+					  </mat-select>
+					</mat-form-field>
+			  </ng-template>
+				
+				<button 
+					mat-icon-button
+					class="float-right"
+					(click)="upYear()"
+				>
+			    <span class="material-icons">
+						east
+					</span>
+			  </button>
+			</td>
+		</tr>
+	</ng-container>
+	<ng-template #loadingBar>
+		<tr><td><mat-progress-bar mode="query"></mat-progress-bar></td></tr>
+	</ng-template>
+
+
+</table>

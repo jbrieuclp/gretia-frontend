@@ -1,0 +1,27 @@
+<mat-form-field>
+  <mat-label>Type de projet</mat-label>
+  <mat-select 
+  	[formControl]="form"
+  	[required]="required"
+  >
+  	<ng-container *ngIf="loading; else dataTmp">
+  		<mat-option>Chargement...</mat-option>
+  	</ng-container>
+		<ng-template #dataTmp>
+			<ng-container *ngIf="projectTypes.length; else noDataTmp">
+				<mat-option 
+					*ngFor="let projectType of projectTypes"
+					[value]="projectType['@id']"
+				>
+		      {{ projectType.refProjectType.libelle }}
+		    </mat-option>
+		  </ng-container>
+		  <ng-template #noDataTmp>
+		  	<mat-option>Aucune valeur pour cette période du projet (voir avec l'admin)</mat-option>
+		  </ng-template>
+	  </ng-template>
+  </mat-select>
+  <mat-error *ngIf="form.errors && form.hasError('dateProjectTypeError')">
+		La valeur ne correspond pas à la date du projet
+	</mat-error>
+</mat-form-field>

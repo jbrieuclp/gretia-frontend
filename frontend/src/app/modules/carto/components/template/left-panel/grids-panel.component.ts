@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material';
+import { map } from 'rxjs/operators';
 import LayerGroup from 'ol/layer/Group';
 import TileLayer from 'ol/layer/Tile';
 import XYZ from 'ol/source/XYZ';
@@ -70,6 +71,9 @@ export class GridsPanelDialog implements OnInit {
 
   getScales() {
     this.layerS.getAvailablesScales()
+      .pipe(
+        map((res): string[] => Object.values(res['hydra:member']))
+      )
       .subscribe(scales => this.scales = scales)
   }
 

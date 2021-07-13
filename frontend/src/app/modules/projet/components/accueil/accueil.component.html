@@ -1,0 +1,48 @@
+<h5>Avancement perso</h5>
+<div>
+	<mat-slide-toggle 
+		#calendarDisplay
+		color="primary"
+	>Mode calendrier</mat-slide-toggle>
+</div>
+
+<ng-container *ngIf="calendarDisplay.checked; else tableView">
+	<app-projects-tasks-task-weeks
+		[year]="year"
+		[data]="getWeeksData()"
+		[displayYear]="true"
+		[editionMode]="false"
+		(change)="submit($event)"
+	></app-projects-tasks-task-weeks>
+</ng-container>
+
+<ng-template #tableView>
+	<mat-card *ngFor="let projet of projets">
+		<mat-card-title>{{ projet.code }} - {{ projet.intitule }}</mat-card-title>
+		<mat-card-content>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Intitulé</th>
+						<th>Nb jours prévus</th>
+						<th>Nb jours réalisés</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let task of projet.tasks">
+						<td>{{ task.intitule }}</td>
+						<td>{{ task.nbJours }}</td>
+						<td>{{ task.numberDaysDone }}</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td><b>TOTAL</b></td>
+						<td>{{ tasksDay(projet) }}</td>
+						<td>{{ tasksDayDone(projet) }}</td>
+					</tr>
+				</tfoot>
+			</table>
+		</mat-card-content>
+	</mat-card>
+</ng-template>

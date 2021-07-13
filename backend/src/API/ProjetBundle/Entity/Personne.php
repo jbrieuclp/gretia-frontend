@@ -5,14 +5,16 @@ namespace API\ProjetBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+use API\ProjetBundle\Entity\Salarie;
 
 /**
 * @ORM\Entity
 * @ORM\Table(name="projet.personne")
 * @UniqueEntity(fields="alias", message="Cet alias est déjà utilisé")
-* @UniqueEntity(fields="compte_id", message="Ce compte est déjà utilisé")
 */
 class Personne
 {
@@ -31,54 +33,68 @@ class Personne
   private $id;
   
   /**
-   * @ORMColumn(name="nom", type="string", length=255, nullable=false)
+   * @ORM\Column(name="nom", type="string", length=255, nullable=false)
    * @Assert\NotNull(message="Nom non renseignée")
    * @Assert\Length(
    *      max = 255,
    *      maxMessage = "Le nom ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @SerializerGroups({"personne", "salarie", "projet", "recup", "conge", "fonction_salarie", "antenne"})
+   * @Serializer\Groups({"personne", "salarie", "projet", "recup", "conge", "fonction_salarie", "antenne"})
    */
   private $nom;
 
   /**
-   * @ORMColumn(name="prenom", type="string", length=255, nullable=false)
+   * @ORM\Column(name="prenom", type="string", length=255, nullable=false)
    * @Assert\NotNull(message="Prenom non renseignée")
    * @Assert\Length(
    *      max = 255,
    *      maxMessage = "Le prenom ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @SerializerGroups({"personne", "salarie", "projet", "recup", "conge", "fonction_salarie", "antenne"})
+   * @Serializer\Groups({"personne", "salarie", "projet", "recup", "conge", "fonction_salarie", "antenne"})
    */
   private $prenom;
 
   /**
-   * @ORMColumn(name="alias", type="string", length=255, nullable=false)
+   * @ORM\Column(name="alias", type="string", length=255, nullable=false)
    * @Assert\NotNull(message="Alias non renseignée")
    * @Assert\Length(
    *      max = 255,
    *      maxMessage = "L'alias ne doit pas faire plus de {{ limit }} caractères"
    * )
    *
-   * @SerializerGroups({"personne", "salarie"})
+   * @Serializer\Groups({"personne", "salarie"})
    */
   private $alias;
 
   /**
-   * @ORMColumn(name="compte_id", type="integer", nullable=true)
+   * @ORM\Column(name="compte_id", type="integer", nullable=true)
    *
-   * @SerializerGroups({"personne", "salarie"})
+   * @Serializer\Groups({"personne", "salarie"})
    */
   private $compteId;
 
   /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Salarie", mappedBy="personne", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Salarie", mappedBy="personne", cascade={"persist", "merge"}, orphanRemoval=true, fetch="EAGER")
    *
    * @Serializer\Groups({"personne"})
    */
   private $salaries;
+
+  /**
+   * @Serializer\VirtualProperty
+   * @Serializer\SerializedName("workIn")
+   * @Serializer\Groups({"salarie", "personne"})
+   */
+  public function workIn() {
+    foreach ($this->salaries as $salarie) {
+      if ( $salarie->getDateDebut() <= new \DateTime("now") and ($salarie->getDateFin() === null or $salarie->getDateFin() >= new \DateTime("now")) ) {
+        return $salarie;
+      }
+    }
+    return null;
+  }
  
   
 
@@ -168,7 +184,7 @@ class Personne
    * @param string $compteId
    * @return string
    */
-  public function setNom($compteId)
+  public function setCompteId($compteId)
   {
     $this->compteId = $compteId;
 
@@ -180,32 +196,49 @@ class Personne
    *
    * @return integer 
    */
-  public function getNom()
-  compteId    return $this->nom;
+  public function getCompteId()
+  {
+    return $this->compteId;
   }
 
   /**
   * Salarie
   */
-  public function addSalarie(Salarie $salarie)
+  public function addSalarie(Salarie $item)
   {
-      // Ici, on utilise l'ArrayCollection vraiment comme un tableau
-      $this->salaries[] = $salarie;
-      
-      // liaison inverse avec entité
-      $salarie->setAntenne($this);
-
-      return $this;
+      // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+      if (!$this->salaries->contains($item)) {
+        $this->salaries->add($item);
+        $item->setPersonne($this);
+      }
   }
 
-  public function removeSalarie(Salarie $salarie)
+  public function removeSalarie(Salarie $item)
   {
-      // Ici on utilise une méthode de l'ArrayCollection, pour supprimer la catégorie en argument
-      $this->salaries->removeElement($salarie);
-      $salarie->setAntenne(null);
+      // Si l'objet fait déjà partie de la collection on ne l'ajoute pas
+      if ($this->salaries->contains($item)) {
+        $this->salaries->removeElement($item);
+        $item->setPersonne(null);
+      }
   }
 
-  // Notez le pluriel, on récupère une liste de catégories ici !
+  // // Notez le pluriel, on récupère une liste de catégories ici !
+  public function setSalaries($items = []) 
+  {
+    if ($items instanceof ArrayCollection || is_array($items)) {
+      foreach ($items as $item) {
+        $this->addSalarie($item);
+      }
+    } elseif ($items instanceof Salarie) {
+      $this->addSalarie($items);
+    } else {
+      throw new \Exception('Salarie must be an instance of Salarie or ArrayCollection');
+    }
+  }
+
+  /**
+   * @return ArrayCollection|Salarie[]
+   */
   public function getSalaries()
   {
       return $this->salaries;

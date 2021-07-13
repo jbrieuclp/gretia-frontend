@@ -1,0 +1,27 @@
+<a mat-raised-button 
+	routerLink="/projet/projets"
+	aria-label="Icon d'une fleche vers la gauche" 
+	matTooltip="Retourner aux projets"
+>
+  <mat-icon>arrow_back</mat-icon> Précédent
+</a>
+
+
+<nav mat-tab-nav-bar *ngIf="(route.params|async).projet">
+  <a 
+  	mat-tab-link 
+  	*ngFor="let tab of tabs; let index = index;"
+  	[routerLink]="['/projet/projets', (route.params|async).projet, tab.url]"
+  	[active]="(route.params|async).onglet == tab.url || ((route.params|async).onglet === '' && index == 0)"
+  > {{ tab.label }} </a>
+</nav>
+
+<ng-container [ngSwitch]="(route.params|async).onglet">
+
+	<app-projet-projet-display *ngSwitchCase="''"></app-projet-projet-display>
+	<app-projet-projet-display *ngSwitchCase="'details'"></app-projet-projet-display>
+	<app-projet-projet-montages *ngSwitchCase="'montage'"></app-projet-projet-montages>
+	<app-projet-projet-financement *ngSwitchCase="'financement'"></app-projet-projet-financement>
+	<app-projets-tasks *ngSwitchCase="'taches'"></app-projets-tasks>
+
+</ng-container>

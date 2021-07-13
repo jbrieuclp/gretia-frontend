@@ -1,0 +1,50 @@
+<mat-card *ngIf="taxon">
+	<mat-tab-group [selectedIndex]="11">
+	  <mat-tab *ngFor="let version of taxon.taxrefVersions;">
+	  	<ng-template mat-tab-label>
+	      <span [ngClass]="{'green lighten-4': taxon.versionExist(version),'red lighten-4': !taxon.versionExist(version)}">
+	      	Taxref {{ version }}
+					<mat-icon class="example-tab-icon float-right">{{ (taxon.versionExist(version)) ? 'done' : 'clear' }}</mat-icon>
+	      </span>
+    	</ng-template>
+
+			<div 
+				*ngIf="version != 2" 
+				[ngStyle]="{'margin': '10px 0px'}"
+			>
+				<button 
+					mat-raised-button 
+					color="primary" 
+					(click)="openChangeDialog(version)"
+				>
+					Afficher les changement pour cette version
+				</button>
+			</div>
+    	<div *ngIf="!taxon.versionExist(version); else elseBlock">Non présent dans la version {{ version }} de Taxref.</div>
+			<ng-template #elseBlock>
+
+				<table class="table table-hover table-sm">
+				  <tbody>
+						<ng-container *ngFor="let entry of taxon.getTaxref(version) | keys">
+							<tr *ngIf="entry.key != 'deserialize'">
+								<td><strong>{{ entry.key }}</strong></td>
+								<td>
+									<ng-container *ngIf="isCodeTaxon( entry.value ); else url">
+										<a [routerLink]="['/taxref', 'taxon', entry.value]">{{ entry.value }}</a>
+									</ng-container>
+									<ng-template #url>
+									    <ng-container *ngIf="isUrl( entry.value ); else text">
+									    	<a href="{{ entry.value }}" target="_BLANK" title="Vers INPN">{{ entry.value }}</a>
+									    </ng-container>
+									</ng-template>
+									<ng-template #text>{{ entry.value }}</ng-template>
+								</td>
+							</tr>
+						</ng-container>
+				  </tbody>
+				</table>
+			</ng-template>
+	  </mat-tab>
+	</mat-tab-group>
+
+</mat-card>

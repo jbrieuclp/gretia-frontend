@@ -15,58 +15,47 @@ class TacheAttribution
 	 
   /**
    * @ORM\Id
-   * @ORM\ManyToOne(targetEntity="API\CoreBundle\Entity\Tache", cascade={"persist", "merge"}, fetch="EAGER")
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Tache", inversedBy="attributionSalaries", cascade={"persist", "merge"}, fetch="EAGER")
    * @ORM\JoinColumn(name="tache_id", referencedColumnName="id_tache", nullable=false)
    * @Assert\NotNull(message="Tâche non renseignée")
    *
-   * @SerializerGroups({"tache_attribution", "salarie"})
+   * @Serializer\Groups({"tache_attribution", "salarie"})
    */
   private $tache;
 
   /**
    * @ORM\Id
-   * @ORM\ManyToOne(targetEntity="API\CoreBundle\Entity\Salarie", cascade={"persist", "merge"}, fetch="EAGER")
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Salarie", cascade={"persist", "merge"}, fetch="EAGER")
    * @ORM\JoinColumn(name="salarie_id", referencedColumnName="id_salarie", nullable=false)
    * @Assert\NotNull(message="Salarié non renseigné")
    *
-   * @SerializerGroups({"tache_attribution", "tache"})
+   * @Serializer\Groups({"tache_attribution", "tache"})
    */
   private $salarie;
 
   /**
-   * @ORMColumn(name="nb_jours", type="", nullable=false)
+   * @ORM\Column(name="nb_jours", type="decimal", nullable=false)
    * @Assert\NotNull(message="Nombre de jours non renseignée")
    *
-   * @SerializerGroups({"tache_attribution", "tache", "salarie"})
+   * @Serializer\Groups({"tache_attribution", "tache", "salarie"})
    */
   private $nbJours;
 
   /**
-   * @ORMColumn(name="date_debut", type="", nullable=true)
+   * @ORM\Column(name="date_debut", type="datetime", nullable=true)
    *
-   * @SerializerGroups({"tache_attribution", "tache", "salarie"})
+   * @Serializer\Groups({"tache_attribution", "tache", "salarie"})
    */
   private $dateDebut;
 
   /**
-   * @ORMColumn(name="date_fin", type="", nullable=true)
+   * @ORM\Column(name="date_fin", type="datetime", nullable=true)
    *
-   * @SerializerGroups({"tache_attribution", "tache", "salarie"})
+   * @Serializer\Groups({"tache_attribution", "tache", "salarie"})
    */
   private $dateFin;
   
   
-
-
-  /**
-   * Get id_projet
-   *
-   * @return integer 
-   */
-  public function getId()
-  {
-    return $this->id;
-  }
 
   /**
    * Set tache

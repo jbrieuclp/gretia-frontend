@@ -1,0 +1,38 @@
+span.button {
+  left: 0px;
+}
+
+span.value {
+  margin-left: 15px;
+}
+
+span.d_id {
+  min-width: 55px;
+  font-style: italic;
+  font-size: 1.5em;
+  font-weight: 300;
+  color: #777;
+}
+
+span.d_nom {
+	font-size: 1.4em;
+}
+
+span.button {
+	font-size: 1.4em;
+  float: left;
+  position: absolute;
+}
+
+::ng-deep .mat-horizontal-stepper-header-container{
+    display: none !important;
+}
+
+::ng-deep .mat-list-item-content .mat-icon-button  {
+  width: 24px!important;
+  margin: 0!important;
+}
+
+.mat-list-item {
+  cursor: pointer;
+}

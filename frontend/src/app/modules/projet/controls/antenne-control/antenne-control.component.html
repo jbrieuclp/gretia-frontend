@@ -1,0 +1,23 @@
+<div class="antenne-form">
+  <mat-form-field>
+    <mat-label>Antennes</mat-label>
+    <mat-select 
+      [formControl]="form"
+      required>
+      <mat-option *ngIf="loading">
+        <mat-spinner 
+          diameter="20"
+          strokeWidth="2"
+        >
+        </mat-spinner>
+        Chargement...
+      </mat-option>
+      <mat-option 
+        *ngFor="let option of options" 
+        [value]="option['@id']">
+        {{ option.nom }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+</div>

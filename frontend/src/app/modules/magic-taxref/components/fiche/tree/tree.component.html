@@ -1,0 +1,14 @@
+<mat-accordion *ngIf="treeS.depth">
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+       <strong>Classification</strong>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-magictaxref-fiche-tree-children 
+    	[taxon]="parents" 
+    	[indent]="indentation" 
+    	[index]="1"
+    ></app-magictaxref-fiche-tree-children>
+  </mat-expansion-panel>
+</mat-accordion>

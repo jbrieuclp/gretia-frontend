@@ -1,53 +1,92 @@
 <header>
-	<mat-toolbar color="primary" class="navbar fixed-top" [ngStyle]="{'background-color': layout.getNavbarColor()?.background}">
-	    <div class="float-left">
-	    	<button mat-fab color="primary" (click)="openSidenav()" *ngIf="layout.hasSidenav()">
-			    <mat-icon aria-label="Ouvrir le menu">menu</mat-icon>
-			  </button>
-			  <a mat-mini-fab *ngIf="!layout.hasSidenav()"
-			  	[ngStyle]="{'background-color': layout.getNavbarColor()?.background, color: layout.getNavbarColor()?.text}" 
-			  	routerLink="/" 
-			  	matTooltip="Retour à l'accueil"
-        	matTooltipPosition="right">
-			    <mat-icon aria-label="Ouvrir le menu">home</mat-icon>
-			  </a>
-			</div>
-	    <div>
-	    	<img class="logo" src="assets/images/logoGretia_rond.png">
-		    <span class="app-titre" [ngStyle]="{'color': layout.getNavbarColor()?.text}">{{ layout.getTitle() }}</span>
-	    </div>
-			<div class="float-right">
-				<ng-container *ngIf="user.isAuthenticated(); else connexionBlock">
-					
-					<ng-container *ngIf="user.hasRole('GESTION_PROJET'); else elseBlock">
-						<button mat-button [matMenuTriggerFor]="menu" matTooltip="Ouvrir le menu"><mat-icon>face</mat-icon><span class="name">{{ user.username }}</span></button>
-			    	<mat-menu #menu="matMenu" [yPosition]="'below'">
-	            <span mat-menu-item [disableRipple]="true" (click)="$event.stopPropagation()">
-	            <mat-list>
-	              <mat-list-item>
-	                <a matLine routerLink="/projet">Suivi des projets
-	                  <button mat-icon-button >
-	                    <mat-icon>keyboard_arrow_right</mat-icon>
-	                  </button>
-	                </a>
-	              </mat-list-item>
-	            </mat-list>
-	            </span>
-	          </mat-menu>
-	        </ng-container>
-	        <ng-template #elseBlock>
-	        	<button mat-button><mat-icon>face</mat-icon><span class="name">{{ user.username }}</span></button>
-	        </ng-template>
+	<mat-toolbar 
+		color="primary" 
+		class="navbar fixed-top" 
+		[ngStyle]="{'background-color': layout.getNavbarColor()?.background}"
+	>
+    <div class="float-left">
+    	<button 
+    		*ngIf="layout.hasSidenav()"
+    		mat-fab color="primary" 
+    		(click)="openSidenav()" 
+    	>
+		    <mat-icon aria-label="Ouvrir le menu">menu</mat-icon>
+		  </button>
+		  <a 
+		  	*ngIf="!layout.hasSidenav()"
+		  	mat-mini-fab 
+		  	[ngStyle]="{'background-color': layout.getNavbarColor()?.background, color: layout.getNavbarColor()?.text}" 
+		  	routerLink="/" 
+		  	matTooltip="Retour à l'accueil"
+      	matTooltipPosition="right"
+      >
+		    <mat-icon aria-label="Ouvrir le menu">home</mat-icon>
+		  </a>
+		</div>
+    <div>
+    	<img 
+    		class="logo" 
+    		src="assets/images/logoGretia_rond.png"
+    	>
+	    <span 
+	    	class="app-titre" 
+	    	[ngStyle]="{'color': layout.getNavbarColor()?.text}"
+	    >
+	  		{{ layout.getTitle() }}
+	  	</span>
+    </div>
+		<div class="float-right">
+			<ng-container *ngIf="user.isAuthenticated(); else connexionBlock">
+				
+				<ng-container *ngIf="user.hasRole('ROLE_GESTION_PROJET'); else elseBlock">
+					<button 
+						mat-button 
+						[matMenuTriggerFor]="menu" 
+						matTooltip="Ouvrir le menu"
+					>
+						<mat-icon>face</mat-icon>
+						<span class="name">{{ user.username }}</span>
+					</button>
+		    	<mat-menu 
+		    		#menu="matMenu" 
+		    		[yPosition]="'below'"
+		    	>
+            <span 
+            	mat-menu-item 
+            	[disableRipple]="true" 
+            	(click)="$event.stopPropagation()"
+            >
+            <mat-list>
+              <mat-list-item>
+                <a matLine routerLink="/projet">Suivi des projets
+                  <button mat-icon-button>
+                    <mat-icon>keyboard_arrow_right</mat-icon>
+                  </button>
+                </a>
+              </mat-list-item>
+            </mat-list>
+            </span>
+          </mat-menu>
+        </ng-container>
+        <ng-template #elseBlock>
+        	<button mat-button>
+        		<mat-icon>face</mat-icon>
+        		<span class="name">{{ user.username }}</span>
+        	</button>
+        </ng-template>
 
-		    	<button mat-icon-button>
-				    <mat-icon 
-				    	matTooltip="Se deconnecter"
-				    	(click)="logout()">exit_to_app</mat-icon>
-				  </button>
-		    </ng-container>
-		    <ng-template #connexionBlock>
-					<a routerLink="/login"><button mat-raised-button>Connexion</button></a>
-				</ng-template>
-			</div>
+	    	<button mat-icon-button>
+			    <mat-icon 
+			    	matTooltip="Se deconnecter"
+			    	(click)="logout()"
+			    >exit_to_app</mat-icon>
+			  </button>
+	    </ng-container>
+	    <ng-template #connexionBlock>
+				<a routerLink="/login">
+					<button mat-raised-button>Connexion</button>
+				</a>
+			</ng-template>
+		</div>
 	</mat-toolbar>
 </header>

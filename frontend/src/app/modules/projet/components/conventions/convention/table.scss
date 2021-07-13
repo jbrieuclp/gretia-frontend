@@ -1,0 +1,16 @@
+table .mat-icon-button { 
+	height: 24px; 
+	line-height: 24px; 
+}
+
+::ng-deep table th,
+::ng-deep table td
+{ 
+	vertical-align: middle!important; 
+}
+
+table th:last-child,
+table td:last-child,
+ { 
+	width: 250px; 
+}

@@ -89,6 +89,20 @@ export class SuiveuseRepository {
   }
 
   /** GET personnes par ID (cd_nom) **/
+  getMySynthese(options: TRAVAIL_OPTIONS): Observable<any[]> {
+    const params = Object.keys(options).map(key => key + '=' + options[key]).join('&');
+    const url = `${this.httpUrlBase}/works/me?${params}`;
+    return this.http
+      .get(url, httpOptions)
+      .pipe(
+        map((res: Travail[]) => { 
+          return res;
+        })
+        , retry(3)
+       );
+  }
+
+  /** GET personnes par ID (cd_nom) **/
   getTravaux(user: number, options: TRAVAIL_OPTIONS): Observable<Travail[]> {
     const params = Object.keys(options).map(key => key + '=' + options[key]).join('&');
     const url = `${this.httpUrlBase}/personne/${user}/travaux?${params}`;

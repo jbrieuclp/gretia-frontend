@@ -19,6 +19,7 @@ use API\ProjetBundle\Entity\Travail;
 class Salarie
 {
 	public function __construct() {
+    $this->responsableProjets = new ArrayCollection();
     $this->recups = new ArrayCollection();
     $this->conges = new ArrayCollection();
     $this->attributionTaches = new ArrayCollection();
@@ -31,12 +32,12 @@ class Salarie
    * @ORM\GeneratedValue(strategy="SEQUENCE")
    * @ORM\SequenceGenerator(sequenceName="projet.salarie_id_salarie_seq", allocationSize=1, initialValue=1)
    *
-   * @Serializer\Groups({"salarie", "projet", "recup", "conge", "fonction_salarie", "antenne"})
+   * @Serializer\Groups({"salarie", "projet", "recup", "conge", "fonction_salarie", "antenne", "personne"})
    */
   private $id;
   
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Personne", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Personne", inversedBy="salaries", cascade={"persist", "merge"}, fetch="EAGER")
    * @ORM\JoinColumn(name="personne_id", referencedColumnName="id_personne", nullable=false)
    * @Assert\NotNull(message="Personne non renseignée")
    *
@@ -45,79 +46,93 @@ class Salarie
   private $personne;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\FonctionSalarie", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\FonctionSalarie", fetch="EAGER")
    * @ORM\JoinColumn(name="fonction_salarie_id", referencedColumnName="id_fonction_salarie", nullable=false)
    * @Assert\NotNull(message="Fonction non renseignée")
    *
-   * @Serializer\Groups({"salarie"})
+   * @Serializer\Groups({"salarie", "personne"})
    */
   private $fonction;
 
   /**
-   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Antenne", cascade={"all"})
+   * @ORM\ManyToOne(targetEntity="API\ProjetBundle\Entity\Antenne", fetch="EAGER")
    * @ORM\JoinColumn(name="antenne_id", referencedColumnName="id_antenne", nullable=false)
    * @Assert\NotNull(message="Antenne non renseignée")
    *
-   * @Serializer\Groups({"salarie"})
+   * @Serializer\Groups({"salarie", "personne"})
    */
   private $antenne;
 
   /**
-   * @ORMColumn(name="date_debut", type="datetime", nullable=false)
+   * @ORM\Column(name="date_debut", type="datetime", nullable=false)
    *
-   * @SerializerGroups({"salarie"})
+   * @Serializer\Groups({"salarie", "personne"})
    */
   private $dateDebut;
 
   /**
-   * @ORMColumn(name="date_fin", type="datetime", nullable=false)
+   * @ORM\Column(name="date_fin", type="datetime", nullable=true)
    *
-   * @SerializerGroups({"salarie"})
+   * @Serializer\Groups({"salarie", "personne"})
    */
   private $dateFin;
 
   /**
-   * @ORMColumn(name="taux", type="decimal", nullable=false)
+   * @ORM\Column(name="taux", type="decimal", nullable=false)
    *
-   * @SerializerGroups({"salarie"})
+   * @Serializer\Groups({"salarie", "personne"})
    */
   private $taux;
 
   /**
    * @var ArrayCollection Projet $responsableProjets
    *
-   * @ORM\ManyToMany(targetEntity="API\ProjetBundle\Entity\Projet", mappedBy="responsables")
+   * @ORM\ManyToMany(targetEntity="API\ProjetBundle\Entity\Projet", mappedBy="responsables", fetch="EAGER")
    * @Serializer\Groups({"salarie"})
    */
   private $responsableProjets;
 
   /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Recup", mappedBy="salarie", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Recup", mappedBy="salarie", fetch="EAGER")
    *
    * @Serializer\Groups({"salarie"})
    */
   private $recups;
 
   /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\CongePaye", mappedBy="salarie", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\CongePaye", mappedBy="salarie", fetch="EAGER")
    *
    * @Serializer\Groups({"salarie"})
    */
   private $conges;
 
   /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\TacheAttribution", mappedBy="salarie", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\TacheAttribution", mappedBy="salarie", fetch="EAGER")
    *
    * @Serializer\Groups({"salarie"})
    */
   private $attributionTaches;
 
   /**
-   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Travail", mappedBy="salarie", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+   * @ORM\OneToMany(targetEntity="API\ProjetBundle\Entity\Travail", mappedBy="salarie", fetch="EAGER")
    *
    * @Serializer\Groups({"salarie"})
    */
   private $travaux;
+
+  /**
+   * @Serializer\VirtualProperty
+   * @Serializer\SerializedName("removable")
+   * @Serializer\Groups({"salarie", "personne"})
+   */
+  public function isRemovable(): bool {
+   return !(count($this->getResponsableProjets()) ?:
+            count($this->getRecups()) ?:
+              count($this->getConges()) ?:
+                count($this->getAttributions()) ?:
+                  count($this->getTravaux()) ?:
+                    false);
+  }
 
   
 
@@ -138,7 +153,7 @@ class Salarie
    * @param string $personne
    * @return string
    */
-  public function setPersonne($personne)
+  public function setPersonne(?Personne $personne): self
   {
     $this->personne = $personne;
 
@@ -148,9 +163,9 @@ class Salarie
   /**
    * Get personne
    *
-   * @return integer 
+   * @return Personne 
    */
-  public function getPersonne()
+  public function getPersonne(): ?Personne
   {
     return $this->personne;
   }
