@@ -14,7 +14,7 @@ export class FileImportComponent implements OnInit {
 	file: any;
 	fileName: any;
 	uploadForm: FormGroup;
-	@ViewChild('fileInput')
+	@ViewChild('fileInput', { static: true })
   fileInput: ElementRef;
   error: any;
 

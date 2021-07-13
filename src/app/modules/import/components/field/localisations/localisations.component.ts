@@ -53,7 +53,7 @@ export class FieldLocalisationsComponent implements OnInit, AfterViewInit {
     onResize(event) {
       this.resizeMap(); 
   }
-  @ViewChild('map') mapView: ElementRef;
+  @ViewChild('map', { static: true }) mapView: ElementRef;
 
   map: Map;
 

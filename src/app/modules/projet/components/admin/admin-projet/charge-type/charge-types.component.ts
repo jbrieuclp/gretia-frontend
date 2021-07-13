@@ -24,7 +24,7 @@ export class ChargeTypesComponent implements OnInit {
     return this.chargeTypeRefS.chargeTypeRefSelect.getValue();
   }
 
-  @ViewChild('stepper') private stepper: MatStepper;
+  @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
   constructor(
   	private chargeTypeRefS: ChargeTypeRefService,

@@ -22,7 +22,7 @@ export class PersonnesComponent implements OnInit, OnDestroy {
   }
   private id: string;
 
-  @ViewChild('stepper') private stepper: MatStepper;
+  @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
   constructor(
   	public personneS: PersonneService,

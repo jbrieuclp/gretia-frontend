@@ -19,7 +19,7 @@ export class RepartitionComponent implements OnInit {
     onResize(event) {
       this.resizeMapCard(); 
   }
-  @ViewChild('mapCard') mapCardView: ElementRef;
+  @ViewChild('mapCard', { static: true }) mapCardView: ElementRef;
 
   mapCardWidth: number;
   mapCardHeight: number;

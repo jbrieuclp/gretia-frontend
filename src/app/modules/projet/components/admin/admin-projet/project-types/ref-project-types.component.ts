@@ -22,7 +22,7 @@ export class RefProjectTypesComponent implements OnInit {
   }
   private id: string;
 
-  @ViewChild('stepper') private stepper: MatStepper;
+  @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
   constructor(
   	public refProjectTypeS: RefProjectTypeService,

@@ -32,7 +32,7 @@ export class MontagesProjectComponent implements OnInit, OnDestroy {
   _subscriptions: Subscription[] = [];
   associateChargeForm: FormControl = new FormControl(null, [Validators.required]);
 
-  @ViewChild('actionsList') actionsList: MatSelectionList;
+  @ViewChild('actionsList', { static: false }) actionsList: MatSelectionList;
 
   charges: Charge[] = [];
 	get totals(): number {

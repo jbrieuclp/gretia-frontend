@@ -17,7 +17,7 @@ export class CartoComponent implements OnInit {
     onResize(event) {
       this.resizeMap(); 
   }
-  @ViewChild('map') mapView: ElementRef;
+  @ViewChild('map', { static: true }) mapView: ElementRef;
 
   map: Map;
 

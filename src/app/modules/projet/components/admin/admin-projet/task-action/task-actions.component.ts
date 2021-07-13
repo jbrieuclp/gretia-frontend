@@ -18,7 +18,7 @@ export class TaskActionsComponent implements OnInit {
 	get actions(): Action[] {
     return this.taskActionS.actions;
   }
-  @ViewChild('stepper') private stepper: MatStepper;
+  @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
   get action() {
     return this.taskActionS.actionSelect.getValue();

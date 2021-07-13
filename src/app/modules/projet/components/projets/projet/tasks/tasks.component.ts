@@ -40,7 +40,7 @@ export class TasksComponent implements OnInit, OnDestroy {
   _subscription: Subscription;
   expandRow: boolean = false;
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   constructor(
   	private projetR: ProjetRepository,

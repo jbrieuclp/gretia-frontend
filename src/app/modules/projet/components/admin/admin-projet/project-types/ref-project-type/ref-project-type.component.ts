@@ -22,7 +22,7 @@ export class RefProjectTypeComponent implements OnInit, AfterViewChecked {
 	public loading: boolean = false;
   public displayForm: boolean = false;
 
-  @ViewChild('stepper') private stepper: MatStepper;
+  @ViewChild('stepper', { static: false }) private stepper: MatStepper;
 
   constructor(
     private refProjectTypeS: RefProjectTypeService,

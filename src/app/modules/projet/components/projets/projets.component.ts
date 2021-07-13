@@ -21,7 +21,7 @@ export class ProjetsComponent implements OnInit {
   public filterInput: FormControl;
   public totalItems: number = 0;
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     public dialog: MatDialog,

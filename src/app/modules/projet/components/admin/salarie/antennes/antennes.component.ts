@@ -14,7 +14,7 @@ export class AntennesComponent implements OnInit {
 	get antennes(): Antenne[] {
     return this.antenneS.antennes;
   }
-  @ViewChild('stepper') private stepper: MatStepper;
+  @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
   constructor(
   	private antenneS: AntenneService,

@@ -14,7 +14,7 @@ export class FonctionsComponent implements OnInit {
 	get fonctions(): Fonction[] {
     return this.fonctionS.fonctions;
   }
-  @ViewChild('stepper') private stepper: MatStepper;
+  @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
   constructor(
   	private fonctionS: FonctionService,

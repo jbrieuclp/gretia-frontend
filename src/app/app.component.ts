@@ -11,7 +11,7 @@ import { LayoutService } from './shared/layout/layout.service';
 })
 export class AppComponent {
 
-  @ViewChild('sidenav') sidenav;
+  @ViewChild('sidenav', { static: false }) sidenav;
 
   sidenavToggle:boolean;
 

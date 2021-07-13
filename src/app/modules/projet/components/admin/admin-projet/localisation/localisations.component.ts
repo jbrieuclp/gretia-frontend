@@ -18,7 +18,7 @@ export class LocalisationsComponent implements OnInit {
 	get localisations(): Localisation[] {
     return this.localisationS.localisations;
   }
-  @ViewChild('stepper') private stepper: MatStepper;
+  @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
   get localisation() {
     return this.localisationS.localisationSelect.getValue();

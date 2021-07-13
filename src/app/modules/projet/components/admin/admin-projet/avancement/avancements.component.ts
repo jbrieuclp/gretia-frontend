@@ -18,7 +18,7 @@ export class AvancementsComponent implements OnInit {
 	get avancements(): Avancement[] {
     return this.avancementS.avancements;
   }
-  @ViewChild('stepper') private stepper: MatStepper;
+  @ViewChild('stepper', { static: true }) private stepper: MatStepper;
 
   get avancement() {
     return this.avancementS.avancementSelect.getValue();

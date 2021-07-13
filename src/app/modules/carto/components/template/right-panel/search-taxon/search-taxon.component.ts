@@ -29,7 +29,7 @@ export class SearchTaxonComponent {
     }
   }
 
-  @ViewChild('zone') zone: ElementRef;
+  @ViewChild('zone', { static: true }) zone: ElementRef;
 
   constructor( 
     private eRef: ElementRef,

@@ -20,7 +20,7 @@ export class FilesListComponent implements OnInit, AfterViewInit {
   closing: BehaviorSubject<boolean> = new BehaviorSubject(true);
   notClosing: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   
   constructor(
     private importS: ImportService,
