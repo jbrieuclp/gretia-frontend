@@ -1,9 +1,0 @@
-api_carto:
-    resource: "@APICartoBundle/Controller/CartoController.php"
-    type:     rest
-    prefix: /
-
-api_carto_taxon:
-    resource: "@APICartoBundle/Controller/TaxonController.php"
-    type:     rest
-    prefix: /

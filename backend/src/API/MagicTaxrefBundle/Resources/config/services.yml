@@ -1,4 +1,0 @@
-services:
-    magic_taxref.service.name_checker:
-        class: API\MagicTaxrefBundle\Services\NameCheckerService
-        arguments: ["@doctrine.dbal.geonature_db_connection", "@request_stack", "@session"]

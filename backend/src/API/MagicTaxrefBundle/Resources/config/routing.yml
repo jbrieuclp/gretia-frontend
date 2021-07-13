@@ -1,9 +1,0 @@
-api_magic_taxref:
-    resource: "@APIMagicTaxrefBundle/Controller/MagicTaxrefController.php"
-    type:     rest
-    prefix: /
-
-api_name_checker:
-    resource: "@APIMagicTaxrefBundle/Controller/NameCheckerController.php"
-    type:     rest
-    prefix: /
